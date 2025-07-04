@@ -59,9 +59,7 @@ deploy-dev:
     - echo "Deploying to dev environment..."
     - helm upgrade --install clubhive-dev ./helm -f helm/values-dev.yaml --set image.tag=$CI_COMMIT_SHA --namespace clubhive-dev --create-namespace
   only:
-    - main
     - dev
-  when: manual
 
 deploy-prod:
   stage: deploy-prod
@@ -81,5 +79,4 @@ deploy-prod:
     - helm upgrade --install clubhive ./helm -f helm/values-prod.yaml --set image.tag=$CI_COMMIT_SHA --namespace clubhive --create-namespace
   only:
     - main
-    - dev
   when: manual
