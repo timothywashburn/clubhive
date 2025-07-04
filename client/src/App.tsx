@@ -1,38 +1,71 @@
 import { useState } from 'react';
-import reactLogo from './assets/react.svg';
-import viteLogo from '/vite.svg';
 import './App.css';
 
 export function App() {
-    const [count, setCount] = useState(0);
+    const [serverStatus, setServerStatus] = useState<string>('');
+    const [loading, setLoading] = useState(false);
+
+    const testConnection = async () => {
+        setLoading(true);
+
+        try {
+            const response = await fetch('/api/health');
+
+            if (!response.ok) {
+                throw new Error(
+                    `HTTP ${response.status}: ${response.statusText}`
+                );
+            }
+
+            const data = await response.json();
+            setServerStatus(`Connected: ${data.message}`);
+        } catch (error) {
+            setServerStatus(
+                `Connection failed: ${error instanceof Error ? error.message : 'Unknown error'}`
+            );
+        } finally {
+            setLoading(false);
+        }
+    };
 
     return (
-        <>
-            <div>
-                <a href="https://vitejs.dev" target="_blank">
-                    <img src={viteLogo} className="logo" alt="Vite logo" />
-                </a>
-                <a href="https://react.dev" target="_blank">
-                    <img
-                        src={reactLogo}
-                        className="logo react"
-                        alt="React logo"
-                    />
-                </a>
-            </div>
-            <h1>Vite + React</h1>
-            <div className="card">
-                <button onClick={() => setCount(count => count + 1)}>
-                    count is {count}
+        <div style={{ padding: '2rem', textAlign: 'center' }}>
+            <h1>ClubHive</h1>
+            <div style={{ marginTop: '2rem' }}>
+                <button
+                    onClick={testConnection}
+                    disabled={loading}
+                    style={{
+                        padding: '10px 20px',
+                        fontSize: '16px',
+                        backgroundColor: loading ? '#ccc' : '#007bff',
+                        color: 'white',
+                        border: 'none',
+                        borderRadius: '4px',
+                        cursor: loading ? 'not-allowed' : 'pointer',
+                    }}
+                >
+                    {loading ? 'Testing...' : 'Test Server Connection'}
                 </button>
-                <p>
-                    Edit <code>src/App.tsx</code> and save to test HMR
-                </p>
+                {serverStatus && (
+                    <p
+                        style={{
+                            marginTop: '1rem',
+                            padding: '10px',
+                            backgroundColor: serverStatus.includes('Connected')
+                                ? '#d4edda'
+                                : '#f8d7da',
+                            color: serverStatus.includes('Connected')
+                                ? '#155724'
+                                : '#721c24',
+                            borderRadius: '4px',
+                        }}
+                    >
+                        {serverStatus}
+                    </p>
+                )}
             </div>
-            <p className="read-the-docs">
-                Click on the Vite and React logos to learn more
-            </p>
-        </>
+        </div>
     );
 }
 

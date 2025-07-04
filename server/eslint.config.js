@@ -9,7 +9,7 @@ export default [
             globals: globals.node,
         },
         rules: {
-            'no-console': 'off', // Allow console in server
+            'no-console': 'off',
         },
     },
 ];
