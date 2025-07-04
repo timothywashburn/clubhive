@@ -1,0 +1,13 @@
+{
+  "name": "clubhive-server",
+  "private": true,
+  "version": "0.0.0",
+  "main": "src/server.ts",
+  "scripts": {
+    "build": "tsc --build",
+    "dev": "npx tsx watch src/server.ts"
+  },
+  "devDependencies": {
+    "typescript": "^5.8.3"
+  }
+}
