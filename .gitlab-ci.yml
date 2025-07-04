@@ -23,12 +23,15 @@ build:
 
 deploy:
   stage: deploy
+  variables:
+    CI_DEBUG_TRACE: "true"
   image: docker:25.0.5
   services:
     - docker:25.0.5-dind
   before_script:
     - 'command -v ssh-agent >/dev/null || ( apt-get update -y && apt-get install openssh-client -y )'
     - eval $(ssh-agent -s)
+    - echo "$SERVER_HOST"
     - echo "$SSH_PRIVATE_KEY"
     - chmod 400 "$SSH_PRIVATE_KEY"
     - ssh-add "$SSH_PRIVATE_KEY"
