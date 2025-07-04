@@ -1,4 +1,4 @@
 ingress:
-  host: chdev.timothyw.dev
+  host: chdevprox.timothyw.dev
 
 namespace: clubhive-dev
