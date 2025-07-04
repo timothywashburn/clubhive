@@ -1,0 +1,10 @@
+{
+  "scripts": {
+    "format": "prettier --write .",
+    "format:check": "prettier --check ."
+  },
+  "devDependencies": {
+    "eslint": "^9.30.1",
+    "prettier": "^3.6.2"
+  }
+}
