@@ -2,7 +2,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: server
-  namespace: clubhive
+  namespace: {{ .Values.namespace }}
   labels:
     app: server
 spec:
@@ -16,10 +16,13 @@ spec:
         app: server
     spec:
       imagePullSecrets:
-      - name: gitlab-registry
+{{- range .Values.imagePullSecrets }}
+      - name: {{ .name }}
+{{- end }}
       containers:
       - name: server
-        image: registry.gitlab.com/sdsc-rds/summer-internships/rds-interns-su25/team-hexagon/centralized-club-system/server:latest
+        image: {{ .Values.image.registry }}/server:{{ .Values.image.tag }}
+        imagePullPolicy: {{ .Values.image.pullPolicy }}
         ports:
         - containerPort: 3000
         env:

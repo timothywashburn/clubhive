@@ -1,6 +1,7 @@
 stages:
   - build
-  - deploy
+  - deploy-dev
+  - deploy-prod
 
 variables:
   DOCKER_DRIVER: overlay2
@@ -41,29 +42,32 @@ build-client:
     - main
     - dev
 
-deploy:
-  stage: deploy
-  image: alpine/kubectl:latest
+deploy-dev:
+  stage: deploy-dev
+  image: alpine/helm:latest
   before_script:
-    - apk add --no-cache openssh-client
-    - eval $(ssh-agent -s)
-    - echo "$SSH_PRIVATE_KEY" | base64 -d | tr -d '\r' | ssh-add -
-    - mkdir -p ~/.ssh
-    - chmod 700 ~/.ssh
-    - ssh-keyscan $SERVER_HOST >> ~/.ssh/known_hosts
-    - chmod 644 ~/.ssh/known_hosts
+    - echo "$KUBECONFIG_DEV" | base64 -d > ~/.kubeconfig
+    - export KUBECONFIG=~/.kubeconfig
+    - helm version
+    - kubectl version --client
   script:
-    - echo "Deploying to Kubernetes..."
-    - ssh $SERVER_USER@$SERVER_HOST "bash -c '
-        if [ ! -d $APP_PATH ]; then
-          git clone $CI_REPOSITORY_URL $APP_PATH
-        fi
-        cd $APP_PATH
-        git pull origin main
-        chmod +x k8s-deploy.sh
-        ./k8s-deploy.sh
-      '"
+    - echo "Deploying to dev environment..."
+    - helm upgrade --install clubhive-dev ./helm -f helm/values-dev.yaml --set image.tag=$CI_COMMIT_SHA --namespace clubhive-dev --create-namespace
+  only:
+    - dev
+  when: manual
+
+deploy-prod:
+  stage: deploy-prod
+  image: alpine/helm:latest
+  before_script:
+    - echo "$KUBECONFIG_PROD" | base64 -d > ~/.kubeconfig
+    - export KUBECONFIG=~/.kubeconfig
+    - helm version
+    - kubectl version --client
+  script:
+    - echo "Deploying to production environment..."
+    - helm upgrade --install clubhive ./helm -f helm/values-prod.yaml --set image.tag=$CI_COMMIT_SHA --namespace clubhive --create-namespace
   only:
     - main
-    - dev
   when: manual

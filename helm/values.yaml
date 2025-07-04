@@ -1,0 +1,13 @@
+image:
+  registry: registry.gitlab.com/sdsc-rds/summer-internships/rds-interns-su25/team-hexagon/centralized-club-system
+  tag: latest
+  pullPolicy: Always
+
+imagePullSecrets:
+  - name: gitlab-registry
+
+ingress:
+  host: clubhive.timothyw.dev
+  ingressClassName: traefik
+
+namespace: clubhive

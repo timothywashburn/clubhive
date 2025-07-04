@@ -2,13 +2,13 @@ apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
   name: clubhive-ingress
-  namespace: clubhive
+  namespace: {{ .Values.namespace }}
   annotations:
     nginx.ingress.kubernetes.io/rewrite-target: /
 spec:
-  ingressClassName: traefik
+  ingressClassName: {{ .Values.ingress.ingressClassName }}
   rules:
-  - host: clubhiveprox.timothyw.dev
+  - host: {{ .Values.ingress.host }}
     http:
       paths:
       - path: /api

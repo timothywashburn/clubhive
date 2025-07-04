@@ -1,0 +1,4 @@
+ingress:
+  host: clubhive.timothyw.dev
+
+namespace: clubhive
