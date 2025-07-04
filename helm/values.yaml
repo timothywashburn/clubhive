@@ -7,7 +7,7 @@ imagePullSecrets:
   - name: gitlab-registry
 
 ingress:
-  host: clubhive.timothyw.dev
+  host: ""
   ingressClassName: traefik
 
-namespace: clubhive
+namespace: ""

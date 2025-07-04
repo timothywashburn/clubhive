@@ -29,7 +29,7 @@ export function App() {
 
     return (
         <div className="p-8 text-center">
-            <h1 className="text-3xl font-bold">ClubHive</h1>
+            <h1 className="text-3xl font-bold">clubhive</h1>
             <div className="mt-8">
                 <button
                     onClick={testConnection}
