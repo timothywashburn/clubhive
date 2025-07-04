@@ -1,5 +1,4 @@
 import { useState } from 'react';
-import './App.css';
 
 export function App() {
     const [serverStatus, setServerStatus] = useState<string>('');
@@ -29,37 +28,27 @@ export function App() {
     };
 
     return (
-        <div style={{ padding: '2rem', textAlign: 'center' }}>
-            <h1>ClubHive</h1>
-            <div style={{ marginTop: '2rem' }}>
+        <div className="p-8 text-center">
+            <h1 className="text-3xl font-bold">ClubHive</h1>
+            <div className="mt-8">
                 <button
                     onClick={testConnection}
                     disabled={loading}
-                    style={{
-                        padding: '10px 20px',
-                        fontSize: '16px',
-                        backgroundColor: loading ? '#ccc' : '#007bff',
-                        color: 'white',
-                        border: 'none',
-                        borderRadius: '4px',
-                        cursor: loading ? 'not-allowed' : 'pointer',
-                    }}
+                    className={`px-5 py-2.5 text-white font-medium rounded border-none cursor-pointer ${
+                        loading
+                            ? 'bg-gray-400 cursor-not-allowed'
+                            : 'bg-blue-600 hover:bg-blue-700'
+                    }`}
                 >
                     {loading ? 'Testing...' : 'Test Server Connection'}
                 </button>
                 {serverStatus && (
                     <p
-                        style={{
-                            marginTop: '1rem',
-                            padding: '10px',
-                            backgroundColor: serverStatus.includes('Connected')
-                                ? '#d4edda'
-                                : '#f8d7da',
-                            color: serverStatus.includes('Connected')
-                                ? '#155724'
-                                : '#721c24',
-                            borderRadius: '4px',
-                        }}
+                        className={`mt-4 p-2.5 rounded ${
+                            serverStatus.includes('Connected')
+                                ? 'bg-green-100 text-green-800'
+                                : 'bg-red-100 text-red-800'
+                        }`}
                     >
                         {serverStatus}
                     </p>
