@@ -29,16 +29,7 @@ deploy:
   before_script:
     - 'command -v ssh-agent >/dev/null || ( apt-get update -y && apt-get install openssh-client -y )'
     - eval $(ssh-agent -s)
-    - echo "Testing SSH key..."
-    - echo "$SSH_PRIVATE_KEY" | base64 -d > /tmp/ssh_key
-    - echo "Key starts with:"
-    - head -n 1 /tmp/ssh_key
-    - echo "Key ends with:"
-    - tail -n 1 /tmp/ssh_key
-    - echo "Key file size:"
-    - wc -c /tmp/ssh_key
-    - chmod 600 /tmp/ssh_key
-    - ssh-add /tmp/ssh_key
+    - echo "$SSH_PRIVATE_KEY" | base64 -d | ssh-add -
     - mkdir -p ~/.ssh
     - chmod 700 ~/.ssh
     - ssh-keyscan $SERVER_HOST >> ~/.ssh/known_hosts
