@@ -2,12 +2,11 @@
 FROM node:18-alpine AS builder
 WORKDIR /app
 COPY package*.json ./
-RUN npm ci
+RUN npm ci --ignore-scripts
 COPY . .
 RUN npm run build
 
-# Production stage - nginx serves the built files
+# Production stage - simple static file server
 FROM nginx:alpine
 COPY --from=builder /app/dist /usr/share/nginx/html
-COPY ../nginx.conf /etc/nginx/conf.d/default.conf
 EXPOSE 80
