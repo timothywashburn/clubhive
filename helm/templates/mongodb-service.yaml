@@ -11,6 +11,6 @@ spec:
   ports:
   - port: 27017
     targetPort: 27017
-    nodePort: 30017
+    nodePort: {{ .Values.mongodb.port }}
     protocol: TCP
   type: NodePort

@@ -7,3 +7,4 @@ mongodb:
   storage:
     size: "2Gi"
     storageClass: "local-path"
+  port: "30017"
