@@ -11,3 +11,8 @@ ingress:
   ingressClassName: traefik
 
 namespace: ""
+
+mongodb:
+  storage:
+    size: ""
+    storageClass: ""

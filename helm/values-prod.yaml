@@ -2,3 +2,8 @@ ingress:
   host: clubhiveprox.timothyw.dev
 
 namespace: clubhive
+
+mongodb:
+  storage:
+    size: "2Gi"
+    storageClass: "local-path"

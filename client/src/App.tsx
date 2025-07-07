@@ -37,7 +37,7 @@ export function App() {
                     className={`px-5 py-2.5 text-white font-medium rounded border-none cursor-pointer ${
                         loading
                             ? 'bg-gray-400 cursor-not-allowed'
-                            : 'bg-blue-600 hover:bg-blue-700'
+                            : 'bg-orange-600 hover:bg-orange-700'
                     }`}
                 >
                     {loading ? 'Testing...' : 'Test Server Connection'}

@@ -1,8 +1,8 @@
 # Helm Chart Deployment
 
-## Prerequisites
+## Setup
 
-### Deploy Token
+### Create Deploy Token
 
 1. Go to your GitLab project → Settings → Repository → Deploy tokens
 2. Create a new token with:
@@ -24,6 +24,24 @@ kubectl create secret docker-registry gitlab-registry \
   --docker-server=registry.gitlab.com \
   --docker-username=<your-deploy-token-username> \
   --docker-password=<your-deploy-token-password> \
+  --namespace=clubhive
+```
+
+### Create MongoDB Secret
+
+```bash
+# For dev environment
+kubectl create secret generic mongodb-secret \
+  --from-literal=username=admin \
+  --from-literal=password=<your-dev-mongodb-password> \
+  --from-literal=uri=mongodb://admin:<your-dev-mongodb-password>@mongodb-service:27017/clubhive \
+  --namespace=clubhive-dev
+
+# For prod environment
+kubectl create secret generic mongodb-secret \
+  --from-literal=username=admin \
+  --from-literal=password=<your-prod-mongodb-password> \
+  --from-literal=uri=mongodb://admin:<your-prod-mongodb-password>@mongodb-service:27017/clubhive \
   --namespace=clubhive
 ```
 
