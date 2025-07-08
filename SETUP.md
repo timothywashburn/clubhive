@@ -7,7 +7,7 @@
 
 ## Installation Steps
 
-1. **Install all dependencies:**
+1. **Install all dependencies and create shared dependency symlinks:**
 
     ```bash
     npm run install:all
