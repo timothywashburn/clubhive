@@ -3,16 +3,16 @@ import mongoose, { Schema, Document, ObjectId } from 'mongoose';
 // mongoose adds an _id property by default for each document
 // it is of type ObjectId
 
-export interface IUser extends Document {
+export interface UserData extends Document {
     email: string;
     password: string;
     school: ObjectId; // use school_id
     major: string;
     year: number;
-    clubs: ObjectId[]; // idk if this works buts its not showing errors
+    clubs: ObjectId[];
 }
 
-const UserSchema: Schema<IUser> = new Schema({
+const UserSchema: Schema<UserData> = new Schema({
     email: {
         type: String,
         required: true,
@@ -35,11 +35,10 @@ const UserSchema: Schema<IUser> = new Schema({
         required: true,
     },
     clubs: {
-        type: [mongoose.Schema.Types.ObjectId], // the numbers are club_id
+        type: [mongoose.Schema.Types.ObjectId],
         ref: 'Club',
-        required: true,
     },
 });
 
-const User = mongoose.model<IUser>('User', UserSchema);
+const User = mongoose.model<UserData>('User', UserSchema);
 export default User;

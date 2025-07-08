@@ -7,11 +7,11 @@ import mongoose, { Schema, Document, ObjectId } from 'mongoose';
 
 // not finished
 
-export interface IEvent extends Document {
+export interface EventData extends Document {
     name: string;
     picture: ObjectId;
     description: string;
-    tags: string[];
+    tags: string[]; // want to use to choose from a collection of tags rather than write their own tags
     event_type: string;
     date: Date;
     start_time: string;
@@ -21,10 +21,9 @@ export interface IEvent extends Document {
     location_description: string;
     club: ObjectId;
     requirements: string;
-    likes: number;
 }
 
-const EventSchema: Schema<IEvent> = new Schema({
+const EventSchema: Schema<EventData> = new Schema({
     name: {
         type: String,
         required: true,
@@ -35,6 +34,7 @@ const EventSchema: Schema<IEvent> = new Schema({
     },
     description: {
         type: String,
+        default: '',
     },
     tags: {
         type: [String],
@@ -42,6 +42,7 @@ const EventSchema: Schema<IEvent> = new Schema({
     },
     event_type: {
         type: String,
+        default: 'N/A',
     },
     date: {
         type: Date,
@@ -65,6 +66,7 @@ const EventSchema: Schema<IEvent> = new Schema({
     },
     location_description: {
         type: String,
+        default: 'N/A',
     },
     club: {
         type: mongoose.Schema.Types.ObjectId,
@@ -72,12 +74,9 @@ const EventSchema: Schema<IEvent> = new Schema({
     },
     requirements: {
         type: String,
-    },
-    likes: {
-        type: Number,
-        required: true,
+        default: 'none',
     },
 });
 
-const Event = mongoose.model<IEvent>('Event', EventSchema);
+const Event = mongoose.model<EventData>('Event', EventSchema);
 export default Event;

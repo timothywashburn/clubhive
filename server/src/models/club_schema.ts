@@ -5,12 +5,12 @@ import mongoose, { Schema, Document, ObjectId } from 'mongoose';
 
 // for pictures maybe using GridFS -- not sure but in the meantime we can probably hardcode pictures
 
-export interface IClub extends Document {
+export interface ClubData extends Document {
     name: string;
     description: string;
     events: ObjectId[];
     announcements: ObjectId[];
-    tags: string[];
+    tags: string[]; // want to use to choose from a collection of tags rather than write their own tags
     social_links: string[];
     members: ObjectId[];
     officers: ObjectId[];
@@ -18,7 +18,7 @@ export interface IClub extends Document {
     gallery_pictures: ObjectId[];
 }
 
-const ClubSchema: Schema<IClub> = new Schema({
+const ClubSchema: Schema<ClubData> = new Schema({
     name: {
         type: String,
         required: true,
@@ -62,5 +62,5 @@ const ClubSchema: Schema<IClub> = new Schema({
     },
 });
 
-const Club = mongoose.model<IClub>('Club', ClubSchema);
+const Club = mongoose.model<ClubData>('Club', ClubSchema);
 export default Club;
