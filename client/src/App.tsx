@@ -1,64 +1,35 @@
 import { useState } from 'react';
-import { ErrorCode } from '@clubhive/shared';
+import { BrowserRouter, Routes, Route } from 'react-router';
+import { Navbar } from './components/navbar/Navbar.tsx';
+import { Home } from './pages/Home';
+import { MyClubs } from './pages/MyClubs';
+import { Clubs } from './pages/Clubs';
+import { Events } from './pages/Events';
+import { Profile } from './pages/Profile';
+import { Notifications } from './pages/Notifications';
+import { SignIn } from './pages/SignIn';
+import { SignUp } from './pages/SignUp';
 
 export function App() {
-    const [serverStatus, setServerStatus] = useState<string>('');
-    const [loading, setLoading] = useState(false);
-
-    const testConnection = async () => {
-        setLoading(true);
-
-        // TODO: this just tests shared code, should be removed after build is tested
-        const test: ErrorCode = ErrorCode.INTERNAL_SERVER_ERROR;
-        console.log('Test ErrorCode:', test);
-
-        try {
-            const response = await fetch('/api/status');
-
-            if (!response.ok) {
-                throw new Error(
-                    `HTTP ${response.status}: ${response.statusText}`
-                );
-            }
-
-            setServerStatus(`Connected!`);
-        } catch (error) {
-            setServerStatus(
-                `Connection failed: ${error instanceof Error ? error.message : 'Unknown error'}`
-            );
-        } finally {
-            setLoading(false);
-        }
-    };
+    // TODO: replace with real auth system
+    const [isAuthenticated, setIsAuthenticated] = useState(false);
 
     return (
-        <div className="p-8 text-center">
-            <h1 className="text-3xl font-bold">clubhive</h1>
-            <div className="mt-8">
-                <button
-                    onClick={testConnection}
-                    disabled={loading}
-                    className={`px-5 py-2.5 text-white font-medium rounded border-none cursor-pointer ${
-                        loading
-                            ? 'bg-gray-400 cursor-not-allowed'
-                            : 'bg-orange-600 hover:bg-orange-700'
-                    }`}
-                >
-                    {loading ? 'Testing...' : 'Test Server Connection'}
-                </button>
-                {serverStatus && (
-                    <p
-                        className={`mt-4 p-2.5 rounded ${
-                            serverStatus.includes('Connected')
-                                ? 'bg-green-100 text-green-800'
-                                : 'bg-red-100 text-red-800'
-                        }`}
-                    >
-                        {serverStatus}
-                    </p>
-                )}
+        <BrowserRouter>
+            <div className="min-h-screen bg-gray-50">
+                <Navbar isAuthenticated={isAuthenticated} />
+                <Routes>
+                    <Route path="/" element={<Home />} />
+                    <Route path="/my-clubs" element={<MyClubs />} />
+                    <Route path="/clubs" element={<Clubs />} />
+                    <Route path="/events" element={<Events />} />
+                    <Route path="/profile" element={<Profile />} />
+                    <Route path="/notifications" element={<Notifications />} />
+                    <Route path="/signin" element={<SignIn />} />
+                    <Route path="/signup" element={<SignUp />} />
+                </Routes>
             </div>
-        </div>
+        </BrowserRouter>
     );
 }
 
