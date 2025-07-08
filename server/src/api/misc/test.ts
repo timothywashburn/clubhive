@@ -1,4 +1,5 @@
-import { ApiEndpoint, AuthType, ErrorCode } from '@/types/api-types';
+import { ErrorCode } from '@clubhive/shared';
+import { ApiEndpoint, AuthType } from '@/types/api-types';
 
 export interface TestRequest {
     message: string;

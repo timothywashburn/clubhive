@@ -1,0 +1,26 @@
+{
+  "name": "@clubhive/shared",
+  "version": "1.0.0",
+  "description": "Shared types and utilities for ClubHive",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "type": "module",
+  "scripts": {
+    "build": "tsc",
+    "dev": "tsc --watch",
+    "clean": "rm -rf dist"
+  },
+  "keywords": [
+    "types",
+    "shared",
+    "clubhive"
+  ],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "typescript": "^5.0.0"
+  },
+  "files": [
+    "dist/**/*"
+  ]
+}

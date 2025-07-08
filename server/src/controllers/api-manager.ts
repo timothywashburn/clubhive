@@ -10,10 +10,10 @@ import {
     ApiRequest,
     ApiResponse,
     AuthType,
-    ErrorCode,
 } from '@/types/api-types';
 import { statusEndpoint } from '@/api/misc/status';
 import { testEndpoint } from '@/api/misc/test';
+import { ErrorCode } from '@clubhive/shared';
 
 export default class ApiManager {
     private static instance: ApiManager;

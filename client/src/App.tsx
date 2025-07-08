@@ -16,8 +16,7 @@ export function App() {
                 );
             }
 
-            const data = await response.json();
-            setServerStatus(`Connected: ${data.message}`);
+            setServerStatus(`Connected!`);
         } catch (error) {
             setServerStatus(
                 `Connection failed: ${error instanceof Error ? error.message : 'Unknown error'}`
