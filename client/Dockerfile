@@ -3,6 +3,10 @@ FROM node:18-alpine AS builder
 WORKDIR /app
 COPY shared/ shared/
 COPY client/ client/
+
+WORKDIR /app/shared
+RUN npm ci
+
 WORKDIR /app/client
 RUN npm ci --ignore-scripts
 RUN npm run build
