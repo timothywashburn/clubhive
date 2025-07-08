@@ -8,7 +8,7 @@ export function App() {
         setLoading(true);
 
         try {
-            const response = await fetch('/api/health');
+            const response = await fetch('/api/status');
 
             if (!response.ok) {
                 throw new Error(
