@@ -8,7 +8,7 @@ WORKDIR /app/shared
 RUN npm ci
 
 WORKDIR /app/client
-RUN npm ci --ignore-scripts
+RUN npm install --ignore-scripts
 RUN npm run build
 
 # Production stage - simple static file server
