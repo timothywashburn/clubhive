@@ -24,7 +24,6 @@ build-server:
   only:
     - main
     - dev
-    - feat/api-endpoint-system # TODO: remove
 
 build-client:
   stage: build
@@ -40,7 +39,6 @@ build-client:
   only:
     - main
     - dev
-    - feat/api-endpoint-system # TODO: remove
 
 deploy-dev:
   stage: deploy-dev
