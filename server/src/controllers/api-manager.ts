@@ -35,7 +35,7 @@ export default class ApiManager {
     private setupMiddleware() {
         this.router.use(express.json());
 
-        this.router.use((req, res, next) => {
+        this.router.use((req: Request, res: Response, next: NextFunction) => {
             res.header('Access-Control-Allow-Origin', '*');
             res.header(
                 'Access-Control-Allow-Methods',
@@ -48,7 +48,7 @@ export default class ApiManager {
             next();
         });
 
-        this.router.use((req, res, next) => {
+        this.router.use((req: Request, res: Response, next: NextFunction) => {
             if (!req.path.startsWith('/api')) {
                 next();
                 return;
@@ -85,7 +85,7 @@ export default class ApiManager {
     private handleAuth: RequestHandler = async (
         req: ApiRequest,
         res: ApiResponse,
-        next
+        next: NextFunction
     ): Promise<void> => {
         const authHeader = req.headers.authorization;
 
