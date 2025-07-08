@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { ErrorCode } from '@clubhive/shared';
 
 export function App() {
     const [serverStatus, setServerStatus] = useState<string>('');
@@ -7,8 +8,12 @@ export function App() {
     const testConnection = async () => {
         setLoading(true);
 
+        // TODO: this just tests shared code, should be removed after build is tested
+        const test: ErrorCode = ErrorCode.INTERNAL_SERVER_ERROR;
+        console.log('Test ErrorCode:', test);
+
         try {
-            const response = await fetch('/api/health');
+            const response = await fetch('/api/status');
 
             if (!response.ok) {
                 throw new Error(
@@ -16,8 +21,7 @@ export function App() {
                 );
             }
 
-            const data = await response.json();
-            setServerStatus(`Connected: ${data.message}`);
+            setServerStatus(`Connected!`);
         } catch (error) {
             setServerStatus(
                 `Connection failed: ${error instanceof Error ? error.message : 'Unknown error'}`
