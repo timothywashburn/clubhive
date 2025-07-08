@@ -1,10 +1,10 @@
 # Build stage
 FROM node:18-alpine AS builder
 WORKDIR /app
-COPY package*.json ./
-COPY ../shared ../shared
+COPY shared/ shared/
+COPY client/package*.json ./
 RUN npm ci --ignore-scripts
-COPY . .
+COPY client/ .
 RUN npm run build
 
 # Production stage - simple static file server

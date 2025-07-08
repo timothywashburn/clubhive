@@ -1,9 +1,9 @@
 FROM node:18-alpine
 WORKDIR /app
-COPY package*.json ./
-COPY ../shared ../shared
+COPY shared/ shared/
+COPY server/package*.json ./
 RUN npm ci
-COPY . .
+COPY server/ .
 RUN npm run build
 EXPOSE 3000
-CMD ["node", "dist/server.js"]
+CMD ["npm", "start"]
