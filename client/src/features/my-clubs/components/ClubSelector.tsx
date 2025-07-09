@@ -38,7 +38,7 @@ export function ClubSelector({
                             className={`w-full p-3 rounded-lg text-left transition-all hover:bg-surface-variant/50 mb-1 group cursor-pointer ${
                                 selectedClub?.id === club.id
                                     ? 'bg-primary-container border-l-4 border-primary'
-                                    : 'hover:border-l-4 hover:border-primary/30'
+                                    : 'hover:border-l-4 border-primary/50'
                             }`}
                         >
                             <div className="flex items-center space-x-3">
