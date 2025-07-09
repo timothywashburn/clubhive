@@ -1,14 +1,73 @@
 import { useState } from 'react';
+import ClubCardSmall from '../components/ClubCardSmall';
 
-/**
- * THIS CLASS IS AI GENERATED AND TEMPORARY
- *
- * This class is a placeholder that bears no resemblance to the real
- * implementation for this page. This code is temporary and can be
- * replaced by the real implementation at any time.
- */
 export function Clubs() {
     const [searchTerm, setSearchTerm] = useState('');
+    const [selectedClub, setSelectedClub] = useState<string | null>(null);
+
+    // Placeholder for clubs data
+    const clubs = [
+        {
+            id: 1,
+            name: 'Photography Club',
+            members: 50,
+            description: 'A club for photography enthusiasts.',
+        },
+        {
+            id: 2,
+            name: 'Book Club',
+            members: 30,
+            description: 'A club for book lovers.',
+        },
+        {
+            id: 3,
+            name: 'Coding Club',
+            members: 40,
+            description: 'A club for coding and tech enthusiasts.',
+        },
+        {
+            id: 4,
+            name: 'Art Club',
+            members: 20,
+            description: 'A club for artists and art lovers.',
+        },
+        {
+            id: 5,
+            name: 'Music Club',
+            members: 25,
+            description: 'A club for music enthusiasts.',
+        },
+        {
+            id: 6,
+            name: 'Gaming Club',
+            members: 60,
+            description: 'A club for gamers.',
+        },
+        {
+            id: 7,
+            name: 'Cooking Club',
+            members: 15,
+            description: 'A club for cooking enthusiasts.',
+        },
+        {
+            id: 8,
+            name: 'Travel Club',
+            members: 10,
+            description: 'A club for travel lovers.',
+        },
+        {
+            id: 9,
+            name: 'Fitness Club',
+            members: 35,
+            description: 'A club for fitness enthusiasts.',
+        },
+        {
+            id: 10,
+            name: 'Language Exchange Club',
+            members: 45,
+            description: 'A club for language learners.',
+        },
+    ];
 
     return (
         <div className="min-h-screen bg-gray-50">
@@ -49,36 +108,49 @@ export function Clubs() {
                     </div>
                 </div>
 
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                    {[1, 2, 3, 4, 5, 6].map(i => (
-                        <div
-                            key={i}
-                            className="bg-white rounded-lg shadow hover:shadow-md transition-shadow p-6"
-                        >
-                            <div className="flex items-center mb-4">
-                                <div className="w-12 h-12 bg-orange-100 rounded-full flex items-center justify-center">
-                                    <span className="text-orange-600 font-bold">
-                                        C{i}
-                                    </span>
-                                </div>
-                                <div className="ml-4">
-                                    <h3 className="text-lg font-medium text-gray-900">
-                                        Club {i}
-                                    </h3>
-                                    <p className="text-sm text-gray-500">
-                                        50 members
-                                    </p>
-                                </div>
-                            </div>
-                            <p className="text-gray-600 mb-4">
-                                This is a sample club description. Join us for
-                                amazing activities and events!
+                <div className="flex flex-row gap-6">
+                    {/* Left: club list */}
+                    <div className="w-full lg:w-1/3 bg-white rounded-lg shadow p-6 h-screen overflow-y-auto space-y-4">
+                        {clubs.map(club => (
+                            <ClubCardSmall
+                                key={club.name}
+                                name={club.name}
+                                members={club.members}
+                                description={club.description}
+                                isSelected={selectedClub === club.name}
+                                onClick={() => setSelectedClub(club.name)}
+                            />
+                        ))}
+                    </div>
+
+                    {/* Right: selected club detail */}
+                    <div className="w-full lg:w-2/3 bg-white rounded-lg shadow p-6 max-h-96">
+                        {selectedClub ? (
+                            <>
+                                <h2 className="text-2xl font-bold mb-2">
+                                    {selectedClub}
+                                </h2>
+                                <p className="text-sm text-gray-500 mb-4">
+                                    {clubs.find(
+                                        club => club.name === selectedClub
+                                    )?.members || 0}{' '}
+                                    members
+                                </p>
+                                <p className="text-gray-700">
+                                    {clubs.find(
+                                        club => club.name === selectedClub
+                                    )?.description || 'No description'}
+                                </p>
+                                <button className="mt-4 w-full bg-orange-600 text-white py-2 rounded-md hover:bg-orange-700 font-medium">
+                                    Join Club
+                                </button>
+                            </>
+                        ) : (
+                            <p className="text-gray-500">
+                                Select a club to see details.
                             </p>
-                            <button className="w-full bg-orange-600 text-white py-2 rounded-md hover:bg-orange-700 font-medium">
-                                Join Club
-                            </button>
-                        </div>
-                    ))}
+                        )}
+                    </div>
                 </div>
             </div>
         </div>
