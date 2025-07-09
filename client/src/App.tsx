@@ -2,7 +2,7 @@ import { BrowserRouter, Routes, Route } from 'react-router';
 import { Navbar } from './components/navbar/Navbar.tsx';
 import { useAuth } from './hooks/useAuth';
 import { Home } from './pages/Home';
-import { MyClubs } from './pages/MyClubs';
+import { MyClubs } from './features/my-clubs';
 import { Clubs } from './pages/Clubs';
 import { Events } from './pages/Events';
 import { Profile } from './pages/Profile';
