@@ -23,6 +23,7 @@
     --color-on-background: #111827;
     --color-on-background-variant: #6b7280;
     --color-surface: #ffffff;
+    --color-surface-variant: #f3f4f6;
     --color-on-surface: #111827;
     --color-on-surface-variant: #6b7280;
     --color-outline: #e5e7eb;
@@ -54,6 +55,7 @@
     --color-on-background: #f1f5f9;
     --color-on-background-variant: #94a3b8;
     --color-surface: #1e293b;
+    --color-surface-variant: #334155;
     --color-on-surface: #f1f5f9;
     --color-on-surface-variant: #94a3b8;
     --color-outline: #334155;
