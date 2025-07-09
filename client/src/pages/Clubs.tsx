@@ -70,13 +70,13 @@ export function Clubs() {
     ];
 
     return (
-        <div className="min-h-screen bg-gray-50">
+        <div className="min-h-screen bg-background">
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
                 <div className="mb-8">
-                    <h1 className="text-3xl font-bold text-gray-900">
+                    <h1 className="text-3xl font-bold text-on-background">
                         Find Clubs
                     </h1>
-                    <p className="text-gray-600 mt-2">
+                    <p className="text-on-background-variant mt-2">
                         Discover clubs that match your interests
                     </p>
                 </div>
@@ -85,7 +85,7 @@ export function Clubs() {
                     <div className="relative">
                         <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
                             <svg
-                                className="h-5 w-5 text-gray-400"
+                                className="h-5 w-5 text-on-surface-variant"
                                 fill="none"
                                 stroke="currentColor"
                                 viewBox="0 0 24 24"
@@ -103,14 +103,14 @@ export function Clubs() {
                             placeholder="Search clubs..."
                             value={searchTerm}
                             onChange={e => setSearchTerm(e.target.value)}
-                            className="block w-full pl-10 pr-3 py-2 border border-gray-300 rounded-md leading-5 bg-white placeholder-gray-500 focus:outline-none focus:placeholder-gray-400 focus:ring-1 focus:ring-orange-500 focus:border-orange-500"
+                            className="block w-full pl-10 pr-3 py-2 border border-outline-variant rounded-md leading-5 bg-surface placeholder-on-surface-variant focus:outline-none focus:ring-1 focus:ring-primary focus:border-primary"
                         />
                     </div>
                 </div>
 
                 <div className="flex flex-row gap-6">
                     {/* Left: club list */}
-                    <div className="w-full lg:w-1/3 bg-white rounded-lg shadow p-6 h-screen overflow-y-auto space-y-4">
+                    <div className="w-full lg:w-1/3 bg-surface rounded-lg shadow p-6 h-screen overflow-y-auto space-y-4">
                         {clubs.map(club => (
                             <ClubCardSmall
                                 key={club.name}
@@ -124,29 +124,29 @@ export function Clubs() {
                     </div>
 
                     {/* Right: selected club detail */}
-                    <div className="w-full lg:w-2/3 bg-white rounded-lg shadow p-6 max-h-96">
+                    <div className="w-full lg:w-2/3 bg-surface rounded-lg shadow p-6 max-h-96">
                         {selectedClub ? (
                             <>
-                                <h2 className="text-2xl font-bold mb-2">
+                                <h2 className="text-2xl text-on-surface font-bold mb-2">
                                     {selectedClub}
                                 </h2>
-                                <p className="text-sm text-gray-500 mb-4">
+                                <p className="text-sm text-on-surface-variant mb-4">
                                     {clubs.find(
                                         club => club.name === selectedClub
                                     )?.members || 0}{' '}
                                     members
                                 </p>
-                                <p className="text-gray-700">
+                                <p className="text-on-surface-variant">
                                     {clubs.find(
                                         club => club.name === selectedClub
                                     )?.description || 'No description'}
                                 </p>
-                                <button className="mt-4 w-full bg-orange-600 text-white py-2 rounded-md hover:bg-orange-700 font-medium">
+                                <button className="mt-4 w-full bg-primary text-on-primary py-2 rounded-md hover:bg-primary/90 font-medium transition-colors">
                                     Join Club
                                 </button>
                             </>
                         ) : (
-                            <p className="text-gray-500">
+                            <p className="text-on-surface-variant">
                                 Select a club to see details.
                             </p>
                         )}

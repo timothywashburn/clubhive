@@ -7,29 +7,29 @@
  */
 export function Notifications() {
     return (
-        <div className="min-h-screen bg-gray-50">
+        <div className="min-h-screen bg-background">
             <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
                 <div className="mb-8">
-                    <h1 className="text-3xl font-bold text-gray-900">
+                    <h1 className="text-3xl font-bold text-on-surface">
                         Notifications
                     </h1>
-                    <p className="text-gray-600 mt-2">
+                    <p className="text-on-surface-variant mt-2">
                         Stay updated with your club activities
                     </p>
                 </div>
 
-                <div className="bg-white rounded-lg shadow">
-                    <div className="px-6 py-4 border-b border-gray-200">
+                <div className="bg-surface rounded-lg shadow">
+                    <div className="px-6 py-4 border-b border-outline-variant">
                         <div className="flex items-center justify-between">
-                            <h2 className="text-lg font-medium text-gray-900">
+                            <h2 className="text-lg font-medium text-on-surface">
                                 Recent Activity
                             </h2>
-                            <button className="text-sm text-orange-600 hover:text-orange-700">
+                            <button className="text-sm text-primary hover:text-primary/90">
                                 Mark all as read
                             </button>
                         </div>
                     </div>
-                    <div className="divide-y divide-gray-200">
+                    <div className="divide-y divide-outline-variant">
                         {/* Placeholder notifications */}
                         {[
                             {
@@ -62,17 +62,17 @@ export function Notifications() {
                         ].map((notification, i) => (
                             <div
                                 key={i}
-                                className={`px-6 py-4 ${notification.unread ? 'bg-orange-50' : ''}`}
+                                className={`px-6 py-4 ${notification.unread ? 'bg-primary/10' : ''}`}
                             >
                                 <div className="flex items-start">
                                     <div
-                                        className={`w-2 h-2 rounded-full mt-2 mr-3 ${notification.unread ? 'bg-orange-500' : 'bg-gray-300'}`}
+                                        className={`w-2 h-2 rounded-full mt-2 mr-3 ${notification.unread ? 'bg-primary' : 'bg-outline-variant'}`}
                                     />
                                     <div className="flex-1">
-                                        <p className="text-gray-900">
+                                        <p className="text-on-surface">
                                             {notification.message}
                                         </p>
-                                        <p className="text-sm text-gray-500 mt-1">
+                                        <p className="text-sm text-on-surface-variant mt-1">
                                             {notification.time}
                                         </p>
                                     </div>
