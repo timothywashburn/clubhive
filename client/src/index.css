@@ -61,3 +61,27 @@
     --color-divider: #334155;
     --color-divider-variant: #334155;
 }
+
+/* Scrollbar Styling */
+* {
+    scrollbar-width: auto;
+    scrollbar-color: var(--color-outline) var(--color-background);
+}
+
+*::-webkit-scrollbar {
+    width: 12px;
+}
+
+*::-webkit-scrollbar-track {
+    background: var(--color-background);
+}
+
+*::-webkit-scrollbar-thumb {
+    background-color: var(--color-outline);
+    border-radius: 6px;
+    border: 2px solid var(--color-background);
+}
+
+*::-webkit-scrollbar-thumb:hover {
+    background-color: var(--color-outline-variant);
+}
