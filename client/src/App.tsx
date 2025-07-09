@@ -1,6 +1,6 @@
-import { useState } from 'react';
 import { BrowserRouter, Routes, Route } from 'react-router';
 import { Navbar } from './components/navbar/Navbar.tsx';
+import { useAuth } from './hooks/useAuth';
 import { Home } from './pages/Home';
 import { MyClubs } from './pages/MyClubs';
 import { Clubs } from './pages/Clubs';
@@ -11,13 +11,15 @@ import { SignIn } from './pages/SignIn';
 import { SignUp } from './pages/SignUp';
 
 export function App() {
-    // TODO: replace with real auth system
-    const [isAuthenticated, setIsAuthenticated] = useState(false);
+    const { isAuthenticated, toggleAuth } = useAuth();
 
     return (
         <BrowserRouter>
-            <div className="min-h-screen bg-gray-50">
-                <Navbar isAuthenticated={isAuthenticated} />
+            <div className="min-h-screen bg-background">
+                <Navbar
+                    isAuthenticated={isAuthenticated}
+                    toggleAuth={toggleAuth}
+                />
                 <Routes>
                     <Route path="/" element={<Home />} />
                     <Route path="/my-clubs" element={<MyClubs />} />
