@@ -1,4 +1,5 @@
-import { Crown, Shield } from 'lucide-react';
+import { Crown, Shield, Search } from 'lucide-react';
+import { useNavigate } from 'react-router';
 import { Club } from '../types';
 import { useMyClubsData } from '../hooks';
 
@@ -14,6 +15,7 @@ export function ClubSelector({
     onClubSelect,
 }: ClubSelectorProps) {
     const { getClubColors } = useMyClubsData();
+    const navigate = useNavigate();
 
     return (
         <div className="bg-surface rounded-lg shadow border border-outline-variant h-fit">
@@ -23,6 +25,26 @@ export function ClubSelector({
                 </h2>
             </div>
             <div className="p-2">
+                {clubs.length === 0 && (
+                    <button
+                        onClick={() => navigate('/clubs')}
+                        className="w-full p-3 rounded-lg text-left transition-all mb-1 group cursor-pointer hover:bg-surface-variant/50 border-dashed border-2 border-outline-variant"
+                    >
+                        <div className="flex items-center space-x-3">
+                            <div className="w-10 h-10 rounded-full flex items-center justify-center text-sm font-semibold bg-primary/10 text-primary border-2 border-dashed border-primary/30">
+                                <Search className="w-5 h-5" />
+                            </div>
+                            <div className="flex-1 min-w-0">
+                                <h3 className="font-medium text-on-surface truncate pr-2">
+                                    Find clubs to join
+                                </h3>
+                                <p className="text-xs text-on-surface-variant truncate italic">
+                                    Discover communities near you
+                                </p>
+                            </div>
+                        </div>
+                    </button>
+                )}
                 {clubs.map(club => {
                     const clubInitials = club.name
                         .split(' ')
