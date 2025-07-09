@@ -103,24 +103,30 @@ export function Clubs() {
                             placeholder="Search clubs..."
                             value={searchTerm}
                             onChange={e => setSearchTerm(e.target.value)}
-                            className="block w-full pl-10 pr-3 py-2 border border-outline-variant rounded-md leading-5 bg-surface placeholder-on-surface-variant focus:outline-none focus:ring-1 focus:ring-primary focus:border-primary"
+                            className="block w-full pl-10 pr-3 py-2 border text-on-surface border-outline-variant rounded-md leading-5 bg-surface placeholder-on-surface-variant focus:outline-none focus:ring-1 focus:ring-primary focus:border-primary"
                         />
                     </div>
                 </div>
 
                 <div className="flex flex-row gap-6">
                     {/* Left: club list */}
-                    <div className="w-full lg:w-1/3 bg-surface rounded-lg shadow p-6 h-screen overflow-y-auto space-y-4">
-                        {clubs.map(club => (
-                            <ClubCardSmall
-                                key={club.name}
-                                name={club.name}
-                                members={club.members}
-                                description={club.description}
-                                isSelected={selectedClub === club.name}
-                                onClick={() => setSelectedClub(club.name)}
-                            />
-                        ))}
+                    <div className="w-full lg:w-1/3 bg-surface rounded-lg shadow p-6 h-[calc(100vh-10rem)] scrollbar-hide overflow-y-auto space-y-4">
+                        {clubs
+                            .filter(club =>
+                                club.name
+                                    .toLowerCase()
+                                    .includes(searchTerm.toLowerCase())
+                            )
+                            .map(club => (
+                                <ClubCardSmall
+                                    key={club.name}
+                                    name={club.name}
+                                    members={club.members}
+                                    description={club.description}
+                                    isSelected={selectedClub === club.name}
+                                    onClick={() => setSelectedClub(club.name)}
+                                />
+                            ))}
                     </div>
 
                     {/* Right: selected club detail */}

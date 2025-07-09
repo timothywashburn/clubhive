@@ -17,16 +17,16 @@ const ClubCardSmall: React.FC<ClubCardProps> = ({
 }) => {
     return (
         <div
-            className={`p-4 border rounded-md cursor-pointer ${
+            className={`p-4 border rounded-md cursor-pointer transition-transform transition-shadow duration-200 hover:shadow-lg hover:-translate-y-1 ${
                 isSelected
-                    ? 'bg-orange-100 border-orange-500'
-                    : 'bg-white border-gray-300'
+                    ? ' border-orange-500'
+                    : 'bg-surface border-outline-variant'
             }`}
             onClick={onClick}
         >
-            <h3 className="text-lg font-medium">{name}</h3>
-            <p className="text-sm text-gray-500">{members} members</p>
-            <p className="text-gray-600 mt-2">{description}</p>
+            <h3 className="text-lg text-on-surface font-medium">{name}</h3>
+            <p className="text-sm text-on-surface-variant">{members} members</p>
+            <p className="text-on-surface-variant mt-2">{description}</p>
         </div>
     );
 };

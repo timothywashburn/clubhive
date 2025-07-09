@@ -61,3 +61,21 @@
     --color-divider: #334155;
     --color-divider-variant: #334155;
 }
+
+.scrollbar-hide::-webkit-scrollbar {
+    width: 8px;
+}
+
+.scrollbar-hide::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+.scrollbar-hide::-webkit-scrollbar-thumb {
+    background-color: transparent;
+    transition: background-color 0.2s ease-in-out;
+    border-radius: 6px;
+}
+
+.scrollbar-hide:hover::-webkit-scrollbar-thumb {
+    background-color: var(--color-outline-variant); /* works for both themes */
+}
