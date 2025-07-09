@@ -35,10 +35,10 @@ export function ClubSelector({
                         <button
                             key={club.id}
                             onClick={() => onClubSelect(club)}
-                            className={`w-full p-3 rounded-lg text-left transition-all hover:bg-surface-variant/50 mb-1 group cursor-pointer ${
+                            className={`w-full p-3 rounded-lg text-left transition-all mb-1 group cursor-pointer ${
                                 selectedClub?.id === club.id
                                     ? 'bg-primary-container border-l-4 border-primary'
-                                    : 'hover:border-l-4 border-primary/50'
+                                    : 'hover:bg-surface-variant/50 hover:border-l-4 border-primary/50'
                             }`}
                         >
                             <div className="flex items-center space-x-3">
