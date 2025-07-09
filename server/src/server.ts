@@ -2,6 +2,7 @@ import express from 'express';
 import cors from 'cors';
 import mongoose from 'mongoose';
 import dotenv from 'dotenv';
+import ApiManager from '@/controllers/api-manager';
 
 dotenv.config();
 
@@ -48,19 +49,11 @@ const connectDB = async () => {
     }
 };
 
-app.get('/api/health', (req, res) => {
-    const response = {
-        status: 'ok',
-        message: 'Server is running!',
-        timestamp: new Date().toISOString(),
-        database:
-            mongoose.connection.readyState === 1 ? 'connected' : 'disconnected',
-    };
-    res.json(response);
-});
-
 const startServer = async () => {
     await connectDB();
+
+    app.use(ApiManager.getInstance().getRouter());
+
     app.listen(PORT, () => {
         console.log(`Server running on port ${PORT}`);
     });
