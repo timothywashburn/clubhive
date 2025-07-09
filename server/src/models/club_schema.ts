@@ -7,13 +7,13 @@ import mongoose, { Schema, Document, ObjectId } from 'mongoose';
 
 export interface ClubData extends Document {
     name: string;
+    members: ObjectId[];
+    officers: ObjectId[];
     description: string;
     events: ObjectId[];
     announcements: ObjectId[];
     tags: string[]; // want to use to choose from a collection of tags rather than write their own tags
     social_links: string[];
-    members: ObjectId[];
-    officers: ObjectId[];
     club_pfp: ObjectId;
     gallery_pictures: ObjectId[];
 }
@@ -36,7 +36,6 @@ const ClubSchema: Schema<ClubData> = new Schema({
     },
     tags: {
         type: [String],
-        required: true,
     },
     social_links: {
         type: [String],

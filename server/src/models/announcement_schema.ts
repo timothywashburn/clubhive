@@ -24,7 +24,6 @@ const AnnouncementSchema: Schema<AnnouncementData> = new Schema({
     pictures: {
         type: [mongoose.Schema.Types.ObjectId],
         ref: 'files', // idk
-        required: true,
     },
 });
 
