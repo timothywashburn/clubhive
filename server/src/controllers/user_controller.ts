@@ -8,7 +8,11 @@ export const createUser = async (req: Request, res: Response) => {
     if (existing) {
         return res.status(400).json({ error: 'User already exists' });
     }
-    const newUser = new User({ email, password, school, major, year });
-    const result = await newUser.save();
-    res.status(201).json({ newUser: result });
+    try {
+        const newUser = new User({ email, password, school, major, year });
+        const result = await newUser.save();
+        res.status(201).json({ newUser: result });
+    } catch (error) {
+        res.status(500).json({ error: 'Error creating user' });
+    }
 };
