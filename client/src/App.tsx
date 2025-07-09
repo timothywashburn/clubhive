@@ -9,6 +9,7 @@ import { Profile } from './pages/Profile';
 import { Notifications } from './pages/Notifications';
 import { SignIn } from './pages/SignIn';
 import { SignUp } from './pages/SignUp';
+import { NotFound } from './pages/NotFound';
 
 export function App() {
     const { isAuthenticated, toggleAuth } = useAuth();
@@ -29,6 +30,7 @@ export function App() {
                     <Route path="/notifications" element={<Notifications />} />
                     <Route path="/signin" element={<SignIn />} />
                     <Route path="/signup" element={<SignUp />} />
+                    <Route path="*" element={<NotFound />} />
                 </Routes>
             </div>
         </BrowserRouter>
