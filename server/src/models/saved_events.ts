@@ -1,27 +1,28 @@
-// can delete this file if unnecessary
-
 import mongoose, { Schema, Document, ObjectId } from 'mongoose';
 
 export interface SavedEventsData extends Document {
-    user_id: ObjectId,
-    event_id: ObjectId,
-    saved_at: Date
+    user_id: ObjectId;
+    event_id: ObjectId;
+    saved_at: Date;
 }
 
 const SavedEventsSchema: Schema<SavedEventsData> = new Schema({
     user_id: {
         type: mongoose.Schema.Types.ObjectId,
-        required: true
+        required: true,
     },
     event_id: {
         type: mongoose.Schema.Types.ObjectId,
-        required: true
+        required: true,
     },
     saved_at: {
         type: Date,
-        required: true
-    }
+        required: true,
+    },
 });
 
-const SavedEvents = mongoose.model<SavedEventsData>('SavedEvents', SavedEventsSchema);
+const SavedEvents = mongoose.model<SavedEventsData>(
+    'SavedEvents',
+    SavedEventsSchema
+);
 export default SavedEvents;

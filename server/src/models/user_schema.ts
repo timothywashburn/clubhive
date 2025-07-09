@@ -9,7 +9,7 @@ export interface UserData extends Document {
     school: ObjectId; // use school_id
     major: string;
     year: number;
-    clubs: ObjectId[];
+    clubs: ObjectId[]; // use club_id
 }
 
 const UserSchema: Schema<UserData> = new Schema({
@@ -37,6 +37,7 @@ const UserSchema: Schema<UserData> = new Schema({
     clubs: {
         type: [mongoose.Schema.Types.ObjectId],
         ref: 'Club',
+        default: [], // empty array
     },
 });
 

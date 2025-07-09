@@ -9,36 +9,20 @@ export interface ClubData extends Document {
     name: string;
     members: ObjectId[];
     officers: ObjectId[];
+    motto: string;
     description: string;
+    tags: string[]; // want to use to choose from a collection of tags rather than write their own tags
+    club_logo: ObjectId;
+    social_links: string[];
+    gallery_pictures: ObjectId[];
     events: ObjectId[];
     announcements: ObjectId[];
-    tags: string[]; // want to use to choose from a collection of tags rather than write their own tags
-    social_links: string[];
-    club_pfp: ObjectId;
-    gallery_pictures: ObjectId[];
 }
 
 const ClubSchema: Schema<ClubData> = new Schema({
     name: {
         type: String,
         required: true,
-    },
-    description: {
-        type: String,
-    },
-    events: {
-        type: [mongoose.Schema.Types.ObjectId],
-        ref: 'Event',
-    },
-    announcements: {
-        type: [mongoose.Schema.Types.ObjectId],
-        ref: 'Announcement',
-    },
-    tags: {
-        type: [String],
-    },
-    social_links: {
-        type: [String],
     },
     members: {
         type: [mongoose.Schema.Types.ObjectId],
@@ -50,14 +34,35 @@ const ClubSchema: Schema<ClubData> = new Schema({
         ref: 'User',
         required: true,
     },
-    club_pfp: {
+    motto: {
+        type: String,
+        required: true,
+    },
+    description: {
+        type: String,
+    },
+    tags: {
+        type: [String],
+    },
+    club_logo: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'file',
         // maybe can have a default picture thats stored in the database
     },
+    social_links: {
+        type: [String],
+    },
     gallery_pictures: {
         type: [mongoose.Schema.Types.ObjectId],
         ref: 'file',
+    },
+    events: {
+        type: [mongoose.Schema.Types.ObjectId],
+        ref: 'Event',
+    },
+    announcements: {
+        type: [mongoose.Schema.Types.ObjectId],
+        ref: 'Announcement',
     },
 });
 
