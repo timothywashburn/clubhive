@@ -1,14 +1,17 @@
 import { useState } from 'react';
 import { Link } from 'react-router';
-import { Menu, X } from 'lucide-react';
+import { Menu, X, Moon, Sun, User, UserX } from 'lucide-react';
 import { NavLink } from './NavLink.tsx';
+import { useTheme } from '../../hooks/useTheme';
 
 interface NavbarProps {
     isAuthenticated: boolean;
+    toggleAuth: () => void;
 }
 
-export function Navbar({ isAuthenticated }: NavbarProps) {
+export function Navbar({ isAuthenticated, toggleAuth }: NavbarProps) {
     const [isMenuOpen, setIsMenuOpen] = useState(false);
+    const { theme, toggleTheme } = useTheme();
 
     const toggleMenu = () => {
         setIsMenuOpen(!isMenuOpen);
@@ -37,14 +40,14 @@ export function Navbar({ isAuthenticated }: NavbarProps) {
           ];
 
     return (
-        <nav className="bg-white shadow-md border-b border-gray-200">
+        <nav className="bg-surface shadow-md border-b border-outline-variant">
             <div className="max-w-7xl mx-auto px-6 lg:px-8">
                 <div className="flex justify-between items-center h-16">
                     {/* Left Aligned Content */}
                     <div className="flex items-center space-x-12">
                         <Link
                             to="/"
-                            className="text-xl font-bold text-orange-600 hover:text-orange-700"
+                            className="text-xl font-bold text-primary hover:text-primary/90"
                         >
                             clubhive
                         </Link>
@@ -60,6 +63,27 @@ export function Navbar({ isAuthenticated }: NavbarProps) {
 
                     {/* Right aligned content */}
                     <div className="hidden md:flex items-center space-x-4">
+                        <button
+                            onClick={toggleAuth}
+                            className="p-2 rounded-md bg-secondary-container hover:bg-primary-container transition-colors cursor-pointer"
+                            title={isAuthenticated ? 'Log out' : 'Log in'}
+                        >
+                            {isAuthenticated ? (
+                                <User size={20} className="text-primary" />
+                            ) : (
+                                <UserX size={20} className="text-primary" />
+                            )}
+                        </button>
+                        <button
+                            onClick={toggleTheme}
+                            className="p-2 rounded-md bg-primary-container hover:bg-secondary-container transition-colors cursor-pointer"
+                        >
+                            {theme === 'light' ? (
+                                <Moon size={20} className="text-primary" />
+                            ) : (
+                                <Sun size={20} className="text-primary" />
+                            )}
+                        </button>
                         {authNavItems.map(item => (
                             <NavLink
                                 key={item.to}
@@ -74,7 +98,7 @@ export function Navbar({ isAuthenticated }: NavbarProps) {
                     <div className="md:hidden">
                         <button
                             onClick={toggleMenu}
-                            className="text-gray-700 hover:text-orange-600 p-2 rounded-md focus:outline-none focus:ring-2 focus:ring-orange-500"
+                            className="text-on-surface hover:text-primary p-2 rounded-md focus:outline-none focus:ring-2 focus:ring-primary"
                             aria-label="Toggle menu"
                         >
                             {isMenuOpen ? (
@@ -87,20 +111,20 @@ export function Navbar({ isAuthenticated }: NavbarProps) {
                 </div>
 
                 {isMenuOpen && (
-                    <div className="md:hidden border-t border-gray-200">
+                    <div className="md:hidden border-t border-outline-variant">
                         <div className="px-2 pt-2 pb-3 space-y-1">
                             {mainNavItems.map(item => (
                                 <NavLink
                                     key={item.to}
                                     to={item.to}
                                     onClick={closeMenu}
-                                    className="hover:bg-gray-50 block text-base"
+                                    className="hover:bg-primary-container block text-base"
                                 >
                                     {item.label}
                                 </NavLink>
                             ))}
                         </div>
-                        <div className="pt-4 pb-3 border-t border-gray-200">
+                        <div className="pt-4 pb-3 border-t border-outline-variant">
                             <div className="px-2 space-y-1">
                                 {authNavItems.map(item => (
                                     <NavLink
@@ -108,7 +132,7 @@ export function Navbar({ isAuthenticated }: NavbarProps) {
                                         to={item.to}
                                         onClick={closeMenu}
                                         variant={item.variant || 'default'}
-                                        className="hover:bg-gray-50 block text-base"
+                                        className="hover:bg-primary-container block text-base"
                                     >
                                         {item.label}
                                     </NavLink>
