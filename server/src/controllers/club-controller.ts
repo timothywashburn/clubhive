@@ -3,7 +3,7 @@ import Club from '../models/club-schema';
 import User from '../models/user-schema';
 
 export const createClub = async (req: Request, res: Response) => {
-    const { name, members, motto, description, tags, club_logo } = req.body;
+    const { name, members, motto, description, tags, clubLogo } = req.body;
 
     try {
         // user can enter a logo when they create the club, but there should be a default
@@ -15,7 +15,7 @@ export const createClub = async (req: Request, res: Response) => {
             motto: motto,
             description: description,
             tags: tags,
-            club_logo: club_logo,
+            clubLogo: clubLogo,
         });
         const result = await newClub.save();
         return res.status(201).json({ newClub: result });
@@ -25,22 +25,22 @@ export const createClub = async (req: Request, res: Response) => {
 };
 
 export const joinClub = async (req: Request, res: Response) => {
-    const { user_id, club_id } = req.body;
+    const { userId, clubId } = req.body;
 
     // look thru user club[] to find club_id to see if user is already in the club
-    const user = await User.findById(user_id);
-    const club = await Club.findById(club_id);
+    const user = await User.findById(userId);
+    const club = await Club.findById(clubId);
     if (!user) {
         return res.status(200).json({ error: 'User not found' });
     } else if (!club) {
         return res.status(200).json({ error: 'Club not found' });
-    } else if (user.clubs.includes(club_id)) {
+    } else if (user.clubs.includes(clubId)) {
         return res.status(200).json({ error: 'User is already in club' });
     }
 
     try {
-        user.clubs.push(club_id);
-        club.members.push(user_id);
+        user.clubs.push(clubId);
+        club.members.push(userId);
         await user.save();
         await club.save();
     } catch (error) {
