@@ -2,7 +2,7 @@ import React from 'react';
 
 type ClubCardProps = {
     name: string;
-    description: string;
+    slogan: string;
     members: number;
     isSelected: boolean;
     onClick: () => void;
@@ -10,7 +10,7 @@ type ClubCardProps = {
 
 const ClubCardSmall: React.FC<ClubCardProps> = ({
     name,
-    description,
+    slogan,
     members,
     isSelected,
     onClick,
@@ -26,7 +26,7 @@ const ClubCardSmall: React.FC<ClubCardProps> = ({
         >
             <h3 className="text-lg text-on-surface font-medium">{name}</h3>
             <p className="text-sm text-on-surface-variant">{members} members</p>
-            <p className="text-on-surface-variant mt-2">{description}</p>
+            <p className="text-on-surface-variant mt-2">{slogan}</p>
         </div>
     );
 };

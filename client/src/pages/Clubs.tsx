@@ -11,61 +11,61 @@ export function Clubs() {
             id: 1,
             name: 'Photography Club',
             members: 50,
-            description: 'A club for photography enthusiasts.',
+            slogan: 'A club for photography enthusiasts.',
         },
         {
             id: 2,
             name: 'Book Club',
             members: 30,
-            description: 'A club for book lovers.',
+            slogan: 'A club for book lovers.',
         },
         {
             id: 3,
             name: 'Coding Club',
             members: 40,
-            description: 'A club for coding and tech enthusiasts.',
+            slogan: 'A club for coding and tech enthusiasts.',
         },
         {
             id: 4,
             name: 'Art Club',
             members: 20,
-            description: 'A club for artists and art lovers.',
+            slogan: 'A club for artists and art lovers.',
         },
         {
             id: 5,
             name: 'Music Club',
             members: 25,
-            description: 'A club for music enthusiasts.',
+            slogan: 'A club for music enthusiasts.',
         },
         {
             id: 6,
             name: 'Gaming Club',
             members: 60,
-            description: 'A club for gamers.',
+            slogan: 'A club for gamers.',
         },
         {
             id: 7,
             name: 'Cooking Club',
             members: 15,
-            description: 'A club for cooking enthusiasts.',
+            slogan: 'A club for cooking enthusiasts.',
         },
         {
             id: 8,
             name: 'Travel Club',
             members: 10,
-            description: 'A club for travel lovers.',
+            slogan: 'A club for travel lovers.',
         },
         {
             id: 9,
             name: 'Fitness Club',
             members: 35,
-            description: 'A club for fitness enthusiasts.',
+            slogan: 'A club for fitness enthusiasts.',
         },
         {
             id: 10,
             name: 'Language Exchange Club',
             members: 45,
-            description: 'A club for language learners.',
+            slogan: 'A club for language learners.',
         },
     ];
 
@@ -122,7 +122,7 @@ export function Clubs() {
                                     key={club.name}
                                     name={club.name}
                                     members={club.members}
-                                    description={club.description}
+                                    slogan={club.slogan}
                                     isSelected={selectedClub === club.name}
                                     onClick={() => setSelectedClub(club.name)}
                                 />
@@ -145,7 +145,7 @@ export function Clubs() {
                                 <p className="text-on-surface-variant">
                                     {clubs.find(
                                         club => club.name === selectedClub
-                                    )?.description || 'No description'}
+                                    )?.slogan || 'No slogan'}
                                 </p>
                                 <button className="mt-4 w-full bg-primary text-on-primary py-2 rounded-md hover:bg-primary/90 font-medium transition-colors">
                                     Join Club
