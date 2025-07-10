@@ -1,5 +1,5 @@
 import { Request, Response } from 'express';
-import User from '../models/user_schema';
+import User from '../models/user-schema';
 
 export const createUser = async (req: Request, res: Response) => {
     const { email, password, school, major, year } = req.body;

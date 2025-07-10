@@ -1,6 +1,6 @@
 import { Request, Response } from 'express';
-import Event from '../models/event_schema';
-import SavedEvents from '../models/saved_events';
+import Event from '../models/event-schema';
+import SavedEvents from '../models/saved-events';
 
 export const createEvent = async (req: Request, res: Response) => {
     const {

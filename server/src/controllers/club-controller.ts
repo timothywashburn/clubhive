@@ -1,6 +1,6 @@
 import { Request, Response } from 'express';
-import Club from '../models/club_schema';
-import User from '../models/user_schema';
+import Club from '../models/club-schema';
+import User from '../models/user-schema';
 
 export const createClub = async (req: Request, res: Response) => {
     const { name, members, motto, description, tags, club_logo } = req.body;
