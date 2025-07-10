@@ -5,21 +5,19 @@ import mongoose, { Schema, Document, ObjectId } from 'mongoose';
 
 // for pictures maybe using GridFS -- not sure but in the meantime we can probably hardcode pictures
 
-// not finished
-
 export interface EventData extends Document {
     name: string;
     tags: ObjectId[]; // want to use to choose from a collection of tags rather than write their own tags
     date: Date;
-    start_time: string;
-    end_time: string;
-    location_name: string;
-    location_address: string;
+    startTime: string;
+    endTime: string;
+    locationName: string;
+    locationAddress: string;
     club: ObjectId;
     picture: ObjectId;
     description: string;
-    event_type: string;
-    location_description: string;
+    eventType: string;
+    locationDescription: string;
     requirements: string;
 }
 
@@ -37,19 +35,19 @@ const EventSchema: Schema<EventData> = new Schema({
         type: Date,
         required: true,
     },
-    start_time: {
+    startTime: {
         type: String,
         required: true,
     },
-    end_time: {
+    endTime: {
         type: String,
         required: true,
     },
-    location_name: {
+    locationName: {
         type: String,
         required: true,
     },
-    location_address: {
+    locationAddress: {
         type: String,
         required: true,
     },
@@ -66,11 +64,11 @@ const EventSchema: Schema<EventData> = new Schema({
         type: String,
         default: '',
     },
-    event_type: {
+    eventType: {
         type: String,
         default: 'N/A',
     },
-    location_description: {
+    locationDescription: {
         type: String,
         default: 'N/A',
     },
