@@ -4,6 +4,7 @@ import { useAuth } from './hooks/useAuth';
 import { Home } from './pages/Home';
 import { MyClubs } from './pages/MyClubs';
 import { Clubs } from './pages/Clubs';
+import { ClubProfile } from './pages/ClubProfile';
 import { Events } from './pages/Events';
 import { Profile } from './pages/Profile';
 import { Notifications } from './pages/Notifications';
@@ -25,12 +26,15 @@ export function App() {
                     <Route path="/" element={<Home />} />
                     <Route path="/my-clubs" element={<MyClubs />} />
                     <Route path="/clubs" element={<Clubs />} />
+                    <Route path="/club-profile" element={<ClubProfile />} />
                     <Route path="/events" element={<Events />} />
                     <Route path="/profile" element={<Profile />} />
                     <Route path="/notifications" element={<Notifications />} />
                     <Route path="/signin" element={<SignIn />} />
                     <Route path="/signup" element={<SignUp />} />
                     <Route path="*" element={<NotFound />} />
+
+                    <Route path="/club-profile/:id" element={<ClubProfile />} />
                 </Routes>
             </div>
         </BrowserRouter>
