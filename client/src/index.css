@@ -49,7 +49,7 @@
     --color-on-warning: #ffffff;
     --color-error: #690005;
     --color-on-error: #ffb4ab;
-    --color-error-container: #93000a;
+    --color-error-container: #69000550; /* translucent */
     --color-on-error-container: #ffdad6;
     --color-background: #0f172a;
     --color-on-background: #f1f5f9;

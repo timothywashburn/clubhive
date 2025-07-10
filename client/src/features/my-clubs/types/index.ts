@@ -7,6 +7,8 @@ export interface Club {
     tagline: string;
     location: string;
     meetingTime: string;
+    logoImage: string;
+    brandColor: string;
 }
 
 export interface Event {

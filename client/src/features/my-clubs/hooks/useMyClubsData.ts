@@ -4,14 +4,16 @@ export const useMyClubsData = () => {
     const clubs: Club[] = [
         {
             id: '1',
-            name: 'Computer Science Club',
+            name: 'Video Game Development Club',
             description:
-                'A community for CS students to learn, network, and build projects together.',
+                'Build games, learn game design, and connect with fellow game developers.',
             memberCount: 85,
             role: 'owner',
-            tagline: 'Code. Create. Connect.',
+            tagline: 'Play. Create. Innovate.',
             location: 'Engineering Building',
             meetingTime: 'Fridays 3:00 PM',
+            logoImage: '/vgdc-square-logo.png',
+            brandColor: '#3b82f6',
         },
         {
             id: '2',
@@ -23,6 +25,8 @@ export const useMyClubsData = () => {
             tagline: 'Capturing life, one frame at a time',
             location: 'Student Center',
             meetingTime: 'Wednesdays 4:00 PM',
+            logoImage: '/vgdc-square-logo.png',
+            brandColor: '#10b981',
         },
         {
             id: '3',
@@ -34,6 +38,8 @@ export const useMyClubsData = () => {
             tagline: 'Where words become weapons',
             location: 'Liberal Arts Building',
             meetingTime: 'Tuesdays 6:00 PM',
+            logoImage: '/vgdc-square-logo.png',
+            brandColor: '#8b5cf6',
         },
         {
             id: '4',
@@ -45,6 +51,8 @@ export const useMyClubsData = () => {
             tagline: 'Level up your social game',
             location: 'Student Center',
             meetingTime: 'Thursdays 5:00 PM',
+            logoImage: '/vgdc-square-logo.png',
+            brandColor: '#ef4444',
         },
         {
             id: '5',
@@ -56,6 +64,8 @@ export const useMyClubsData = () => {
             tagline: 'Building the future, one bot at a time',
             location: 'Engineering Lab',
             meetingTime: 'Mondays 4:00 PM',
+            logoImage: '/vgdc-square-logo.png',
+            brandColor: '#eab308',
         },
         {
             id: '6',
@@ -67,6 +77,8 @@ export const useMyClubsData = () => {
             tagline: "All the world's a stage",
             location: 'Theater Building',
             meetingTime: 'Tuesdays 7:00 PM',
+            logoImage: '/vgdc-square-logo.png',
+            brandColor: '#ec4899',
         },
         {
             id: '7',
@@ -78,6 +90,8 @@ export const useMyClubsData = () => {
             tagline: 'Think green, act now',
             location: 'Science Building',
             meetingTime: 'Wednesdays 3:00 PM',
+            logoImage: '/vgdc-square-logo.png',
+            brandColor: '#6366f1',
         },
         {
             id: '8',
@@ -89,6 +103,8 @@ export const useMyClubsData = () => {
             tagline: 'Your network is your net worth',
             location: 'Business Building',
             meetingTime: 'Fridays 2:00 PM',
+            logoImage: '/vgdc-square-logo.png',
+            brandColor: '#14b8a6',
         },
     ];
 
