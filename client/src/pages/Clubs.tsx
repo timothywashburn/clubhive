@@ -1,73 +1,11 @@
-import { useState } from 'react';
+import { useClubState, useMyClubsData } from '../features/my-clubs/hooks';
 import ClubCardSmall from '../components/ClubCardSmall';
+import { useState } from 'react';
 
 export function Clubs() {
     const [searchTerm, setSearchTerm] = useState('');
-    const [selectedClub, setSelectedClub] = useState<string | null>(null);
-
-    // Placeholder for clubs data
-    const clubs = [
-        {
-            id: 1,
-            name: 'Photography Club',
-            members: 50,
-            slogan: 'A club for photography enthusiasts.',
-        },
-        {
-            id: 2,
-            name: 'Book Club',
-            members: 30,
-            slogan: 'A club for book lovers.',
-        },
-        {
-            id: 3,
-            name: 'Coding Club',
-            members: 40,
-            slogan: 'A club for coding and tech enthusiasts.',
-        },
-        {
-            id: 4,
-            name: 'Art Club',
-            members: 20,
-            slogan: 'A club for artists and art lovers.',
-        },
-        {
-            id: 5,
-            name: 'Music Club',
-            members: 25,
-            slogan: 'A club for music enthusiasts.',
-        },
-        {
-            id: 6,
-            name: 'Gaming Club',
-            members: 60,
-            slogan: 'A club for gamers.',
-        },
-        {
-            id: 7,
-            name: 'Cooking Club',
-            members: 15,
-            slogan: 'A club for cooking enthusiasts.',
-        },
-        {
-            id: 8,
-            name: 'Travel Club',
-            members: 10,
-            slogan: 'A club for travel lovers.',
-        },
-        {
-            id: 9,
-            name: 'Fitness Club',
-            members: 35,
-            slogan: 'A club for fitness enthusiasts.',
-        },
-        {
-            id: 10,
-            name: 'Language Exchange Club',
-            members: 45,
-            slogan: 'A club for language learners.',
-        },
-    ];
+    const { selectedClub, setSelectedClub } = useClubState();
+    const { clubs, getClubColors } = useMyClubsData();
 
     return (
         <div className="bg-background">
@@ -111,7 +49,7 @@ export function Clubs() {
                 <div className="flex flex-row gap-6">
                     {/* Left: club list */}
                     <div className="w-full lg:w-1/3 bg-surface rounded-lg shadow p-6 h-[calc(100vh-10rem)] scrollbar-hide overflow-y-auto space-y-4">
-                        {clubs
+                        {(clubs || [])
                             .filter(club =>
                                 club.name
                                     .toLowerCase()
@@ -121,35 +59,59 @@ export function Clubs() {
                                 <ClubCardSmall
                                     key={club.name}
                                     name={club.name}
-                                    members={club.members}
-                                    slogan={club.slogan}
-                                    isSelected={selectedClub === club.name}
-                                    onClick={() => setSelectedClub(club.name)}
+                                    members={club.memberCount || 0}
+                                    tagline={club.tagline}
+                                    id={club.id}
+                                    isSelected={
+                                        selectedClub?.name === club.name
+                                    }
+                                    onClick={() => setSelectedClub(club)}
                                 />
                             ))}
                     </div>
 
                     {/* Right: selected club detail */}
-                    <div className="w-full lg:w-2/3 bg-surface rounded-lg shadow p-6 max-h-96">
+                    <div className="w-full lg:w-2/3 bg-surface rounded-lg shadow p-6 ">
                         {selectedClub ? (
                             <>
-                                <h2 className="text-2xl text-on-surface font-bold mb-2">
-                                    {selectedClub}
-                                </h2>
+                                <div className="flex items-center gap-10 mb-5">
+                                    <div
+                                        className={`w-30 h-30 rounded-full flex items-center justify-center text-sm font-semibold ${getClubColors(selectedClub.id)}`}
+                                    >
+                                        picture
+                                    </div>
+                                    <div className="flex-1 overflow-hidden">
+                                        <h2 className="text-4xl text-on-surface font-bold mb-2">
+                                            {selectedClub.name}
+                                        </h2>
+                                        <p className="text-on-surface-variant italic">
+                                            {clubs.find(
+                                                club =>
+                                                    club.name ===
+                                                    selectedClub.name
+                                            )?.tagline || 'No tagline'}
+                                        </p>
+                                    </div>
+                                </div>
+                                <hr className="my-4 border-t border-outline-variant" />
                                 <p className="text-sm text-on-surface-variant mb-4">
                                     {clubs.find(
-                                        club => club.name === selectedClub
-                                    )?.members || 0}{' '}
+                                        club => club.name === selectedClub.name
+                                    )?.memberCount || 0}{' '}
                                     members
                                 </p>
-                                <p className="text-on-surface-variant">
-                                    {clubs.find(
-                                        club => club.name === selectedClub
-                                    )?.slogan || 'No slogan'}
-                                </p>
-                                <button className="mt-4 w-full bg-primary text-on-primary py-2 rounded-md hover:bg-primary/90 font-medium transition-colors">
-                                    Join Club
-                                </button>
+
+                                <div className="mt-6 flex flex-col items-center space-y-4">
+                                    <p className="text-on-surface-variant">
+                                        {clubs.find(
+                                            club =>
+                                                club.name === selectedClub.name
+                                        )?.description || 'No description'}
+                                    </p>
+                                    <button className="mt-4 w-sm bg-primary text-on-primary py-2 rounded-md hover:bg-primary/90 font-medium transition-colors">
+                                        View Club Profile
+                                    </button>
+                                </div>
                             </>
                         ) : (
                             <p className="text-on-surface-variant">

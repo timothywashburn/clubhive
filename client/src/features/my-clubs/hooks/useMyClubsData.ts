@@ -6,7 +6,7 @@ export const useMyClubsData = () => {
             id: '1',
             name: 'Computer Science Club',
             description:
-                'A community for CS students to learn, network, and build projects together.',
+                "The Computer Science Club is a student-led organization dedicated to fostering curiosity, innovation, and collaboration in the field of computing. Whether you're passionate about software development, cybersecurity, artificial intelligence, or just starting your coding journey, our club provides a supportive environment to learn, build, and grow. We host hands-on workshops, guest speaker events, coding challenges, and collaborative projects that empower members to sharpen their technical skills and make real-world impact. Join us to connect with like-minded peers, explore new technologies, and become part of a vibrant tech-driven community!",
             memberCount: 85,
             role: 'owner',
             tagline: 'Code. Create. Connect.',
