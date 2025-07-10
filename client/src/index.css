@@ -87,3 +87,21 @@
 *::-webkit-scrollbar-thumb:hover {
     background-color: var(--color-outline-variant);
 }
+
+/* Custom scrollbar for surface containers */
+.scrollbar-surface {
+    scrollbar-color: var(--color-outline) var(--color-surface);
+}
+
+.scrollbar-surface::-webkit-scrollbar-track {
+    background: var(--color-surface);
+}
+
+.scrollbar-surface::-webkit-scrollbar-thumb {
+    background-color: var(--color-surface-variant);
+    border: 2px solid var(--color-surface);
+}
+
+.scrollbar-surface::-webkit-scrollbar-thumb:hover {
+    background-color: var(--color-outline);
+}
