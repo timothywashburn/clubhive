@@ -9,7 +9,7 @@ import mongoose, { Schema, Document, ObjectId } from 'mongoose';
 
 export interface EventData extends Document {
     name: string;
-    tags: string[]; // want to use to choose from a collection of tags rather than write their own tags
+    tags: ObjectId[]; // want to use to choose from a collection of tags rather than write their own tags
     date: Date;
     start_time: string;
     end_time: string;
@@ -29,7 +29,8 @@ const EventSchema: Schema<EventData> = new Schema({
         required: true,
     },
     tags: {
-        type: [String],
+        type: [mongoose.Schema.Types.ObjectId],
+        ref: 'Tag',
         required: true,
     },
     date: {
@@ -59,7 +60,7 @@ const EventSchema: Schema<EventData> = new Schema({
     },
     picture: {
         type: mongoose.Schema.Types.ObjectId,
-        ref: 'file',
+        ref: 'Image',
     },
     description: {
         type: String,

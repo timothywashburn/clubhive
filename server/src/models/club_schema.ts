@@ -11,7 +11,7 @@ export interface ClubData extends Document {
     officers: ObjectId[];
     motto: string;
     description: string;
-    tags: string[]; // want to use to choose from a collection of tags rather than write their own tags
+    tags: ObjectId[]; // want to use to choose from a collection of tags rather than write their own tags
     club_logo: ObjectId;
     social_links: string[];
     gallery_pictures: ObjectId[];
@@ -42,11 +42,12 @@ const ClubSchema: Schema<ClubData> = new Schema({
         type: String,
     },
     tags: {
-        type: [String],
+        type: [mongoose.Schema.Types.ObjectId],
+        ref: 'Tag',
     },
     club_logo: {
         type: mongoose.Schema.Types.ObjectId,
-        ref: 'file',
+        ref: 'Image',
         // maybe can have a default picture thats stored in the database
     },
     social_links: {
@@ -54,7 +55,7 @@ const ClubSchema: Schema<ClubData> = new Schema({
     },
     gallery_pictures: {
         type: [mongoose.Schema.Types.ObjectId],
-        ref: 'file',
+        ref: 'Image',
     },
     events: {
         type: [mongoose.Schema.Types.ObjectId],

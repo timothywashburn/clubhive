@@ -8,8 +8,7 @@ export const createClub = async (req: Request, res: Response) => {
     try {
         // user can enter a logo when they create the club, but there should be a default
         // maybe will have default autofilled values in the club creation page bc idk how to do that here
-        // idk how default values will be handled but that's not an urgent issue rn
-        // can tags be empty?
+        // idk how default values will be handled
         const newClub = new Club({
             name: name,
             members: members,
