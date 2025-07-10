@@ -2,7 +2,7 @@ import mongoose, { Document, Schema } from 'mongoose';
 
 export interface TagData extends Document {
     type: string; // either club or event
-    tag_name: string;
+    tagName: string;
 }
 
 const TagSchema: Schema<TagData> = new Schema({
@@ -10,7 +10,7 @@ const TagSchema: Schema<TagData> = new Schema({
         type: String,
         required: true,
     },
-    tag_name: {
+    tagName: {
         type: String,
         required: true,
     },

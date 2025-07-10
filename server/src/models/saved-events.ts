@@ -1,21 +1,21 @@
 import mongoose, { Schema, Document, ObjectId } from 'mongoose';
 
 export interface SavedEventsData extends Document {
-    user_id: ObjectId;
-    event_id: ObjectId;
-    saved_at: Date;
+    userId: ObjectId;
+    eventId: ObjectId;
+    savedAt: Date;
 }
 
 const SavedEventsSchema: Schema<SavedEventsData> = new Schema({
-    user_id: {
+    userId: {
         type: mongoose.Schema.Types.ObjectId,
         required: true,
     },
-    event_id: {
+    eventId: {
         type: mongoose.Schema.Types.ObjectId,
         required: true,
     },
-    saved_at: {
+    savedAt: {
         type: Date,
         required: true,
     },
