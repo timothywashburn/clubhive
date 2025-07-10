@@ -40,7 +40,7 @@ export function Navbar({ isAuthenticated, toggleAuth }: NavbarProps) {
           ];
 
     return (
-        <nav className="bg-surface shadow-md border-b border-outline-variant">
+        <nav className="bg-surface shadow-md border-b border-outline-variant flex-shrink-0">
             <div className="max-w-7xl mx-auto px-6 lg:px-8">
                 <div className="flex justify-between items-center h-16">
                     {/* Left Aligned Content */}

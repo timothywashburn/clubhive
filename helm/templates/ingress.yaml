@@ -3,8 +3,7 @@ kind: Ingress
 metadata:
   name: clubhive-ingress
   namespace: {{ .Values.namespace }}
-  annotations:
-    nginx.ingress.kubernetes.io/rewrite-target: /
+  annotations: {}
 spec:
   ingressClassName: {{ .Values.ingress.ingressClassName }}
   rules:
