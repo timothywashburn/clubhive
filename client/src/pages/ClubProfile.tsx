@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { useParams } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 
 /**
  * This class is a static view of what the Club Profile page
@@ -34,9 +34,20 @@ export function ClubProfile() {
         },
     ];
 
+    const navigate = useNavigate();
+
     return (
         <div className="bg-background">
             <div className="max-w-5xl mx-auto p-6">
+                <div className="flex justify-start mb-4">
+                    <button
+                        onClick={() => navigate(-1)}
+                        className="bg-surface text-on-surface border border-outline px-4 py-2 rounded-full hover:bg-outline-variant/30 font-medium transition-colors"
+                    >
+                        ← Find Clubs
+                    </button>
+                </div>
+
                 {/* Join Club button*/}
                 <div className="flex justify-end mb-5">
                     <button className="bg-primary text-on-primary px-4 py-2 rounded-full hover:bg-primary/90 font-medium">
@@ -80,7 +91,7 @@ export function ClubProfile() {
                         <button className="px-4 py-2 rounded-full font-medium border bg-surface text-on-surface border-outline hover:bg-outline-variant/30 transition-colors">
                             Socials
                         </button>
-                        {/* save button */}
+                        {/* save button, remove from this page and use for events page */}
                         <button
                             onClick={() => setSaved(prev => !prev)}
                             className={`px-4 py-2 rounded-full font-medium border transition-colors min-w-[80px] text-center ${
@@ -151,26 +162,23 @@ export function ClubProfile() {
                 </div>
 
                 {/* gallery */}
-                <div className="mt-10">
-                    <h2 className="text-2xl font-semibold text-on-surface mb-4">
-                        Gallery
-                    </h2>
-                    <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
-                        <img
-                            src="https://via.placeholder.com/300"
-                            alt="Club photo 1"
-                            className="w-full h-48 object-cover rounded-lg"
-                        />
-                        <img
-                            src="https://via.placeholder.com/300"
-                            alt="Club photo 2"
-                            className="w-full h-48 object-cover rounded-lg"
-                        />
-                        <img
-                            src="https://via.placeholder.com/300"
-                            alt="Club photo 3"
-                            className="w-full h-48 object-cover rounded-lg"
-                        />
+                <h2 className="text-2xl font-semibold text-on-surface mb-4 mt-10">
+                    Gallery
+                </h2>
+                <div className="overflow-x-auto">
+                    <div className="flex space-x-4">
+                        {[1, 2, 3, 4, 5, 6].map(i => (
+                            <div
+                                key={i}
+                                className="min-w-[200px] h-40 bg-surface border border-outline-variant rounded-md flex-shrink-0 overflow-hidden"
+                            >
+                                <img
+                                    src={`https://via.placeholder.com/200x160?text=Image+${i}`}
+                                    alt={`Club image ${i}`}
+                                    className="w-full h-full object-cover"
+                                />
+                            </div>
+                        ))}
                     </div>
                 </div>
             </div>
