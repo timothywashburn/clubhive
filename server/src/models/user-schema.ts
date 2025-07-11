@@ -4,20 +4,15 @@ import mongoose, { Schema, Document, ObjectId } from 'mongoose';
 // it is of type ObjectId
 
 export interface UserData extends Document {
-    email: string;
-    password: string;
+    name: string;
     school: ObjectId; // use school_id
     major: string;
-    year: number;
-    clubs: ObjectId[]; // use club_id
+    educationType: Enumerator;
+    year: Enumerator;
 }
 
 const UserSchema: Schema<UserData> = new Schema({
-    email: {
-        type: String,
-        required: true,
-    },
-    password: {
+    name: {
         type: String,
         required: true,
     },
@@ -30,14 +25,15 @@ const UserSchema: Schema<UserData> = new Schema({
         type: String,
         required: true,
     },
-    year: {
-        type: Number,
+    educationType: {
+        type: String,
+        enum: ['Undergraduate', 'Postgraduate'],
         required: true,
     },
-    clubs: {
-        type: [mongoose.Schema.Types.ObjectId],
-        ref: 'Club',
-        default: [], // empty array
+    year: {
+        type: String,
+        enum: ['1st year', '2nd year', '3rd year', '4th year', '>4th year'],
+        required: true,
     },
 });
 

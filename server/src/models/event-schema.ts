@@ -3,36 +3,43 @@ import mongoose, { Schema, Document, ObjectId } from 'mongoose';
 // mongoose adds an _id property by default for each document
 // it is of type ObjectId
 
-// for pictures maybe using GridFS -- not sure but in the meantime we can probably hardcode pictures
-
 export interface EventData extends Document {
+    club: ObjectId;
     name: string;
-    tags: ObjectId[]; // want to use to choose from a collection of tags rather than write their own tags
-    date: Date;
+    description: string;
+    type: Enumerator;
+    location: string;
+    date: string;
     startTime: string;
     endTime: string;
-    locationName: string;
-    locationAddress: string;
-    club: ObjectId;
     picture: ObjectId;
-    description: string;
-    eventType: string;
-    locationDescription: string;
-    requirements: string;
+    tags: ObjectId[]; // want to use to choose from a collection of tags rather than write their own tags
 }
 
 const EventSchema: Schema<EventData> = new Schema({
+    club: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Club',
+        required: true,
+    },
     name: {
         type: String,
         required: true,
     },
-    tags: {
-        type: [mongoose.Schema.Types.ObjectId],
-        ref: 'Tag',
+    description: {
+        type: String,
+        default: '',
+    },
+    type: {
+        type: String,
+        enum: ['Club Officers', 'Club Members', 'UCSD Students', 'Anyone'],
+    },
+    location: {
+        type: String,
         required: true,
     },
     date: {
-        type: Date,
+        type: String,
         required: true,
     },
     startTime: {
@@ -43,38 +50,14 @@ const EventSchema: Schema<EventData> = new Schema({
         type: String,
         required: true,
     },
-    locationName: {
-        type: String,
-        required: true,
-    },
-    locationAddress: {
-        type: String,
-        required: true,
-    },
-    club: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'Club',
-        required: true,
-    },
     picture: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Image',
     },
-    description: {
-        type: String,
-        default: '',
-    },
-    eventType: {
-        type: String,
-        default: 'N/A',
-    },
-    locationDescription: {
-        type: String,
-        default: 'N/A',
-    },
-    requirements: {
-        type: String,
-        default: 'none',
+    tags: {
+        type: [mongoose.Schema.Types.ObjectId],
+        ref: 'Tag',
+        required: true,
     },
 });
 

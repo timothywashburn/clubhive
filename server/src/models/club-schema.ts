@@ -6,64 +6,51 @@ import mongoose, { Schema, Document, ObjectId } from 'mongoose';
 // for pictures maybe using GridFS -- not sure but in the meantime we can probably hardcode pictures
 
 export interface ClubData extends Document {
+    school: ObjectId;
     name: string;
-    members: ObjectId[];
-    officers: ObjectId[];
-    motto: string;
+    tagline: string;
     description: string;
-    tags: ObjectId[]; // want to use to choose from a collection of tags rather than write their own tags
+    url: string;
+    socials: ObjectId;
     clubLogo: ObjectId;
-    socialLinks: string[];
-    galleryPictures: ObjectId[];
-    events: ObjectId[];
-    announcements: ObjectId[];
+    pictures: ObjectId[];
+    tags: ObjectId[]; // want to use to choose from a collection of tags rather than write their own tags
 }
 
 const ClubSchema: Schema<ClubData> = new Schema({
+    school: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'School',
+    },
     name: {
         type: String,
         required: true,
     },
-    members: {
-        type: [mongoose.Schema.Types.ObjectId],
-        ref: 'User',
-        required: true,
-    },
-    officers: {
-        type: [mongoose.Schema.Types.ObjectId],
-        ref: 'User',
-        required: true,
-    },
-    motto: {
+    tagline: {
         type: String,
         required: true,
     },
     description: {
         type: String,
     },
-    tags: {
-        type: [mongoose.Schema.Types.ObjectId],
-        ref: 'Tag',
+    url: {
+        type: String,
+    },
+    socials: {
+        type: [String],
     },
     clubLogo: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Image',
         // maybe can have a default picture thats stored in the database
     },
-    socialLinks: {
-        type: [String],
-    },
-    galleryPictures: {
+    pictures: {
         type: [mongoose.Schema.Types.ObjectId],
         ref: 'Image',
     },
-    events: {
+    tags: {
         type: [mongoose.Schema.Types.ObjectId],
-        ref: 'Event',
-    },
-    announcements: {
-        type: [mongoose.Schema.Types.ObjectId],
-        ref: 'Announcement',
+        ref: 'Tag',
     },
 });
 
