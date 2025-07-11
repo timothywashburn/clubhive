@@ -5,6 +5,7 @@ import { Home } from './pages/Home';
 import { MyClubs } from './features/my-clubs';
 import { Clubs } from './pages/Clubs';
 import { Events } from './pages/Events';
+import { EventsPage } from './pages/EventsPage';
 import { Profile } from './pages/Profile';
 import { Notifications } from './pages/Notifications';
 import { SignIn } from './pages/SignIn';
@@ -27,6 +28,7 @@ export function App() {
                         <Route path="/my-clubs" element={<MyClubs />} />
                         <Route path="/clubs" element={<Clubs />} />
                         <Route path="/events" element={<Events />} />
+                        <Route path="/events/:id" element={<EventsPage />} />
                         <Route path="/profile" element={<Profile />} />
                         <Route
                             path="/notifications"

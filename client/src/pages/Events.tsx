@@ -1,3 +1,4 @@
+import { Link } from 'react-router-dom';
 /**
  * THIS CLASS IS AI GENERATED AND TEMPORARY
  *
@@ -34,9 +35,17 @@ export function Events() {
                                             </span>
                                         </div>
                                         <div>
-                                            <h3 className="text-lg font-medium text-on-surface">
+                                            <Link
+                                                to={`/events/${i}`}
+                                                className="text-lg font-medium text-primary hover:underline"
+                                            >
                                                 Event {i}
-                                            </h3>
+                                            </Link>
+
+                                            {/*<h3 className="text-lg font-medium text-on-surface">
+                                                Event {i}
+                                            </h3>*/}
+
                                             <p className="text-sm text-on-surface-variant">
                                                 Club {i}
                                             </p>
