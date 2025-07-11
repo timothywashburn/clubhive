@@ -84,7 +84,7 @@ export const Footer: React.FC = () => {
                             className="flex items-center gap-1 text-on-surface-variant hover:text-primary transition-colors"
                         >
                             <GitBranch size={14} />
-                            <span>v1.0.0</span>
+                            <span>v0.0.0</span>
                         </a>
                     </div>
                 </div>
