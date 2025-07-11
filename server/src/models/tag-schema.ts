@@ -1,6 +1,7 @@
-import mongoose, { Document, Schema } from 'mongoose';
+import mongoose, { Document, Schema, ObjectId } from 'mongoose';
 
 export interface TagData extends Document {
+    _id: ObjectId;
     type: Enumerator; // either club or event
     text: string;
 }

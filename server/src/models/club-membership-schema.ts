@@ -1,0 +1,47 @@
+import mongoose, { Schema, Document, ObjectId } from 'mongoose';
+
+// mongoose adds an _id property by default for each document
+// it is of type ObjectId
+
+export interface ClubMembershipData extends Document {
+    _id: ObjectId;
+    userId: ObjectId;
+    clubId: ObjectId;
+    role: Enumerator;
+    createdAt: Date;
+    updatedAt: Date;
+}
+
+export enum ClubRole {
+    OWNER = 'owner',
+    MEMBER = 'member',
+    OFFICER = 'officer',
+    PM = 'principle member',
+}
+
+const ClubMembershipSchema: Schema<ClubMembershipData> = new Schema(
+    {
+        userId: {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: 'User',
+            required: true,
+        },
+        clubId: {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: 'Club',
+            required: true,
+        },
+        role: {
+            type: String,
+            enum: Object.values(ClubRole), // can be edited as needed
+            required: true,
+        },
+    },
+    { timestamps: true }
+);
+
+const ClubMembership = mongoose.model<ClubMembershipData>(
+    'ClubMembership',
+    ClubMembershipSchema
+);
+export default ClubMembership;

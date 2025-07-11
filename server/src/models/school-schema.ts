@@ -1,6 +1,7 @@
-import mongoose, { Document, Schema } from 'mongoose';
+import mongoose, { Document, Schema, ObjectId } from 'mongoose';
 
 export interface SchoolData extends Document {
+    _id: ObjectId;
     name: string;
     location: string;
 }

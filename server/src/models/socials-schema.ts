@@ -1,6 +1,7 @@
-import mongoose, { Document, Schema } from 'mongoose';
+import mongoose, { Document, Schema, ObjectId } from 'mongoose';
 
 export interface SocialsData extends Document {
+    _id: ObjectId;
     website: string;
     discord: string;
     instagram: string;

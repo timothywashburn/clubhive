@@ -4,6 +4,7 @@ import mongoose, { Schema, Document, ObjectId } from 'mongoose';
 // it is of type ObjectId
 
 export interface EventData extends Document {
+    _id: ObjectId;
     club: ObjectId;
     name: string;
     description: string;
