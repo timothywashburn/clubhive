@@ -1,0 +1,32 @@
+import { useEffect, useState } from 'react';
+
+export type Club = {
+    _id: string;
+    name: string;
+    tagline: string;
+    description: string;
+    members: string[];
+    tags: { _id: string; tagName: string; type: string }[];
+};
+
+export const useClubData = () => {
+    const [clubs, setClubs] = useState<Club[]>([]);
+    const [isLoading, setIsLoading] = useState(true);
+    const [error, setError] = useState<string | null>(null);
+
+    useEffect(() => {
+        fetch('/api/clubs')
+            .then(res => res.json())
+            .then(data => {
+                if (data.success) {
+                    setClubs(data.data.clubs);
+                } else {
+                    setError(data.error?.message || 'Unknown error');
+                }
+            })
+            .catch(err => setError(err.message))
+            .finally(() => setIsLoading(false));
+    }, []);
+
+    return { clubs, isLoading, error };
+};

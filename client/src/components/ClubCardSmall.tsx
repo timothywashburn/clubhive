@@ -5,8 +5,8 @@ const { getClubColors } = useMyClubsData();
 type ClubCardProps = {
     name: string;
     tagline: string;
-    members: number;
     id: string;
+    tags?: { _id: string; tagName: string; type: string }[];
     isSelected: boolean;
     onClick: () => void;
 };
@@ -14,9 +14,9 @@ type ClubCardProps = {
 const ClubCardSmall: React.FC<ClubCardProps> = ({
     name,
     tagline,
-    members,
     id,
     isSelected,
+    tags = [],
     onClick,
 }) => {
     const clubInitials = name
@@ -29,7 +29,7 @@ const ClubCardSmall: React.FC<ClubCardProps> = ({
         <div
             className={`p-4 border rounded-md cursor-pointer transition-transform transition-shadow duration-200 hover:shadow-lg hover:-translate-y-1 ${
                 isSelected
-                    ? ' border-primary bg-primary-container'
+                    ? ' border-primary'
                     : 'bg-surface border-outline-variant'
             }`}
             onClick={onClick}
@@ -44,10 +44,17 @@ const ClubCardSmall: React.FC<ClubCardProps> = ({
                     <h3 className="text-lg text-on-surface font-medium truncate">
                         {name}
                     </h3>
-
-                    <p className="text-sm text-on-surface-variant">
-                        {members} members
-                    </p>
+                    {/* Display tags */}
+                    <div className="mt-2 flex flex-wrap gap-2">
+                        {tags.map(tag => (
+                            <span
+                                key={tag._id}
+                                className="bg-primary-container text-primary rounded-full px-3 py-1 text-xs font-semibold"
+                            >
+                                {tag.tagName}
+                            </span>
+                        ))}
+                    </div>
                     <p className="text-sm text-on-surface-variant mt-2 truncate italic">
                         {tagline}
                     </p>
