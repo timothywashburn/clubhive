@@ -17,6 +17,13 @@ export interface EventData extends Document {
     tags: ObjectId[]; // want to use to choose from a collection of tags rather than write their own tags
 }
 
+export enum EventType {
+    CLUB_OFFICERS = 'Club Officers',
+    CLUB_MEMBERS = 'Club Members',
+    UCSD_STUDENTS = 'UCSD Students',
+    ANYONE = 'Anyone',
+}
+
 const EventSchema: Schema<EventData> = new Schema({
     club: {
         type: mongoose.Schema.Types.ObjectId,
@@ -33,7 +40,7 @@ const EventSchema: Schema<EventData> = new Schema({
     },
     type: {
         type: String,
-        enum: ['Club Officers', 'Club Members', 'UCSD Students', 'Anyone'],
+        enum: Object.values(EventType),
     },
     location: {
         type: String,

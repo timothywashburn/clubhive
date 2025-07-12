@@ -6,10 +6,15 @@ export interface TagData extends Document {
     text: string;
 }
 
+export enum TagType {
+    CLUB = 'club',
+    EVENT = 'event',
+}
+
 const TagSchema: Schema<TagData> = new Schema({
     type: {
         type: String,
-        enum: ['club', 'event'],
+        enum: Object.values(TagType),
         required: true,
     },
     text: {

@@ -14,6 +14,19 @@ export interface UserData extends Document {
     updatedAt: Date;
 }
 
+export enum EducationType {
+    UNDERGRADUATE = 'Undergraduate',
+    POSTGRADUATE = 'Postgraduate',
+}
+
+export enum Year {
+    FIRST = '1',
+    SECOND = '2',
+    THIRD = '3',
+    FOURTH = '4',
+    OTHER = '>4',
+}
+
 const UserSchema: Schema<UserData> = new Schema(
     {
         name: {
@@ -31,12 +44,12 @@ const UserSchema: Schema<UserData> = new Schema(
         },
         educationType: {
             type: String,
-            enum: ['Undergraduate', 'Postgraduate'],
+            enum: Object.values(EducationType),
             required: true,
         },
         year: {
             type: String,
-            enum: ['1', '2', '3', '4', '>4'],
+            enum: Object.values(Year),
             required: true,
         },
     },

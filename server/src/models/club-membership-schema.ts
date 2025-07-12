@@ -16,7 +16,7 @@ export enum ClubRole {
     OWNER = 'owner',
     MEMBER = 'member',
     OFFICER = 'officer',
-    PM = 'principle member',
+    PRINCIPAL_MEMBER = 'principal_member',
 }
 
 const ClubMembershipSchema: Schema<ClubMembershipData> = new Schema(
