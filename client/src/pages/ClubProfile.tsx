@@ -25,16 +25,18 @@ export function ClubProfile() {
             details: 'Every Thursday at 6PM, Red Shoe Room',
         },
         {
-            title: 'Hackathon Kickoff!',
-            details: 'Friday at 5PM, Innovation Lab',
+            title: 'Event',
+            details: 'Friday at 5PM, Student Center',
         },
         {
-            title: 'Social Mixer',
-            details: 'Next Tuesday, 7PM, Community Lounge',
+            title: 'Event',
+            details: 'Next Tuesday, 7PM, TEC Cafe',
         },
     ];
 
     const navigate = useNavigate();
+
+    const [isOpen, setIsOpen] = useState(false);
 
     return (
         <div className="bg-background">
@@ -69,12 +71,12 @@ export function ClubProfile() {
                     {/* club name and description */}
                     <div className="w-2/3 flex items-center">
                         <h1 className="text-6xl font-semibold text-on-surface text-center">
-                            Clerb Name
+                            Club Name
                         </h1>
                     </div>
                 </div>
 
-                <div className="my-4 relative">
+                <div className="my-6 relative">
                     {/* club tags */}
                     <div className="flex flex-wrap gap-2 mt-2">
                         {['Tech', 'Social', 'Food'].map((tag, index) => (
@@ -87,10 +89,34 @@ export function ClubProfile() {
                         ))}
                     </div>
 
-                    <div className="absolute top-0 right-0 flex space-x-2">
-                        <button className="px-4 py-2 rounded-full font-medium border bg-surface text-on-surface border-outline hover:bg-outline-variant/30 transition-colors">
+                    <div className="absolute top-0 right-0 flex space-x-4">
+                        <button
+                            onClick={() => setIsOpen(true)}
+                            className="px-4 py-2 rounded-full font-medium border bg-surface text-on-surface border-outline hover:bg-outline-variant/30 transition-colors"
+                        >
                             Socials
                         </button>
+
+                        {isOpen && (
+                            <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
+                                <div className="bg-surface rounded-xl p-6 w-[90%] max-w-md shadow-lg relative">
+                                    <p className="text-on-surface-variant">
+                                        Instagram:...
+                                    </p>
+                                    <p className="text-on-surface-variant">
+                                        Website:... include links
+                                    </p>
+
+                                    <button
+                                        onClick={() => setIsOpen(false)}
+                                        className="absolute top-3 right-4 text-on-surface-variant hover:text-on-surface"
+                                    >
+                                        ✕
+                                    </button>
+                                </div>
+                            </div>
+                        )}
+
                         {/* save button, remove from this page and use for events page */}
                         <button
                             onClick={() => setSaved(prev => !prev)}
@@ -108,7 +134,7 @@ export function ClubProfile() {
 
                 {/* club description */}
 
-                <div className="mt-6">
+                <div className="mt-8">
                     <textarea
                         value={description}
                         onChange={handleDescriptionChange}
@@ -162,10 +188,12 @@ export function ClubProfile() {
                 </div>
 
                 {/* gallery */}
-                <h2 className="text-2xl font-semibold text-on-surface mb-4 mt-10">
+                <h2 className="text-2xl font-semibold text-on-surface mb-4 mt-8">
                     Gallery
                 </h2>
                 <div className="overflow-x-auto">
+                    {' '}
+                    {/* scroll bar for images */}
                     <div className="flex space-x-4">
                         {[1, 2, 3, 4, 5, 6].map(i => (
                             <div
@@ -180,6 +208,59 @@ export function ClubProfile() {
                             </div>
                         ))}
                     </div>
+                </div>
+
+                {/* club officers */}
+                <h2 className="text-2xl font-semibold text-on-surface mb-4 mt-8">
+                    Our Officers
+                </h2>
+
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+                    {[1, 2, 3, 4, 5, 6].map((officer, i) => (
+                        <div
+                            key={i}
+                            className="w-full bg-white border border-gray-200 rounded-lg shadow-sm dark:bg-gray-800 dark:border-gray-700"
+                        >
+                            <div className="flex justify-end px-4 pt-4">
+                                <button
+                                    className="inline-block text-gray-500 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700 focus:ring-4 focus:outline-none focus:ring-gray-200 dark:focus:ring-gray-700 rounded-lg text-sm p-1.5"
+                                    type="button"
+                                >
+                                    <span className="sr-only">
+                                        Open dropdown
+                                    </span>
+                                    <svg
+                                        className="w-5 h-5"
+                                        fill="currentColor"
+                                        viewBox="0 0 16 3"
+                                    >
+                                        <path d="M2 0a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3Zm6.041 0a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3ZM14 0a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3Z" />
+                                    </svg>
+                                </button>
+                            </div>
+                            <div className="flex flex-col items-center pb-10">
+                                <img
+                                    className="w-24 h-24 mb-3 rounded-full shadow-lg"
+                                    src="/docs/images/people/profile-picture-3.jpg"
+                                    alt="Profile"
+                                />
+                                <h5 className="mb-1 text-xl font-medium text-gray-900 dark:text-white">
+                                    Bob Ross
+                                </h5>
+                                <span className="text-sm text-gray-500 dark:text-gray-400">
+                                    President
+                                </span>
+                                <div className="flex mt-4 md:mt-6">
+                                    <a className="inline-flex items-center px-4 py-2 text-sm font-medium text-white bg-blue-700 rounded-lg hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">
+                                        Contact
+                                    </a>
+                                    <a className="py-2 px-4 ms-2 text-sm font-medium text-gray-900 focus:outline-none bg-white rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-blue-700 dark:focus:ring-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700">
+                                        Year
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    ))}
                 </div>
             </div>
         </div>
