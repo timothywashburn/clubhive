@@ -6,11 +6,11 @@ import { Home } from './pages/Home';
 import { MyClubs } from './features/my-clubs';
 import { Clubs } from './pages/Clubs';
 import { Events } from './pages/Events';
-import { Profile } from './pages/Profile';
 import { Notifications } from './pages/Notifications';
 import { SignIn } from './pages/SignIn';
 import { SignUp } from './pages/SignUp';
 import { NotFound } from './pages/NotFound';
+import { Account } from './pages/Account.tsx';
 
 export function App() {
     const { isAuthenticated, toggleAuth } = useAuth();
@@ -28,7 +28,7 @@ export function App() {
                         <Route path="/my-clubs" element={<MyClubs />} />
                         <Route path="/clubs" element={<Clubs />} />
                         <Route path="/events" element={<Events />} />
-                        <Route path="/profile" element={<Profile />} />
+                        <Route path="/account" element={<Account />} />
                         <Route
                             path="/notifications"
                             element={<Notifications />}
