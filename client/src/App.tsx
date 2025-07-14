@@ -1,5 +1,6 @@
 import { BrowserRouter, Routes, Route } from 'react-router';
 import { Navbar } from './components/navbar/Navbar.tsx';
+import { Footer } from './components/footer/Footer.tsx';
 import { useAuth } from './hooks/useAuth';
 import { Home } from './pages/Home';
 import { MyClubs } from './features/my-clubs';
@@ -16,12 +17,12 @@ export function App() {
 
     return (
         <BrowserRouter>
-            <div className="h-screen bg-background flex flex-col">
+            <div className="min-h-screen bg-background flex flex-col">
                 <Navbar
                     isAuthenticated={isAuthenticated}
                     toggleAuth={toggleAuth}
                 />
-                <main className="flex-1 overflow-auto">
+                <main className="flex-grow">
                     <Routes>
                         <Route path="/" element={<Home />} />
                         <Route path="/my-clubs" element={<MyClubs />} />
@@ -37,6 +38,7 @@ export function App() {
                         <Route path="*" element={<NotFound />} />
                     </Routes>
                 </main>
+                <Footer />
             </div>
         </BrowserRouter>
     );
