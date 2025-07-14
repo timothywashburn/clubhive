@@ -125,137 +125,132 @@ const ChangelogModal: React.FC<ChangelogModalProps> = ({ isOpen, onClose }) => {
         });
     };
 
+    if (!isOpen) return null;
+
     return (
         <AnimatePresence>
-            {isOpen && (
+            <motion.div
+                className="fixed inset-0 z-50 flex items-center justify-center"
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+                transition={{ duration: 0.2 }}
+            >
+                {/* Backdrop */}
                 <motion.div
-                    className="fixed inset-0 z-50 flex items-center justify-center"
+                    className="absolute inset-0 bg-black"
                     initial={{ opacity: 0 }}
-                    animate={{ opacity: 1 }}
+                    animate={{ opacity: 0.4 }}
                     exit={{ opacity: 0 }}
-                    transition={{ duration: 0.2 }}
+                    onClick={handleBackdropClick}
+                />
+
+                <motion.div
+                    className="relative bg-surface border border-outline rounded-lg shadow-lg max-w-2xl w-full mx-4 max-h-[80vh] overflow-hidden"
+                    initial={{ scale: 0.95, opacity: 0 }}
+                    animate={{ scale: 1, opacity: 1 }}
+                    exit={{ scale: 0.95, opacity: 0 }}
+                    transition={{ duration: 0.2, ease: 'easeOut' }}
                 >
-                    {/* Backdrop */}
-                    <motion.div
-                        className="absolute inset-0 bg-black"
-                        initial={{ opacity: 0 }}
-                        animate={{ opacity: 0.4 }}
-                        exit={{ opacity: 0 }}
-                        onClick={handleBackdropClick}
-                    />
-
-                    <motion.div
-                        className="relative bg-surface border border-outline rounded-lg shadow-lg max-w-2xl w-full mx-4 max-h-[80vh] overflow-hidden"
-                        initial={{ scale: 0.95, opacity: 0 }}
-                        animate={{ scale: 1, opacity: 1 }}
-                        exit={{ scale: 0.95, opacity: 0 }}
-                        transition={{ duration: 0.2, ease: 'easeOut' }}
-                    >
-                        {/* Header */}
-                        <div className="flex items-center justify-between p-5 border-b border-divider">
-                            <div className="flex items-center flex-wrap">
-                                <div className="flex items-center gap-2">
-                                    <FileText
-                                        size={20}
-                                        className="text-primary"
-                                    />
-                                    <h2 className="text-xl font-semibold text-on-surface">
-                                        Recent Changes
-                                    </h2>
-                                </div>
-                                <span className="text-sm text-on-surface-variant ml-4">
-                                    Last 6 months •{' '}
-                                    <a
-                                        href="https://gitlab.com/sdsc-rds/summer-internships/rds-interns-su25/team-hexagon/centralized-club-system"
-                                        target="_blank"
-                                        rel="noopener noreferrer"
-                                        className="text-primary hover:underline"
-                                    >
-                                        View full changelog
-                                    </a>
-                                </span>
+                    {/* Header */}
+                    <div className="flex items-center justify-between p-5 border-b border-divider">
+                        <div className="flex items-center flex-wrap">
+                            <div className="flex items-center gap-2">
+                                <FileText size={20} className="text-primary" />
+                                <h2 className="text-xl font-semibold text-on-surface">
+                                    Recent Changes
+                                </h2>
                             </div>
-                            <button
-                                onClick={onClose}
-                                className="text-on-surface-variant hover:text-on-surface transition-colors"
-                                aria-label="Close modal"
-                            >
-                                <X size={20} />
-                            </button>
-                        </div>
-
-                        {/* Content */}
-                        <div className="p-5 overflow-y-auto max-h-[60vh]">
-                            {isLoading ? (
-                                <div className="flex items-center justify-center py-8">
-                                    <div className="text-on-surface-variant">
-                                        Loading changelog...
-                                    </div>
-                                </div>
-                            ) : error ? (
-                                <div className="flex items-center justify-center py-8">
-                                    <div className="text-error text-center">
-                                        <p>Failed to load changelog</p>
-                                        <p className="text-sm text-on-surface-variant mt-2">
-                                            {error}
-                                        </p>
-                                    </div>
-                                </div>
-                            ) : changelogVersions.length === 0 ? (
-                                <div className="flex items-center justify-center py-8">
-                                    <div className="text-on-surface-variant">
-                                        No recent changes found
-                                    </div>
-                                </div>
-                            ) : (
-                                <motion.div
-                                    initial="hidden"
-                                    animate="visible"
-                                    variants={{
-                                        hidden: {},
-                                        visible: {
-                                            transition: {
-                                                delayChildren: stagger(0.1),
-                                            },
-                                        },
-                                    }}
+                            <span className="text-sm text-on-surface-variant ml-4">
+                                Last 6 months •{' '}
+                                <a
+                                    href="https://gitlab.com/sdsc-rds/summer-internships/rds-interns-su25/team-hexagon/centralized-club-system"
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    className="text-primary hover:underline"
                                 >
-                                    {changelogVersions.map((version, index) => (
-                                        <motion.div
-                                            key={index}
-                                            className="mb-6 last:mb-0"
-                                            variants={{
-                                                hidden: { opacity: 0, y: 20 },
-                                                visible: { opacity: 1, y: 0 },
-                                            }}
-                                            transition={{ duration: 0.3 }}
-                                        >
-                                            {/* Version Header */}
-                                            <div className="flex items-center gap-3 mb-2">
-                                                <div className="flex items-center gap-2">
-                                                    <GitBranch
-                                                        size={16}
-                                                        className="text-primary"
-                                                    />
-                                                    <span className="font-semibold text-on-surface">
-                                                        {version.version}
-                                                    </span>
-                                                </div>
-                                                <div className="flex items-center gap-2 text-on-surface-variant text-sm">
-                                                    <Calendar size={14} />
-                                                    <span>
-                                                        {formatDate(
-                                                            version.date
-                                                        )}
-                                                    </span>
-                                                </div>
-                                            </div>
+                                    View full changelog
+                                </a>
+                            </span>
+                        </div>
+                        <button
+                            onClick={onClose}
+                            className="text-on-surface-variant hover:text-on-surface transition-colors"
+                            aria-label="Close modal"
+                        >
+                            <X size={20} />
+                        </button>
+                    </div>
 
-                                            {/* Changes */}
-                                            <div className="space-y-2">
-                                                {sortChanges(
-                                                    version.changes
-                                                ).map((change, changeIndex) => (
+                    {/* Content */}
+                    <div className="p-5 overflow-y-auto max-h-[60vh]">
+                        {isLoading ? (
+                            <div className="flex items-center justify-center py-8">
+                                <div className="text-on-surface-variant">
+                                    Loading changelog...
+                                </div>
+                            </div>
+                        ) : error ? (
+                            <div className="flex items-center justify-center py-8">
+                                <div className="text-error text-center">
+                                    <p>Failed to load changelog</p>
+                                    <p className="text-sm text-on-surface-variant mt-2">
+                                        {error}
+                                    </p>
+                                </div>
+                            </div>
+                        ) : changelogVersions.length === 0 ? (
+                            <div className="flex items-center justify-center py-8">
+                                <div className="text-on-surface-variant">
+                                    No recent changes found
+                                </div>
+                            </div>
+                        ) : (
+                            <motion.div
+                                initial="hidden"
+                                animate="visible"
+                                variants={{
+                                    hidden: {},
+                                    visible: {
+                                        transition: {
+                                            delayChildren: stagger(0.1),
+                                        },
+                                    },
+                                }}
+                            >
+                                {changelogVersions.map((version, index) => (
+                                    <motion.div
+                                        key={index}
+                                        className="mb-6 last:mb-0"
+                                        variants={{
+                                            hidden: { opacity: 0, y: 20 },
+                                            visible: { opacity: 1, y: 0 },
+                                        }}
+                                        transition={{ duration: 0.3 }}
+                                    >
+                                        {/* Version Header */}
+                                        <div className="flex items-center gap-3 mb-2">
+                                            <div className="flex items-center gap-2">
+                                                <GitBranch
+                                                    size={16}
+                                                    className="text-primary"
+                                                />
+                                                <span className="font-semibold text-on-surface">
+                                                    {version.version}
+                                                </span>
+                                            </div>
+                                            <div className="flex items-center gap-2 text-on-surface-variant text-sm">
+                                                <Calendar size={14} />
+                                                <span>
+                                                    {formatDate(version.date)}
+                                                </span>
+                                            </div>
+                                        </div>
+
+                                        {/* Changes */}
+                                        <div className="space-y-2">
+                                            {sortChanges(version.changes).map(
+                                                (change, changeIndex) => (
                                                     <div
                                                         key={changeIndex}
                                                         className="flex items-center gap-3"
@@ -267,16 +262,16 @@ const ChangelogModal: React.FC<ChangelogModalProps> = ({ isOpen, onClose }) => {
                                                             {change.text}
                                                         </span>
                                                     </div>
-                                                ))}
-                                            </div>
-                                        </motion.div>
-                                    ))}
-                                </motion.div>
-                            )}
-                        </div>
-                    </motion.div>
+                                                )
+                                            )}
+                                        </div>
+                                    </motion.div>
+                                ))}
+                            </motion.div>
+                        )}
+                    </div>
                 </motion.div>
-            )}
+            </motion.div>
         </AnimatePresence>
     );
 };
