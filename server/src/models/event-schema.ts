@@ -8,7 +8,7 @@ export interface EventData extends Document {
     club: ObjectId;
     name: string;
     description: string;
-    type: Enumerator;
+    type: EventType;
     location: string;
     date: string;
     startTime: string;

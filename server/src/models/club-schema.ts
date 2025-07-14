@@ -12,7 +12,7 @@ export interface ClubData extends Document {
     tagline: string;
     description: string;
     url: string;
-    socials: ObjectId;
+    socials: object; // not sure what type to put here for the nested properties?
     clubLogo: ObjectId;
     pictures: ObjectId[];
     tags: ObjectId[]; // want to use to choose from a collection of tags rather than write their own tags
@@ -41,7 +41,15 @@ const ClubSchema: Schema<ClubData> = new Schema(
             type: String,
         },
         socials: {
-            type: [String],
+            website: {
+                type: String,
+            },
+            discord: {
+                type: String,
+            },
+            instagram: {
+                type: String,
+            },
         },
         clubLogo: {
             type: mongoose.Schema.Types.ObjectId,

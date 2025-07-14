@@ -3,7 +3,7 @@ import mongoose, { Schema, Document, ObjectId } from 'mongoose';
 export interface ClubSnapshotData extends Document {
     _id: ObjectId;
     date: Date;
-    clubs: ObjectId[];
+    clubs: object[];
     createdAt: Date;
     updatedAt: Date;
 }
@@ -14,11 +14,15 @@ const ClubSnapshotSchema: Schema<ClubSnapshotData> = new Schema(
             type: Date,
             required: true,
         },
-        clubs: {
-            type: [mongoose.Schema.Types.ObjectId],
-            ref: 'Club',
-            required: true,
-        },
+        clubs: [
+            {
+                clubId: {
+                    type: mongoose.Schema.Types.ObjectId,
+                    ref: 'Club',
+                },
+                memberCount: { type: Number },
+            },
+        ],
     },
     { timestamps: true }
 );

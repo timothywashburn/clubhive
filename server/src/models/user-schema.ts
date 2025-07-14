@@ -8,8 +8,8 @@ export interface UserData extends Document {
     name: string;
     school: ObjectId; // use school_id
     major: string;
-    educationType: Enumerator;
-    year: Enumerator;
+    educationType: EducationType;
+    year: Year;
     createdAt: Date;
     updatedAt: Date;
 }
