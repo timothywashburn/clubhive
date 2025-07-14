@@ -1,8 +1,7 @@
 import { useState } from 'react';
 import { Link } from 'react-router';
-import { Menu, X, Moon, Sun, User, UserX } from 'lucide-react';
+import { Menu, X, User, UserX } from 'lucide-react';
 import { NavLink } from './NavLink.tsx';
-import { useTheme } from '../../hooks/useTheme';
 
 interface NavbarProps {
     isAuthenticated: boolean;
@@ -11,7 +10,6 @@ interface NavbarProps {
 
 export function Navbar({ isAuthenticated, toggleAuth }: NavbarProps) {
     const [isMenuOpen, setIsMenuOpen] = useState(false);
-    const { theme, toggleTheme } = useTheme();
 
     const toggleMenu = () => {
         setIsMenuOpen(!isMenuOpen);
@@ -28,7 +26,7 @@ export function Navbar({ isAuthenticated, toggleAuth }: NavbarProps) {
     const authNavItems = isAuthenticated
         ? [
               { to: '/notifications', label: 'Notifications' },
-              { to: '/profile', label: 'Profile' },
+              { to: '/account', label: 'Account' },
           ]
         : [
               { to: '/signin', label: 'Sign In' },
@@ -72,16 +70,6 @@ export function Navbar({ isAuthenticated, toggleAuth }: NavbarProps) {
                                 <User size={20} className="text-primary" />
                             ) : (
                                 <UserX size={20} className="text-primary" />
-                            )}
-                        </button>
-                        <button
-                            onClick={toggleTheme}
-                            className="p-2 rounded-md bg-primary-container hover:bg-secondary-container transition-colors cursor-pointer"
-                        >
-                            {theme === 'light' ? (
-                                <Moon size={20} className="text-primary" />
-                            ) : (
-                                <Sun size={20} className="text-primary" />
                             )}
                         </button>
                         {authNavItems.map(item => (
