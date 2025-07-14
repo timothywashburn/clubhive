@@ -101,7 +101,7 @@ export const Footer: React.FC = () => {
                             </a>
                             <button
                                 onClick={() => setIsChangelogOpen(true)}
-                                className="flex items-center gap-1 text-on-surface-variant hover:text-primary transition-colors"
+                                className="flex items-center gap-1 text-on-surface-variant hover:text-primary transition-colors cursor-pointer"
                             >
                                 <GitBranch size={14} />
                                 <span>{currentVersion}</span>
