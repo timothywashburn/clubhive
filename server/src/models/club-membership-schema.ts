@@ -7,7 +7,7 @@ export interface ClubMembershipData extends Document {
     _id: ObjectId;
     userId: ObjectId;
     clubId: ObjectId;
-    role: Enumerator;
+    role: ClubRole;
     createdAt: Date;
     updatedAt: Date;
 }

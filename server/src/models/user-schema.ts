@@ -16,7 +16,7 @@ export interface UserData extends Document {
 
 export enum EducationType {
     UNDERGRADUATE = 'Undergraduate',
-    POSTGRADUATE = 'Postgraduate',
+    GRADUATE = 'Graduate',
 }
 
 export enum Year {
@@ -24,7 +24,7 @@ export enum Year {
     SECOND = '2',
     THIRD = '3',
     FOURTH = '4',
-    OTHER = '>4',
+    OVER_FOUR = '>4',
 }
 
 const UserSchema: Schema<UserData> = new Schema(
