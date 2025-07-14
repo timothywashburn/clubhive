@@ -1,12 +1,15 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 
 /**
  * This class is a static view of what the Club Profile page
  * might look like, may be temporary and changed.
  */
 export function ClubProfile() {
-    //const { id } = useParams();
+    // Inside ClubProfile component
+    const { id } = useParams();
+
     const [saved, setSaved] = useState(false);
     const [description, setDescription] = useState('');
     const maxWords = 200;

@@ -1,4 +1,4 @@
-import { BrowserRouter, Routes, Route } from 'react-router';
+import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import { Navbar } from './components/navbar/Navbar.tsx';
 import { Footer } from './components/footer/Footer.tsx';
 import { useAuth } from './hooks/useAuth';
@@ -28,6 +28,10 @@ export function App() {
                         <Route path="/" element={<Home />} />
                         <Route path="/my-clubs" element={<MyClubs />} />
                         <Route path="/clubs" element={<Clubs />} />
+                        <Route
+                            path="/club-profile/:id"
+                            element={<ClubProfile />}
+                        />
                         <Route path="/events" element={<Events />} />
                         <Route path="/profile" element={<Profile />} />
                         <Route
