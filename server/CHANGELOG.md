@@ -45,3 +45,129 @@
 ### Fixed
 
 - Example of a fixed bug
+
+## [v0.0.0-alpha] - 2025-07-01
+
+### Added
+
+- Example of a new feature
+
+### Changed
+
+- Example of a changed feature
+
+### Fixed
+
+- Example of a fixed bug
+
+## [v0.0.0-alpha] - 2025-07-01
+
+### Added
+
+- Example of a new feature
+
+### Changed
+
+- Example of a changed feature
+
+### Fixed
+
+- Example of a fixed bug
+
+## [v0.0.0-alpha] - 2025-07-01
+
+### Added
+
+- Example of a new feature
+
+### Changed
+
+- Example of a changed feature
+
+### Fixed
+
+- Example of a fixed bug
+
+## [v0.0.0-alpha] - 2025-07-01
+
+### Added
+
+- Example of a new feature
+
+### Changed
+
+- Example of a changed feature
+
+### Fixed
+
+- Example of a fixed bug
+
+## [v0.0.0-alpha] - 2025-07-01
+
+### Added
+
+- Example of a new feature
+
+### Changed
+
+- Example of a changed feature
+
+### Fixed
+
+- Example of a fixed bug
+
+## [v0.0.0-alpha] - 2025-07-01
+
+### Added
+
+- Example of a new feature
+
+### Changed
+
+- Example of a changed feature
+
+### Fixed
+
+- Example of a fixed bug
+
+## [v0.0.0-alpha] - 2025-07-01
+
+### Added
+
+- Example of a new feature
+
+### Changed
+
+- Example of a changed feature
+
+### Fixed
+
+- Example of a fixed bug
+
+## [v0.0.0-alpha] - 2025-07-01
+
+### Added
+
+- Example of a new feature
+
+### Changed
+
+- Example of a changed feature
+
+### Fixed
+
+- Example of a fixed bug
+
+## [v0.0.0-alpha] - 2025-07-01
+
+### Added
+
+- Example of a new feature
+
+### Changed
+
+- Example of a changed feature
+
+### Fixed
+
+- Example of a fixed bug
