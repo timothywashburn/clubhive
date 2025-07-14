@@ -3,7 +3,12 @@ import mongoose, { Schema, Document, ObjectId } from 'mongoose';
 export interface ClubSnapshotData extends Document {
     _id: ObjectId;
     date: Date;
-    clubs: object[];
+    clubs: [
+        {
+            clubId: ObjectId;
+            memberCount: number;
+        },
+    ];
     createdAt: Date;
     updatedAt: Date;
 }

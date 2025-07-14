@@ -12,7 +12,11 @@ export interface ClubData extends Document {
     tagline: string;
     description: string;
     url: string;
-    socials: object; // not sure what type to put here for the nested properties?
+    socials: {
+        website: string;
+        discord: string;
+        instagram: string;
+    };
     clubLogo: ObjectId;
     pictures: ObjectId[];
     tags: ObjectId[]; // want to use to choose from a collection of tags rather than write their own tags
