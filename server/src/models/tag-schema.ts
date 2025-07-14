@@ -1,16 +1,23 @@
-import mongoose, { Document, Schema } from 'mongoose';
+import mongoose, { Document, Schema, ObjectId } from 'mongoose';
 
 export interface TagData extends Document {
-    type: string; // either club or event
-    tagName: string;
+    _id: ObjectId;
+    type: TagType; // either club or event
+    text: string;
+}
+
+export enum TagType {
+    CLUB = 'club',
+    EVENT = 'event',
 }
 
 const TagSchema: Schema<TagData> = new Schema({
     type: {
         type: String,
+        enum: Object.values(TagType),
         required: true,
     },
-    tagName: {
+    text: {
         type: String,
         required: true,
     },
