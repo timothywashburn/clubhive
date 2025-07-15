@@ -4,42 +4,57 @@ import mongoose, { Schema, Document, ObjectId } from 'mongoose';
 // it is of type ObjectId
 
 export interface UserData extends Document {
-    email: string;
-    password: string;
+    _id: ObjectId;
+    name: string;
     school: ObjectId; // use school_id
     major: string;
-    year: number;
-    clubs: ObjectId[]; // use club_id
+    educationType: EducationType;
+    year: Year;
+    createdAt: Date;
+    updatedAt: Date;
 }
 
-const UserSchema: Schema<UserData> = new Schema({
-    email: {
-        type: String,
-        required: true,
+export enum EducationType {
+    UNDERGRADUATE = 'Undergraduate',
+    GRADUATE = 'Graduate',
+}
+
+export enum Year {
+    FIRST = '1',
+    SECOND = '2',
+    THIRD = '3',
+    FOURTH = '4',
+    OVER_FOUR = '>4',
+}
+
+const UserSchema: Schema<UserData> = new Schema(
+    {
+        name: {
+            type: String,
+            required: true,
+        },
+        school: {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: 'School',
+            required: true,
+        },
+        major: {
+            type: String,
+            required: true,
+        },
+        educationType: {
+            type: String,
+            enum: Object.values(EducationType),
+            required: true,
+        },
+        year: {
+            type: String,
+            enum: Object.values(Year),
+            required: true,
+        },
     },
-    password: {
-        type: String,
-        required: true,
-    },
-    school: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'School',
-        required: true,
-    },
-    major: {
-        type: String,
-        required: true,
-    },
-    year: {
-        type: Number,
-        required: true,
-    },
-    clubs: {
-        type: [mongoose.Schema.Types.ObjectId],
-        ref: 'Club',
-        default: [], // empty array
-    },
-});
+    { timestamps: true }
+);
 
 const User = mongoose.model<UserData>('User', UserSchema);
 export default User;
