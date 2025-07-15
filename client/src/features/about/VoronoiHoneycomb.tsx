@@ -128,79 +128,14 @@ export function VoronoiHoneycomb({
         };
     }, []);
 
-    const generateAndDrawHoneycomb = (
+    const createAnimationLoop = (
         ctx: CanvasRenderingContext2D,
         width: number,
-        height: number
+        height: number,
+        extendedBounds: [number, number, number, number],
+        staticColorData: any[],
+        velocities: { vx: number; vy: number }[]
     ) => {
-        // Clean up previous animation
-        if (animationRef.current) {
-            cancelAnimationFrame(animationRef.current);
-        }
-        // Extend the generation area beyond screen boundaries to ensure proper edge cells
-        const margin = Math.max(width, height) * 0.2; // 20% margin on all sides
-        const extendedWidth = width + 2 * margin;
-        const extendedHeight = height + 2 * margin;
-
-        // Generate points in a hexagonal grid pattern with noise
-        const points: [number, number][] = [];
-
-        // Calculate spacing based on desired number of points
-        const targetDensity = numPoints / (extendedWidth * extendedHeight);
-        const hexSpacing = Math.sqrt(2 / (Math.sqrt(3) * targetDensity));
-        const rowHeight = (hexSpacing * Math.sqrt(3)) / 2;
-
-        // Generate hexagonal grid with noise
-        const actualNoiseAmount = hexSpacing * noiseAmount;
-
-        for (let row = 0; row * rowHeight < extendedHeight + margin; row++) {
-            const y = row * rowHeight - margin;
-            const isOddRow = row % 2 === 1;
-            const xOffset = isOddRow ? hexSpacing / 2 : 0;
-
-            for (
-                let col = 0;
-                col * hexSpacing < extendedWidth + margin;
-                col++
-            ) {
-                const x = col * hexSpacing + xOffset - margin;
-
-                // Add random noise to break perfect grid
-                const noisyX = x + (Math.random() - 0.5) * actualNoiseAmount;
-                const noisyY = y + (Math.random() - 0.5) * actualNoiseAmount;
-
-                points.push([noisyX, noisyY]);
-            }
-        }
-
-        const noise2D = createNoise2D();
-
-        // Use points as-is without relaxation
-        const extendedBounds: [number, number, number, number] = [
-            -margin,
-            -margin,
-            width + margin,
-            height + margin,
-        ];
-        const currentPoints = points;
-
-        // Store base points for spring physics and pre-calculate random offsets
-        basePointsRef.current = currentPoints.map(
-            p => [...p] as [number, number]
-        );
-        currentPointsRef.current = currentPoints.map(
-            p => [...p] as [number, number]
-        );
-
-        // Pre-calculate random lightness offsets
-        const randomOffsets = currentPoints.map(
-            () => (Math.random() - 0.5) * COLORS.honeycomb.randomLightnessRange
-        );
-
-        // Manual physics system for continuous spring forces
-        const velocities = currentPoints.map(() => ({ vx: 0, vy: 0 }));
-
-        // Animation loop for manual jelly physics
         const animate = () => {
             const mouse = mouseRef.current;
             const mouseForce = 0.2;
@@ -274,103 +209,12 @@ export function VoronoiHoneycomb({
                     }
                     ctx.closePath();
 
-                    // Use the base position for consistent colors
-                    const baseCentroid = basePointsRef.current[i];
-                    const colorNoise = noise2D(
-                        baseCentroid[0] / 800,
-                        baseCentroid[1] / 800
-                    );
-
-                    const randomLightnessOffset = randomOffsets[i];
-
-                    const baseHue =
-                        COLORS.honeycomb.baseHue +
-                        colorNoise * COLORS.honeycomb.hueVariation;
-                    const baseSaturation =
-                        COLORS.honeycomb.baseSaturation +
-                        colorNoise * COLORS.honeycomb.saturationVariation;
-                    const baseLightness = Math.max(
-                        COLORS.honeycomb.minLightness,
-                        Math.min(
-                            COLORS.honeycomb.maxLightness,
-                            COLORS.honeycomb.baseLightness +
-                                colorNoise *
-                                    COLORS.honeycomb.lightnessVariation +
-                                randomLightnessOffset
-                        )
-                    );
-
-                    // Calculate distance from edges for darkened ring effect
-                    const distanceFromEdge = Math.min(
-                        baseCentroid[0],
-                        baseCentroid[1],
-                        width - baseCentroid[0],
-                        height - baseCentroid[1]
-                    );
-                    const edgeThreshold = Math.min(width, height) * 0.1;
-                    const edgeFactor = Math.min(
-                        1,
-                        distanceFromEdge / edgeThreshold
-                    );
-
-                    // Extract color blending functions
-                    const calculateBlendFactor = (
-                        baseLightness: number,
-                        edgeFactor: number
-                    ) => {
-                        const darknessFactor = 1 - baseLightness / 80;
-                        const edgeDarknessFactor = 1 - (0.5 + 0.5 * edgeFactor);
-                        return Math.min(1, darknessFactor + edgeDarknessFactor);
-                    };
-
-                    const blendTowardsEdgeColor = (
-                        baseHue: number,
-                        baseSaturation: number,
-                        baseLightness: number,
-                        blendFactor: number
-                    ) => {
-                        const {
-                            hue: edgeHue,
-                            saturation: edgeSaturation,
-                            lightness: edgeLightness,
-                        } = COLORS.edge.targetHsl;
-
-                        return {
-                            hue: baseHue + (edgeHue - baseHue) * blendFactor,
-                            saturation:
-                                baseSaturation +
-                                (edgeSaturation - baseSaturation) * blendFactor,
-                            lightness:
-                                baseLightness +
-                                (edgeLightness - baseLightness) * blendFactor,
-                        };
-                    };
-
-                    // Calculate blend factors and colors
-                    const totalDarknessFactor = calculateBlendFactor(
-                        baseLightness,
-                        edgeFactor
-                    );
-                    const innerColor = blendTowardsEdgeColor(
-                        baseHue,
-                        baseSaturation,
-                        baseLightness,
-                        totalDarknessFactor
-                    );
-
-                    const outerBlendFactor = Math.min(
-                        1,
-                        totalDarknessFactor + COLORS.animation.outerBlendOffset
-                    ); // More edge blending for outer ring
-                    const outerColor = blendTowardsEdgeColor(
-                        baseHue,
-                        baseSaturation,
-                        baseLightness,
-                        outerBlendFactor
-                    );
+                    // Use pre-calculated static color data
+                    const { innerColorString, outerColorString } =
+                        staticColorData[i];
 
                     // Draw outer hexagon with edge-blended color
-                    ctx.fillStyle = `hsl(${outerColor.hue}, ${outerColor.saturation}%, ${outerColor.lightness}%)`;
+                    ctx.fillStyle = outerColorString;
                     ctx.fill();
 
                     // Calculate the centroid of the cell for the inner hexagon
@@ -392,7 +236,7 @@ export function VoronoiHoneycomb({
                     ctx.closePath();
 
                     // Fill inner hexagon with blended color
-                    ctx.fillStyle = `hsl(${innerColor.hue}, ${innerColor.saturation}%, ${innerColor.lightness}%)`;
+                    ctx.fillStyle = innerColorString;
                     ctx.fill();
 
                     // Draw outer edge
@@ -467,7 +311,199 @@ export function VoronoiHoneycomb({
             animationRef.current = requestAnimationFrame(animate);
         };
 
-        // Start animation
+        return animate;
+    };
+
+    const generateAndDrawHoneycomb = (
+        ctx: CanvasRenderingContext2D,
+        width: number,
+        height: number
+    ) => {
+        // Clean up previous animation
+        if (animationRef.current) {
+            cancelAnimationFrame(animationRef.current);
+        }
+        // Extend the generation area beyond screen boundaries to ensure proper edge cells
+        const margin = Math.max(width, height) * 0.2; // 20% margin on all sides
+        const extendedWidth = width + 2 * margin;
+        const extendedHeight = height + 2 * margin;
+
+        // Generate points in a hexagonal grid pattern with noise
+        const points: [number, number][] = [];
+
+        // Calculate spacing based on desired number of points
+        const targetDensity = numPoints / (extendedWidth * extendedHeight);
+        const hexSpacing = Math.sqrt(2 / (Math.sqrt(3) * targetDensity));
+        const rowHeight = (hexSpacing * Math.sqrt(3)) / 2;
+
+        // Generate hexagonal grid with noise
+        const actualNoiseAmount = hexSpacing * noiseAmount;
+
+        for (let row = 0; row * rowHeight < extendedHeight + margin; row++) {
+            const y = row * rowHeight - margin;
+            const isOddRow = row % 2 === 1;
+            const xOffset = isOddRow ? hexSpacing / 2 : 0;
+
+            for (
+                let col = 0;
+                col * hexSpacing < extendedWidth + margin;
+                col++
+            ) {
+                const x = col * hexSpacing + xOffset - margin;
+
+                // Add random noise to break perfect grid
+                const noisyX = x + (Math.random() - 0.5) * actualNoiseAmount;
+                const noisyY = y + (Math.random() - 0.5) * actualNoiseAmount;
+
+                points.push([noisyX, noisyY]);
+            }
+        }
+
+        const noise2D = createNoise2D();
+
+        // Use points as-is without relaxation
+        const extendedBounds: [number, number, number, number] = [
+            -margin,
+            -margin,
+            width + margin,
+            height + margin,
+        ];
+        const currentPoints = points;
+
+        // Store base points for spring physics and pre-calculate random offsets
+        basePointsRef.current = currentPoints.map(
+            p => [...p] as [number, number]
+        );
+        currentPointsRef.current = currentPoints.map(
+            p => [...p] as [number, number]
+        );
+
+        // Pre-calculate random lightness offsets
+        const randomOffsets = currentPoints.map(
+            () => (Math.random() - 0.5) * COLORS.honeycomb.randomLightnessRange
+        );
+
+        // Pre-calculate static color data that never changes during animation
+        const edgeThreshold = Math.min(width, height) * 0.1;
+
+        // Helper functions for color blending
+        const calculateBlendFactor = (
+            baseLightness: number,
+            edgeFactor: number
+        ) => {
+            const darknessFactor = 1 - baseLightness / 80;
+            const edgeDarknessFactor = 1 - (0.5 + 0.5 * edgeFactor);
+            return Math.min(1, darknessFactor + edgeDarknessFactor);
+        };
+
+        const blendTowardsEdgeColor = (
+            baseHue: number,
+            baseSaturation: number,
+            baseLightness: number,
+            blendFactor: number
+        ) => {
+            const {
+                hue: edgeHue,
+                saturation: edgeSaturation,
+                lightness: edgeLightness,
+            } = COLORS.edge.targetHsl;
+            return {
+                hue: baseHue + (edgeHue - baseHue) * blendFactor,
+                saturation:
+                    baseSaturation +
+                    (edgeSaturation - baseSaturation) * blendFactor,
+                lightness:
+                    baseLightness +
+                    (edgeLightness - baseLightness) * blendFactor,
+            };
+        };
+
+        const staticColorData = currentPoints.map((point, i) => {
+            const baseCentroid = point;
+            const colorNoise = noise2D(
+                baseCentroid[0] / 800,
+                baseCentroid[1] / 800
+            );
+            const randomLightnessOffset = randomOffsets[i];
+
+            const baseHue =
+                COLORS.honeycomb.baseHue +
+                colorNoise * COLORS.honeycomb.hueVariation;
+            const baseSaturation =
+                COLORS.honeycomb.baseSaturation +
+                colorNoise * COLORS.honeycomb.saturationVariation;
+            const baseLightness = Math.max(
+                COLORS.honeycomb.minLightness,
+                Math.min(
+                    COLORS.honeycomb.maxLightness,
+                    COLORS.honeycomb.baseLightness +
+                        colorNoise * COLORS.honeycomb.lightnessVariation +
+                        randomLightnessOffset
+                )
+            );
+
+            // Pre-calculate edge distance factors
+            const distanceFromEdge = Math.min(
+                baseCentroid[0],
+                baseCentroid[1],
+                width - baseCentroid[0],
+                height - baseCentroid[1]
+            );
+            const edgeFactor = Math.min(1, distanceFromEdge / edgeThreshold);
+
+            // Pre-calculate blend factors and final colors
+            const totalDarknessFactor = calculateBlendFactor(
+                baseLightness,
+                edgeFactor
+            );
+            const innerColor = blendTowardsEdgeColor(
+                baseHue,
+                baseSaturation,
+                baseLightness,
+                totalDarknessFactor
+            );
+
+            const outerBlendFactor = Math.min(
+                1,
+                totalDarknessFactor + COLORS.animation.outerBlendOffset
+            );
+            const outerColor = blendTowardsEdgeColor(
+                baseHue,
+                baseSaturation,
+                baseLightness,
+                outerBlendFactor
+            );
+
+            // Pre-calculate HSL strings for direct use in drawing
+            const innerColorString = `hsl(${innerColor.hue}, ${innerColor.saturation}%, ${innerColor.lightness}%)`;
+            const outerColorString = `hsl(${outerColor.hue}, ${outerColor.saturation}%, ${outerColor.lightness}%)`;
+
+            return {
+                baseHue,
+                baseSaturation,
+                baseLightness,
+                colorNoise,
+                randomLightnessOffset,
+                edgeFactor,
+                innerColor,
+                outerColor,
+                innerColorString,
+                outerColorString,
+            };
+        });
+
+        // Manual physics system for continuous spring forces
+        const velocities = currentPoints.map(() => ({ vx: 0, vy: 0 }));
+
+        // Create and start animation loop
+        const animate = createAnimationLoop(
+            ctx,
+            width,
+            height,
+            extendedBounds,
+            staticColorData,
+            velocities
+        );
         animate();
     };
 
