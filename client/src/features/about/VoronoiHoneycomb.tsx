@@ -3,11 +3,14 @@ import { DynamicVoronoiHoneycombComponent } from './honeycomb/components/Dynamic
 import { StaticVoronoiHoneycomb } from './honeycomb/components/StaticVoronoiHoneycomb';
 import { GlowingHoneycomb } from './honeycomb/components/GlowingHoneycomb';
 
+type HoneycombType = 'static' | 'dynamic' | 'glowing';
+
 interface VoronoiHoneycombProps {
     className?: string;
     numPoints?: number;
     noiseAmount?: number;
     showDebug?: boolean;
+    honeycombType?: HoneycombType;
     isStatic?: boolean;
     glowing?: boolean;
     glowRadius?: number;
@@ -21,6 +24,7 @@ export function VoronoiHoneycomb({
     numPoints = 1000,
     noiseAmount = 0.3,
     showDebug = false,
+    honeycombType = 'glowing',
     isStatic = true,
     glowing = true,
     glowRadius = 250,
@@ -28,7 +32,13 @@ export function VoronoiHoneycomb({
     glowSpeed = 0.01,
     fadeSpeed = 0.002,
 }: VoronoiHoneycombProps) {
-    if (glowing) {
+    const type =
+        honeycombType ||
+        (glowing ? 'glowing' : isStatic ? 'static' : 'dynamic');
+
+    console.log(type);
+
+    if (type === 'glowing') {
         return (
             <GlowingHoneycomb
                 className={className}
@@ -43,7 +53,7 @@ export function VoronoiHoneycomb({
         );
     }
 
-    if (isStatic) {
+    if (type === 'static') {
         return (
             <StaticVoronoiHoneycomb
                 className={className}

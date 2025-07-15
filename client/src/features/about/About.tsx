@@ -3,9 +3,13 @@ import { Code, Users, Star } from 'lucide-react';
 import { VoronoiHoneycomb } from './VoronoiHoneycomb.tsx';
 import { DevPanel } from './DevPanel.tsx';
 
+type HoneycombType = 'static' | 'dynamic' | 'glowing';
+
 export function About() {
     const [noiseAmount, setNoiseAmount] = useState(0.15);
     const [showDebug, setShowDebug] = useState(false);
+    const [honeycombType, setHoneycombType] =
+        useState<HoneycombType>('glowing');
     const [scrollY, setScrollY] = useState(0);
     const backgroundRef = useRef<HTMLDivElement>(null);
 
@@ -35,6 +39,7 @@ export function About() {
                     numPoints={8000}
                     noiseAmount={noiseAmount}
                     showDebug={showDebug}
+                    honeycombType={honeycombType}
                 />
             </div>
 
@@ -43,6 +48,8 @@ export function About() {
                 onNoiseAmountChange={setNoiseAmount}
                 showDebug={showDebug}
                 onShowDebugChange={setShowDebug}
+                honeycombType={honeycombType}
+                onHoneycombTypeChange={setHoneycombType}
             />
             <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-16 relative z-10">
                 {/* Hero Section */}
