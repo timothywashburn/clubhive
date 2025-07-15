@@ -1,10 +1,11 @@
 import { useState } from 'react';
-import { useClubData } from '../features/my-clubs/hooks/fetchClubs';
+import { useClubData } from '../hooks/fetchClubs';
 import ClubCardSmall from '../components/ClubCardSmall';
+import type { Club } from '../hooks/fetchClubs';
 
 export function Clubs() {
     const [searchTerm, setSearchTerm] = useState('');
-    const [selectedClub, setSelectedClub] = useState<string | null>(null);
+    const [selectedClub, setSelectedClub] = useState<Club | null>(null);
     const { clubs, isLoading, error } = useClubData();
 
     const getClubColors = (id: string) =>
