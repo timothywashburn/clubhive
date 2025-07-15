@@ -1,4 +1,4 @@
-import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import { BrowserRouter, Routes, Route } from 'react-router';
 import { Navbar } from './components/navbar/Navbar.tsx';
 import { Footer } from './components/footer/Footer.tsx';
 import { useAuth } from './hooks/useAuth';
