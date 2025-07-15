@@ -4,7 +4,6 @@ import { VoronoiHoneycomb } from './VoronoiHoneycomb.tsx';
 import { DevPanel } from './DevPanel.tsx';
 
 export function About() {
-    const [regularity, setRegularity] = useState(0);
     const [noiseAmount, setNoiseAmount] = useState(0.15);
     const [showDebug, setShowDebug] = useState(false);
     const [scrollY, setScrollY] = useState(0);
@@ -34,15 +33,12 @@ export function About() {
             >
                 <VoronoiHoneycomb
                     numPoints={8000}
-                    relaxationSteps={regularity}
                     noiseAmount={noiseAmount}
                     showDebug={showDebug}
                 />
             </div>
 
             <DevPanel
-                regularity={regularity}
-                onRegularityChange={setRegularity}
                 noiseAmount={noiseAmount}
                 onNoiseAmountChange={setNoiseAmount}
                 showDebug={showDebug}

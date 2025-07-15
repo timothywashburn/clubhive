@@ -2,8 +2,6 @@ import React from 'react';
 
 // I'M WELL AWARE THIS CODE IS TERRIBLE I'M SO SORRY IF YOU EVER HAVE TO READ THIS
 interface DevPanelProps {
-    regularity: number;
-    onRegularityChange: (value: number) => void;
     noiseAmount: number;
     onNoiseAmountChange: (value: number) => void;
     showDebug: boolean;
@@ -11,8 +9,6 @@ interface DevPanelProps {
 }
 
 export function DevPanel({
-    regularity,
-    onRegularityChange,
     noiseAmount,
     onNoiseAmountChange,
     showDebug,
@@ -23,24 +19,6 @@ export function DevPanel({
             <h3 className="text-sm font-bold mb-3">Dev Panel</h3>
 
             <div className="space-y-3">
-                <div>
-                    <label className="block text-xs mb-1">
-                        Regularity:{' '}
-                        <span className="text-yellow-400">{regularity}</span>
-                    </label>
-                    <input
-                        type="range"
-                        min="0"
-                        max="20"
-                        step="1"
-                        value={regularity}
-                        onChange={e =>
-                            onRegularityChange(parseInt(e.target.value))
-                        }
-                        className="w-full h-2 bg-gray-600 rounded-lg appearance-none cursor-pointer slider"
-                    />
-                </div>
-
                 <div>
                     <label className="block text-xs mb-1">
                         Noise Amount:{' '}

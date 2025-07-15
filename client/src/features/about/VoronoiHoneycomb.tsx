@@ -4,10 +4,54 @@ import { Delaunay } from 'd3-delaunay';
 import { createNoise2D } from 'simplex-noise';
 
 // I'M WELL AWARE THIS CODE IS TERRIBLE I'M SO SORRY IF YOU EVER HAVE TO READ THIS
+
+// Color configuration - all values in hex for easy modification
+const COLORS = {
+    // Background
+    background: '#2c2c2c',
+
+    // Honeycomb cell colors (base ranges for dynamic calculation)
+    honeycomb: {
+        baseHue: 40,
+        hueVariation: 15,
+        baseSaturation: 60,
+        saturationVariation: 20,
+        baseLightness: 50,
+        lightnessVariation: 15,
+        minLightness: 20,
+        maxLightness: 80,
+        randomLightnessRange: 15,
+    },
+
+    // Edge/border colors
+    edge: {
+        stroke: '#4d1f09',
+        target: '#512205', // HSL(23, 88%, 17%) - used for blending
+        targetHsl: { hue: 23, saturation: 88, lightness: 17 },
+    },
+
+    // Debug colors
+    debug: {
+        currentPoint: '#ff0000',
+        basePoint: '#0000ff',
+        connectionLine: '#ffffff',
+        connectionLineOpacity: 0.3,
+        mousePosition: '#00ff00',
+        mouseRadius: '#00ff00',
+        mouseRadiusOpacity: 0.2,
+    },
+
+    // Animation settings
+    animation: {
+        strokeWidth: 3.5,
+        innerHexagonScale: 0.7,
+        outerBlendOffset: 0.4,
+    },
+};
+
 interface VoronoiHoneycombProps {
     className?: string;
     numPoints?: number;
-    relaxationSteps?: number;
     noiseAmount?: number;
     showDebug?: boolean;
 }
@@ -15,7 +59,6 @@ interface VoronoiHoneycombProps {
 export function VoronoiHoneycomb({
     className = '',
     numPoints = 1000,
-    relaxationSteps = 5,
     noiseAmount = 0.3,
     showDebug = true,
 }: VoronoiHoneycombProps) {
@@ -74,7 +117,7 @@ export function VoronoiHoneycomb({
             window.removeEventListener('mousemove', handleMouseMove);
             document.removeEventListener('mouseleave', handleMouseLeave);
         };
-    }, [dimensions, numPoints, relaxationSteps, noiseAmount, showDebug]);
+    }, [dimensions, numPoints, noiseAmount, showDebug]);
 
     // Clean up previous animation
     useEffect(() => {
@@ -132,30 +175,14 @@ export function VoronoiHoneycomb({
 
         const noise2D = createNoise2D();
 
-        // Lloyd's Relaxation Algorithm with extended bounds (optional, can reduce steps since we start with better grid)
+        // Use points as-is without relaxation
         const extendedBounds: [number, number, number, number] = [
             -margin,
             -margin,
             width + margin,
             height + margin,
         ];
-        let currentPoints = points;
-        for (let i = 0; i < relaxationSteps; i++) {
-            const delaunay = Delaunay.from(currentPoints);
-            const voronoi = delaunay.voronoi(extendedBounds);
-            const newPoints: [number, number][] = [];
-
-            for (let j = 0; j < currentPoints.length; j++) {
-                const cell = voronoi.cellPolygon(j);
-                if (cell) {
-                    const centroid = d3.polygonCentroid(cell);
-                    newPoints.push([centroid[0], centroid[1]]);
-                } else {
-                    newPoints.push(currentPoints[j]);
-                }
-            }
-            currentPoints = newPoints;
-        }
+        const currentPoints = points;
 
         // Store base points for spring physics and pre-calculate random offsets
         basePointsRef.current = currentPoints.map(
@@ -165,9 +192,9 @@ export function VoronoiHoneycomb({
             p => [...p] as [number, number]
         );
 
-        // Pre-calculate random lightness offsets to prevent flickering
+        // Pre-calculate random lightness offsets
         const randomOffsets = currentPoints.map(
-            () => (Math.random() - 0.5) * 15
+            () => (Math.random() - 0.5) * COLORS.honeycomb.randomLightnessRange
         );
 
         // Manual physics system for continuous spring forces
@@ -254,16 +281,22 @@ export function VoronoiHoneycomb({
                         baseCentroid[1] / 800
                     );
 
-                    // Use pre-calculated random offset to prevent flickering
                     const randomLightnessOffset = randomOffsets[i];
 
-                    const baseHue = 40 + colorNoise * 15;
-                    const baseSaturation = 60 + colorNoise * 20;
+                    const baseHue =
+                        COLORS.honeycomb.baseHue +
+                        colorNoise * COLORS.honeycomb.hueVariation;
+                    const baseSaturation =
+                        COLORS.honeycomb.baseSaturation +
+                        colorNoise * COLORS.honeycomb.saturationVariation;
                     const baseLightness = Math.max(
-                        20,
+                        COLORS.honeycomb.minLightness,
                         Math.min(
-                            80,
-                            50 + colorNoise * 15 + randomLightnessOffset
+                            COLORS.honeycomb.maxLightness,
+                            COLORS.honeycomb.baseLightness +
+                                colorNoise *
+                                    COLORS.honeycomb.lightnessVariation +
+                                randomLightnessOffset
                         )
                     );
 
@@ -296,10 +329,11 @@ export function VoronoiHoneycomb({
                         baseLightness: number,
                         blendFactor: number
                     ) => {
-                        // Edge color HSL values for #502205
-                        const edgeHue = 23;
-                        const edgeSaturation = 88;
-                        const edgeLightness = 17;
+                        const {
+                            hue: edgeHue,
+                            saturation: edgeSaturation,
+                            lightness: edgeLightness,
+                        } = COLORS.edge.targetHsl;
 
                         return {
                             hue: baseHue + (edgeHue - baseHue) * blendFactor,
@@ -326,7 +360,7 @@ export function VoronoiHoneycomb({
 
                     const outerBlendFactor = Math.min(
                         1,
-                        totalDarknessFactor + 0.4
+                        totalDarknessFactor + COLORS.animation.outerBlendOffset
                     ); // More edge blending for outer ring
                     const outerColor = blendTowardsEdgeColor(
                         baseHue,
@@ -343,7 +377,7 @@ export function VoronoiHoneycomb({
                     const centroid = d3.polygonCentroid(cell);
 
                     // Create inner hexagon path (scaled down from center)
-                    const scaleFactor = 0.7; // Inner hexagon is 70% the size
+                    const scaleFactor = COLORS.animation.innerHexagonScale; // Inner hexagon scale
                     const innerCell = cell.map(point => [
                         centroid[0] + (point[0] - centroid[0]) * scaleFactor,
                         centroid[1] + (point[1] - centroid[1]) * scaleFactor,
@@ -368,8 +402,8 @@ export function VoronoiHoneycomb({
                         ctx.lineTo(cell[j][0], cell[j][1]);
                     }
                     ctx.closePath();
-                    ctx.strokeStyle = `#4d1f09`;
-                    ctx.lineWidth = 3.5;
+                    ctx.strokeStyle = COLORS.edge.stroke;
+                    ctx.lineWidth = COLORS.animation.strokeWidth;
                     ctx.stroke();
                 }
             }
@@ -382,19 +416,19 @@ export function VoronoiHoneycomb({
                     const basePoint = basePointsRef.current[i];
 
                     // Draw current position (red)
-                    ctx.fillStyle = 'red';
+                    ctx.fillStyle = COLORS.debug.currentPoint;
                     ctx.beginPath();
                     ctx.arc(point[0], point[1], 3, 0, 2 * Math.PI);
                     ctx.fill();
 
                     // Draw base position (blue)
-                    ctx.fillStyle = 'blue';
+                    ctx.fillStyle = COLORS.debug.basePoint;
                     ctx.beginPath();
                     ctx.arc(basePoint[0], basePoint[1], 2, 0, 2 * Math.PI);
                     ctx.fill();
 
                     // Draw connection line
-                    ctx.strokeStyle = 'rgba(255, 255, 255, 0.3)';
+                    ctx.strokeStyle = `rgba(255, 255, 255, ${COLORS.debug.connectionLineOpacity})`;
                     ctx.lineWidth = 1;
                     ctx.beginPath();
                     ctx.moveTo(basePoint[0], basePoint[1]);
@@ -405,13 +439,13 @@ export function VoronoiHoneycomb({
                 // Draw mouse position
                 const mousePos = mouseRef.current;
                 if (mousePos.x > -500) {
-                    ctx.fillStyle = 'lime';
+                    ctx.fillStyle = COLORS.debug.mousePosition;
                     ctx.beginPath();
                     ctx.arc(mousePos.x, mousePos.y, 5, 0, 2 * Math.PI);
                     ctx.fill();
 
                     // Draw mouse influence radius
-                    ctx.strokeStyle = 'rgba(0, 255, 0, 0.2)';
+                    ctx.strokeStyle = `rgba(0, 255, 0, ${COLORS.debug.mouseRadiusOpacity})`;
                     ctx.lineWidth = 2;
                     ctx.beginPath();
                     ctx.arc(
@@ -442,7 +476,7 @@ export function VoronoiHoneycomb({
             ref={canvasRef}
             className={`w-full h-full ${className}`}
             style={{
-                background: '#2c2c2c',
+                background: COLORS.background,
                 display: 'block',
                 width: '100%',
                 height: '100%',
