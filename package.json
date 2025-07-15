@@ -28,5 +28,8 @@
     "*.{json,md,css,scss}": [
       "prettier --write"
     ]
+  },
+  "dependencies": {
+    "lucide-react": "^0.525.0"
   }
 }
