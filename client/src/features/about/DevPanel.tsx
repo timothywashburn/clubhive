@@ -5,6 +5,8 @@ interface DevPanelProps {
     onRegularityChange: (value: number) => void;
     noiseAmount: number;
     onNoiseAmountChange: (value: number) => void;
+    showDebug: boolean;
+    onShowDebugChange: (value: boolean) => void;
 }
 
 export function DevPanel({
@@ -12,6 +14,8 @@ export function DevPanel({
     onRegularityChange,
     noiseAmount,
     onNoiseAmountChange,
+    showDebug,
+    onShowDebugChange,
 }: DevPanelProps) {
     return (
         <div className="fixed top-4 right-4 z-50 bg-black/80 backdrop-blur-sm border border-white/20 rounded-lg p-4 text-white">
@@ -55,9 +59,21 @@ export function DevPanel({
                         className="w-full h-2 bg-gray-600 rounded-lg appearance-none cursor-pointer slider"
                     />
                 </div>
+
+                <div>
+                    <label className="flex items-center text-xs">
+                        <input
+                            type="checkbox"
+                            checked={showDebug}
+                            onChange={e => onShowDebugChange(e.target.checked)}
+                            className="mr-2"
+                        />
+                        Show Debug Visualization
+                    </label>
+                </div>
             </div>
 
-            <style jsx>{`
+            <style>{`
                 .slider::-webkit-slider-thumb {
                     appearance: none;
                     width: 16px;

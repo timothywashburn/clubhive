@@ -4,8 +4,9 @@ import { VoronoiHoneycomb } from './VoronoiHoneycomb.tsx';
 import { DevPanel } from './DevPanel.tsx';
 
 export function About() {
-    const [regularity, setRegularity] = useState(5);
-    const [noiseAmount, setNoiseAmount] = useState(0.3);
+    const [regularity, setRegularity] = useState(0);
+    const [noiseAmount, setNoiseAmount] = useState(0.15);
+    const [showDebug, setShowDebug] = useState(false);
 
     const contributors = [
         { name: 'alex chen', commits: 87, role: 'project manager' },
@@ -26,6 +27,7 @@ export function About() {
                     numPoints={800}
                     relaxationSteps={regularity}
                     noiseAmount={noiseAmount}
+                    showDebug={showDebug}
                 />
             </div>
 
@@ -34,10 +36,12 @@ export function About() {
                 onRegularityChange={setRegularity}
                 noiseAmount={noiseAmount}
                 onNoiseAmountChange={setNoiseAmount}
+                showDebug={showDebug}
+                onShowDebugChange={setShowDebug}
             />
             <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-16 relative z-10">
                 {/* Hero Section */}
-                <div className="text-center mb-20">
+                <div className="text-center mb-20 bg-black/20 backdrop-blur-md rounded-2xl p-8">
                     <h1 className="text-5xl md:text-7xl font-black text-on-surface mb-6">
                         hey there! 👋
                     </h1>
@@ -51,7 +55,7 @@ export function About() {
                 </div>
 
                 {/* Project Story */}
-                <div className="mb-20 max-w-4xl mx-auto">
+                <div className="mb-20 max-w-4xl mx-auto bg-black/20 backdrop-blur-md rounded-2xl p-8">
                     <h2 className="text-4xl font-bold text-on-surface mb-8 text-center">
                         the project
                     </h2>
@@ -81,7 +85,7 @@ export function About() {
                 </div>
 
                 {/* Team Section */}
-                <div className="mb-20">
+                <div className="mb-20 bg-black/20 backdrop-blur-md rounded-2xl p-8">
                     <h2 className="text-4xl font-bold text-on-surface text-center mb-4">
                         our team
                     </h2>
@@ -115,7 +119,7 @@ export function About() {
                 </div>
 
                 {/* Contributors Section */}
-                <div className="mb-20">
+                <div className="mb-20 bg-black/20 backdrop-blur-md rounded-2xl p-8">
                     <h2 className="text-4xl font-bold text-on-surface text-center mb-4">
                         contributors
                     </h2>
@@ -124,7 +128,7 @@ export function About() {
                         busy bees.
                     </p>
 
-                    <div className="relative h-96 bg-black/20 backdrop-blur-sm rounded-2xl overflow-hidden">
+                    <div className="relative h-96 bg-black/30 backdrop-blur-sm rounded-2xl overflow-hidden">
                         <div className="absolute inset-0 p-8 flex items-center justify-center">
                             <p className="text-white/80 text-lg text-center">
                                 put some text here
@@ -134,7 +138,7 @@ export function About() {
                 </div>
 
                 {/* Casual CTA */}
-                <div className="text-center">
+                <div className="text-center bg-black/20 backdrop-blur-md rounded-2xl p-8">
                     <h2 className="text-4xl font-bold text-on-surface mb-6">
                         ready to explore?
                     </h2>
