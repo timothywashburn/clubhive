@@ -1,7 +1,11 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Code, Users, Star } from 'lucide-react';
+import { VoronoiHoneycomb } from '../components/VoronoiHoneycomb';
+import { DevPanel } from '../components/DevPanel';
 
 export function About() {
+    const [regularity, setRegularity] = useState(5);
+
     const contributors = [
         { name: 'alex chen', commits: 87, role: 'project manager' },
         { name: 'jordan smith', commits: 124, role: 'frontend wizard' },
@@ -15,8 +19,19 @@ export function About() {
     const maxCommits = Math.max(...contributors.map(c => c.commits));
 
     return (
-        <div className="min-h-screen bg-background">
-            <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
+        <div className="min-h-screen relative">
+            <div className="absolute inset-0" style={{ zIndex: 1 }}>
+                <VoronoiHoneycomb
+                    numPoints={800}
+                    relaxationSteps={regularity}
+                />
+            </div>
+
+            <DevPanel
+                regularity={regularity}
+                onRegularityChange={setRegularity}
+            />
+            <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-16 relative z-10">
                 {/* Hero Section */}
                 <div className="text-center mb-20">
                     <h1 className="text-5xl md:text-7xl font-black text-on-surface mb-6">
@@ -101,66 +116,16 @@ export function About() {
                         contributors
                     </h2>
                     <p className="text-lg text-on-surface-variant text-center mb-12">
-                        Lorem ipsum dolor sit amet, consectetur adipiscing elit
+                        Welcome to the hive! Our contributors work together like
+                        busy bees.
                     </p>
 
-                    <div className="relative h-96 bg-surface rounded-2xl border border-divider overflow-hidden">
-                        <div className="absolute inset-0 p-8">
-                            {contributors.map((contributor, index) => {
-                                const size =
-                                    40 +
-                                    (contributor.commits / maxCommits) * 80; // 40px to 120px
-                                const positions = [
-                                    { top: '20%', left: '15%' },
-                                    { top: '60%', left: '25%' },
-                                    { top: '30%', left: '45%' },
-                                    { top: '70%', left: '55%' },
-                                    { top: '15%', left: '70%' },
-                                    { top: '50%', left: '80%' },
-                                    { top: '80%', left: '10%' },
-                                ];
-
-                                return (
-                                    <div
-                                        key={contributor.name}
-                                        className="absolute group cursor-pointer transition-all duration-300 hover:scale-110"
-                                        style={{
-                                            top: positions[index].top,
-                                            left: positions[index].left,
-                                            width: `${size}px`,
-                                            height: `${size}px`,
-                                        }}
-                                    >
-                                        <div className="w-full h-full bg-primary/20 rounded-full flex items-center justify-center border-2 border-primary/30 hover:border-primary transition-colors">
-                                            <div className="text-center">
-                                                <div className="text-xs font-bold text-primary truncate px-1">
-                                                    {
-                                                        contributor.name.split(
-                                                            ' '
-                                                        )[0]
-                                                    }
-                                                </div>
-                                                <div className="text-xs text-primary/70">
-                                                    {contributor.commits}
-                                                </div>
-                                            </div>
-                                        </div>
-
-                                        {/* Tooltip */}
-                                        <div className="absolute -top-16 left-1/2 transform -translate-x-1/2 bg-surface border border-divider rounded-lg p-2 shadow-lg opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none whitespace-nowrap z-10">
-                                            <div className="text-sm font-bold text-on-surface">
-                                                {contributor.name}
-                                            </div>
-                                            <div className="text-xs text-on-surface-variant">
-                                                {contributor.role}
-                                            </div>
-                                            <div className="text-xs text-primary">
-                                                {contributor.commits} commits
-                                            </div>
-                                        </div>
-                                    </div>
-                                );
-                            })}
+                    <div className="relative h-96 bg-black/20 backdrop-blur-sm rounded-2xl border border-white/20 overflow-hidden">
+                        <div className="absolute inset-0 p-8 flex items-center justify-center">
+                            <p className="text-white/80 text-lg text-center">
+                                Soon this space will be filled with flying bees
+                                representing our contributors!
+                            </p>
                         </div>
                     </div>
                 </div>
