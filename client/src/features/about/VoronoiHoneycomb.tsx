@@ -3,6 +3,7 @@ import * as d3 from 'd3';
 import { Delaunay } from 'd3-delaunay';
 import { createNoise2D } from 'simplex-noise';
 
+// I'M WELL AWARE THIS CODE IS TERRIBLE I'M SO SORRY IF YOU EVER HAVE TO READ THIS
 interface VoronoiHoneycombProps {
     className?: string;
     numPoints?: number;

@@ -10,18 +10,6 @@ export function About() {
     const [scrollY, setScrollY] = useState(0);
     const backgroundRef = useRef<HTMLDivElement>(null);
 
-    const contributors = [
-        { name: 'alex chen', commits: 87, role: 'project manager' },
-        { name: 'jordan smith', commits: 124, role: 'frontend wizard' },
-        { name: 'taylor kim', commits: 156, role: 'backend guru' },
-        { name: 'casey brown', commits: 98, role: 'full-stack explorer' },
-        { name: 'morgan davis', commits: 73, role: 'database whisperer' },
-        { name: 'riley jones', commits: 91, role: 'ui/ux enthusiast' },
-        { name: 'jamie wilson', commits: 67, role: 'bug hunter' },
-    ];
-
-    const maxCommits = Math.max(...contributors.map(c => c.commits));
-
     useEffect(() => {
         const handleScroll = () => {
             setScrollY(window.scrollY);

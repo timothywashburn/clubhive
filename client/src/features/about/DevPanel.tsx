@@ -1,5 +1,6 @@
 import React from 'react';
 
+// I'M WELL AWARE THIS CODE IS TERRIBLE I'M SO SORRY IF YOU EVER HAVE TO READ THIS
 interface DevPanelProps {
     regularity: number;
     onRegularityChange: (value: number) => void;
