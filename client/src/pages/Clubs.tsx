@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { Link } from 'react-router';
 
 /**
  * THIS CLASS IS AI GENERATED AND TEMPORARY
@@ -51,33 +52,35 @@ export function Clubs() {
 
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                     {[1, 2, 3, 4, 5, 6].map(i => (
-                        <div
-                            key={i}
-                            className="bg-surface rounded-lg shadow hover:shadow-md transition-shadow p-6 border border-outline-variant"
-                        >
-                            <div className="flex items-center mb-4">
-                                <div className="w-12 h-12 bg-primary-container rounded-full flex items-center justify-center">
-                                    <span className="text-on-primary-container font-bold">
-                                        C{i}
-                                    </span>
+                        <Link to={`/club-profile/${i}`}>
+                            <div
+                                key={i}
+                                className="bg-surface rounded-lg shadow hover:shadow-md transition-shadow p-6 border border-outline-variant"
+                            >
+                                <div className="flex items-center mb-4">
+                                    <div className="w-12 h-12 bg-primary-container rounded-full flex items-center justify-center">
+                                        <span className="text-on-primary-container font-bold">
+                                            C{i}
+                                        </span>
+                                    </div>
+                                    <div className="ml-4">
+                                        <h3 className="text-lg font-medium text-on-surface">
+                                            Club {i}
+                                        </h3>
+                                        <p className="text-sm text-on-surface-variant">
+                                            50 members
+                                        </p>
+                                    </div>
                                 </div>
-                                <div className="ml-4">
-                                    <h3 className="text-lg font-medium text-on-surface">
-                                        Club {i}
-                                    </h3>
-                                    <p className="text-sm text-on-surface-variant">
-                                        50 members
-                                    </p>
-                                </div>
+                                <p className="text-on-surface-variant mb-4">
+                                    This is a sample club description. Join us
+                                    for amazing activities and events!
+                                </p>
+                                <button className="w-full bg-primary text-on-primary py-2 rounded-md hover:bg-primary/90 font-medium transition-colors">
+                                    Join Club
+                                </button>
                             </div>
-                            <p className="text-on-surface-variant mb-4">
-                                This is a sample club description. Join us for
-                                amazing activities and events!
-                            </p>
-                            <button className="w-full bg-primary text-on-primary py-2 rounded-md hover:bg-primary/90 font-medium transition-colors">
-                                Join Club
-                            </button>
-                        </div>
+                        </Link>
                     ))}
                 </div>
             </div>

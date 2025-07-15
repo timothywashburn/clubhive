@@ -5,6 +5,7 @@ import { useAuth } from './hooks/useAuth';
 import { Home } from './pages/Home';
 import { MyClubs } from './features/my-clubs';
 import { Clubs } from './pages/Clubs';
+import { ClubProfile } from './pages/ClubProfile';
 import { Events } from './pages/Events';
 import { Notifications } from './pages/Notifications';
 import { SignIn } from './pages/SignIn';
@@ -28,6 +29,10 @@ export function App() {
                         <Route path="/" element={<Home />} />
                         <Route path="/my-clubs" element={<MyClubs />} />
                         <Route path="/clubs" element={<Clubs />} />
+                        <Route
+                            path="/club-profile/:id"
+                            element={<ClubProfile />}
+                        />
                         <Route path="/events" element={<Events />} />
                         <Route path="/account" element={<Account />} />
                         <Route
