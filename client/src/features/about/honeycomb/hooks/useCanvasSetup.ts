@@ -13,11 +13,13 @@ export interface CanvasSetupResult {
 
 export function useCanvasSetup(): CanvasSetupResult {
     const canvasRef = useRef<HTMLCanvasElement>(null);
-    const [dimensions, setDimensions] = useState<CanvasDimensions>({ 
-        width: 1200, 
-        height: 800 
+    const [dimensions, setDimensions] = useState<CanvasDimensions>({
+        width: 1200,
+        height: 800,
     });
-    const [context, setContext] = useState<CanvasRenderingContext2D | null>(null);
+    const [context, setContext] = useState<CanvasRenderingContext2D | null>(
+        null
+    );
 
     useEffect(() => {
         const updateDimensions = () => {

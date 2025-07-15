@@ -10,7 +10,7 @@ class DynamicVoronoiHoneycomb extends VoronoiHoneycombBase {
     animate(mousePosition: { x: number; y: number }): void {
         // Update physics simulation
         this.physicsEngine.updatePhysics(mousePosition);
-        
+
         // Render frame with debug info if enabled
         if (this.config.showDebug) {
             this.renderFrameWithDebug(mousePosition);
@@ -63,7 +63,16 @@ export function DynamicVoronoiHoneycombComponent({
             honeycomb.destroy();
             honeycombRef.current = null;
         };
-    }, [context, dimensions, numPoints, noiseAmount, showDebug, startAnimation, stopAnimation, mousePosition]);
+    }, [
+        context,
+        dimensions,
+        numPoints,
+        noiseAmount,
+        showDebug,
+        startAnimation,
+        stopAnimation,
+        mousePosition,
+    ]);
 
     return (
         <canvas

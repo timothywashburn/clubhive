@@ -1,17 +1,21 @@
 import React, { useEffect, useRef } from 'react';
 import { PointGenerator } from '../core/PointGenerator';
-import { ColorMorphingCalculator } from '../core/ColorMorphingCalculator';
+import { GlowingHoneycombCalculator } from '../core/GlowingHoneycombCalculator';
 import { HoneycombRenderer } from '../core/HoneycombRenderer';
 import { useCanvasSetup } from '../hooks/useCanvasSetup';
 import { useMouseTracking } from '../hooks/useMouseTracking';
 import { useAnimation } from '../hooks/useAnimation';
-import { VoronoiHoneycombProps, HoneycombConfig, VoronoiColors } from '../config/types';
+import {
+    VoronoiHoneycombProps,
+    HoneycombConfig,
+    VoronoiColors,
+} from '../config/types';
 import { MUTED_COLORS, VIBRANT_COLORS } from '../config/colors';
 import { DEFAULT_CONFIG } from '../config/animation';
 
-class ColorMorphingHoneycombEngine {
+class GlowingHoneycombEngine {
     private pointGenerator: PointGenerator;
-    private colorCalculator: ColorMorphingCalculator;
+    private colorCalculator: GlowingHoneycombCalculator;
     private renderer: HoneycombRenderer;
     private config: HoneycombConfig;
     private extendedBounds: [number, number, number, number] = [0, 0, 0, 0];
@@ -25,7 +29,10 @@ class ColorMorphingHoneycombEngine {
         height: number,
         mutedColors: VoronoiColors,
         vibrantColors: VoronoiColors,
-        morphRadius: number = 300
+        glowRadius: number,
+        activationChance: number,
+        glowSpeed: number,
+        fadeSpeed: number
     ) {
         this.config = config;
         this.pointGenerator = new PointGenerator(
@@ -34,14 +41,17 @@ class ColorMorphingHoneycombEngine {
             config.numPoints,
             config.noiseAmount
         );
-        this.colorCalculator = new ColorMorphingCalculator(
+        this.colorCalculator = new GlowingHoneycombCalculator(
             mutedColors,
             vibrantColors,
             width,
             height,
-            morphRadius
+            glowRadius,
+            activationChance,
+            glowSpeed,
+            fadeSpeed
         );
-        // Use muted colors for the renderer (won't affect dynamic colors)
+        // Use muted colors for the renderer
         this.renderer = new HoneycombRenderer(
             ctx,
             width,
@@ -54,33 +64,38 @@ class ColorMorphingHoneycombEngine {
     initialize(): void {
         // Generate hexagonal grid points
         this.basePoints = this.pointGenerator.generateHexagonalGrid();
-        
+
+        // Initialize glow states for each point
+        this.colorCalculator.initializeGlowStates(this.basePoints.length);
+
         // Pre-calculate static random offsets for consistent color variation
         this.staticRandomOffsets = this.basePoints.map(
-            () => (Math.random() - 0.5) * this.config.colors.honeycomb.randomLightnessRange
+            () =>
+                (Math.random() - 0.5) *
+                this.config.colors.honeycomb.randomLightnessRange
         );
-        
+
         // Get extended bounds for Voronoi diagram
         this.extendedBounds = this.pointGenerator.getExtendedBounds();
     }
 
     animate(mousePosition: { x: number; y: number }): void {
-        // Calculate dynamic color data based on mouse position
+        // Calculate dynamic color data with glow effects
         const dynamicColorData = this.colorCalculator.calculateDynamicColorData(
             this.basePoints,
             mousePosition,
             this.staticRandomOffsets
         );
-        
+
         // Render frame with dynamic colors
         if (this.config.showDebug) {
             this.renderer.renderWithDebug(
                 this.basePoints,
-                this.basePoints, // No physics movement, just color morphing
+                this.basePoints, // No physics movement, just glow effects
                 this.extendedBounds,
                 dynamicColorData,
                 mousePosition,
-                300 // morphRadius for debug display
+                300 // glowRadius for debug display
             );
         } else {
             this.renderer.render(
@@ -91,8 +106,20 @@ class ColorMorphingHoneycombEngine {
         }
     }
 
-    updateMorphRadius(radius: number): void {
-        this.colorCalculator.updateMorphRadius(radius);
+    updateGlowRadius(radius: number): void {
+        this.colorCalculator.updateGlowRadius(radius);
+    }
+
+    updateGlowSettings(
+        activationChance: number,
+        glowSpeed: number,
+        fadeSpeed: number
+    ): void {
+        this.colorCalculator.updateGlowSettings(
+            activationChance,
+            glowSpeed,
+            fadeSpeed
+        );
     }
 
     destroy(): void {
@@ -101,25 +128,31 @@ class ColorMorphingHoneycombEngine {
     }
 }
 
-interface ColorMorphingHoneycombProps extends VoronoiHoneycombProps {
-    morphRadius?: number;
+interface GlowingHoneycombProps extends VoronoiHoneycombProps {
+    glowRadius?: number;
+    activationChance?: number;
+    glowSpeed?: number;
+    fadeSpeed?: number;
     mutedColors?: VoronoiColors;
     vibrantColors?: VoronoiColors;
 }
 
-export function ColorMorphingHoneycomb({
+export function GlowingHoneycomb({
     className = '',
     numPoints = 1000,
     noiseAmount = 0.3,
     showDebug = false,
-    morphRadius = 300,
+    glowRadius = 300,
+    activationChance = 0.05,
+    glowSpeed = 0.02,
+    fadeSpeed = 0.01,
     mutedColors = MUTED_COLORS,
     vibrantColors = VIBRANT_COLORS,
-}: ColorMorphingHoneycombProps) {
+}: GlowingHoneycombProps) {
     const { canvasRef, dimensions, context } = useCanvasSetup();
     const { mousePosition } = useMouseTracking(canvasRef);
     const { startAnimation, stopAnimation } = useAnimation();
-    const honeycombRef = useRef<ColorMorphingHoneycombEngine | null>(null);
+    const honeycombRef = useRef<GlowingHoneycombEngine | null>(null);
 
     useEffect(() => {
         if (!context || !dimensions.width || !dimensions.height) return;
@@ -132,19 +165,23 @@ export function ColorMorphingHoneycomb({
             colors: mutedColors, // Use muted as base config
         };
 
-        // Create color morphing honeycomb instance
-        const honeycomb = new ColorMorphingHoneycombEngine(
+        // Create glowing honeycomb instance
+        const honeycomb = new GlowingHoneycombEngine(
             config,
             context,
             dimensions.width,
             dimensions.height,
             mutedColors,
             vibrantColors,
-            morphRadius
+            glowRadius,
+            activationChance,
+            glowSpeed,
+            fadeSpeed
         );
 
         // Initialize the honeycomb
         honeycomb.initialize();
+
         honeycombRef.current = honeycomb;
 
         // Start animation loop
@@ -157,14 +194,34 @@ export function ColorMorphingHoneycomb({
             honeycomb.destroy();
             honeycombRef.current = null;
         };
-    }, [context, dimensions, numPoints, noiseAmount, showDebug, morphRadius, mutedColors, vibrantColors, startAnimation, stopAnimation, mousePosition]);
+    }, [
+        context,
+        dimensions,
+        numPoints,
+        noiseAmount,
+        showDebug,
+        glowRadius,
+        activationChance,
+        glowSpeed,
+        fadeSpeed,
+        mutedColors,
+        vibrantColors,
+        startAnimation,
+        stopAnimation,
+        mousePosition,
+    ]);
 
-    // Update morph radius when it changes
+    // Update glow settings when they change
     useEffect(() => {
         if (honeycombRef.current) {
-            honeycombRef.current.updateMorphRadius(morphRadius);
+            honeycombRef.current.updateGlowRadius(glowRadius);
+            honeycombRef.current.updateGlowSettings(
+                activationChance,
+                glowSpeed,
+                fadeSpeed
+            );
         }
-    }, [morphRadius]);
+    }, [glowRadius, activationChance, glowSpeed, fadeSpeed]);
 
     return (
         <canvas

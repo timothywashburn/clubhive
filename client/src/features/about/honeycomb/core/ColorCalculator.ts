@@ -15,12 +15,15 @@ export class ColorCalculator {
         this.width = width;
         this.height = height;
         this.noise2D = createNoise2D();
-        this.edgeThreshold = Math.min(width, height) * GENERATION_CONFIG.edgeThresholdRatio;
+        this.edgeThreshold =
+            Math.min(width, height) * GENERATION_CONFIG.edgeThresholdRatio;
     }
 
     calculateStaticColorData(points: [number, number][]): ColorData[] {
         const randomOffsets = points.map(
-            () => (Math.random() - 0.5) * this.colors.honeycomb.randomLightnessRange
+            () =>
+                (Math.random() - 0.5) *
+                this.colors.honeycomb.randomLightnessRange
         );
 
         return points.map((point, i) => {
@@ -31,9 +34,11 @@ export class ColorCalculator {
             );
             const randomLightnessOffset = randomOffsets[i];
 
-            const baseHue = this.colors.honeycomb.baseHue + 
+            const baseHue =
+                this.colors.honeycomb.baseHue +
                 colorNoise * this.colors.honeycomb.hueVariation;
-            const baseSaturation = this.colors.honeycomb.baseSaturation + 
+            const baseSaturation =
+                this.colors.honeycomb.baseSaturation +
                 colorNoise * this.colors.honeycomb.saturationVariation;
             const baseLightness = Math.max(
                 this.colors.honeycomb.minLightness,
@@ -51,9 +56,15 @@ export class ColorCalculator {
                 this.width - baseCentroid[0],
                 this.height - baseCentroid[1]
             );
-            const edgeFactor = Math.min(1, distanceFromEdge / this.edgeThreshold);
+            const edgeFactor = Math.min(
+                1,
+                distanceFromEdge / this.edgeThreshold
+            );
 
-            const totalDarknessFactor = this.calculateBlendFactor(baseLightness, edgeFactor);
+            const totalDarknessFactor = this.calculateBlendFactor(
+                baseLightness,
+                edgeFactor
+            );
             const innerColor = this.blendTowardsTargetColor(
                 baseHue,
                 baseSaturation,
@@ -86,11 +97,15 @@ export class ColorCalculator {
                 outerColor,
                 innerColorString,
                 outerColorString,
+                edgeColorString: this.colors.honeycomb.edgeStroke,
             };
         });
     }
 
-    private calculateBlendFactor(baseLightness: number, edgeFactor: number): number {
+    private calculateBlendFactor(
+        baseLightness: number,
+        edgeFactor: number
+    ): number {
         const darknessFactor = 1 - baseLightness / 80;
         const edgeDarknessFactor = 1 - (0.5 + 0.5 * edgeFactor);
         return Math.min(1, darknessFactor + edgeDarknessFactor);
@@ -106,8 +121,12 @@ export class ColorCalculator {
 
         return {
             hue: baseHue + (targetHsl.hue - baseHue) * blendFactor,
-            saturation: baseSaturation + (targetHsl.saturation - baseSaturation) * blendFactor,
-            lightness: baseLightness + (targetHsl.lightness - baseLightness) * blendFactor,
+            saturation:
+                baseSaturation +
+                (targetHsl.saturation - baseSaturation) * blendFactor,
+            lightness:
+                baseLightness +
+                (targetHsl.lightness - baseLightness) * blendFactor,
         };
     }
 }

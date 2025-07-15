@@ -26,7 +26,11 @@ export class VoronoiHoneycombBase {
             config.numPoints,
             config.noiseAmount
         );
-        this.colorCalculator = new ColorCalculator(config.colors, width, height);
+        this.colorCalculator = new ColorCalculator(
+            config.colors,
+            width,
+            height
+        );
         this.physicsEngine = new PhysicsEngine(config.physics);
         this.renderer = new HoneycombRenderer(
             ctx,
@@ -40,20 +44,21 @@ export class VoronoiHoneycombBase {
     initialize(): void {
         // Generate hexagonal grid points
         const points = this.pointGenerator.generateHexagonalGrid();
-        
+
         // Initialize physics engine with points
         this.physicsEngine.initialize(points);
-        
+
         // Calculate static color data
-        this.staticColorData = this.colorCalculator.calculateStaticColorData(points);
-        
+        this.staticColorData =
+            this.colorCalculator.calculateStaticColorData(points);
+
         // Get extended bounds for Voronoi diagram
         this.extendedBounds = this.pointGenerator.getExtendedBounds();
     }
 
     renderFrame(): void {
         const currentPoints = this.physicsEngine.getCurrentPoints();
-        
+
         this.renderer.render(
             currentPoints,
             this.extendedBounds,
@@ -61,10 +66,13 @@ export class VoronoiHoneycombBase {
         );
     }
 
-    protected renderFrameWithDebug(mousePosition: { x: number; y: number }): void {
+    protected renderFrameWithDebug(mousePosition: {
+        x: number;
+        y: number;
+    }): void {
         const currentPoints = this.physicsEngine.getCurrentPoints();
         const basePoints = this.physicsEngine.getBasePoints();
-        
+
         this.renderer.renderWithDebug(
             currentPoints,
             basePoints,
@@ -77,11 +85,11 @@ export class VoronoiHoneycombBase {
 
     updateConfig(newConfig: Partial<HoneycombConfig>): void {
         this.config = { ...this.config, ...newConfig };
-        
+
         if (newConfig.colors) {
             this.renderer.updateColors(newConfig.colors);
         }
-        
+
         if (newConfig.showDebug !== undefined) {
             this.renderer.updateDebugMode(newConfig.showDebug);
         }

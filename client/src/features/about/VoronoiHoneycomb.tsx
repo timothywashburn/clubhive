@@ -1,7 +1,7 @@
 import React from 'react';
 import { DynamicVoronoiHoneycombComponent } from './honeycomb/components/DynamicVoronoiHoneycomb';
 import { StaticVoronoiHoneycomb } from './honeycomb/components/StaticVoronoiHoneycomb';
-import { ColorMorphingHoneycomb } from './honeycomb/components/ColorMorphingHoneycomb';
+import { GlowingHoneycomb } from './honeycomb/components/GlowingHoneycomb';
 
 interface VoronoiHoneycombProps {
     className?: string;
@@ -9,8 +9,11 @@ interface VoronoiHoneycombProps {
     noiseAmount?: number;
     showDebug?: boolean;
     isStatic?: boolean;
-    colorMorphing?: boolean;
-    morphRadius?: number;
+    glowing?: boolean;
+    glowRadius?: number;
+    activationChance?: number;
+    glowSpeed?: number;
+    fadeSpeed?: number;
 }
 
 export function VoronoiHoneycomb({
@@ -19,17 +22,23 @@ export function VoronoiHoneycomb({
     noiseAmount = 0.3,
     showDebug = false,
     isStatic = true,
-    colorMorphing = true,
-    morphRadius = 300,
+    glowing = true,
+    glowRadius = 250,
+    activationChance = 0.05,
+    glowSpeed = 0.01,
+    fadeSpeed = 0.002,
 }: VoronoiHoneycombProps) {
-    if (colorMorphing) {
+    if (glowing) {
         return (
-            <ColorMorphingHoneycomb
+            <GlowingHoneycomb
                 className={className}
                 numPoints={numPoints}
                 noiseAmount={noiseAmount}
                 showDebug={showDebug}
-                morphRadius={morphRadius}
+                glowRadius={glowRadius}
+                activationChance={activationChance}
+                glowSpeed={glowSpeed}
+                fadeSpeed={fadeSpeed}
             />
         );
     }

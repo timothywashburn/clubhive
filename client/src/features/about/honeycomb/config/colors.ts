@@ -30,7 +30,7 @@ export const MUTED_COLORS: VoronoiColors = {
     //     blendTargetColor: '#512205',
     //     edgeStroke: '#4d1f09',
     // },
-    
+
     debug: {
         currentPoint: '#ff0000',
         basePoint: '#0000ff',
@@ -40,7 +40,7 @@ export const MUTED_COLORS: VoronoiColors = {
         mouseRadius: '#00ff00',
         mouseRadiusOpacity: 0.2,
     },
-    
+
     animation: {
         strokeWidth: 3.5,
         innerHexagonScale: 0.7,
@@ -50,7 +50,7 @@ export const MUTED_COLORS: VoronoiColors = {
 
 export const VIBRANT_COLORS: VoronoiColors = {
     background: '#2c2c2c',
-    
+
     honeycomb: {
         baseHue: 40,
         hueVariation: 15,
@@ -64,7 +64,7 @@ export const VIBRANT_COLORS: VoronoiColors = {
         blendTargetColor: '#512205',
         edgeStroke: '#4d1f09',
     },
-    
+
     debug: {
         currentPoint: '#ff0000',
         basePoint: '#0000ff',
@@ -74,7 +74,7 @@ export const VIBRANT_COLORS: VoronoiColors = {
         mouseRadius: '#00ff00',
         mouseRadiusOpacity: 0.2,
     },
-    
+
     animation: {
         strokeWidth: 3.5,
         innerHexagonScale: 0.7,

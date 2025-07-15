@@ -81,6 +81,7 @@ export interface ColorData {
     };
     innerColorString: string;
     outerColorString: string;
+    edgeColorString: string;
 }
 
 export interface VoronoiHoneycombProps {

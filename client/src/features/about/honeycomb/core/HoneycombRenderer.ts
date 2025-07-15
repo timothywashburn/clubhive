@@ -29,7 +29,7 @@ export class HoneycombRenderer {
         staticColorData: ColorData[]
     ): void {
         this.clear();
-        
+
         const delaunay = Delaunay.from(points);
         const voronoi = delaunay.voronoi(extendedBounds);
 
@@ -40,7 +40,7 @@ export class HoneycombRenderer {
         this.ctx.clip();
 
         this.renderCells(voronoi, points, staticColorData);
-        
+
         this.ctx.restore();
     }
 
@@ -53,9 +53,14 @@ export class HoneycombRenderer {
         mouseRadius: number
     ): void {
         this.render(points, extendedBounds, staticColorData);
-        
+
         if (this.showDebug) {
-            this.renderDebugInfo(points, basePoints, mousePosition, mouseRadius);
+            this.renderDebugInfo(
+                points,
+                basePoints,
+                mousePosition,
+                mouseRadius
+            );
         }
     }
 
@@ -118,7 +123,7 @@ export class HoneycombRenderer {
             this.ctx.lineTo(cell[j][0], cell[j][1]);
         }
         this.ctx.closePath();
-        this.ctx.strokeStyle = this.colors.honeycomb.edgeStroke;
+        this.ctx.strokeStyle = colorData.edgeColorString;
         this.ctx.lineWidth = this.colors.animation.strokeWidth;
         this.ctx.stroke();
     }
@@ -168,7 +173,13 @@ export class HoneycombRenderer {
             this.ctx.strokeStyle = `rgba(0, 255, 0, ${this.colors.debug.mouseRadiusOpacity})`;
             this.ctx.lineWidth = 2;
             this.ctx.beginPath();
-            this.ctx.arc(mousePosition.x, mousePosition.y, mouseRadius, 0, 2 * Math.PI);
+            this.ctx.arc(
+                mousePosition.x,
+                mousePosition.y,
+                mouseRadius,
+                0,
+                2 * Math.PI
+            );
             this.ctx.stroke();
         }
 

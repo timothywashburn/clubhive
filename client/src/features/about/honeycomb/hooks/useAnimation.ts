@@ -18,21 +18,24 @@ export function useAnimation(): AnimationHookResult {
         isAnimating.current = false;
     }, []);
 
-    const startAnimation = useCallback((animationCallback: () => void) => {
-        // Stop any existing animation
-        stopAnimation();
-        
-        isAnimating.current = true;
+    const startAnimation = useCallback(
+        (animationCallback: () => void) => {
+            // Stop any existing animation
+            stopAnimation();
 
-        const animate = () => {
-            if (!isAnimating.current) return;
-            
-            animationCallback();
+            isAnimating.current = true;
+
+            const animate = () => {
+                if (!isAnimating.current) return;
+
+                animationCallback();
+                animationRef.current = requestAnimationFrame(animate);
+            };
+
             animationRef.current = requestAnimationFrame(animate);
-        };
-
-        animationRef.current = requestAnimationFrame(animate);
-    }, [stopAnimation]);
+        },
+        [stopAnimation]
+    );
 
     // Clean up on unmount
     useEffect(() => {

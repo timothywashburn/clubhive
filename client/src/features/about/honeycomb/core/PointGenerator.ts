@@ -10,7 +10,12 @@ export class PointGenerator {
     private extendedWidth: number;
     private extendedHeight: number;
 
-    constructor(width: number, height: number, numPoints: number, noiseAmount: number) {
+    constructor(
+        width: number,
+        height: number,
+        numPoints: number,
+        noiseAmount: number
+    ) {
         this.width = width;
         this.height = height;
         this.numPoints = numPoints;
@@ -22,31 +27,40 @@ export class PointGenerator {
 
     generateHexagonalGrid(): [number, number][] {
         const points: [number, number][] = [];
-        
+
         // Calculate spacing based on desired number of points
-        const targetDensity = this.numPoints / (this.extendedWidth * this.extendedHeight);
+        const targetDensity =
+            this.numPoints / (this.extendedWidth * this.extendedHeight);
         const hexSpacing = Math.sqrt(2 / (Math.sqrt(3) * targetDensity));
         const rowHeight = (hexSpacing * Math.sqrt(3)) / 2;
-        
+
         // Generate hexagonal grid with noise
         const actualNoiseAmount = hexSpacing * this.noiseAmount;
-        
-        for (let row = 0; row * rowHeight < this.extendedHeight + this.margin; row++) {
+
+        for (
+            let row = 0;
+            row * rowHeight < this.extendedHeight + this.margin;
+            row++
+        ) {
             const y = row * rowHeight - this.margin;
             const isOddRow = row % 2 === 1;
             const xOffset = isOddRow ? hexSpacing / 2 : 0;
-            
-            for (let col = 0; col * hexSpacing < this.extendedWidth + this.margin; col++) {
+
+            for (
+                let col = 0;
+                col * hexSpacing < this.extendedWidth + this.margin;
+                col++
+            ) {
                 const x = col * hexSpacing + xOffset - this.margin;
-                
+
                 // Add random noise to break perfect grid
                 const noisyX = x + (Math.random() - 0.5) * actualNoiseAmount;
                 const noisyY = y + (Math.random() - 0.5) * actualNoiseAmount;
-                
+
                 points.push([noisyX, noisyY]);
             }
         }
-        
+
         return points;
     }
 

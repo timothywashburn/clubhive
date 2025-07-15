@@ -33,8 +33,10 @@ export class PhysicsEngine {
             const mouseForce = this.calculateMouseForce(current, mousePosition);
 
             // Update velocity with forces
-            velocity.vx = (velocity.vx + springX + mouseForce.x) * this.config.damping;
-            velocity.vy = (velocity.vy + springY + mouseForce.y) * this.config.damping;
+            velocity.vx =
+                (velocity.vx + springX + mouseForce.x) * this.config.damping;
+            velocity.vy =
+                (velocity.vy + springY + mouseForce.y) * this.config.damping;
 
             // Update position
             current[0] += velocity.vx;
@@ -42,7 +44,10 @@ export class PhysicsEngine {
         }
     }
 
-    private calculateMouseForce(currentPos: [number, number], mousePos: Point): { x: number; y: number } {
+    private calculateMouseForce(
+        currentPos: [number, number],
+        mousePos: Point
+    ): { x: number; y: number } {
         let mouseForceX = 0;
         let mouseForceY = 0;
 
@@ -53,7 +58,10 @@ export class PhysicsEngine {
             const distance = Math.sqrt(dx * dx + dy * dy);
 
             if (distance < this.config.mouseRadius && distance > 0) {
-                let force = ((this.config.mouseRadius - distance) / this.config.mouseRadius) * this.config.mouseForce;
+                let force =
+                    ((this.config.mouseRadius - distance) /
+                        this.config.mouseRadius) *
+                    this.config.mouseForce;
 
                 // Apply distance-based force scaling
                 const clampedDistance = Math.min(

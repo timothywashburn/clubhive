@@ -5,7 +5,9 @@ export interface MouseTrackingResult {
     mousePosition: React.MutableRefObject<Point>;
 }
 
-export function useMouseTracking(canvasRef: React.RefObject<HTMLCanvasElement>): MouseTrackingResult {
+export function useMouseTracking(
+    canvasRef: React.RefObject<HTMLCanvasElement>
+): MouseTrackingResult {
     const mousePosition = useRef<Point>({ x: -1000, y: -1000 });
 
     useEffect(() => {
