@@ -1,6 +1,6 @@
 import { ApiEndpoint, AuthType } from '@/types/api-types';
 import { ErrorCode } from '@clubhive/shared';
-import Tag from '@/models/tag-schema'; // <-- Your Tag model here
+import Tag from '@/models/tag-schema';
 import { TagData } from '@/models/tag-schema';
 
 export type GetTagsRequest = Record<string, unknown>;
