@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { useLocation } from 'react-router';
 import {
     Code,
     Mail,
@@ -14,6 +15,8 @@ import ChangelogModal from './ChangelogModal';
 export const Footer: React.FC = () => {
     const [isChangelogOpen, setIsChangelogOpen] = useState(false);
     const [currentVersion, setCurrentVersion] = useState('Unknown');
+    const location = useLocation();
+    const isAboutPage = location.pathname === '/about';
 
     useEffect(() => {
         const fetchVersion = async () => {
@@ -33,12 +36,14 @@ export const Footer: React.FC = () => {
     }, []);
 
     return (
-        <>
+        <div style={{ zIndex: 1 }}>
             <ChangelogModal
                 isOpen={isChangelogOpen}
                 onClose={() => setIsChangelogOpen(false)}
             />
-            <footer className={`bg-surface border-t border-divider`}>
+            <footer
+                className={`${isAboutPage ? 'bg-black/20 backdrop-blur-md border-t border-white/10' : 'bg-surface border-t border-divider'}`}
+            >
                 <div className="max-w-7xl mx-auto px-6 lg:px-8 py-6">
                     <div className="flex flex-col lg:flex-row justify-between items-center gap-4">
                         {/* Left Content */}
@@ -110,6 +115,6 @@ export const Footer: React.FC = () => {
                     </div>
                 </div>
             </footer>
-        </>
+        </div>
     );
 };

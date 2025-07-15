@@ -175,7 +175,7 @@ export function VoronoiHoneycomb({
         // Animation loop for manual jelly physics
         const animate = () => {
             const mouse = mouseRef.current;
-            const mouseForce = 0.07;
+            const mouseForce = 0.2;
             const mouseRadius = 600;
             const springStrength = 0.002;
             const damping = 0.8;

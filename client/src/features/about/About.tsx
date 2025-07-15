@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { Code, Users, Star } from 'lucide-react';
 import { VoronoiHoneycomb } from './VoronoiHoneycomb.tsx';
 import { DevPanel } from './DevPanel.tsx';
@@ -7,6 +7,8 @@ export function About() {
     const [regularity, setRegularity] = useState(0);
     const [noiseAmount, setNoiseAmount] = useState(0.15);
     const [showDebug, setShowDebug] = useState(false);
+    const [scrollY, setScrollY] = useState(0);
+    const backgroundRef = useRef<HTMLDivElement>(null);
 
     const contributors = [
         { name: 'alex chen', commits: 87, role: 'project manager' },
@@ -20,9 +22,28 @@ export function About() {
 
     const maxCommits = Math.max(...contributors.map(c => c.commits));
 
+    useEffect(() => {
+        const handleScroll = () => {
+            setScrollY(window.scrollY);
+        };
+
+        window.addEventListener('scroll', handleScroll);
+        return () => window.removeEventListener('scroll', handleScroll);
+    }, []);
+
     return (
         <div className="min-h-screen relative">
-            <div className="absolute inset-0" style={{ zIndex: 1 }}>
+            <div
+                ref={backgroundRef}
+                className="fixed"
+                style={{
+                    top: 0,
+                    left: '0',
+                    right: '0',
+                    height: '150vh',
+                    transform: `translateY(${scrollY * -0.05}px)`,
+                }}
+            >
                 <VoronoiHoneycomb
                     numPoints={8000}
                     relaxationSteps={regularity}
