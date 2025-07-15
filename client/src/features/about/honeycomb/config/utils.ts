@@ -8,9 +8,9 @@ export function hexToHsl(hex: string): { hue: number; saturation: number; lightn
     const cleanHex = hex.replace('#', '');
     
     // Parse the hex values
-    const r = parseInt(cleanHex.substr(0, 2), 16) / 255;
-    const g = parseInt(cleanHex.substr(2, 2), 16) / 255;
-    const b = parseInt(cleanHex.substr(4, 2), 16) / 255;
+    const r = parseInt(cleanHex.substring(0, 2), 16) / 255;
+    const g = parseInt(cleanHex.substring(2, 4), 16) / 255;
+    const b = parseInt(cleanHex.substring(4, 6), 16) / 255;
     
     const max = Math.max(r, g, b);
     const min = Math.min(r, g, b);
@@ -41,7 +41,7 @@ export function hexToHsl(hex: string): { hue: number; saturation: number; lightn
         }
         hue /= 6;
     }
-    
+
     return {
         hue: Math.round(hue * 360),
         saturation: Math.round(saturation * 100),

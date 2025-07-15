@@ -2,11 +2,13 @@
 export { VoronoiHoneycomb } from '../VoronoiHoneycomb';
 export { StaticVoronoiHoneycomb } from './components/StaticVoronoiHoneycomb';
 export { DynamicVoronoiHoneycombComponent } from './components/DynamicVoronoiHoneycomb';
+export { ColorMorphingHoneycomb } from './components/ColorMorphingHoneycomb';
 
 // Core classes
 export { VoronoiHoneycombBase } from './core/VoronoiHoneycombBase';
 export { PointGenerator } from './core/PointGenerator';
 export { ColorCalculator } from './core/ColorCalculator';
+export { ColorMorphingCalculator } from './core/ColorMorphingCalculator';
 export { PhysicsEngine } from './core/PhysicsEngine';
 export { HoneycombRenderer } from './core/HoneycombRenderer';
 
@@ -16,7 +18,7 @@ export { useMouseTracking } from './hooks/useMouseTracking';
 export { useAnimation } from './hooks/useAnimation';
 
 // Configuration
-export { DEFAULT_COLORS } from './config/colors';
+export { DEFAULT_COLORS, MUTED_COLORS, VIBRANT_COLORS } from './config/colors';
 export { DEFAULT_PHYSICS, DEFAULT_CONFIG, GENERATION_CONFIG } from './config/animation';
 export type {
     VoronoiHoneycombProps,
