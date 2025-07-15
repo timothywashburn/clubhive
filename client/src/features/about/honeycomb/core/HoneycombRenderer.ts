@@ -1,19 +1,19 @@
 import * as d3 from 'd3';
 import { Delaunay } from 'd3-delaunay';
-import { ColorData, VoronoiColors, Point } from '../config/types';
+import { ColorData, HoneycombColors, Point } from '../config/types';
 
 export class HoneycombRenderer {
     private ctx: CanvasRenderingContext2D;
     private width: number;
     private height: number;
-    private colors: VoronoiColors;
+    private colors: HoneycombColors;
     private showDebug: boolean;
 
     constructor(
         ctx: CanvasRenderingContext2D,
         width: number,
         height: number,
-        colors: VoronoiColors,
+        colors: HoneycombColors,
         showDebug: boolean = false
     ) {
         this.ctx = ctx;
@@ -190,7 +190,7 @@ export class HoneycombRenderer {
         this.showDebug = showDebug;
     }
 
-    updateColors(colors: VoronoiColors): void {
+    updateColors(colors: HoneycombColors): void {
         this.colors = colors;
     }
 }

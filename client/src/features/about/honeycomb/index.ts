@@ -1,11 +1,11 @@
 // Main components
-export { VoronoiHoneycomb } from '../VoronoiHoneycomb';
-export { StaticVoronoiHoneycomb } from './components/StaticVoronoiHoneycomb';
-export { DynamicVoronoiHoneycombComponent } from './components/DynamicVoronoiHoneycomb';
+export { Honeycomb } from '../Honeycomb.tsx';
+export { StaticHoneycomb } from './components/StaticHoneycomb.tsx';
+export { DynamicHoneycombComponent } from './components/DynamicHoneycomb.tsx';
 export { GlowingHoneycomb } from './components/GlowingHoneycomb';
 
 // Core classes
-export { VoronoiHoneycombBase } from './core/VoronoiHoneycombBase';
+export { HoneycombBase } from './core/HoneycombBase.ts';
 export { PointGenerator } from './core/PointGenerator';
 export { ColorCalculator } from './core/ColorCalculator';
 export { GlowingHoneycombCalculator } from './core/GlowingHoneycombCalculator';
@@ -25,12 +25,12 @@ export {
     GENERATION_CONFIG,
 } from './config/animation';
 export type {
-    VoronoiHoneycombProps,
+    HoneycombProps,
     HoneycombConfig,
-    VoronoiColors,
     HoneycombColors,
-    DebugColors,
-    AnimationSettings,
+    HoneycombCellColors,
+    HoneycombDebugColors,
+    HoneycombAnimationSettings,
     PhysicsConfig,
     Point,
     Velocity,

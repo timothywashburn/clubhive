@@ -1,14 +1,13 @@
-import { Point } from '../config/types';
 import { GENERATION_CONFIG } from '../config/animation';
 
 export class PointGenerator {
-    private width: number;
-    private height: number;
-    private numPoints: number;
-    private noiseAmount: number;
-    private margin: number;
-    private extendedWidth: number;
-    private extendedHeight: number;
+    private readonly width: number;
+    private readonly height: number;
+    private readonly numPoints: number;
+    private readonly noiseAmount: number;
+    private readonly margin: number;
+    private readonly extendedWidth: number;
+    private readonly extendedHeight: number;
 
     constructor(
         width: number,

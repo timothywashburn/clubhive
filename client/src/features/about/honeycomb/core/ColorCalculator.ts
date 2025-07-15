@@ -1,16 +1,16 @@
 import { createNoise2D } from 'simplex-noise';
-import { ColorData, VoronoiColors, HoneycombColors } from '../config/types';
+import { ColorData, HoneycombColors } from '../config/types';
 import { GENERATION_CONFIG } from '../config/animation';
 import { hexToHsl } from '../config/utils';
 
 export class ColorCalculator {
-    private colors: VoronoiColors;
+    private colors: HoneycombColors;
     private width: number;
     private height: number;
     private noise2D: ReturnType<typeof createNoise2D>;
     private edgeThreshold: number;
 
-    constructor(colors: VoronoiColors, width: number, height: number) {
+    constructor(colors: HoneycombColors, width: number, height: number) {
         this.colors = colors;
         this.width = width;
         this.height = height;

@@ -1,17 +1,17 @@
 import React, { useEffect, useRef } from 'react';
-import { VoronoiHoneycombBase } from '../core/VoronoiHoneycombBase';
+import { HoneycombBase } from '../core/HoneycombBase.ts';
 import { useCanvasSetup } from '../hooks/useCanvasSetup';
-import { VoronoiHoneycombProps, HoneycombConfig } from '../config/types';
+import { HoneycombProps, HoneycombConfig } from '../config/types';
 import { DEFAULT_CONFIG } from '../config/animation';
 
-export function StaticVoronoiHoneycomb({
+export function StaticHoneycomb({
     className = '',
-    numPoints = 1000,
-    noiseAmount = 0.3,
-    showDebug = false,
-}: VoronoiHoneycombProps) {
+    numPoints,
+    noiseAmount,
+    showDebug,
+}: HoneycombProps) {
     const { canvasRef, dimensions, context } = useCanvasSetup();
-    const honeycombRef = useRef<VoronoiHoneycombBase | null>(null);
+    const honeycombRef = useRef<HoneycombBase | null>(null);
 
     useEffect(() => {
         if (!context || !dimensions.width || !dimensions.height) return;
@@ -24,7 +24,7 @@ export function StaticVoronoiHoneycomb({
         };
 
         // Create honeycomb instance
-        const honeycomb = new VoronoiHoneycombBase(
+        const honeycomb = new HoneycombBase(
             config,
             context,
             dimensions.width,
@@ -48,7 +48,6 @@ export function StaticVoronoiHoneycomb({
             ref={canvasRef}
             className={`w-full h-full ${className}`}
             style={{
-                background: DEFAULT_CONFIG.colors.background,
                 display: 'block',
                 width: '100%',
                 height: '100%',

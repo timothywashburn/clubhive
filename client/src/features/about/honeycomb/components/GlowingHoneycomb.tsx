@@ -6,9 +6,9 @@ import { useCanvasSetup } from '../hooks/useCanvasSetup';
 import { useMouseTracking } from '../hooks/useMouseTracking';
 import { useAnimation } from '../hooks/useAnimation';
 import {
-    VoronoiHoneycombProps,
+    HoneycombProps,
     HoneycombConfig,
-    VoronoiColors,
+    HoneycombColors,
 } from '../config/types';
 import { MUTED_COLORS, VIBRANT_COLORS } from '../config/colors';
 import { DEFAULT_CONFIG } from '../config/animation';
@@ -27,8 +27,8 @@ class GlowingHoneycombEngine {
         ctx: CanvasRenderingContext2D,
         width: number,
         height: number,
-        mutedColors: VoronoiColors,
-        vibrantColors: VoronoiColors,
+        mutedColors: HoneycombColors,
+        vibrantColors: HoneycombColors,
         glowRadius: number,
         activationChance: number,
         glowSpeed: number,
@@ -128,26 +128,26 @@ class GlowingHoneycombEngine {
     }
 }
 
-interface GlowingHoneycombProps extends VoronoiHoneycombProps {
-    glowRadius?: number;
-    activationChance?: number;
-    glowSpeed?: number;
-    fadeSpeed?: number;
-    mutedColors?: VoronoiColors;
-    vibrantColors?: VoronoiColors;
+interface GlowingHoneycombProps extends HoneycombProps {
+    glowRadius: number;
+    activationChance: number;
+    glowSpeed: number;
+    fadeSpeed: number;
+    mutedColors: HoneycombColors;
+    vibrantColors: HoneycombColors;
 }
 
 export function GlowingHoneycomb({
     className = '',
-    numPoints = 1000,
-    noiseAmount = 0.3,
-    showDebug = false,
-    glowRadius = 300,
-    activationChance = 0.05,
-    glowSpeed = 0.02,
-    fadeSpeed = 0.01,
-    mutedColors = MUTED_COLORS,
-    vibrantColors = VIBRANT_COLORS,
+    numPoints,
+    noiseAmount,
+    showDebug,
+    glowRadius,
+    activationChance,
+    glowSpeed,
+    fadeSpeed,
+    mutedColors,
+    vibrantColors,
 }: GlowingHoneycombProps) {
     const { canvasRef, dimensions, context } = useCanvasSetup();
     const { mousePosition } = useMouseTracking(canvasRef);
@@ -228,7 +228,6 @@ export function GlowingHoneycomb({
             ref={canvasRef}
             className={`w-full h-full ${className}`}
             style={{
-                background: mutedColors.background,
                 display: 'block',
                 width: '100%',
                 height: '100%',

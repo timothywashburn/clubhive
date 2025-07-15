@@ -1,5 +1,5 @@
 import { createNoise2D } from 'simplex-noise';
-import { ColorData, VoronoiColors, Point } from '../config/types';
+import { ColorData, HoneycombColors, Point } from '../config/types';
 import { GENERATION_CONFIG } from '../config/animation';
 import { hexToHsl, hexToRgb, rgbToHsl, alphaBlendRgb } from '../config/utils';
 
@@ -11,8 +11,8 @@ interface GlowState {
 }
 
 export class GlowingHoneycombCalculator {
-    private mutedColors: VoronoiColors;
-    private vibrantColors: VoronoiColors;
+    private mutedColors: HoneycombColors;
+    private vibrantColors: HoneycombColors;
     private width: number;
     private height: number;
     private noise2D: ReturnType<typeof createNoise2D>;
@@ -36,8 +36,8 @@ export class GlowingHoneycombCalculator {
     private fadeSpeed: number; // How fast cells fade back
 
     constructor(
-        mutedColors: VoronoiColors,
-        vibrantColors: VoronoiColors,
+        mutedColors: HoneycombColors,
+        vibrantColors: HoneycombColors,
         width: number,
         height: number,
         glowRadius: number = 300,

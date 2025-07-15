@@ -1,8 +1,6 @@
-import { VoronoiColors } from './types';
+import { HoneycombColors } from './types';
 
-export const MUTED_COLORS: VoronoiColors = {
-    background: '#2c2c2c',
-
+export const MUTED_COLORS: HoneycombColors = {
     honeycomb: {
         baseHue: 222,
         hueVariation: 15,
@@ -48,9 +46,7 @@ export const MUTED_COLORS: VoronoiColors = {
     },
 };
 
-export const VIBRANT_COLORS: VoronoiColors = {
-    background: '#2c2c2c',
-
+export const VIBRANT_COLORS: HoneycombColors = {
     honeycomb: {
         baseHue: 40,
         hueVariation: 15,

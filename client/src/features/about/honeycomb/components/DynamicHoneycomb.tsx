@@ -1,12 +1,12 @@
 import React, { useEffect, useRef } from 'react';
-import { VoronoiHoneycombBase } from '../core/VoronoiHoneycombBase';
+import { HoneycombBase } from '../core/HoneycombBase.ts';
 import { useCanvasSetup } from '../hooks/useCanvasSetup';
 import { useMouseTracking } from '../hooks/useMouseTracking';
 import { useAnimation } from '../hooks/useAnimation';
-import { VoronoiHoneycombProps, HoneycombConfig } from '../config/types';
+import { HoneycombProps, HoneycombConfig } from '../config/types';
 import { DEFAULT_CONFIG } from '../config/animation';
 
-class DynamicVoronoiHoneycomb extends VoronoiHoneycombBase {
+class DynamicHoneycomb extends HoneycombBase {
     animate(mousePosition: { x: number; y: number }): void {
         // Update physics simulation
         this.physicsEngine.updatePhysics(mousePosition);
@@ -20,16 +20,16 @@ class DynamicVoronoiHoneycomb extends VoronoiHoneycombBase {
     }
 }
 
-export function DynamicVoronoiHoneycombComponent({
+export function DynamicHoneycombComponent({
     className = '',
-    numPoints = 1000,
-    noiseAmount = 0.3,
-    showDebug = false,
-}: VoronoiHoneycombProps) {
+    numPoints,
+    noiseAmount,
+    showDebug,
+}: HoneycombProps) {
     const { canvasRef, dimensions, context } = useCanvasSetup();
     const { mousePosition } = useMouseTracking(canvasRef);
     const { startAnimation, stopAnimation } = useAnimation();
-    const honeycombRef = useRef<DynamicVoronoiHoneycomb | null>(null);
+    const honeycombRef = useRef<DynamicHoneycomb | null>(null);
 
     useEffect(() => {
         if (!context || !dimensions.width || !dimensions.height) return;
@@ -42,7 +42,7 @@ export function DynamicVoronoiHoneycombComponent({
         };
 
         // Create dynamic honeycomb instance
-        const honeycomb = new DynamicVoronoiHoneycomb(
+        const honeycomb = new DynamicHoneycomb(
             config,
             context,
             dimensions.width,
@@ -79,7 +79,6 @@ export function DynamicVoronoiHoneycombComponent({
             ref={canvasRef}
             className={`w-full h-full ${className}`}
             style={{
-                background: DEFAULT_CONFIG.colors.background,
                 display: 'block',
                 width: '100%',
                 height: '100%',

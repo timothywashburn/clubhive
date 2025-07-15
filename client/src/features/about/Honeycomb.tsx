@@ -1,7 +1,8 @@
 import React from 'react';
-import { DynamicVoronoiHoneycombComponent } from './honeycomb/components/DynamicVoronoiHoneycomb';
-import { StaticVoronoiHoneycomb } from './honeycomb/components/StaticVoronoiHoneycomb';
+import { DynamicHoneycombComponent } from './honeycomb/components/DynamicHoneycomb.tsx';
+import { StaticHoneycomb } from './honeycomb/components/StaticHoneycomb.tsx';
 import { GlowingHoneycomb } from './honeycomb/components/GlowingHoneycomb';
+import { MUTED_COLORS, VIBRANT_COLORS } from './honeycomb/config/colors';
 
 type HoneycombType = 'static' | 'dynamic' | 'glowing';
 
@@ -19,7 +20,7 @@ interface VoronoiHoneycombProps {
     fadeSpeed?: number;
 }
 
-export function VoronoiHoneycomb({
+export function Honeycomb({
     className = '',
     numPoints = 1000,
     noiseAmount = 0.3,
@@ -36,8 +37,6 @@ export function VoronoiHoneycomb({
         honeycombType ||
         (glowing ? 'glowing' : isStatic ? 'static' : 'dynamic');
 
-    console.log(type);
-
     if (type === 'glowing') {
         return (
             <GlowingHoneycomb
@@ -49,13 +48,15 @@ export function VoronoiHoneycomb({
                 activationChance={activationChance}
                 glowSpeed={glowSpeed}
                 fadeSpeed={fadeSpeed}
+                mutedColors={MUTED_COLORS}
+                vibrantColors={VIBRANT_COLORS}
             />
         );
     }
 
     if (type === 'static') {
         return (
-            <StaticVoronoiHoneycomb
+            <StaticHoneycomb
                 className={className}
                 numPoints={numPoints}
                 noiseAmount={noiseAmount}
@@ -65,7 +66,7 @@ export function VoronoiHoneycomb({
     }
 
     return (
-        <DynamicVoronoiHoneycombComponent
+        <DynamicHoneycombComponent
             className={className}
             numPoints={numPoints}
             noiseAmount={noiseAmount}

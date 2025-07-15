@@ -1,4 +1,4 @@
-export interface HoneycombColors {
+export interface HoneycombCellColors {
     baseHue: number;
     hueVariation: number;
     baseSaturation: number;
@@ -12,7 +12,7 @@ export interface HoneycombColors {
     edgeStroke: string; // Hex color for the edge stroke
 }
 
-export interface DebugColors {
+export interface HoneycombDebugColors {
     currentPoint: string;
     basePoint: string;
     connectionLine: string;
@@ -22,17 +22,16 @@ export interface DebugColors {
     mouseRadiusOpacity: number;
 }
 
-export interface AnimationSettings {
+export interface HoneycombAnimationSettings {
     strokeWidth: number;
     innerHexagonScale: number;
     outerBlendOffset: number;
 }
 
-export interface VoronoiColors {
-    background: string;
-    honeycomb: HoneycombColors;
-    debug: DebugColors;
-    animation: AnimationSettings;
+export interface HoneycombColors {
+    honeycomb: HoneycombCellColors;
+    debug: HoneycombDebugColors;
+    animation: HoneycombAnimationSettings;
 }
 
 export interface PhysicsConfig {
@@ -48,7 +47,7 @@ export interface HoneycombConfig {
     numPoints: number;
     noiseAmount: number;
     showDebug: boolean;
-    colors: VoronoiColors;
+    colors: HoneycombColors;
     physics: PhysicsConfig;
 }
 
@@ -84,10 +83,10 @@ export interface ColorData {
     edgeColorString: string;
 }
 
-export interface VoronoiHoneycombProps {
+export interface HoneycombProps {
     className?: string;
-    numPoints?: number;
-    noiseAmount?: number;
-    showDebug?: boolean;
+    numPoints: number;
+    noiseAmount: number;
+    showDebug: boolean;
     isStatic?: boolean;
 }

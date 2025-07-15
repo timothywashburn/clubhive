@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Code, Users, Star } from 'lucide-react';
-import { VoronoiHoneycomb } from './VoronoiHoneycomb.tsx';
+import { Honeycomb } from './Honeycomb.tsx';
 import { DevPanel } from './DevPanel.tsx';
 
 type HoneycombType = 'static' | 'dynamic' | 'glowing';
@@ -35,7 +35,7 @@ export function About() {
                     transform: `translateY(${scrollY * -0.05}px)`,
                 }}
             >
-                <VoronoiHoneycomb
+                <Honeycomb
                     numPoints={8000}
                     noiseAmount={noiseAmount}
                     showDebug={showDebug}

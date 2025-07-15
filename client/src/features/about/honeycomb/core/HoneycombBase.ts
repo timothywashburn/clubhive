@@ -4,7 +4,7 @@ import { PhysicsEngine } from './PhysicsEngine';
 import { HoneycombRenderer } from './HoneycombRenderer';
 import { HoneycombConfig, ColorData } from '../config/types';
 
-export class VoronoiHoneycombBase {
+export class HoneycombBase {
     protected pointGenerator: PointGenerator;
     protected colorCalculator: ColorCalculator;
     protected physicsEngine: PhysicsEngine;
