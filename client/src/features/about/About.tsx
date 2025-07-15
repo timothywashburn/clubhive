@@ -24,7 +24,7 @@ export function About() {
         <div className="min-h-screen relative">
             <div className="absolute inset-0" style={{ zIndex: 1 }}>
                 <VoronoiHoneycomb
-                    numPoints={800}
+                    numPoints={8000}
                     relaxationSteps={regularity}
                     noiseAmount={noiseAmount}
                     showDebug={showDebug}

@@ -175,12 +175,10 @@ export function VoronoiHoneycomb({
         // Animation loop for manual jelly physics
         const animate = () => {
             const mouse = mouseRef.current;
-            const mouseForce = 0.1;
+            const mouseForce = 0.07;
             const mouseRadius = 600;
             const springStrength = 0.002;
-            const damping = 0.4;
-            const maxDisplacement = 30; // Maximum distance from base position
-
+            const damping = 0.8;
             // Apply forces to each point
             for (let i = 0; i < currentPointsRef.current.length; i++) {
                 const current = currentPointsRef.current[i];
@@ -191,33 +189,27 @@ export function VoronoiHoneycomb({
                 const springX = (base[0] - current[0]) * springStrength;
                 const springY = (base[1] - current[1]) * springStrength;
 
-                // Calculate current displacement from base
-                const displacementX = current[0] - base[0];
-                const displacementY = current[1] - base[1];
-                const currentDisplacement = Math.sqrt(
-                    displacementX * displacementX +
-                        displacementY * displacementY
-                );
-
-                // Resistance factor that increases exponentially with distance
-                const resistanceFactor = Math.max(
-                    0.1,
-                    1 - Math.pow(currentDisplacement / maxDisplacement, 2)
-                );
-
-                // Mouse repulsion force (reduced by resistance)
+                // Mouse attraction force (suck in)
                 let mouseForceX = 0;
                 let mouseForceY = 0;
                 if (mouse.x > -500) {
-                    const dx = current[0] - mouse.x;
-                    const dy = current[1] - mouse.y;
+                    const dx = mouse.x - current[0];
+                    const dy = mouse.y - current[1];
                     const distance = Math.sqrt(dx * dx + dy * dy);
 
                     if (distance < mouseRadius && distance > 0) {
-                        const force =
+                        let force =
                             ((mouseRadius - distance) / mouseRadius) *
-                            mouseForce *
-                            resistanceFactor;
+                            mouseForce;
+
+                        const cutoff = 80;
+                        const minDistance = 1;
+                        const clampedDistance = Math.min(
+                            Math.max(distance, minDistance),
+                            cutoff
+                        );
+                        force *= clampedDistance / cutoff;
+
                         const angle = Math.atan2(dy, dx);
                         mouseForceX = Math.cos(angle) * force;
                         mouseForceY = Math.sin(angle) * force;
@@ -287,35 +279,95 @@ export function VoronoiHoneycomb({
                         distanceFromEdge / edgeThreshold
                     );
 
-                    // Calculate darkness factor
-                    const darknessFactor = 1 - baseLightness / 80;
-                    const edgeDarknessFactor = 1 - (0.5 + 0.5 * edgeFactor);
-                    const totalDarknessFactor = Math.min(
-                        1,
-                        darknessFactor + edgeDarknessFactor
+                    // Extract color blending functions
+                    const calculateBlendFactor = (
+                        baseLightness: number,
+                        edgeFactor: number
+                    ) => {
+                        const darknessFactor = 1 - baseLightness / 80;
+                        const edgeDarknessFactor = 1 - (0.5 + 0.5 * edgeFactor);
+                        return Math.min(1, darknessFactor + edgeDarknessFactor);
+                    };
+
+                    const blendTowardsEdgeColor = (
+                        baseHue: number,
+                        baseSaturation: number,
+                        baseLightness: number,
+                        blendFactor: number
+                    ) => {
+                        // Edge color HSL values for #502205
+                        const edgeHue = 23;
+                        const edgeSaturation = 88;
+                        const edgeLightness = 17;
+
+                        return {
+                            hue: baseHue + (edgeHue - baseHue) * blendFactor,
+                            saturation:
+                                baseSaturation +
+                                (edgeSaturation - baseSaturation) * blendFactor,
+                            lightness:
+                                baseLightness +
+                                (edgeLightness - baseLightness) * blendFactor,
+                        };
+                    };
+
+                    // Calculate blend factors and colors
+                    const totalDarknessFactor = calculateBlendFactor(
+                        baseLightness,
+                        edgeFactor
+                    );
+                    const innerColor = blendTowardsEdgeColor(
+                        baseHue,
+                        baseSaturation,
+                        baseLightness,
+                        totalDarknessFactor
                     );
 
-                    // Edge color HSL values for #502205
-                    const edgeHue = 23;
-                    const edgeSaturation = 88;
-                    const edgeLightness = 17;
+                    const outerBlendFactor = Math.min(
+                        1,
+                        totalDarknessFactor + 0.4
+                    ); // More edge blending for outer ring
+                    const outerColor = blendTowardsEdgeColor(
+                        baseHue,
+                        baseSaturation,
+                        baseLightness,
+                        outerBlendFactor
+                    );
 
-                    // Blend towards edge color
-                    const finalHue =
-                        baseHue + (edgeHue - baseHue) * totalDarknessFactor;
-                    const finalSaturation =
-                        baseSaturation +
-                        (edgeSaturation - baseSaturation) * totalDarknessFactor;
-                    const finalLightness =
-                        baseLightness +
-                        (edgeLightness - baseLightness) * totalDarknessFactor;
-
-                    // Draw main fill
-                    ctx.fillStyle = `hsl(${finalHue}, ${finalSaturation}%, ${finalLightness}%)`;
+                    // Draw outer hexagon with edge-blended color
+                    ctx.fillStyle = `hsl(${outerColor.hue}, ${outerColor.saturation}%, ${outerColor.lightness}%)`;
                     ctx.fill();
 
-                    // Draw main edge
-                    ctx.strokeStyle = `#502205`;
+                    // Calculate the centroid of the cell for the inner hexagon
+                    const centroid = d3.polygonCentroid(cell);
+
+                    // Create inner hexagon path (scaled down from center)
+                    const scaleFactor = 0.7; // Inner hexagon is 70% the size
+                    const innerCell = cell.map(point => [
+                        centroid[0] + (point[0] - centroid[0]) * scaleFactor,
+                        centroid[1] + (point[1] - centroid[1]) * scaleFactor,
+                    ]);
+
+                    // Draw inner hexagon
+                    ctx.beginPath();
+                    ctx.moveTo(innerCell[0][0], innerCell[0][1]);
+                    for (let j = 1; j < innerCell.length; j++) {
+                        ctx.lineTo(innerCell[j][0], innerCell[j][1]);
+                    }
+                    ctx.closePath();
+
+                    // Fill inner hexagon with blended color
+                    ctx.fillStyle = `hsl(${innerColor.hue}, ${innerColor.saturation}%, ${innerColor.lightness}%)`;
+                    ctx.fill();
+
+                    // Draw outer edge
+                    ctx.beginPath();
+                    ctx.moveTo(cell[0][0], cell[0][1]);
+                    for (let j = 1; j < cell.length; j++) {
+                        ctx.lineTo(cell[j][0], cell[j][1]);
+                    }
+                    ctx.closePath();
+                    ctx.strokeStyle = `#4d1f09`;
                     ctx.lineWidth = 3.5;
                     ctx.stroke();
                 }
