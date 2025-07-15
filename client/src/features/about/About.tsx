@@ -1,10 +1,11 @@
 import React, { useState } from 'react';
 import { Code, Users, Star } from 'lucide-react';
-import { VoronoiHoneycomb } from '../components/VoronoiHoneycomb';
-import { DevPanel } from '../components/DevPanel';
+import { VoronoiHoneycomb } from './VoronoiHoneycomb.tsx';
+import { DevPanel } from './DevPanel.tsx';
 
 export function About() {
     const [regularity, setRegularity] = useState(5);
+    const [noiseAmount, setNoiseAmount] = useState(0.3);
 
     const contributors = [
         { name: 'alex chen', commits: 87, role: 'project manager' },
@@ -24,12 +25,15 @@ export function About() {
                 <VoronoiHoneycomb
                     numPoints={800}
                     relaxationSteps={regularity}
+                    noiseAmount={noiseAmount}
                 />
             </div>
 
             <DevPanel
                 regularity={regularity}
                 onRegularityChange={setRegularity}
+                noiseAmount={noiseAmount}
+                onNoiseAmountChange={setNoiseAmount}
             />
             <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-16 relative z-10">
                 {/* Hero Section */}
@@ -120,11 +124,10 @@ export function About() {
                         busy bees.
                     </p>
 
-                    <div className="relative h-96 bg-black/20 backdrop-blur-sm rounded-2xl border border-white/20 overflow-hidden">
+                    <div className="relative h-96 bg-black/20 backdrop-blur-sm rounded-2xl overflow-hidden">
                         <div className="absolute inset-0 p-8 flex items-center justify-center">
                             <p className="text-white/80 text-lg text-center">
-                                Soon this space will be filled with flying bees
-                                representing our contributors!
+                                put some text here
                             </p>
                         </div>
                     </div>

@@ -11,7 +11,7 @@ import { SignIn } from './pages/SignIn';
 import { SignUp } from './pages/SignUp';
 import { NotFound } from './pages/NotFound';
 import { Account } from './pages/Account.tsx';
-import { About } from './pages/About';
+import { About } from './features/about/About.tsx';
 
 export function App() {
     const { isAuthenticated, toggleAuth } = useAuth();

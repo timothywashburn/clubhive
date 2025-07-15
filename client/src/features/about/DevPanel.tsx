@@ -3,9 +3,16 @@ import React from 'react';
 interface DevPanelProps {
     regularity: number;
     onRegularityChange: (value: number) => void;
+    noiseAmount: number;
+    onNoiseAmountChange: (value: number) => void;
 }
 
-export function DevPanel({ regularity, onRegularityChange }: DevPanelProps) {
+export function DevPanel({
+    regularity,
+    onRegularityChange,
+    noiseAmount,
+    onNoiseAmountChange,
+}: DevPanelProps) {
     return (
         <div className="fixed top-4 right-4 z-50 bg-black/80 backdrop-blur-sm border border-white/20 rounded-lg p-4 text-white">
             <h3 className="text-sm font-bold mb-3">Dev Panel</h3>
@@ -24,6 +31,26 @@ export function DevPanel({ regularity, onRegularityChange }: DevPanelProps) {
                         value={regularity}
                         onChange={e =>
                             onRegularityChange(parseInt(e.target.value))
+                        }
+                        className="w-full h-2 bg-gray-600 rounded-lg appearance-none cursor-pointer slider"
+                    />
+                </div>
+
+                <div>
+                    <label className="block text-xs mb-1">
+                        Noise Amount:{' '}
+                        <span className="text-yellow-400">
+                            {noiseAmount.toFixed(2)}
+                        </span>
+                    </label>
+                    <input
+                        type="range"
+                        min="0"
+                        max="1"
+                        step="0.05"
+                        value={noiseAmount}
+                        onChange={e =>
+                            onNoiseAmountChange(parseFloat(e.target.value))
                         }
                         className="w-full h-2 bg-gray-600 rounded-lg appearance-none cursor-pointer slider"
                     />
