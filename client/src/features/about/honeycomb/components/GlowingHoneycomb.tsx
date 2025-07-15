@@ -32,7 +32,8 @@ class GlowingHoneycombEngine {
         glowRadius: number,
         activationChance: number,
         glowSpeed: number,
-        fadeSpeed: number
+        fadeSpeed: number,
+        decayChance: number
     ) {
         this.config = config;
         this.pointGenerator = new PointGenerator(
@@ -49,7 +50,8 @@ class GlowingHoneycombEngine {
             glowRadius,
             activationChance,
             glowSpeed,
-            fadeSpeed
+            fadeSpeed,
+            decayChance
         );
         // Use muted colors for the renderer
         this.renderer = new HoneycombRenderer(
@@ -133,6 +135,7 @@ interface GlowingHoneycombProps extends HoneycombProps {
     activationChance: number;
     glowSpeed: number;
     fadeSpeed: number;
+    decayChance: number;
     mutedColors: HoneycombColors;
     vibrantColors: HoneycombColors;
 }
@@ -146,6 +149,7 @@ export function GlowingHoneycomb({
     activationChance,
     glowSpeed,
     fadeSpeed,
+    decayChance,
     mutedColors,
     vibrantColors,
 }: GlowingHoneycombProps) {
@@ -176,7 +180,8 @@ export function GlowingHoneycomb({
             glowRadius,
             activationChance,
             glowSpeed,
-            fadeSpeed
+            fadeSpeed,
+            decayChance
         );
 
         // Initialize the honeycomb
@@ -204,6 +209,7 @@ export function GlowingHoneycomb({
         activationChance,
         glowSpeed,
         fadeSpeed,
+        decayChance,
         mutedColors,
         vibrantColors,
         startAnimation,

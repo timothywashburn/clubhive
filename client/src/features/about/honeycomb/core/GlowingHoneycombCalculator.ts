@@ -3,11 +3,16 @@ import { ColorData, HoneycombColors, Point } from '../config/types';
 import { GENERATION_CONFIG } from '../config/animation';
 import { hexToHsl, hexToRgb, rgbToHsl, alphaBlendRgb } from '../config/utils';
 
+// Constants for random intensity boost amounts
+const MIN_INTENSITY_CHANGE = 0.1;
+const MAX_INTENSITY_CHANGE = 0.4;
+const RANDOM_CHECK_INTERVAL = 100; // Check for activation/decay every 100ms
+
 interface GlowState {
-    isGlowing: boolean;
-    glowIntensity: number; // 0 to 1
+    maxIntensity: number; // 0 to 1 - maximum intensity this cell can reach
+    glowIntensity: number; // 0 to 1 - current intensity
     activationTimer: number;
-    lastActivationCheck: number;
+    lastRandomCheck: number;
 }
 
 export class GlowingHoneycombCalculator {
@@ -31,7 +36,8 @@ export class GlowingHoneycombCalculator {
     private mutedTargetRgb: { r: number; g: number; b: number };
     private vibrantTargetRgb: { r: number; g: number; b: number };
     private glowStates: GlowState[] = [];
-    private activationChance: number; // Chance per frame to activate when cursor is near
+    private activationChance: number; // Chance per check to activate when cursor is near
+    private decayChance: number; // Chance per check to decay intensity
     private glowSpeed: number; // How fast cells glow up
     private fadeSpeed: number; // How fast cells fade back
 
@@ -40,10 +46,11 @@ export class GlowingHoneycombCalculator {
         vibrantColors: HoneycombColors,
         width: number,
         height: number,
-        glowRadius: number = 300,
-        activationChance: number = 0.05,
-        glowSpeed: number = 0.02,
-        fadeSpeed: number = 0.01
+        glowRadius: number,
+        activationChance: number,
+        glowSpeed: number,
+        fadeSpeed: number,
+        decayChance: number
     ) {
         this.mutedColors = mutedColors;
         this.vibrantColors = vibrantColors;
@@ -54,6 +61,7 @@ export class GlowingHoneycombCalculator {
             Math.min(width, height) * GENERATION_CONFIG.edgeThresholdRatio;
         this.glowRadius = glowRadius;
         this.activationChance = activationChance;
+        this.decayChance = decayChance;
         this.glowSpeed = glowSpeed;
         this.fadeSpeed = fadeSpeed;
 
@@ -72,10 +80,10 @@ export class GlowingHoneycombCalculator {
         this.glowStates = Array(pointCount)
             .fill(null)
             .map(() => ({
-                isGlowing: false,
+                maxIntensity: 0,
                 glowIntensity: 0,
                 activationTimer: 0,
-                lastActivationCheck: 0,
+                lastRandomCheck: 0,
             }));
     }
 
@@ -104,47 +112,85 @@ export class GlowingHoneycombCalculator {
             // Update glow state for this cell
             const glowState = this.glowStates[i];
 
-            // Activation logic - random chance to start glowing when cursor is near
-            if (isNearMouse && !glowState.isGlowing) {
-                // Only check for activation every 100ms to avoid too frequent checks
-                if (currentTime - glowState.lastActivationCheck > 100) {
-                    glowState.lastActivationCheck = currentTime;
+            // Random logic - check for both activation and decay
+            if (
+                currentTime - glowState.lastRandomCheck >
+                RANDOM_CHECK_INTERVAL
+            ) {
+                glowState.lastRandomCheck = currentTime;
 
+                // Activation logic - random chance to boost max intensity when cursor is near
+                if (isNearMouse && glowState.maxIntensity < 1.0) {
                     // Distance-based activation chance (closer = higher chance)
                     const distanceFactor =
                         1 - distanceFromMouse / this.glowRadius;
                     const adjustedChance = Math.min(
                         1.0,
-                        this.activationChance * Math.pow(distanceFactor, 1.5)
+                        this.activationChance * Math.pow(distanceFactor, 2)
                     );
 
                     if (Math.random() < adjustedChance) {
-                        glowState.isGlowing = true;
+                        // Add random boost to max intensity
+                        const intensityBoost =
+                            MIN_INTENSITY_CHANGE +
+                            Math.random() *
+                                (MAX_INTENSITY_CHANGE - MIN_INTENSITY_CHANGE);
+
+                        // If cell is at max intensity (fading), boost from current instead of previous max
+                        if (glowState.glowIntensity >= glowState.maxIntensity) {
+                            glowState.maxIntensity = Math.min(
+                                1.0,
+                                glowState.glowIntensity + intensityBoost
+                            );
+                        } else {
+                            glowState.maxIntensity = Math.min(
+                                1.0,
+                                glowState.maxIntensity + intensityBoost
+                            );
+                        }
+
                         glowState.activationTimer = currentTime;
+                    }
+                }
+
+                // Decay logic - random chance to reduce max intensity over time
+                if (glowState.maxIntensity > 0) {
+                    if (Math.random() < this.decayChance) {
+                        // Reduce max intensity by random decay amount
+                        const intensityDecay =
+                            MIN_INTENSITY_CHANGE +
+                            Math.random() *
+                                (MAX_INTENSITY_CHANGE - MIN_INTENSITY_CHANGE);
+                        glowState.maxIntensity = Math.max(
+                            0,
+                            glowState.maxIntensity - intensityDecay
+                        );
                     }
                 }
             }
 
-            // Update glow intensity
-            if (glowState.isGlowing && isNearMouse) {
-                // Glow up while cursor is near
-                const previousIntensity = glowState.glowIntensity;
+            // Update glow intensity based on max intensity threshold
+            if (
+                glowState.glowIntensity < glowState.maxIntensity &&
+                isNearMouse
+            ) {
+                // Glow up towards max intensity when cursor is near
                 glowState.glowIntensity = Math.min(
-                    1,
+                    glowState.maxIntensity,
                     glowState.glowIntensity + this.glowSpeed
                 );
-            } else if (glowState.glowIntensity > 0) {
-                // Fade out when cursor moves away or glow is done
-                const previousIntensity = glowState.glowIntensity;
+            } else if (glowState.glowIntensity >= glowState.maxIntensity) {
+                glowState.maxIntensity = 0;
+                // Fade down when at or above max intensity
                 glowState.glowIntensity = Math.max(
                     0,
                     glowState.glowIntensity - this.fadeSpeed
                 );
+            }
 
-                // Stop glowing when fully faded
-                if (glowState.glowIntensity <= 0) {
-                    glowState.isGlowing = false;
-                }
+            // Reset max intensity when fully faded to 0
+            if (glowState.glowIntensity <= 0) {
+                glowState.maxIntensity = 0;
             }
 
             // Calculate muted (base) colors first

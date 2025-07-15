@@ -36,7 +36,7 @@ export function About() {
                 }}
             >
                 <Honeycomb
-                    numPoints={8000}
+                    numPoints={7000}
                     noiseAmount={noiseAmount}
                     showDebug={showDebug}
                     honeycombType={honeycombType}

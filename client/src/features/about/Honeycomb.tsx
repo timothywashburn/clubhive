@@ -16,6 +16,7 @@ interface VoronoiHoneycombProps {
     glowing?: boolean;
     glowRadius?: number;
     activationChance?: number;
+    decayChance?: number;
     glowSpeed?: number;
     fadeSpeed?: number;
 }
@@ -28,10 +29,11 @@ export function Honeycomb({
     honeycombType = 'glowing',
     isStatic = true,
     glowing = true,
-    glowRadius = 250,
-    activationChance = 0.05,
+    glowRadius = 200,
+    activationChance = 1,
+    decayChance = 0.01,
     glowSpeed = 0.01,
-    fadeSpeed = 0.002,
+    fadeSpeed = 0.01,
 }: VoronoiHoneycombProps) {
     const type =
         honeycombType ||
@@ -46,6 +48,7 @@ export function Honeycomb({
                 showDebug={showDebug}
                 glowRadius={glowRadius}
                 activationChance={activationChance}
+                decayChance={decayChance}
                 glowSpeed={glowSpeed}
                 fadeSpeed={fadeSpeed}
                 mutedColors={MUTED_COLORS}
