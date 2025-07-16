@@ -13,16 +13,13 @@ export function About() {
     const backgroundRef = useRef<HTMLDivElement>(null);
 
     useEffect(() => {
-        const handleScroll = () => {
-            setScrollY(window.scrollY);
-        };
-
+        const handleScroll = () => setScrollY(window.scrollY);
         window.addEventListener('scroll', handleScroll);
         return () => window.removeEventListener('scroll', handleScroll);
     }, []);
 
     return (
-        <div className="min-h-screen relative">
+        <div className="h-full relative">
             <div
                 ref={backgroundRef}
                 className="fixed"
@@ -45,7 +42,7 @@ export function About() {
                 honeycombType={honeycombType}
                 onHoneycombTypeChange={setHoneycombType}
             />
-            <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-16 relative z-10">
+            <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-16 relative z-1">
                 {/* Hero Section */}
                 <div className="text-center mb-20 bg-black/20 backdrop-blur-md rounded-2xl p-8">
                     <h1 className="text-5xl md:text-7xl font-black text-on-surface mb-6">hey there! 👋</h1>

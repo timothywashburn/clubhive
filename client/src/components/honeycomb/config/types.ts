@@ -90,8 +90,8 @@ export interface ColorData {
 
 export interface HoneycombProps {
     className?: string;
-    numPoints: number;
-    noiseAmount: number;
-    showDebug: boolean;
+    numPoints?: number;
+    noiseAmount?: number;
+    showDebug?: boolean;
     isStatic?: boolean;
 }

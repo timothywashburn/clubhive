@@ -4,7 +4,7 @@ import { useCanvasSetup } from '../hooks/useCanvasSetup.ts';
 import { HoneycombProps, HoneycombConfig } from '../config/types.ts';
 import { DEFAULT_CONFIG } from '../config/animation.ts';
 
-export function StaticHoneycomb({ className = '', numPoints, noiseAmount, showDebug }: HoneycombProps) {
+export function StaticHoneycomb({ className = '', numPoints = 7000, noiseAmount = 0.15, showDebug = false }: HoneycombProps) {
     const { canvasRef, dimensions, context } = useCanvasSetup();
     const honeycombRef = useRef<HoneycombBase | null>(null);
 

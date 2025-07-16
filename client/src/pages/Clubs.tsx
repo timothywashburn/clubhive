@@ -12,26 +12,17 @@ export function Clubs() {
     const [searchTerm, setSearchTerm] = useState('');
 
     return (
-        <div className="bg-background">
+        <div className="h-full relative">
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
                 <div className="mb-8">
-                    <h1 className="text-3xl font-bold text-on-background">
-                        Find Clubs
-                    </h1>
-                    <p className="text-on-background-variant mt-2">
-                        Discover clubs that match your interests
-                    </p>
+                    <h1 className="text-3xl font-bold text-on-background">Find Clubs</h1>
+                    <p className="text-on-background-variant mt-2">Discover clubs that match your interests</p>
                 </div>
 
                 <div className="mb-6">
                     <div className="relative">
                         <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                            <svg
-                                className="h-5 w-5 text-on-surface-variant"
-                                fill="none"
-                                stroke="currentColor"
-                                viewBox="0 0 24 24"
-                            >
+                            <svg className="h-5 w-5 text-on-surface-variant" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path
                                     strokeLinecap="round"
                                     strokeLinejoin="round"
@@ -59,22 +50,15 @@ export function Clubs() {
                             >
                                 <div className="flex items-center mb-4">
                                     <div className="w-12 h-12 bg-primary-container rounded-full flex items-center justify-center">
-                                        <span className="text-on-primary-container font-bold">
-                                            C{i}
-                                        </span>
+                                        <span className="text-on-primary-container font-bold">C{i}</span>
                                     </div>
                                     <div className="ml-4">
-                                        <h3 className="text-lg font-medium text-on-surface">
-                                            Club {i}
-                                        </h3>
-                                        <p className="text-sm text-on-surface-variant">
-                                            50 members
-                                        </p>
+                                        <h3 className="text-lg font-medium text-on-surface">Club {i}</h3>
+                                        <p className="text-sm text-on-surface-variant">50 members</p>
                                     </div>
                                 </div>
                                 <p className="text-on-surface-variant mb-4">
-                                    This is a sample club description. Join us
-                                    for amazing activities and events!
+                                    This is a sample club description. Join us for amazing activities and events!
                                 </p>
                                 <button className="w-full bg-primary text-on-primary py-2 rounded-md hover:bg-primary/90 font-medium transition-colors">
                                     Join Club
