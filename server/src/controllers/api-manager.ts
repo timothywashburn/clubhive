@@ -11,6 +11,7 @@ import {
     ApiResponse,
     AuthType,
 } from '@/types/api-types';
+import { getClubProfileEndpoint } from '@/api/misc/club-profile-endpoint';
 import { statusEndpoint } from '@/api/misc/status';
 import { testEndpoint } from '@/api/misc/test';
 import { changelogEndpoint } from '@/api/misc/changelog';
@@ -30,6 +31,7 @@ export default class ApiManager {
     private registerEndpoints() {
         this.addEndpoint(statusEndpoint);
         this.addEndpoint(testEndpoint);
+        this.addEndpoint(getClubProfileEndpoint);
         this.addEndpoint(changelogEndpoint);
         this.addEndpoint(versionEndpoint);
 
