@@ -1,12 +1,15 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Code, Users, Star } from 'lucide-react';
-import { VoronoiHoneycomb } from './VoronoiHoneycomb.tsx';
+import { Honeycomb } from './Honeycomb.tsx';
 import { DevPanel } from './DevPanel.tsx';
 
+type HoneycombType = 'static' | 'dynamic' | 'glowing';
+
 export function About() {
-    const [regularity, setRegularity] = useState(0);
     const [noiseAmount, setNoiseAmount] = useState(0.15);
     const [showDebug, setShowDebug] = useState(false);
+    const [honeycombType, setHoneycombType] =
+        useState<HoneycombType>('glowing');
     const [scrollY, setScrollY] = useState(0);
     const backgroundRef = useRef<HTMLDivElement>(null);
 
@@ -32,21 +35,21 @@ export function About() {
                     transform: `translateY(${scrollY * -0.05}px)`,
                 }}
             >
-                <VoronoiHoneycomb
-                    numPoints={8000}
-                    relaxationSteps={regularity}
+                <Honeycomb
+                    numPoints={7000}
                     noiseAmount={noiseAmount}
                     showDebug={showDebug}
+                    honeycombType={honeycombType}
                 />
             </div>
 
             <DevPanel
-                regularity={regularity}
-                onRegularityChange={setRegularity}
                 noiseAmount={noiseAmount}
                 onNoiseAmountChange={setNoiseAmount}
                 showDebug={showDebug}
                 onShowDebugChange={setShowDebug}
+                honeycombType={honeycombType}
+                onHoneycombTypeChange={setHoneycombType}
             />
             <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-16 relative z-10">
                 {/* Hero Section */}
