@@ -9,6 +9,10 @@ dotenv.config();
 const app = express();
 const PORT = 3000;
 
+import userRoutes from './routes/user-routes';
+import clubRoutes from './routes/club-routes';
+import eventRoutes from './routes/event-routes';
+
 app.use(cors());
 app.use(express.json());
 
@@ -48,6 +52,10 @@ const connectDB = async () => {
         process.exit(1);
     }
 };
+
+app.use('/api/users', userRoutes);
+app.use('/api/clubs', clubRoutes);
+app.use('/api/event', eventRoutes); // not exactly sure if im doing this right; would appreciate feedback
 
 const startServer = async () => {
     await connectDB();
