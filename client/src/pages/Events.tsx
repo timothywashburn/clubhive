@@ -1,4 +1,4 @@
-import { Link } from 'react-router-dom';
+import { Link } from 'react-router';
 /**
  * THIS CLASS IS AI GENERATED AND TEMPORARY
  *
