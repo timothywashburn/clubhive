@@ -6,7 +6,7 @@ type ClubCardProps = {
     name: string;
     tagline: string;
     id: string;
-    tags?: { _id: string; tagName: string; type: string }[];
+    tags?: { _id: string; text: string; type: string }[];
     isSelected: boolean;
     onClick: () => void;
 };
@@ -45,13 +45,13 @@ const ClubCardSmall: React.FC<ClubCardProps> = ({
                         {name}
                     </h3>
                     {/* Display tags */}
-                    <div className="mt-2 flex flex-wrap gap-2">
+                    <div className="mt-2 flex gap-2 overflow-hidden whitespace-nowrap text-ellipsis">
                         {tags.map(tag => (
                             <span
                                 key={tag._id}
                                 className="bg-primary-container text-primary rounded-full px-3 py-1 text-xs font-semibold"
                             >
-                                {tag.tagName}
+                                {tag.text}
                             </span>
                         ))}
                     </div>

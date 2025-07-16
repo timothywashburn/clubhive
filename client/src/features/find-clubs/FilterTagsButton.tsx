@@ -70,7 +70,7 @@ export default function TagFilterPopover({
                                             : 'bg-surface text-on-surface-variant border-outline-variant hover:bg-outline-variant'
                                     }`}
                                 >
-                                    {tag.tagName}
+                                    {tag.text}
                                 </button>
                             );
                         })}

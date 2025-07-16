@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 
 export type Tag = {
     _id: string;
-    tagName: string;
+    text: string;
     type: string;
 };
 

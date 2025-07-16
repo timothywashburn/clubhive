@@ -107,7 +107,7 @@ export function Clubs() {
                                             key={tag._id}
                                             className="bg-primary-container text-primary rounded-full px-3 py-1 text-xs font-semibold"
                                         >
-                                            {tag.tagName}
+                                            {tag.text}
                                         </span>
                                     ))}
                                 </div>
