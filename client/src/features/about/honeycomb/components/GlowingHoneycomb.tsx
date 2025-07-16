@@ -1,21 +1,17 @@
 import React, { useEffect, useRef } from 'react';
 import { PointGenerator } from '../core/PointGenerator';
-import { GlowingHoneycombCalculator } from '../core/GlowingHoneycombCalculator';
+import { GlowingColorCalculator } from '../core/GlowingColorCalculator.ts';
 import { HoneycombRenderer } from '../core/HoneycombRenderer';
 import { useCanvasSetup } from '../hooks/useCanvasSetup';
 import { useMouseTracking } from '../hooks/useMouseTracking';
 import { useAnimation } from '../hooks/useAnimation';
-import {
-    HoneycombProps,
-    HoneycombConfig,
-    HoneycombColors,
-} from '../config/types';
+import { HoneycombProps, HoneycombConfig, HoneycombColors } from '../config/types';
 import { MUTED_COLORS, VIBRANT_COLORS } from '../config/colors';
 import { DEFAULT_CONFIG } from '../config/animation';
 
 class GlowingHoneycombEngine {
     private pointGenerator: PointGenerator;
-    private colorCalculator: GlowingHoneycombCalculator;
+    private colorCalculator: GlowingColorCalculator;
     private renderer: HoneycombRenderer;
     private config: HoneycombConfig;
     private glowRadius: number;
@@ -37,30 +33,10 @@ class GlowingHoneycombEngine {
     ) {
         this.config = config;
         this.glowRadius = glowRadius;
-        this.pointGenerator = new PointGenerator(
-            width,
-            height,
-            config.numPoints,
-            config.noiseAmount
-        );
-        this.colorCalculator = new GlowingHoneycombCalculator(
-            mutedColors,
-            vibrantColors,
-            width,
-            height,
-            glowRadius,
-            activationChance,
-            glowSpeed,
-            fadeSpeed
-        );
+        this.pointGenerator = new PointGenerator(width, height, config.numPoints, config.noiseAmount);
+        this.colorCalculator = new GlowingColorCalculator(mutedColors, vibrantColors, glowRadius, activationChance, glowSpeed, fadeSpeed);
         // Use muted colors for the renderer
-        this.renderer = new HoneycombRenderer(
-            ctx,
-            width,
-            height,
-            mutedColors,
-            config.showDebug
-        );
+        this.renderer = new HoneycombRenderer(ctx, width, height, mutedColors, config.showDebug);
     }
 
     initialize(): void {
@@ -71,11 +47,7 @@ class GlowingHoneycombEngine {
         this.colorCalculator.initializeGlowStates(this.basePoints.length);
 
         // Pre-calculate static random offsets for consistent color variation
-        this.staticRandomOffsets = this.basePoints.map(
-            () =>
-                (Math.random() - 0.5) *
-                this.config.colors.honeycomb.randomLightnessRange
-        );
+        this.staticRandomOffsets = this.basePoints.map(() => (Math.random() - 0.5) * this.config.colors.honeycomb.randomLightnessRange);
 
         // Get extended bounds for Voronoi diagram
         this.extendedBounds = this.pointGenerator.getExtendedBounds();
@@ -83,11 +55,7 @@ class GlowingHoneycombEngine {
 
     animate(mousePosition: { x: number; y: number }): void {
         // Calculate dynamic color data with glow effects
-        const dynamicColorData = this.colorCalculator.calculateDynamicColorData(
-            this.basePoints,
-            mousePosition,
-            this.staticRandomOffsets
-        );
+        const dynamicColorData = this.colorCalculator.calculateDynamicColorData(this.basePoints, mousePosition, this.staticRandomOffsets);
 
         // Render frame with dynamic colors
         if (this.config.showDebug) {
@@ -100,11 +68,7 @@ class GlowingHoneycombEngine {
                 this.glowRadius
             );
         } else {
-            this.renderer.render(
-                this.basePoints,
-                this.extendedBounds,
-                dynamicColorData
-            );
+            this.renderer.render(this.basePoints, this.extendedBounds, dynamicColorData);
         }
     }
 
@@ -112,16 +76,8 @@ class GlowingHoneycombEngine {
         this.colorCalculator.updateGlowRadius(radius);
     }
 
-    updateGlowSettings(
-        activationChance: number,
-        glowSpeed: number,
-        fadeSpeed: number
-    ): void {
-        this.colorCalculator.updateGlowSettings(
-            activationChance,
-            glowSpeed,
-            fadeSpeed
-        );
+    updateGlowSettings(activationChance: number, glowSpeed: number, fadeSpeed: number): void {
+        this.colorCalculator.updateGlowSettings(activationChance, glowSpeed, fadeSpeed);
     }
 
     destroy(): void {
@@ -220,11 +176,7 @@ export function GlowingHoneycomb({
     useEffect(() => {
         if (honeycombRef.current) {
             honeycombRef.current.updateGlowRadius(glowRadius);
-            honeycombRef.current.updateGlowSettings(
-                activationChance,
-                glowSpeed,
-                fadeSpeed
-            );
+            honeycombRef.current.updateGlowSettings(activationChance, glowSpeed, fadeSpeed);
         }
     }, [glowRadius, activationChance, glowSpeed, fadeSpeed]);
 

@@ -61,13 +61,18 @@ export interface Velocity {
     vy: number;
 }
 
+export interface HSLColor {
+    hue: number;
+    saturation: number;
+    lightness: number;
+}
+
 export interface ColorData {
     baseHue: number;
     baseSaturation: number;
     baseLightness: number;
     colorNoise: number;
     randomLightnessOffset: number;
-    edgeFactor: number;
     innerColor: {
         hue: number;
         saturation: number;

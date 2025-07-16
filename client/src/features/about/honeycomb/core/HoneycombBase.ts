@@ -13,32 +13,12 @@ export class HoneycombBase {
     protected staticColorData: ColorData[] = [];
     protected extendedBounds: [number, number, number, number] = [0, 0, 0, 0];
 
-    constructor(
-        config: HoneycombConfig,
-        ctx: CanvasRenderingContext2D,
-        width: number,
-        height: number
-    ) {
+    constructor(config: HoneycombConfig, ctx: CanvasRenderingContext2D, width: number, height: number) {
         this.config = config;
-        this.pointGenerator = new PointGenerator(
-            width,
-            height,
-            config.numPoints,
-            config.noiseAmount
-        );
-        this.colorCalculator = new ColorCalculator(
-            config.colors,
-            width,
-            height
-        );
+        this.pointGenerator = new PointGenerator(width, height, config.numPoints, config.noiseAmount);
+        this.colorCalculator = new ColorCalculator(config.colors);
         this.physicsEngine = new PhysicsEngine(config.physics);
-        this.renderer = new HoneycombRenderer(
-            ctx,
-            width,
-            height,
-            config.colors,
-            config.showDebug
-        );
+        this.renderer = new HoneycombRenderer(ctx, width, height, config.colors, config.showDebug);
     }
 
     initialize(): void {
@@ -49,8 +29,7 @@ export class HoneycombBase {
         this.physicsEngine.initialize(points);
 
         // Calculate static color data
-        this.staticColorData =
-            this.colorCalculator.calculateStaticColorData(points);
+        this.staticColorData = this.colorCalculator.calculateStaticColorData(points);
 
         // Get extended bounds for Voronoi diagram
         this.extendedBounds = this.pointGenerator.getExtendedBounds();
@@ -59,17 +38,10 @@ export class HoneycombBase {
     renderFrame(): void {
         const currentPoints = this.physicsEngine.getCurrentPoints();
 
-        this.renderer.render(
-            currentPoints,
-            this.extendedBounds,
-            this.staticColorData
-        );
+        this.renderer.render(currentPoints, this.extendedBounds, this.staticColorData);
     }
 
-    protected renderFrameWithDebug(mousePosition: {
-        x: number;
-        y: number;
-    }): void {
+    protected renderFrameWithDebug(mousePosition: { x: number; y: number }): void {
         const currentPoints = this.physicsEngine.getCurrentPoints();
         const basePoints = this.physicsEngine.getBasePoints();
 
