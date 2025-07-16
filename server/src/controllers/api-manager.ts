@@ -13,6 +13,11 @@ import {
 } from '@/types/api-types';
 import { statusEndpoint } from '@/api/misc/status';
 import { testEndpoint } from '@/api/misc/test';
+import { testGetClubsEndpoint } from '@/api/misc/test-club-endpoint';
+import { getTagsEndpoint } from '@/api/misc/tags-endpoint';
+import { changelogEndpoint } from '@/api/misc/changelog';
+import { versionEndpoint } from '@/api/misc/version';
+
 import { ErrorCode } from '@clubhive/shared';
 
 export default class ApiManager {
@@ -28,7 +33,10 @@ export default class ApiManager {
     private registerEndpoints() {
         this.addEndpoint(statusEndpoint);
         this.addEndpoint(testEndpoint);
-
+        this.addEndpoint(testGetClubsEndpoint);
+        this.addEndpoint(getTagsEndpoint);
+        this.addEndpoint(changelogEndpoint);
+        this.addEndpoint(versionEndpoint);
         console.log(`registered api endpoints`);
     }
 

@@ -5,6 +5,26 @@
         <link rel="icon" type="image/svg+xml" href="/clubhive.svg" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <title>clubhive</title>
+        <script>
+            // Apply theme immediately to prevent flash of unstyled content
+            (function() {
+                const getEffectiveTheme = (themePreference) => {
+                    if (themePreference === 'system' || !themePreference) {
+                        return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+                    }
+                    return themePreference;
+                };
+
+                const storedTheme = localStorage.getItem('theme') || 'system';
+                const effectiveTheme = getEffectiveTheme(storedTheme);
+
+                if (effectiveTheme === 'dark') {
+                    document.documentElement.setAttribute('data-theme', 'dark');
+                } else {
+                    document.documentElement.removeAttribute('data-theme');
+                }
+            })();
+        </script>
     </head>
     <body>
         <div id="root"></div>

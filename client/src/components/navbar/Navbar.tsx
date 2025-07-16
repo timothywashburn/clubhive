@@ -1,8 +1,7 @@
 import { useState } from 'react';
-import { Link } from 'react-router';
-import { Menu, X, Moon, Sun, User, UserX } from 'lucide-react';
+import { Link, useLocation } from 'react-router';
+import { Menu, X, User, UserX } from 'lucide-react';
 import { NavLink } from './NavLink.tsx';
-import { useTheme } from '../../hooks/useTheme';
 
 interface NavbarProps {
     isAuthenticated: boolean;
@@ -11,7 +10,8 @@ interface NavbarProps {
 
 export function Navbar({ isAuthenticated, toggleAuth }: NavbarProps) {
     const [isMenuOpen, setIsMenuOpen] = useState(false);
-    const { theme, toggleTheme } = useTheme();
+    const location = useLocation();
+    const isAboutPage = location.pathname === '/about';
 
     const toggleMenu = () => {
         setIsMenuOpen(!isMenuOpen);
@@ -28,7 +28,7 @@ export function Navbar({ isAuthenticated, toggleAuth }: NavbarProps) {
     const authNavItems = isAuthenticated
         ? [
               { to: '/notifications', label: 'Notifications' },
-              { to: '/profile', label: 'Profile' },
+              { to: '/account', label: 'Account' },
           ]
         : [
               { to: '/signin', label: 'Sign In' },
@@ -40,7 +40,10 @@ export function Navbar({ isAuthenticated, toggleAuth }: NavbarProps) {
           ];
 
     return (
-        <nav className="bg-surface shadow-md border-b border-outline-variant flex-shrink-0">
+        <nav
+            style={{ zIndex: 1 }}
+            className={`${isAboutPage ? 'bg-black/20 backdrop-blur-md border-b border-white/10' : 'bg-surface shadow-md border-b border-outline-variant'} flex-shrink-0`}
+        >
             <div className="max-w-7xl mx-auto px-6 lg:px-8">
                 <div className="flex justify-between items-center h-16">
                     {/* Left Aligned Content */}
@@ -74,16 +77,6 @@ export function Navbar({ isAuthenticated, toggleAuth }: NavbarProps) {
                                 <UserX size={20} className="text-primary" />
                             )}
                         </button>
-                        <button
-                            onClick={toggleTheme}
-                            className="p-2 rounded-md bg-primary-container hover:bg-secondary-container transition-colors cursor-pointer"
-                        >
-                            {theme === 'light' ? (
-                                <Moon size={20} className="text-primary" />
-                            ) : (
-                                <Sun size={20} className="text-primary" />
-                            )}
-                        </button>
                         {authNavItems.map(item => (
                             <NavLink
                                 key={item.to}
@@ -111,7 +104,9 @@ export function Navbar({ isAuthenticated, toggleAuth }: NavbarProps) {
                 </div>
 
                 {isMenuOpen && (
-                    <div className="md:hidden border-t border-outline-variant">
+                    <div
+                        className={`md:hidden border-t ${isAboutPage ? 'border-white/10' : 'border-outline-variant'}`}
+                    >
                         <div className="px-2 pt-2 pb-3 space-y-1">
                             {mainNavItems.map(item => (
                                 <NavLink
@@ -124,7 +119,9 @@ export function Navbar({ isAuthenticated, toggleAuth }: NavbarProps) {
                                 </NavLink>
                             ))}
                         </div>
-                        <div className="pt-4 pb-3 border-t border-outline-variant">
+                        <div
+                            className={`pt-4 pb-3 border-t ${isAboutPage ? 'border-white/10' : 'border-outline-variant'}`}
+                        >
                             <div className="px-2 space-y-1">
                                 {authNavItems.map(item => (
                                     <NavLink
