@@ -43,6 +43,7 @@ async function seed() {
         { type: 'club', text: 'Robotics' },
         { type: 'club', text: 'Finance & Investing' },
         { type: 'club', text: 'Languages' },
+        { type: 'club', text: 'Coding' },
     ]);
 
     const tagMap = Object.fromEntries(tags.map(t => [t.text, t._id]));
@@ -52,16 +53,16 @@ async function seed() {
             name: 'Computer Science Club',
             tagline: 'Innovate, Code, Collaborate',
             description:
-                'A community for students passionate about CS. We host workshops, coding competitions, and networking nights to empower technical growth.',
+                'The Computer Science Club at UCSD is a dynamic community for students who are passionate about coding, software engineering, and emerging technologies. From hands-on coding workshops and competitive hackathons to resume reviews and tech talks with industry professionals, we aim to provide a space where every aspiring developer can grow. Whether you’re just starting out or looking to deepen your technical expertise, CSC helps you connect, collaborate, and create.',
             url: 'https://csclub.ucsd.edu',
             school: ucsd._id,
             tags: [
                 tagMap['Technology'],
-                tagMap['Career'],
-                tagMap['Community'],
                 tagMap['Academic'],
                 tagMap['Professional Development'],
                 tagMap['STEM'],
+                tagMap['Career'],
+                tagMap['Coding'],
             ],
             socials: {
                 website: 'https://csclub.ucsd.edu',
@@ -75,16 +76,16 @@ async function seed() {
             name: 'Hack the Triton',
             tagline: 'UCSD’s Hackathon Org',
             description:
-                'We organize UCSD’s largest hackathons and tech events for students of all levels. Build, learn, and win with us.',
+                'Hack the Triton is UCSD’s premier hackathon organization, dedicated to empowering students of all majors and backgrounds to build creative, impactful projects. We host annual hackathons, weekly tech events, and collaborative programming sessions where students learn by doing. Our goal is to foster a supportive ecosystem of builders, innovators, and problem-solvers who want to make a difference through technology.',
             url: 'https://hackthetriton.ucsd.edu',
             school: ucsd._id,
             tags: [
-                tagMap['Hackathon'],
                 tagMap['Technology'],
-                tagMap['Career'],
-                tagMap['Community'],
+                tagMap['Entrepreneurship'],
                 tagMap['Professional Development'],
                 tagMap['STEM'],
+                tagMap['Career'],
+                tagMap['Coding'],
             ],
             socials: {
                 website: 'https://hackthetriton.ucsd.edu',
@@ -96,17 +97,17 @@ async function seed() {
             name: 'Women in Computing',
             tagline: 'Empowering Women in Tech at UCSD',
             description:
-                'We foster an inclusive tech environment by connecting and supporting women and non-binary students in computing.',
+                'Women in Computing (WiC) at UCSD is a supportive network for women and non-binary individuals pursuing computing and technology. Through mentorship programs, technical workshops, speaker panels, and social events, WiC aims to empower underrepresented groups in tech and foster inclusivity. Our mission is to create an equitable environment where everyone feels welcome and confident to explore their interests in CS and beyond.',
             url: 'https://wic.ucsd.edu',
             school: ucsd._id,
             tags: [
                 tagMap['Diversity'],
                 tagMap['Technology'],
-                tagMap['Career'],
-                tagMap['Community'],
                 tagMap['Professional Development'],
                 tagMap['Academic'],
                 tagMap['STEM'],
+                tagMap['Career'],
+                tagMap['Coding'],
             ],
             socials: {
                 website: 'https://wic.ucsd.edu',
@@ -118,14 +119,13 @@ async function seed() {
             name: 'Triton Community Club',
             tagline: 'Connect. Serve. Grow.',
             description:
-                'We’re dedicated to local impact through volunteering, food drives, and mentorship programs in San Diego.',
+                'Triton Community Club is committed to making a positive impact in the San Diego community through acts of service, advocacy, and connection. We organize regular volunteering events, community drives, and social impact initiatives that address local needs. The club is open to anyone with a heart for helping others and a desire to build stronger, more connected communities both on and off campus.',
             url: 'https://community.ucsd.edu',
             school: ucsd._id,
             tags: [
-                tagMap['Community'],
-                tagMap['Volunteer'],
-                tagMap['Social Impact'],
                 tagMap['Service'],
+                tagMap['Community'],
+                tagMap['Leadership'],
             ],
             socials: {
                 website: 'https://community.ucsd.edu',
@@ -137,17 +137,14 @@ async function seed() {
             name: 'Workshop Central',
             tagline: 'Learn and Build, Weekly',
             description:
-                'Every week, we run hands-on workshops on topics like web dev, machine learning, and game design for all skill levels.',
+                'Workshop Central is the go-to club for students eager to learn by doing. Every week, we host beginner-friendly and advanced workshops covering topics like web development, AI, game design, and more. With a focus on accessibility and growth, our events are open to all skill levels. We’re passionate about hands-on learning and helping students build real-world skills outside the classroom.',
             url: 'https://workshopcentral.ucsd.edu',
             school: ucsd._id,
             tags: [
-                tagMap['Workshop'],
                 tagMap['Technology'],
-                tagMap['Career'],
-                tagMap['Community'],
-                tagMap['Professional Development'],
                 tagMap['Academic'],
                 tagMap['STEM'],
+                tagMap['Career'],
             ],
             socials: {
                 website: 'https://workshopcentral.ucsd.edu',
@@ -159,15 +156,13 @@ async function seed() {
             name: 'Startup Circle',
             tagline: 'Launch Your Ideas',
             description:
-                'Our mission is to support student founders through mentorship, pitch events, and venture capital connections.',
+                'Startup Circle is a hub for entrepreneurial students looking to turn their ideas into real ventures. We provide pitch opportunities, mentorship from founders and investors, and connections to funding resources. Whether you’re building a business, app, or product, we support you through every stage of the startup journey.',
             url: 'https://startupcircle.ucsd.edu',
             school: ucsd._id,
             tags: [
                 tagMap['Entrepreneurship'],
                 tagMap['Career'],
-                tagMap['Community'],
-                tagMap['Professional Development'],
-                tagMap['Academic'],
+                tagMap['Leadership'],
             ],
             socials: {
                 website: 'https://startupcircle.ucsd.edu',
@@ -179,14 +174,13 @@ async function seed() {
             name: 'Triton Gamers',
             tagline: 'Play. Compete. Connect.',
             description:
-                'We bring together casual and competitive gamers for tournaments, LAN parties, and game dev meetups.',
+                'Triton Gamers brings together students who are passionate about games—whether it’s casual play, competitive esports, or game development. We host tournaments, game nights, and dev jams that build a thriving gaming community. Everyone from button mashers to elite competitors is welcome.',
             url: 'https://gamers.ucsd.edu',
             school: ucsd._id,
             tags: [
-                tagMap['Gaming'],
+                tagMap['Gaming & Esports'],
                 tagMap['Community'],
                 tagMap['Social'],
-                tagMap['Esports'],
                 tagMap['Technology'],
             ],
             socials: {
@@ -199,14 +193,14 @@ async function seed() {
             name: 'Triton Creatives',
             tagline: 'Create Beyond the Classroom',
             description:
-                'Our club celebrates creativity across mediums—film, photography, poetry, and music—through exhibitions and collabs.',
+                'Triton Creatives is a collective of students passionate about visual, musical, and literary arts. We host exhibitions, open mics, and collaborative projects that give creators a space to express and share their work. Whether you are into film, photography, music, or poetry, you will find your creative community here.',
             url: 'https://creatives.ucsd.edu',
             school: ucsd._id,
             tags: [
-                tagMap['Arts & Culture'],
-                tagMap['Community'],
-                tagMap['Social Impact'],
+                tagMap['Art'],
+                tagMap['Music'],
                 tagMap['Media & Journalism'],
+                tagMap['Community'],
             ],
             socials: {
                 website: 'https://creatives.ucsd.edu',
@@ -218,18 +212,14 @@ async function seed() {
             name: 'Diversity in Data',
             tagline: 'Making Data Accessible and Equitable',
             description:
-                'We promote ethical and inclusive data practices through workshops, speakers, and open-source projects.',
+                'Diversity in Data is a student-led group focused on inclusive and ethical data practices. We organize talks, collaborative data projects, and community research initiatives aimed at addressing bias in tech. Our goal is to amplify underrepresented voices in data science and ensure data is used for good.',
             url: 'https://diversitydata.ucsd.edu',
             school: ucsd._id,
             tags: [
                 tagMap['Diversity'],
-                tagMap['Workshop'],
-                tagMap['Technology'],
-                tagMap['Career'],
-                tagMap['Community'],
-                tagMap['Professional Development'],
-                tagMap['Academic'],
                 tagMap['STEM'],
+                tagMap['Technology'],
+                tagMap['Academic'],
             ],
             socials: {
                 website: 'https://diversitydata.ucsd.edu',
@@ -241,15 +231,12 @@ async function seed() {
             name: 'InfoSessions @ UCSD',
             tagline: 'Your Gateway to Industry',
             description:
-                'We host weekly info sessions with recruiters and engineers from top tech companies to help you break into the field.',
+                'InfoSessions @ UCSD connects students with tech recruiters, engineers, and professionals through weekly events and industry panels. We aim to bridge the gap between education and employment by helping students explore careers, understand job roles, and network effectively.',
             url: 'https://infosessions.ucsd.edu',
             school: ucsd._id,
             tags: [
-                tagMap['Info Session'],
                 tagMap['Career'],
-                tagMap['Community'],
                 tagMap['Professional Development'],
-                tagMap['Academic'],
                 tagMap['STEM'],
             ],
             socials: {
@@ -259,12 +246,11 @@ async function seed() {
             },
         },
     ]);
-
-    console.log('Seeding complete.');
-    await mongoose.disconnect();
+    console.log('Seeding complete!');
+    mongoose.connection.close();
 }
 
 seed().catch(err => {
-    console.error('Seed error:', err);
-    process.exit(1);
+    console.error('Error seeding database:', err);
+    mongoose.connection.close();
 });
