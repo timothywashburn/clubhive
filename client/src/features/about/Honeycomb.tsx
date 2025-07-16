@@ -6,7 +6,7 @@ import { MUTED_COLORS, VIBRANT_COLORS } from './honeycomb/config/colors';
 
 type HoneycombType = 'static' | 'dynamic' | 'glowing';
 
-interface VoronoiHoneycombProps {
+interface HoneycombProps {
     className?: string;
     numPoints?: number;
     noiseAmount?: number;
@@ -34,7 +34,7 @@ export function Honeycomb({
     decayChance = 0.03,
     glowSpeed = 0.02,
     fadeSpeed = 0.01,
-}: VoronoiHoneycombProps) {
+}: HoneycombProps) {
     const type =
         honeycombType ||
         (glowing ? 'glowing' : isStatic ? 'static' : 'dynamic');
