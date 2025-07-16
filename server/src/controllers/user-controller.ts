@@ -8,7 +8,8 @@ export const createUser = async (req: Request, res: Response) => {
 
     const existing = await Auth.findOne({ email: email });
     if (existing) {
-        return res.status(400).json({ error: 'User already exists' });
+        res.status(400).json({ error: 'User already exists' });
+        return;
     }
     try {
         const newUser = new User({

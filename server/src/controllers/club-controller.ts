@@ -33,9 +33,9 @@ export const createClub = async (req: Request, res: Response) => {
             clubLogo: clubLogo,
         });
         const result = await newClub.save();
-        return res.status(201).json({ newClub: result });
+        res.status(201).json({ newClub: result });
     } catch (error) {
-        return res.status(500).json({ error: 'Error creating club' });
+        res.status(500).json({ error: 'Error creating club' });
     }
 };
 
@@ -48,7 +48,8 @@ export const joinClub = async (req: Request, res: Response) => {
         clubId: clubId,
     });
     if (isMember) {
-        return res.status(200).json({ error: 'User is already in club' });
+        res.status(200).json({ error: 'User is already in club' });
+        return;
     }
 
     try {
@@ -58,8 +59,8 @@ export const joinClub = async (req: Request, res: Response) => {
             role: 'Member',
         });
         const result = await newMember.save();
-        return res.status(201).json({ newMember: result });
+        res.status(201).json({ newMember: result });
     } catch (error) {
-        return res.status(500).json({ error: 'Error joining club' });
+        res.status(500).json({ error: 'Error joining club' });
     }
 };

@@ -45,9 +45,8 @@ export const saveEvent = async (req: Request, res: Response) => {
     });
     if (eventIsSaved) {
         console.log('Event is saved.');
-        return res
-            .status(400)
-            .json({ error: 'Event is already saved to user' });
+        res.status(400).json({ error: 'Event is already saved to user' });
+        return;
     }
     try {
         const saveEvent = new SavedEvents({
