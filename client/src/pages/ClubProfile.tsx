@@ -40,6 +40,18 @@ export function ClubProfile() {
 
     const [isOpen, setIsOpen] = useState(false);
 
+    useEffect(() => {
+        const fetchClub = async () => {
+            const res = await fetch(`/api/clubs/${clubId}`);
+            const json = await res.json();
+            if (json.success) setClub(json.data.club);
+        };
+
+        fetchClub();
+    }, [clubId]);
+
+    if (!club) return <div>Loading...</div>;
+
     return (
         <div className="bg-background">
             <div className="max-w-5xl mx-auto p-6">
