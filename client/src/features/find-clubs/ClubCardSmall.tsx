@@ -1,6 +1,5 @@
 import React from 'react';
 import { useMyClubsData } from '../my-clubs/hooks';
-const { getClubColors } = useMyClubsData();
 
 type ClubCardProps = {
     name: string;
@@ -25,6 +24,7 @@ const ClubCardSmall: React.FC<ClubCardProps> = ({
         .join('')
         .toUpperCase()
         .slice(0, 2);
+    const { getClubColors } = useMyClubsData();
     return (
         <div
             className={`p-4 border rounded-md cursor-pointer transition-transform transition-shadow duration-200 hover:shadow-lg hover:-translate-y-1 ${

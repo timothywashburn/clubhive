@@ -8,10 +8,7 @@ export interface GetClubsResponse {
     clubs: ClubData[];
 }
 
-export const testGetClubsEndpoint: ApiEndpoint<
-    GetClubsRequest,
-    GetClubsResponse
-> = {
+export const testGetClubsEndpoint: ApiEndpoint<undefined, GetClubsResponse> = {
     path: '/api/clubs',
     method: 'get',
     auth: AuthType.NONE,

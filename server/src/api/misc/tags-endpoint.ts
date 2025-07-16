@@ -8,7 +8,7 @@ export interface GetTagsResponse {
     tags: TagData[];
 }
 
-export const getTagsEndpoint: ApiEndpoint<GetTagsRequest, GetTagsResponse> = {
+export const getTagsEndpoint: ApiEndpoint<undefined, GetTagsResponse> = {
     path: '/api/tags',
     method: 'get',
     auth: AuthType.NONE,
