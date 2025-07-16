@@ -30,11 +30,6 @@ export function EventsPage() {
                     <h1 className="text-4xl font-bold text-on-surface mb-4">
                         Event Name
                     </h1>
-
-                    {/* placeholder RSVP button */}
-                    <button className="bg-primary text-on-primary px-6 py-2 rounded-full hover:bg-primary/90 font-medium">
-                        RSVP
-                    </button>
                 </div>
 
                 {/* flyer/thumbnail placeholder */}
