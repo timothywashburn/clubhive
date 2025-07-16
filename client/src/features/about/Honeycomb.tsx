@@ -29,10 +29,10 @@ export function Honeycomb({
     honeycombType = 'glowing',
     isStatic = true,
     glowing = true,
-    glowRadius = 200,
-    activationChance = 1,
-    decayChance = 0.01,
-    glowSpeed = 0.01,
+    glowRadius = 250,
+    activationChance = 1.5,
+    decayChance = 0.03,
+    glowSpeed = 0.02,
     fadeSpeed = 0.01,
 }: VoronoiHoneycombProps) {
     const type =

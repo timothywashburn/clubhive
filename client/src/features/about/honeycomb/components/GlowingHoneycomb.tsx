@@ -18,6 +18,7 @@ class GlowingHoneycombEngine {
     private colorCalculator: GlowingHoneycombCalculator;
     private renderer: HoneycombRenderer;
     private config: HoneycombConfig;
+    private glowRadius: number;
     private extendedBounds: [number, number, number, number] = [0, 0, 0, 0];
     private basePoints: [number, number][] = [];
     private staticRandomOffsets: number[] = [];
@@ -32,10 +33,10 @@ class GlowingHoneycombEngine {
         glowRadius: number,
         activationChance: number,
         glowSpeed: number,
-        fadeSpeed: number,
-        decayChance: number
+        fadeSpeed: number
     ) {
         this.config = config;
+        this.glowRadius = glowRadius;
         this.pointGenerator = new PointGenerator(
             width,
             height,
@@ -50,8 +51,7 @@ class GlowingHoneycombEngine {
             glowRadius,
             activationChance,
             glowSpeed,
-            fadeSpeed,
-            decayChance
+            fadeSpeed
         );
         // Use muted colors for the renderer
         this.renderer = new HoneycombRenderer(
@@ -97,7 +97,7 @@ class GlowingHoneycombEngine {
                 this.extendedBounds,
                 dynamicColorData,
                 mousePosition,
-                300 // glowRadius for debug display
+                this.glowRadius
             );
         } else {
             this.renderer.render(
@@ -180,8 +180,7 @@ export function GlowingHoneycomb({
             glowRadius,
             activationChance,
             glowSpeed,
-            fadeSpeed,
-            decayChance
+            fadeSpeed
         );
 
         // Initialize the honeycomb
