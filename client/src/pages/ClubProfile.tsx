@@ -85,7 +85,7 @@ export function ClubProfile() {
                     {/* club name and description */}
                     <div className="w-2/3 flex items-center">
                         <h1 className="text-6xl font-semibold text-on-surface text-center">
-                            Club Name
+                            {club.name}
                         </h1>
                     </div>
                 </div>
@@ -157,6 +157,7 @@ export function ClubProfile() {
                         className="w-full p-4 bg-surface text-on-surface border border-outline-variant rounded-md resize-none text-sm leading-relaxed"
                     />
                     <div className="text-right text-xs text-on-surface-variant mt-1">
+                        {/* club.description */}
                         {description.trim().split(/\s+/).filter(Boolean).length}
                         /{maxWords} words
                     </div>
