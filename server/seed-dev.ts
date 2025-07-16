@@ -7,33 +7,59 @@ import School from './src/models/school-schema';
 import Tag from './src/models/tag-schema';
 
 async function seed() {
+    console.log('Connecting to MongoDB at:', process.env.MONGODB_URI);
     await mongoose.connect(process.env.MONGODB_URI!);
 
-    // school
     const [ucsd] = await School.insertMany([
         { name: 'UCSD', location: 'San Diego, CA' },
     ]);
 
-    // tags
     const tags = await Tag.insertMany([
-        { type: 'club', text: 'Technology' },
-        { type: 'club', text: 'Career' },
-        { type: 'event', text: 'Hackathon' },
-        { type: 'club', text: 'Community' },
-        { type: 'club', text: 'Diversity' },
-        { type: 'event', text: 'Workshop' },
+        { type: 'club', tagName: 'Technology' },
+        { type: 'club', tagName: 'Career' },
+        { type: 'club', tagName: 'Community' },
+        { type: 'club', tagName: 'Diversity' },
+        { type: 'club', tagName: 'Cultural' },
+        { type: 'club', tagName: 'Academic' },
+        { type: 'club', tagName: 'Professional Development' },
+        { type: 'club', tagName: 'Service' },
+        { type: 'club', tagName: 'STEM' },
+        { type: 'club', tagName: 'Social' },
+        { type: 'club', tagName: 'Leadership' },
+        { type: 'club', tagName: 'Entrepreneurship' },
+        { type: 'club', tagName: 'Health & Wellness' },
+        { type: 'club', tagName: 'Media & Journalism' },
+        { type: 'club', tagName: 'Politics & Activism' },
+        { type: 'club', tagName: 'Music' },
+        { type: 'club', tagName: 'Art' },
+        { type: 'club', tagName: 'Dance' },
+        { type: 'club', tagName: 'Sports' },
+        { type: 'club', tagName: 'Gaming & Esports' },
+        { type: 'club', tagName: 'Religion & Spirituality' },
+        { type: 'club', tagName: 'Environmental' },
+        { type: 'club', tagName: 'Robotics' },
+        { type: 'club', tagName: 'Finance & Investing' },
+        { type: 'club', tagName: 'Languages' },
     ]);
 
-    // clubs
+    const tagMap = Object.fromEntries(tags.map(t => [t.tagName, t._id]));
+
     await Club.insertMany([
         {
             name: 'Computer Science Club',
             tagline: 'Innovate, Code, Collaborate',
             description:
-                'A club for students passionate about computer science.',
+                'A community for students passionate about CS. We host workshops, coding competitions, and networking nights to empower technical growth.',
             url: 'https://csclub.ucsd.edu',
             school: ucsd._id,
-            tags: [tags[0]._id, tags[1]._id],
+            tags: [
+                tagMap['Technology'],
+                tagMap['Career'],
+                tagMap['Community'],
+                tagMap['Academic'],
+                tagMap['Professional Development'],
+                tagMap['STEM'],
+            ],
             socials: {
                 website: 'https://csclub.ucsd.edu',
                 discord: 'https://discord.gg/csclub',
@@ -46,10 +72,17 @@ async function seed() {
             name: 'Hack the Triton',
             tagline: 'UCSD’s Hackathon Org',
             description:
-                'The team behind UCSD’s biggest student-run hackathons.',
+                'We organize UCSD’s largest hackathons and tech events for students of all levels. Build, learn, and win with us.',
             url: 'https://hackthetriton.ucsd.edu',
             school: ucsd._id,
-            tags: [tags[2]._id, tags[0]._id],
+            tags: [
+                tagMap['Hackathon'],
+                tagMap['Technology'],
+                tagMap['Career'],
+                tagMap['Community'],
+                tagMap['Professional Development'],
+                tagMap['STEM'],
+            ],
             socials: {
                 website: 'https://hackthetriton.ucsd.edu',
                 discord: 'https://discord.gg/hackucsd',
@@ -60,10 +93,18 @@ async function seed() {
             name: 'Women in Computing',
             tagline: 'Empowering Women in Tech at UCSD',
             description:
-                'Creating inclusive spaces for women and non-binary students in CS.',
+                'We foster an inclusive tech environment by connecting and supporting women and non-binary students in computing.',
             url: 'https://wic.ucsd.edu',
             school: ucsd._id,
-            tags: [tags[4]._id, tags[0]._id],
+            tags: [
+                tagMap['Diversity'],
+                tagMap['Technology'],
+                tagMap['Career'],
+                tagMap['Community'],
+                tagMap['Professional Development'],
+                tagMap['Academic'],
+                tagMap['STEM'],
+            ],
             socials: {
                 website: 'https://wic.ucsd.edu',
                 discord: '',
@@ -74,10 +115,15 @@ async function seed() {
             name: 'Triton Community Club',
             tagline: 'Connect. Serve. Grow.',
             description:
-                'Focused on outreach and service to the greater San Diego area.',
+                'We’re dedicated to local impact through volunteering, food drives, and mentorship programs in San Diego.',
             url: 'https://community.ucsd.edu',
             school: ucsd._id,
-            tags: [tags[3]._id],
+            tags: [
+                tagMap['Community'],
+                tagMap['Volunteer'],
+                tagMap['Social Impact'],
+                tagMap['Service'],
+            ],
             socials: {
                 website: 'https://community.ucsd.edu',
                 discord: '',
@@ -87,14 +133,126 @@ async function seed() {
         {
             name: 'Workshop Central',
             tagline: 'Learn and Build, Weekly',
-            description: 'Hands-on workshops every week to build your skills.',
+            description:
+                'Every week, we run hands-on workshops on topics like web dev, machine learning, and game design for all skill levels.',
             url: 'https://workshopcentral.ucsd.edu',
             school: ucsd._id,
-            tags: [tags[5]._id, tags[0]._id],
+            tags: [
+                tagMap['Workshop'],
+                tagMap['Technology'],
+                tagMap['Career'],
+                tagMap['Community'],
+                tagMap['Professional Development'],
+                tagMap['Academic'],
+                tagMap['STEM'],
+            ],
             socials: {
                 website: 'https://workshopcentral.ucsd.edu',
                 discord: 'https://discord.gg/workshops',
                 instagram: 'https://instagram.com/workshopcentral',
+            },
+        },
+        {
+            name: 'Startup Circle',
+            tagline: 'Launch Your Ideas',
+            description:
+                'Our mission is to support student founders through mentorship, pitch events, and venture capital connections.',
+            url: 'https://startupcircle.ucsd.edu',
+            school: ucsd._id,
+            tags: [
+                tagMap['Entrepreneurship'],
+                tagMap['Career'],
+                tagMap['Community'],
+                tagMap['Professional Development'],
+                tagMap['Academic'],
+            ],
+            socials: {
+                website: 'https://startupcircle.ucsd.edu',
+                discord: '',
+                instagram: 'https://instagram.com/startupcircle',
+            },
+        },
+        {
+            name: 'Triton Gamers',
+            tagline: 'Play. Compete. Connect.',
+            description:
+                'We bring together casual and competitive gamers for tournaments, LAN parties, and game dev meetups.',
+            url: 'https://gamers.ucsd.edu',
+            school: ucsd._id,
+            tags: [
+                tagMap['Gaming'],
+                tagMap['Community'],
+                tagMap['Social'],
+                tagMap['Esports'],
+                tagMap['Technology'],
+            ],
+            socials: {
+                website: 'https://gamers.ucsd.edu',
+                discord: 'https://discord.gg/gaming',
+                instagram: 'https://instagram.com/ucsdcgg',
+            },
+        },
+        {
+            name: 'Triton Creatives',
+            tagline: 'Create Beyond the Classroom',
+            description:
+                'Our club celebrates creativity across mediums—film, photography, poetry, and music—through exhibitions and collabs.',
+            url: 'https://creatives.ucsd.edu',
+            school: ucsd._id,
+            tags: [
+                tagMap['Arts & Culture'],
+                tagMap['Community'],
+                tagMap['Social Impact'],
+                tagMap['Media & Journalism'],
+            ],
+            socials: {
+                website: 'https://creatives.ucsd.edu',
+                discord: '',
+                instagram: 'https://instagram.com/tritoncreatives',
+            },
+        },
+        {
+            name: 'Diversity in Data',
+            tagline: 'Making Data Accessible and Equitable',
+            description:
+                'We promote ethical and inclusive data practices through workshops, speakers, and open-source projects.',
+            url: 'https://diversitydata.ucsd.edu',
+            school: ucsd._id,
+            tags: [
+                tagMap['Diversity'],
+                tagMap['Workshop'],
+                tagMap['Technology'],
+                tagMap['Career'],
+                tagMap['Community'],
+                tagMap['Professional Development'],
+                tagMap['Academic'],
+                tagMap['STEM'],
+            ],
+            socials: {
+                website: 'https://diversitydata.ucsd.edu',
+                discord: '',
+                instagram: 'https://instagram.com/diversitydata',
+            },
+        },
+        {
+            name: 'InfoSessions @ UCSD',
+            tagline: 'Your Gateway to Industry',
+            description:
+                'We host weekly info sessions with recruiters and engineers from top tech companies to help you break into the field.',
+            url: 'https://infosessions.ucsd.edu',
+            school: ucsd._id,
+            tags: [
+                tagMap['Info Session'],
+                tagMap['Career'],
+                tagMap['Community'],
+                tagMap['Professional Development'],
+                tagMap['Academic'],
+                tagMap['STEM'],
+            ],
+            socials: {
+                website: 'https://infosessions.ucsd.edu',
+                discord: '',
+                instagram: '',
             },
         },
     ]);
