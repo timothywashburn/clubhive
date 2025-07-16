@@ -3,7 +3,6 @@ import { ErrorCode } from '@clubhive/shared';
 import Tag from '@/models/tag-schema';
 import { TagData } from '@/models/tag-schema';
 
-export type GetTagsRequest = Record<string, unknown>;
 export interface GetTagsResponse {
     tags: TagData[];
 }

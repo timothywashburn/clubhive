@@ -1,10 +1,10 @@
 import mongoose from 'mongoose';
 import dotenv from 'dotenv';
-dotenv.config();
-
 import Club from './src/models/club-schema';
 import School from './src/models/school-schema';
 import Tag from './src/models/tag-schema';
+
+dotenv.config();
 
 async function seed() {
     console.log('Connecting to MongoDB at:', process.env.MONGODB_URI);

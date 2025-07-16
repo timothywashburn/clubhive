@@ -3,7 +3,6 @@ import { ErrorCode } from '@clubhive/shared';
 import Club from '@/models/club-schema';
 import { ClubData } from '@/models/club-schema';
 
-export type GetClubsRequest = Record<string, unknown>;
 export interface GetClubsResponse {
     clubs: ClubData[];
 }
