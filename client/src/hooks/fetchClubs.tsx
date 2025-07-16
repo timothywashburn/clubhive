@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import type { Tag } from './fetchTags';
 
 export type Club = {
     _id: string;
@@ -6,7 +7,7 @@ export type Club = {
     tagline: string;
     description: string;
     members: string[];
-    tags: { _id: string; tagName: string; type: string }[];
+    tags: Tag[];
 };
 
 export const useClubData = () => {

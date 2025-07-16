@@ -1,14 +1,13 @@
 import mongoose from 'mongoose';
 import dotenv from 'dotenv';
+dotenv.config({ path: '.env.local' });
 
 import Club from './src/models/club-schema';
 import School from './src/models/school-schema';
 import Tag from './src/models/tag-schema';
 
-dotenv.config();
-
 async function seed() {
-    await mongoose.connect(process.env.MONGODB_URI_DEV!);
+    await mongoose.connect(process.env.MONGODB_URI!);
 
     // school
     const [ucsd] = await School.insertMany([

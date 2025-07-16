@@ -1,15 +1,20 @@
 import { useState } from 'react';
 import { useClubData } from '../hooks/fetchClubs';
-import ClubCardSmall from '../components/ClubCardSmall';
 import type { Club } from '../hooks/fetchClubs';
+import { useTagsData } from '../hooks/fetchTags';
+import type { Tag } from '../hooks/fetchTags';
+import ClubCardSmall from '../features/find-clubs/ClubCardSmall';
+import TagFilterPopover from '../features/find-clubs/FilterTagsButton';
 
 export function Clubs() {
     const [searchTerm, setSearchTerm] = useState('');
     const [selectedClub, setSelectedClub] = useState<Club | null>(null);
     const { clubs, isLoading, error } = useClubData();
+    const { tags } = useTagsData();
+    const [selectedTags, setSelectedTags] = useState<Tag[]>([]);
 
     const getClubColors = (id: string) =>
-        ['bg-pink-200', 'bg-blue-200', 'bg-green-200'][id.charCodeAt(0) % 3];
+        ['bg-pink-200', 'bg-blue-200', 'bg-green-200'][parseInt(id) % 3];
 
     if (isLoading)
         return <p className="p-4 text-on-surface-variant">Loading clubs...</p>;
@@ -27,13 +32,18 @@ export function Clubs() {
                     </p>
                 </div>
 
-                <div className="mb-6">
+                <div className="flex h-10 mb-6">
+                    <TagFilterPopover
+                        tags={tags}
+                        selectedTags={selectedTags}
+                        setSelectedTags={setSelectedTags}
+                    />
                     <input
                         type="text"
                         placeholder="Search clubs..."
                         value={searchTerm}
                         onChange={e => setSearchTerm(e.target.value)}
-                        className="block w-full pl-10 pr-3 py-2 border text-on-surface border-outline-variant rounded-md leading-5 bg-surface placeholder-on-surface-variant focus:outline-none focus:ring-1 focus:ring-primary focus:border-primary"
+                        className="block w-full pl-10 pr-3 py-2 border text-on-surface border-outline-variant rounded-md rounded-l-none leading-5 bg-surface placeholder-on-surface-variant focus:outline-none focus:ring-1 focus:ring-primary focus:border-primary"
                     />
                 </div>
 
@@ -45,6 +55,15 @@ export function Clubs() {
                                 club.name
                                     .toLowerCase()
                                     .includes(searchTerm.toLowerCase())
+                            )
+                            .filter(
+                                club =>
+                                    selectedTags.length === 0 ||
+                                    club.tags.some(tag =>
+                                        selectedTags.some(
+                                            t => t._id === tag._id
+                                        )
+                                    )
                             )
                             .map(club => (
                                 <ClubCardSmall

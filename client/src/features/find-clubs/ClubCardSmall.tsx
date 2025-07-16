@@ -1,5 +1,5 @@
 import React from 'react';
-import { useMyClubsData } from '../features/my-clubs/hooks';
+import { useMyClubsData } from '../my-clubs/hooks';
 const { getClubColors } = useMyClubsData();
 
 type ClubCardProps = {
