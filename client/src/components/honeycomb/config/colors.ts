@@ -1,4 +1,4 @@
-import { HoneycombColors } from './types';
+import { HoneycombColors } from './types.ts';
 
 export const MUTED_COLORS: HoneycombColors = {
     honeycomb: {

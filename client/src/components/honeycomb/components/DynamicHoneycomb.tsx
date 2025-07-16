@@ -1,10 +1,10 @@
 import React, { useEffect, useRef } from 'react';
 import { HoneycombBase } from '../core/HoneycombBase.ts';
-import { useCanvasSetup } from '../hooks/useCanvasSetup';
-import { useMouseTracking } from '../hooks/useMouseTracking';
-import { useAnimation } from '../hooks/useAnimation';
-import { HoneycombProps, HoneycombConfig } from '../config/types';
-import { DEFAULT_CONFIG } from '../config/animation';
+import { useCanvasSetup } from '../hooks/useCanvasSetup.ts';
+import { useMouseTracking } from '../hooks/useMouseTracking.ts';
+import { useAnimation } from '../hooks/useAnimation.ts';
+import { HoneycombProps, HoneycombConfig } from '../config/types.ts';
+import { DEFAULT_CONFIG } from '../config/animation.ts';
 
 class DynamicHoneycomb extends HoneycombBase {
     animate(mousePosition: { x: number; y: number }): void {
@@ -20,12 +20,7 @@ class DynamicHoneycomb extends HoneycombBase {
     }
 }
 
-export function DynamicHoneycombComponent({
-    className = '',
-    numPoints,
-    noiseAmount,
-    showDebug,
-}: HoneycombProps) {
+export function DynamicHoneycombComponent({ className = '', numPoints, noiseAmount, showDebug }: HoneycombProps) {
     const { canvasRef, dimensions, context } = useCanvasSetup();
     const { mousePosition } = useMouseTracking(canvasRef);
     const { startAnimation, stopAnimation } = useAnimation();
@@ -42,12 +37,7 @@ export function DynamicHoneycombComponent({
         };
 
         // Create dynamic honeycomb instance
-        const honeycomb = new DynamicHoneycomb(
-            config,
-            context,
-            dimensions.width,
-            dimensions.height
-        );
+        const honeycomb = new DynamicHoneycomb(config, context, dimensions.width, dimensions.height);
 
         // Initialize the honeycomb
         honeycomb.initialize();
@@ -63,16 +53,7 @@ export function DynamicHoneycombComponent({
             honeycomb.destroy();
             honeycombRef.current = null;
         };
-    }, [
-        context,
-        dimensions,
-        numPoints,
-        noiseAmount,
-        showDebug,
-        startAnimation,
-        stopAnimation,
-        mousePosition,
-    ]);
+    }, [context, dimensions, numPoints, noiseAmount, showDebug, startAnimation, stopAnimation, mousePosition]);
 
     return (
         <canvas

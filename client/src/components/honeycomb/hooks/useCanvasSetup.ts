@@ -17,9 +17,7 @@ export function useCanvasSetup(): CanvasSetupResult {
         width: 1200,
         height: 800,
     });
-    const [context, setContext] = useState<CanvasRenderingContext2D | null>(
-        null
-    );
+    const [context, setContext] = useState<CanvasRenderingContext2D | null>(null);
 
     useEffect(() => {
         const updateDimensions = () => {

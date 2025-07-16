@@ -1,7 +1,7 @@
 import { createNoise2D } from 'simplex-noise';
-import { ColorData, HoneycombColors, HSLColor, Point } from '../config/types';
-import { GENERATION_CONFIG } from '../config/animation';
-import { hexToHsl, hexToRgb, rgbToHsl, alphaBlendRgb } from '../config/utils';
+import { ColorData, HoneycombColors, HSLColor, Point } from '../config/types.ts';
+import { GENERATION_CONFIG } from '../config/animation.ts';
+import { hexToHsl, hexToRgb, rgbToHsl, alphaBlendRgb } from '../config/utils.ts';
 
 // Constants for random intensity boost amounts
 const MIN_INTENSITY_CHANGE = 0.1;

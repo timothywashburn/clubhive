@@ -1,8 +1,8 @@
-import { PointGenerator } from './PointGenerator';
-import { ColorCalculator } from './ColorCalculator';
-import { PhysicsEngine } from './PhysicsEngine';
-import { HoneycombRenderer } from './HoneycombRenderer';
-import { HoneycombConfig, ColorData } from '../config/types';
+import { PointGenerator } from './PointGenerator.ts';
+import { ColorCalculator } from './ColorCalculator.ts';
+import { PhysicsEngine } from './PhysicsEngine.ts';
+import { HoneycombRenderer } from './HoneycombRenderer.ts';
+import { HoneycombConfig, ColorData } from '../config/types.ts';
 
 export class HoneycombBase {
     protected pointGenerator: PointGenerator;

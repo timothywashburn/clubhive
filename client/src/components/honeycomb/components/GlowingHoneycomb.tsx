@@ -1,13 +1,13 @@
 import React, { useEffect, useRef } from 'react';
-import { PointGenerator } from '../core/PointGenerator';
+import { PointGenerator } from '../core/PointGenerator.ts';
 import { GlowingColorCalculator } from '../core/GlowingColorCalculator.ts';
-import { HoneycombRenderer } from '../core/HoneycombRenderer';
-import { useCanvasSetup } from '../hooks/useCanvasSetup';
-import { useMouseTracking } from '../hooks/useMouseTracking';
-import { useAnimation } from '../hooks/useAnimation';
-import { HoneycombProps, HoneycombConfig, HoneycombColors } from '../config/types';
-import { MUTED_COLORS, VIBRANT_COLORS } from '../config/colors';
-import { DEFAULT_CONFIG } from '../config/animation';
+import { HoneycombRenderer } from '../core/HoneycombRenderer.ts';
+import { useCanvasSetup } from '../hooks/useCanvasSetup.ts';
+import { useMouseTracking } from '../hooks/useMouseTracking.ts';
+import { useAnimation } from '../hooks/useAnimation.ts';
+import { HoneycombProps, HoneycombConfig, HoneycombColors } from '../config/types.ts';
+import { MUTED_COLORS, VIBRANT_COLORS } from '../config/colors.ts';
+import { DEFAULT_CONFIG } from '../config/animation.ts';
 
 class GlowingHoneycombEngine {
     private pointGenerator: PointGenerator;
