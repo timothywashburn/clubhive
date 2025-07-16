@@ -24,26 +24,26 @@ export const createClub = async (req: Request, res: Response) => {
     }
 };
 
-export const joinClub = async (req: Request, res: Response) => {
-    const { userId, clubId } = req.body;
-
-    // look thru user club[] to find club_id to see if user is already in the club
-    const user = await User.findById(userId);
-    const club = await Club.findById(clubId);
-    if (!user) {
-        return res.status(200).json({ error: 'User not found' });
-    } else if (!club) {
-        return res.status(200).json({ error: 'Club not found' });
-    } else if (user.clubs.includes(clubId)) {
-        return res.status(200).json({ error: 'User is already in club' });
-    }
-
-    try {
-        user.clubs.push(clubId);
-        club.members.push(userId);
-        await user.save();
-        await club.save();
-    } catch (error) {
-        return res.status(500).json({ error: 'Error joining club' });
-    }
-};
+// export const joinClub = async (req: Request, res: Response) => {
+//     const { userId, clubId } = req.body;
+//
+//     // look thru user club[] to find club_id to see if user is already in the club
+//     const user = await User.findById(userId);
+//     const club = await Club.findById(clubId);
+//     if (!user) {
+//         return res.status(200).json({ error: 'User not found' });
+//     } else if (!club) {
+//         return res.status(200).json({ error: 'Club not found' });
+//     } else if (user.clubs.includes(clubId)) {
+//         return res.status(200).json({ error: 'User is already in club' });
+//     }
+//
+//     try {
+//         user.clubs.push(clubId);
+//         club.members.push(userId);
+//         await user.save();
+//         await club.save();
+//     } catch (error) {
+//         return res.status(500).json({ error: 'Error joining club' });
+//     }
+// };
