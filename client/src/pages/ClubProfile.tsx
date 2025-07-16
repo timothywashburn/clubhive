@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router';
 
 /**
@@ -6,8 +6,8 @@ import { useNavigate, useParams } from 'react-router';
  * might look like, may be temporary and changed.
  */
 export function ClubProfile() {
-    // Inside ClubProfile component
-    const { id } = useParams();
+    const { clubId } = useParams(); // 7-15 updates
+    const [club, setClub] = useState(null); // 7-15 update
 
     const [saved, setSaved] = useState(false);
     const [description, setDescription] = useState('');
