@@ -1,6 +1,6 @@
 import mongoose from 'mongoose';
 import dotenv from 'dotenv';
-dotenv.config({ path: '.env.local' });
+dotenv.config();
 
 import Club from './src/models/club-schema';
 import School from './src/models/school-schema';
@@ -9,40 +9,43 @@ import Tag from './src/models/tag-schema';
 async function seed() {
     console.log('Connecting to MongoDB at:', process.env.MONGODB_URI);
     await mongoose.connect(process.env.MONGODB_URI!);
+    await School.deleteMany({});
+    await Tag.deleteMany({});
+    await Club.deleteMany({});
 
     const [ucsd] = await School.insertMany([
         { name: 'UCSD', location: 'San Diego, CA' },
     ]);
 
     const tags = await Tag.insertMany([
-        { type: 'club', tagName: 'Technology' },
-        { type: 'club', tagName: 'Career' },
-        { type: 'club', tagName: 'Community' },
-        { type: 'club', tagName: 'Diversity' },
-        { type: 'club', tagName: 'Cultural' },
-        { type: 'club', tagName: 'Academic' },
-        { type: 'club', tagName: 'Professional Development' },
-        { type: 'club', tagName: 'Service' },
-        { type: 'club', tagName: 'STEM' },
-        { type: 'club', tagName: 'Social' },
-        { type: 'club', tagName: 'Leadership' },
-        { type: 'club', tagName: 'Entrepreneurship' },
-        { type: 'club', tagName: 'Health & Wellness' },
-        { type: 'club', tagName: 'Media & Journalism' },
-        { type: 'club', tagName: 'Politics & Activism' },
-        { type: 'club', tagName: 'Music' },
-        { type: 'club', tagName: 'Art' },
-        { type: 'club', tagName: 'Dance' },
-        { type: 'club', tagName: 'Sports' },
-        { type: 'club', tagName: 'Gaming & Esports' },
-        { type: 'club', tagName: 'Religion & Spirituality' },
-        { type: 'club', tagName: 'Environmental' },
-        { type: 'club', tagName: 'Robotics' },
-        { type: 'club', tagName: 'Finance & Investing' },
-        { type: 'club', tagName: 'Languages' },
+        { type: 'club', text: 'Technology' },
+        { type: 'club', text: 'Career' },
+        { type: 'club', text: 'Community' },
+        { type: 'club', text: 'Diversity' },
+        { type: 'club', text: 'Cultural' },
+        { type: 'club', text: 'Academic' },
+        { type: 'club', text: 'Professional Development' },
+        { type: 'club', text: 'Service' },
+        { type: 'club', text: 'STEM' },
+        { type: 'club', text: 'Social' },
+        { type: 'club', text: 'Leadership' },
+        { type: 'club', text: 'Entrepreneurship' },
+        { type: 'club', text: 'Health & Wellness' },
+        { type: 'club', text: 'Media & Journalism' },
+        { type: 'club', text: 'Politics & Activism' },
+        { type: 'club', text: 'Music' },
+        { type: 'club', text: 'Art' },
+        { type: 'club', text: 'Dance' },
+        { type: 'club', text: 'Sports' },
+        { type: 'club', text: 'Gaming & Esports' },
+        { type: 'club', text: 'Religion & Spirituality' },
+        { type: 'club', text: 'Environmental' },
+        { type: 'club', text: 'Robotics' },
+        { type: 'club', text: 'Finance & Investing' },
+        { type: 'club', text: 'Languages' },
     ]);
 
-    const tagMap = Object.fromEntries(tags.map(t => [t.tagName, t._id]));
+    const tagMap = Object.fromEntries(tags.map(t => [t.text, t._id]));
 
     await Club.insertMany([
         {
