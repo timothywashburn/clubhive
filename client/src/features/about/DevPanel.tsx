@@ -1,22 +1,24 @@
 import React from 'react';
 
 // I'M WELL AWARE THIS CODE IS TERRIBLE I'M SO SORRY IF YOU EVER HAVE TO READ THIS
+type HoneycombType = 'static' | 'dynamic' | 'glowing';
+
 interface DevPanelProps {
-    regularity: number;
-    onRegularityChange: (value: number) => void;
     noiseAmount: number;
     onNoiseAmountChange: (value: number) => void;
     showDebug: boolean;
     onShowDebugChange: (value: boolean) => void;
+    honeycombType: HoneycombType;
+    onHoneycombTypeChange: (type: HoneycombType) => void;
 }
 
 export function DevPanel({
-    regularity,
-    onRegularityChange,
     noiseAmount,
     onNoiseAmountChange,
     showDebug,
     onShowDebugChange,
+    honeycombType,
+    onHoneycombTypeChange,
 }: DevPanelProps) {
     return (
         <div className="fixed top-4 right-4 z-50 bg-black/80 backdrop-blur-sm border border-white/20 rounded-lg p-4 text-white">
@@ -25,20 +27,24 @@ export function DevPanel({
             <div className="space-y-3">
                 <div>
                     <label className="block text-xs mb-1">
-                        Regularity:{' '}
-                        <span className="text-yellow-400">{regularity}</span>
+                        Honeycomb Type:{' '}
+                        <span className="text-yellow-400 capitalize">
+                            {honeycombType}
+                        </span>
                     </label>
-                    <input
-                        type="range"
-                        min="0"
-                        max="20"
-                        step="1"
-                        value={regularity}
+                    <select
+                        value={honeycombType}
                         onChange={e =>
-                            onRegularityChange(parseInt(e.target.value))
+                            onHoneycombTypeChange(
+                                e.target.value as HoneycombType
+                            )
                         }
-                        className="w-full h-2 bg-gray-600 rounded-lg appearance-none cursor-pointer slider"
-                    />
+                        className="w-full bg-gray-700 text-white border border-gray-600 rounded px-2 py-1 text-xs"
+                    >
+                        <option value="static">Static</option>
+                        <option value="dynamic">Dynamic</option>
+                        <option value="glowing">Glowing</option>
+                    </select>
                 </div>
 
                 <div>
