@@ -21,7 +21,7 @@ interface GlowState {
     fadeDelay: number; // Random delay before fading starts (in ms)
 }
 
-export class GlowingHoneycombCalculator {
+export class GlowingColorCalculator {
     private mutedColors: HoneycombColors;
     private vibrantColors: HoneycombColors;
     private width: number;
@@ -61,8 +61,7 @@ export class GlowingHoneycombCalculator {
         this.width = width;
         this.height = height;
         this.noise2D = createNoise2D();
-        this.edgeThreshold =
-            Math.min(width, height) * GENERATION_CONFIG.edgeThresholdRatio;
+        this.edgeThreshold = Math.min(width, height) * GENERATION_CONFIG.edgeThresholdRatio;
         this.glowRadius = glowRadius;
         this.activationChance = activationChance;
         this.glowSpeed = glowSpeed;
@@ -70,13 +69,9 @@ export class GlowingHoneycombCalculator {
 
         // Pre-calculate target HSL and RGB values to avoid repeated conversions
         this.mutedTargetHsl = hexToHsl(mutedColors.honeycomb.blendTargetColor);
-        this.vibrantTargetHsl = hexToHsl(
-            vibrantColors.honeycomb.blendTargetColor
-        );
+        this.vibrantTargetHsl = hexToHsl(vibrantColors.honeycomb.blendTargetColor);
         this.mutedTargetRgb = hexToRgb(mutedColors.honeycomb.blendTargetColor);
-        this.vibrantTargetRgb = hexToRgb(
-            vibrantColors.honeycomb.blendTargetColor
-        );
+        this.vibrantTargetRgb = hexToRgb(vibrantColors.honeycomb.blendTargetColor);
     }
 
     initializeGlowStates(pointCount: number): void {
@@ -88,72 +83,46 @@ export class GlowingHoneycombCalculator {
                 activationTimer: 0,
                 lastRandomCheck: 0,
                 lastMouseNearTime: 0,
-                fadeDelay:
-                    MIN_FADE_DELAY +
-                    Math.random() * (MAX_FADE_DELAY - MIN_FADE_DELAY),
+                fadeDelay: MIN_FADE_DELAY + Math.random() * (MAX_FADE_DELAY - MIN_FADE_DELAY),
             }));
     }
 
-    calculateDynamicColorData(
-        points: [number, number][],
-        mousePosition: Point,
-        staticRandomOffsets: number[]
-    ): ColorData[] {
+    calculateDynamicColorData(points: [number, number][], mousePosition: Point, staticRandomOffsets: number[]): ColorData[] {
         const currentTime = Date.now();
 
         return points.map((point, i) => {
             const baseCentroid = point;
-            const colorNoise = this.noise2D(
-                baseCentroid[0] / GENERATION_CONFIG.noiseScale,
-                baseCentroid[1] / GENERATION_CONFIG.noiseScale
-            );
+            const colorNoise = this.noise2D(baseCentroid[0] / GENERATION_CONFIG.noiseScale, baseCentroid[1] / GENERATION_CONFIG.noiseScale);
             const randomLightnessOffset = staticRandomOffsets[i];
 
             // Calculate distance from mouse to this point
             const dx = mousePosition.x - baseCentroid[0];
             const dy = mousePosition.y - baseCentroid[1];
             const distanceFromMouse = Math.sqrt(dx * dx + dy * dy);
-            const isNearMouse =
-                mousePosition.x > -500 && distanceFromMouse < this.glowRadius;
+            const isNearMouse = mousePosition.x > -500 && distanceFromMouse < this.glowRadius;
 
             // Update glow state for this cell
             const glowState = this.glowStates[i];
 
             // Random logic - check for both activation and decay
-            if (
-                currentTime - glowState.lastRandomCheck >
-                RANDOM_CHECK_INTERVAL
-            ) {
+            if (currentTime - glowState.lastRandomCheck > RANDOM_CHECK_INTERVAL) {
                 glowState.lastRandomCheck = currentTime;
 
                 // Activation logic - random chance to boost max intensity when cursor is near
                 if (isNearMouse && glowState.maxIntensity < 1.0) {
                     // Distance-based activation chance (closer = higher chance)
-                    const distanceFactor =
-                        1 - distanceFromMouse / this.glowRadius;
-                    const adjustedChance = Math.min(
-                        1.0,
-                        this.activationChance * Math.pow(distanceFactor, 3)
-                    );
+                    const distanceFactor = 1 - distanceFromMouse / this.glowRadius;
+                    const adjustedChance = Math.min(1.0, this.activationChance * Math.pow(distanceFactor, 3));
 
                     if (Math.random() < adjustedChance) {
                         // Add random boost to max intensity
-                        const intensityBoost =
-                            MIN_INTENSITY_CHANGE +
-                            Math.random() *
-                                (MAX_INTENSITY_CHANGE - MIN_INTENSITY_CHANGE);
+                        const intensityBoost = MIN_INTENSITY_CHANGE + Math.random() * (MAX_INTENSITY_CHANGE - MIN_INTENSITY_CHANGE);
 
                         // If cell is at max intensity (fading), boost from current instead of previous max
                         if (glowState.glowIntensity >= glowState.maxIntensity) {
-                            glowState.maxIntensity = Math.min(
-                                1.0,
-                                glowState.glowIntensity + intensityBoost
-                            );
+                            glowState.maxIntensity = Math.min(1.0, glowState.glowIntensity + intensityBoost);
                         } else {
-                            glowState.maxIntensity = Math.min(
-                                1.0,
-                                glowState.maxIntensity + intensityBoost
-                            );
+                            glowState.maxIntensity = Math.min(1.0, glowState.maxIntensity + intensityBoost);
                         }
 
                         glowState.activationTimer = currentTime;
@@ -163,38 +132,27 @@ export class GlowingHoneycombCalculator {
 
             // Track when mouse was last near this cell and generate new fade delay
             if (isNearMouse) {
-                const wasNotNearBefore =
-                    currentTime - glowState.lastMouseNearTime >
-                    glowState.fadeDelay + 100;
+                const wasNotNearBefore = currentTime - glowState.lastMouseNearTime > glowState.fadeDelay + 100;
                 glowState.lastMouseNearTime = currentTime;
 
                 // Generate new random fade delay when mouse enters proximity for the first time
                 if (wasNotNearBefore) {
-                    glowState.fadeDelay =
-                        MIN_FADE_DELAY +
-                        Math.random() * (MAX_FADE_DELAY - MIN_FADE_DELAY);
+                    glowState.fadeDelay = MIN_FADE_DELAY + Math.random() * (MAX_FADE_DELAY - MIN_FADE_DELAY);
                 }
             }
 
             // Calculate if we should be fading based on time since mouse left
-            const timeSinceMouseLeft =
-                currentTime - glowState.lastMouseNearTime;
+            const timeSinceMouseLeft = currentTime - glowState.lastMouseNearTime;
             const shouldStartFading = timeSinceMouseLeft > glowState.fadeDelay;
 
             // Update glow intensity
             if (glowState.glowIntensity < glowState.maxIntensity) {
                 // Glow up towards max intensity when cursor is near
-                glowState.glowIntensity = Math.min(
-                    glowState.maxIntensity,
-                    glowState.glowIntensity + this.glowSpeed
-                );
+                glowState.glowIntensity = Math.min(glowState.maxIntensity, glowState.glowIntensity + this.glowSpeed);
             } else if (shouldStartFading) {
                 glowState.maxIntensity = 0;
                 // Fade down after delay when mouse is no longer near
-                glowState.glowIntensity = Math.max(
-                    0,
-                    glowState.glowIntensity - this.fadeSpeed
-                );
+                glowState.glowIntensity = Math.max(0, glowState.glowIntensity - this.fadeSpeed);
             }
 
             // Reset max intensity when fully faded to 0
@@ -203,41 +161,29 @@ export class GlowingHoneycombCalculator {
             }
 
             // Calculate muted (base) colors first
-            const mutedBaseHue =
-                this.mutedColors.honeycomb.baseHue +
-                colorNoise * this.mutedColors.honeycomb.hueVariation;
+            const mutedBaseHue = this.mutedColors.honeycomb.baseHue + colorNoise * this.mutedColors.honeycomb.hueVariation;
             const mutedBaseSaturation =
-                this.mutedColors.honeycomb.baseSaturation +
-                colorNoise * this.mutedColors.honeycomb.saturationVariation;
+                this.mutedColors.honeycomb.baseSaturation + colorNoise * this.mutedColors.honeycomb.saturationVariation;
             const mutedBaseLightnessRaw =
                 this.mutedColors.honeycomb.baseLightness +
                 colorNoise * this.mutedColors.honeycomb.lightnessVariation +
                 randomLightnessOffset;
             const mutedBaseLightness = Math.max(
                 this.mutedColors.honeycomb.minLightness,
-                Math.min(
-                    this.mutedColors.honeycomb.maxLightness,
-                    mutedBaseLightnessRaw
-                )
+                Math.min(this.mutedColors.honeycomb.maxLightness, mutedBaseLightnessRaw)
             );
 
             // Calculate vibrant colors
-            const vibrantBaseHue =
-                this.vibrantColors.honeycomb.baseHue +
-                colorNoise * this.vibrantColors.honeycomb.hueVariation;
+            const vibrantBaseHue = this.vibrantColors.honeycomb.baseHue + colorNoise * this.vibrantColors.honeycomb.hueVariation;
             const vibrantBaseSaturation =
-                this.vibrantColors.honeycomb.baseSaturation +
-                colorNoise * this.vibrantColors.honeycomb.saturationVariation;
+                this.vibrantColors.honeycomb.baseSaturation + colorNoise * this.vibrantColors.honeycomb.saturationVariation;
             const vibrantBaseLightnessRaw =
                 this.vibrantColors.honeycomb.baseLightness +
                 colorNoise * this.vibrantColors.honeycomb.lightnessVariation +
                 randomLightnessOffset;
             const vibrantBaseLightness = Math.max(
                 this.vibrantColors.honeycomb.minLightness,
-                Math.min(
-                    this.vibrantColors.honeycomb.maxLightness,
-                    vibrantBaseLightnessRaw
-                )
+                Math.min(this.vibrantColors.honeycomb.maxLightness, vibrantBaseLightnessRaw)
             );
 
             // Calculate edge factor
@@ -247,16 +193,10 @@ export class GlowingHoneycombCalculator {
                 this.width - baseCentroid[0],
                 this.height - baseCentroid[1]
             );
-            const edgeFactor = Math.min(
-                1,
-                distanceFromEdge / this.edgeThreshold
-            );
+            const edgeFactor = Math.min(1, distanceFromEdge / this.edgeThreshold);
 
             // Calculate muted colors with edge blending
-            const mutedDarknessFactor = this.calculateBlendFactor(
-                mutedBaseLightness,
-                edgeFactor
-            );
+            const mutedDarknessFactor = this.calculateBlendFactor(mutedBaseLightness, edgeFactor);
             const mutedInnerColor = this.blendTowardsTargetHsl(
                 mutedBaseHue,
                 mutedBaseSaturation,
@@ -265,11 +205,7 @@ export class GlowingHoneycombCalculator {
                 this.mutedTargetHsl
             );
 
-            const mutedOuterBlendFactor = Math.min(
-                1,
-                mutedDarknessFactor +
-                    this.mutedColors.animation.outerBlendOffset
-            );
+            const mutedOuterBlendFactor = Math.min(1, mutedDarknessFactor + this.mutedColors.animation.outerBlendOffset);
             const mutedOuterColor = this.blendTowardsTargetHsl(
                 mutedBaseHue,
                 mutedBaseSaturation,
@@ -279,10 +215,7 @@ export class GlowingHoneycombCalculator {
             );
 
             // Calculate vibrant colors with edge blending
-            const vibrantDarknessFactor = this.calculateBlendFactor(
-                vibrantBaseLightness,
-                edgeFactor
-            );
+            const vibrantDarknessFactor = this.calculateBlendFactor(vibrantBaseLightness, edgeFactor);
             const vibrantInnerColor = this.blendTowardsTargetHsl(
                 vibrantBaseHue,
                 vibrantBaseSaturation,
@@ -291,11 +224,7 @@ export class GlowingHoneycombCalculator {
                 this.vibrantTargetHsl
             );
 
-            const vibrantOuterBlendFactor = Math.min(
-                1,
-                vibrantDarknessFactor +
-                    this.vibrantColors.animation.outerBlendOffset
-            );
+            const vibrantOuterBlendFactor = Math.min(1, vibrantDarknessFactor + this.vibrantColors.animation.outerBlendOffset);
             const vibrantOuterColor = this.blendTowardsTargetHsl(
                 vibrantBaseHue,
                 vibrantBaseSaturation,
@@ -308,68 +237,24 @@ export class GlowingHoneycombCalculator {
             const alpha = glowState.glowIntensity;
 
             // Convert HSL to RGB for alpha blending
-            const mutedInnerRgb = this.hslToRgb(
-                mutedInnerColor.hue,
-                mutedInnerColor.saturation,
-                mutedInnerColor.lightness
-            );
-            const mutedOuterRgb = this.hslToRgb(
-                mutedOuterColor.hue,
-                mutedOuterColor.saturation,
-                mutedOuterColor.lightness
-            );
-            const vibrantInnerRgb = this.hslToRgb(
-                vibrantInnerColor.hue,
-                vibrantInnerColor.saturation,
-                vibrantInnerColor.lightness
-            );
-            const vibrantOuterRgb = this.hslToRgb(
-                vibrantOuterColor.hue,
-                vibrantOuterColor.saturation,
-                vibrantOuterColor.lightness
-            );
+            const mutedInnerRgb = this.hslToRgb(mutedInnerColor.hue, mutedInnerColor.saturation, mutedInnerColor.lightness);
+            const mutedOuterRgb = this.hslToRgb(mutedOuterColor.hue, mutedOuterColor.saturation, mutedOuterColor.lightness);
+            const vibrantInnerRgb = this.hslToRgb(vibrantInnerColor.hue, vibrantInnerColor.saturation, vibrantInnerColor.lightness);
+            const vibrantOuterRgb = this.hslToRgb(vibrantOuterColor.hue, vibrantOuterColor.saturation, vibrantOuterColor.lightness);
 
             // Alpha blend inner and outer colors
-            const blendedInnerRgb = alphaBlendRgb(
-                mutedInnerRgb,
-                vibrantInnerRgb,
-                alpha
-            );
-            const blendedOuterRgb = alphaBlendRgb(
-                mutedOuterRgb,
-                vibrantOuterRgb,
-                alpha
-            );
+            const blendedInnerRgb = alphaBlendRgb(mutedInnerRgb, vibrantInnerRgb, alpha);
+            const blendedOuterRgb = alphaBlendRgb(mutedOuterRgb, vibrantOuterRgb, alpha);
 
             // Alpha blend edge colors
-            const mutedEdgeRgb = hexToRgb(
-                this.mutedColors.honeycomb.edgeStroke
-            );
-            const vibrantEdgeRgb = hexToRgb(
-                this.vibrantColors.honeycomb.edgeStroke
-            );
-            const blendedEdgeRgb = alphaBlendRgb(
-                mutedEdgeRgb,
-                vibrantEdgeRgb,
-                alpha
-            );
+            const mutedEdgeRgb = hexToRgb(this.mutedColors.honeycomb.edgeStroke);
+            const vibrantEdgeRgb = hexToRgb(this.vibrantColors.honeycomb.edgeStroke);
+            const blendedEdgeRgb = alphaBlendRgb(mutedEdgeRgb, vibrantEdgeRgb, alpha);
 
             // Convert back to HSL
-            const innerColor = rgbToHsl(
-                blendedInnerRgb.r,
-                blendedInnerRgb.g,
-                blendedInnerRgb.b
-            );
-            const outerColor = rgbToHsl(
-                blendedOuterRgb.r,
-                blendedOuterRgb.g,
-                blendedOuterRgb.b
-            );
-            const edgeColor = rgbToHsl(
-                blendedEdgeRgb.r,
-                blendedEdgeRgb.g,
-                blendedEdgeRgb.b
-            );
+            const innerColor = rgbToHsl(blendedInnerRgb.r, blendedInnerRgb.g, blendedInnerRgb.b);
+            const outerColor = rgbToHsl(blendedOuterRgb.r, blendedOuterRgb.g, blendedOuterRgb.b);
+            const edgeColor = rgbToHsl(blendedEdgeRgb.r, blendedEdgeRgb.g, blendedEdgeRgb.b);
 
             const innerColorString = `hsl(${innerColor.hue}, ${innerColor.saturation}%, ${innerColor.lightness}%)`;
             const outerColorString = `hsl(${outerColor.hue}, ${outerColor.saturation}%, ${outerColor.lightness}%)`;
@@ -395,10 +280,7 @@ export class GlowingHoneycombCalculator {
         return from + (to - from) * factor;
     }
 
-    private calculateBlendFactor(
-        baseLightness: number,
-        edgeFactor: number
-    ): number {
+    private calculateBlendFactor(baseLightness: number, edgeFactor: number): number {
         const darknessFactor = 1 - baseLightness / 80;
         const edgeDarknessFactor = 1 - (0.5 + 0.5 * edgeFactor);
         return Math.min(1, darknessFactor + edgeDarknessFactor);
@@ -413,12 +295,8 @@ export class GlowingHoneycombCalculator {
     ): { hue: number; saturation: number; lightness: number } {
         return {
             hue: baseHue + (targetHsl.hue - baseHue) * blendFactor,
-            saturation:
-                baseSaturation +
-                (targetHsl.saturation - baseSaturation) * blendFactor,
-            lightness:
-                baseLightness +
-                (targetHsl.lightness - baseLightness) * blendFactor,
+            saturation: baseSaturation + (targetHsl.saturation - baseSaturation) * blendFactor,
+            lightness: baseLightness + (targetHsl.lightness - baseLightness) * blendFactor,
         };
     }
 
@@ -426,21 +304,13 @@ export class GlowingHoneycombCalculator {
         this.glowRadius = radius;
     }
 
-    updateGlowSettings(
-        activationChance: number,
-        glowSpeed: number,
-        fadeSpeed: number
-    ): void {
+    updateGlowSettings(activationChance: number, glowSpeed: number, fadeSpeed: number): void {
         this.activationChance = activationChance;
         this.glowSpeed = glowSpeed;
         this.fadeSpeed = fadeSpeed;
     }
 
-    private hslToRgb(
-        h: number,
-        s: number,
-        l: number
-    ): { r: number; g: number; b: number } {
+    private hslToRgb(h: number, s: number, l: number): { r: number; g: number; b: number } {
         h /= 360;
         s /= 100;
         l /= 100;
