@@ -2,7 +2,6 @@ import React from 'react';
 import { DynamicHoneycombComponent } from '../../components/honeycomb/components/DynamicHoneycomb.tsx';
 import { StaticHoneycomb } from '../../components/honeycomb/components/StaticHoneycomb.tsx';
 import { GlowingHoneycomb } from '../../components/honeycomb/components/GlowingHoneycomb';
-import { MUTED_COLORS, VIBRANT_COLORS } from '../../components/honeycomb/config/colors';
 
 type HoneycombType = 'static' | 'dynamic' | 'glowing';
 
@@ -49,8 +48,6 @@ export function HoneycombTest({
                 decayChance={decayChance}
                 glowSpeed={glowSpeed}
                 fadeSpeed={fadeSpeed}
-                mutedColors={MUTED_COLORS}
-                vibrantColors={VIBRANT_COLORS}
             />
         );
     }

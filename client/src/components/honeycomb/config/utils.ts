@@ -74,6 +74,58 @@ export function rgbToHsl(r: number, g: number, b: number): HSLColor {
 }
 
 /**
+ * Gets CSS variable value from document root
+ * @param variable - CSS variable name (e.g., '--color-background')
+ * @returns CSS variable value or null if not found
+ */
+export function getCSSVariable(variable: string): string | null {
+    if (typeof document === 'undefined') return null;
+
+    const styles = getComputedStyle(document.documentElement);
+    const value = styles.getPropertyValue(variable).trim();
+    return value || null;
+}
+
+/**
+ * Converts CSS variable to HSL color
+ * @param variable - CSS variable name (e.g., '--color-background')
+ * @returns HSL object or null if variable not found or invalid
+ */
+export function cssVariableToHsl(variable: string): HSLColor | null {
+    const value = getCSSVariable(variable);
+    if (!value) return null;
+
+    // Handle hex colors
+    if (value.startsWith('#')) {
+        return hexToHsl(value);
+    }
+
+    // Handle rgb() colors
+    if (value.startsWith('rgb(')) {
+        const match = value.match(/rgb\((\d+),\s*(\d+),\s*(\d+)\)/);
+        if (match) {
+            const r = parseInt(match[1]);
+            const g = parseInt(match[2]);
+            const b = parseInt(match[3]);
+            return rgbToHsl(r, g, b);
+        }
+    }
+
+    // Handle rgba() colors
+    if (value.startsWith('rgba(')) {
+        const match = value.match(/rgba\((\d+),\s*(\d+),\s*(\d+),\s*[\d.]+\)/);
+        if (match) {
+            const r = parseInt(match[1]);
+            const g = parseInt(match[2]);
+            const b = parseInt(match[3]);
+            return rgbToHsl(r, g, b);
+        }
+    }
+
+    return null;
+}
+
+/**
  * Alpha blends two RGB colors
  * @param background - Background RGB color
  * @param foreground - Foreground RGB color

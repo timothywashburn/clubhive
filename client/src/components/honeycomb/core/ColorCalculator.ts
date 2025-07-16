@@ -23,9 +23,9 @@ export class ColorCalculator {
             const baseHue = this.colors.honeycomb.baseHue + colorNoise * this.colors.honeycomb.hueVariation;
             const baseSaturation = this.colors.honeycomb.baseSaturation + colorNoise * this.colors.honeycomb.saturationVariation;
             const baseLightness = Math.max(
-                this.colors.honeycomb.minLightness,
+                0,
                 Math.min(
-                    this.colors.honeycomb.maxLightness,
+                    100,
                     this.colors.honeycomb.baseLightness + colorNoise * this.colors.honeycomb.lightnessVariation + randomLightnessOffset
                 )
             );

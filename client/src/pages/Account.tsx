@@ -1,9 +1,10 @@
 import { useState } from 'react';
-import { Settings, Mail, Lock, User, GraduationCap, School, Calendar, Monitor, Moon, Sun, Trash2 } from 'lucide-react';
-import { useTheme } from '../hooks/useTheme';
+import { Settings, Mail, Lock, User, Monitor, Moon, Sun, Trash2 } from 'lucide-react';
+import { ThemePreference, useThemeStore } from '../stores/themeStore.ts';
 
 export function Account() {
-    const { theme, setTheme } = useTheme();
+    const { preference, setPreference } = useThemeStore();
+
     const [formData, setFormData] = useState({
         name: 'John Doe',
         email: 'john.doe@university.edu',
@@ -99,32 +100,6 @@ export function Account() {
                 behavior: 'smooth',
                 block: 'start',
             });
-        }
-    };
-
-    const getThemeIcon = () => {
-        switch (theme) {
-            case 'light':
-                return <Sun className="w-4 h-4" />;
-            case 'dark':
-                return <Moon className="w-4 h-4" />;
-            case 'system':
-                return <Monitor className="w-4 h-4" />;
-            default:
-                return <Monitor className="w-4 h-4" />;
-        }
-    };
-
-    const getThemeLabel = () => {
-        switch (theme) {
-            case 'light':
-                return 'Light';
-            case 'dark':
-                return 'Dark';
-            case 'system':
-                return 'System';
-            default:
-                return 'System';
         }
     };
 
@@ -322,11 +297,11 @@ export function Account() {
                                         ].map(option => (
                                             <button
                                                 key={option.value}
-                                                onClick={() => setTheme(option.value as 'light' | 'dark' | 'system')}
+                                                onClick={() => setPreference(option.value as ThemePreference)}
                                                 className={`
                                                     flex items-center gap-2 px-4 py-2 rounded-md text-sm font-medium transition-all duration-200
                                                     ${
-                                                        theme === option.value
+                                                        preference === option.value
                                                             ? 'bg-primary text-on-primary shadow-sm'
                                                             : 'text-on-surface-variant hover:text-on-surface hover:bg-surface'
                                                     }

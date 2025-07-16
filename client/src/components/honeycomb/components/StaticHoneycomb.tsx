@@ -3,10 +3,12 @@ import { HoneycombBase } from '../core/HoneycombBase.ts';
 import { useCanvasSetup } from '../hooks/useCanvasSetup.ts';
 import { HoneycombProps, HoneycombConfig } from '../config/types.ts';
 import { DEFAULT_CONFIG } from '../config/animation.ts';
+import { useHoneycombColors } from '../hooks/useHoneycombColors.ts';
 
 export function StaticHoneycomb({ className = '', numPoints = 7000, noiseAmount = 0.15, showDebug = false }: HoneycombProps) {
     const { canvasRef, dimensions, context } = useCanvasSetup();
     const honeycombRef = useRef<HoneycombBase | null>(null);
+    const { baseColors } = useHoneycombColors();
 
     useEffect(() => {
         if (!context || !dimensions.width || !dimensions.height) return;
@@ -16,7 +18,10 @@ export function StaticHoneycomb({ className = '', numPoints = 7000, noiseAmount 
             numPoints,
             noiseAmount,
             showDebug,
+            colors: baseColors,
         };
+
+        console.log('baseColors', baseColors);
 
         // Create honeycomb instance
         const honeycomb = new HoneycombBase(config, context, dimensions.width, dimensions.height);
@@ -31,7 +36,7 @@ export function StaticHoneycomb({ className = '', numPoints = 7000, noiseAmount 
             honeycomb.destroy();
             honeycombRef.current = null;
         };
-    }, [context, dimensions, numPoints, noiseAmount, showDebug]);
+    }, [context, dimensions, numPoints, noiseAmount, showDebug, baseColors]);
 
     return (
         <canvas

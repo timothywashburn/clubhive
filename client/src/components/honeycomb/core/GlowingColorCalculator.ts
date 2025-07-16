@@ -115,26 +115,28 @@ export class GlowingColorCalculator {
             const mutedBaseHue = this.mutedColors.honeycomb.baseHue + colorNoise * this.mutedColors.honeycomb.hueVariation;
             const mutedBaseSaturation =
                 this.mutedColors.honeycomb.baseSaturation + colorNoise * this.mutedColors.honeycomb.saturationVariation;
-            const mutedBaseLightnessRaw =
-                this.mutedColors.honeycomb.baseLightness +
-                colorNoise * this.mutedColors.honeycomb.lightnessVariation +
-                randomLightnessOffset;
             const mutedBaseLightness = Math.max(
-                this.mutedColors.honeycomb.minLightness,
-                Math.min(this.mutedColors.honeycomb.maxLightness, mutedBaseLightnessRaw)
+                0,
+                Math.min(
+                    100,
+                    this.mutedColors.honeycomb.baseLightness +
+                        colorNoise * this.mutedColors.honeycomb.lightnessVariation +
+                        randomLightnessOffset
+                )
             );
 
             // Calculate vibrant colors
             const vibrantBaseHue = this.vibrantColors.honeycomb.baseHue + colorNoise * this.vibrantColors.honeycomb.hueVariation;
             const vibrantBaseSaturation =
                 this.vibrantColors.honeycomb.baseSaturation + colorNoise * this.vibrantColors.honeycomb.saturationVariation;
-            const vibrantBaseLightnessRaw =
-                this.vibrantColors.honeycomb.baseLightness +
-                colorNoise * this.vibrantColors.honeycomb.lightnessVariation +
-                randomLightnessOffset;
             const vibrantBaseLightness = Math.max(
-                this.vibrantColors.honeycomb.minLightness,
-                Math.min(this.vibrantColors.honeycomb.maxLightness, vibrantBaseLightnessRaw)
+                0,
+                Math.min(
+                    100,
+                    this.vibrantColors.honeycomb.baseLightness +
+                        colorNoise * this.vibrantColors.honeycomb.lightnessVariation +
+                        randomLightnessOffset
+                )
             );
 
             const mutedDarknessFactor = this.calculateBlendFactor(mutedBaseLightness);

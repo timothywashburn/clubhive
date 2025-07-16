@@ -5,6 +5,7 @@ import { useMouseTracking } from '../hooks/useMouseTracking.ts';
 import { useAnimation } from '../hooks/useAnimation.ts';
 import { HoneycombProps, HoneycombConfig } from '../config/types.ts';
 import { DEFAULT_CONFIG } from '../config/animation.ts';
+import { useHoneycombColors } from '../hooks/useHoneycombColors.ts';
 
 class DynamicHoneycomb extends HoneycombBase {
     animate(mousePosition: { x: number; y: number }): void {
@@ -25,6 +26,7 @@ export function DynamicHoneycombComponent({ className = '', numPoints, noiseAmou
     const { mousePosition } = useMouseTracking(canvasRef);
     const { startAnimation, stopAnimation } = useAnimation();
     const honeycombRef = useRef<DynamicHoneycomb | null>(null);
+    const { baseColors: honeycombColors } = useHoneycombColors();
 
     useEffect(() => {
         if (!context || !dimensions.width || !dimensions.height) return;
@@ -34,6 +36,7 @@ export function DynamicHoneycombComponent({ className = '', numPoints, noiseAmou
             numPoints,
             noiseAmount,
             showDebug,
+            colors: honeycombColors,
         };
 
         // Create dynamic honeycomb instance
@@ -53,7 +56,7 @@ export function DynamicHoneycombComponent({ className = '', numPoints, noiseAmou
             honeycomb.destroy();
             honeycombRef.current = null;
         };
-    }, [context, dimensions, numPoints, noiseAmount, showDebug, startAnimation, stopAnimation, mousePosition]);
+    }, [context, dimensions, numPoints, noiseAmount, showDebug, honeycombColors, startAnimation, stopAnimation, mousePosition]);
 
     return (
         <canvas

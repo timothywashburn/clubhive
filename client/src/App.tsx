@@ -3,6 +3,7 @@ import { BrowserRouter, Routes, Route } from 'react-router';
 import { Navbar } from './components/navbar/Navbar.tsx';
 import { Footer } from './components/footer/Footer.tsx';
 import { useAuth } from './hooks/useAuth';
+import { useTheme } from './hooks/useTheme';
 import { Home } from './pages/Home';
 import { MyClubs } from './features/my-clubs';
 import { Clubs } from './pages/Clubs';
@@ -20,6 +21,7 @@ export function App() {
     const { isAuthenticated, toggleAuth } = useAuth();
     const [scrollY, setScrollY] = useState(0);
     const backgroundRef = useRef<HTMLDivElement>(null);
+    useTheme();
 
     useEffect(() => {
         const handleScroll = () => {

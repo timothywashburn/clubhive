@@ -1,69 +1,27 @@
-import { useEffect, useState } from 'react';
-
-type Theme = 'light' | 'dark' | 'system';
+import { useEffect } from 'react';
+import { Theme, ThemePreference, useThemeStore } from '../stores/themeStore';
 
 export function useTheme() {
-    const [theme, setTheme] = useState<Theme>(() => {
-        if (typeof window !== 'undefined') {
-            const stored = localStorage.getItem('theme') as Theme;
-            return stored || 'system';
-        }
-        return 'system';
-    });
-
-    const getEffectiveTheme = (themePreference: Theme): 'light' | 'dark' => {
-        if (themePreference === 'system') {
-            return window.matchMedia('(prefers-color-scheme: dark)').matches
-                ? 'dark'
-                : 'light';
-        }
-        return themePreference;
-    };
+    const { preference, setTheme, setPreference } = useThemeStore();
 
     useEffect(() => {
-        const root = window.document.documentElement;
-        const effectiveTheme = getEffectiveTheme(theme);
-
-        if (effectiveTheme === 'dark') {
-            root.setAttribute('data-theme', 'dark');
-        } else {
-            root.removeAttribute('data-theme');
-        }
-
-        localStorage.setItem('theme', theme);
-
         const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
-        const handleChange = () => {
-            if (theme === 'system') {
-                const newEffectiveTheme = getEffectiveTheme('system');
-                if (newEffectiveTheme === 'dark') {
-                    root.setAttribute('data-theme', 'dark');
-                } else {
-                    root.removeAttribute('data-theme');
-                }
+
+        const getTheme = () => {
+            const storedTheme = localStorage.getItem('theme');
+            if (storedTheme) {
+                setTheme(storedTheme as Theme);
+                setPreference(storedTheme as ThemePreference);
+                localStorage.setItem('theme', storedTheme);
+            } else {
+                setTheme(mediaQuery.matches ? 'dark' : 'light');
+                setPreference('system');
+                localStorage.removeItem('theme');
             }
         };
 
-        mediaQuery.addEventListener('change', handleChange);
-        return () => mediaQuery.removeEventListener('change', handleChange);
-    }, [theme]);
-
-    const toggleTheme = () => {
-        setTheme(prev => {
-            if (prev === 'light') return 'dark';
-            if (prev === 'dark') return 'system';
-            return 'light';
-        });
-    };
-
-    const setThemeDirectly = (newTheme: Theme) => {
-        setTheme(newTheme);
-    };
-
-    return {
-        theme,
-        toggleTheme,
-        setTheme: setThemeDirectly,
-        effectiveTheme: getEffectiveTheme(theme),
-    };
+        getTheme();
+        mediaQuery.addEventListener('change', getTheme);
+        return () => mediaQuery.removeEventListener('change', getTheme);
+    }, [preference, setTheme, setPreference]);
 }

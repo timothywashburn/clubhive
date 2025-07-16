@@ -6,8 +6,8 @@ import { useCanvasSetup } from '../hooks/useCanvasSetup.ts';
 import { useMouseTracking } from '../hooks/useMouseTracking.ts';
 import { useAnimation } from '../hooks/useAnimation.ts';
 import { HoneycombProps, HoneycombConfig, HoneycombColors } from '../config/types.ts';
-import { MUTED_COLORS, VIBRANT_COLORS } from '../config/colors.ts';
 import { DEFAULT_CONFIG } from '../config/animation.ts';
+import { useHoneycombColors } from '../hooks/useHoneycombColors.ts';
 
 class GlowingHoneycombEngine {
     private pointGenerator: PointGenerator;
@@ -92,8 +92,6 @@ interface GlowingHoneycombProps extends HoneycombProps {
     glowSpeed: number;
     fadeSpeed: number;
     decayChance: number;
-    mutedColors: HoneycombColors;
-    vibrantColors: HoneycombColors;
 }
 
 export function GlowingHoneycomb({
@@ -106,13 +104,12 @@ export function GlowingHoneycomb({
     glowSpeed,
     fadeSpeed,
     decayChance,
-    mutedColors,
-    vibrantColors,
 }: GlowingHoneycombProps) {
     const { canvasRef, dimensions, context } = useCanvasSetup();
     const { mousePosition } = useMouseTracking(canvasRef);
     const { startAnimation, stopAnimation } = useAnimation();
     const honeycombRef = useRef<GlowingHoneycombEngine | null>(null);
+    const { baseColors, vibrantColors } = useHoneycombColors();
 
     useEffect(() => {
         if (!context || !dimensions.width || !dimensions.height) return;
@@ -122,7 +119,7 @@ export function GlowingHoneycomb({
             numPoints,
             noiseAmount,
             showDebug,
-            colors: mutedColors, // Use muted as base config
+            colors: baseColors,
         };
 
         // Create glowing honeycomb instance
@@ -131,7 +128,7 @@ export function GlowingHoneycomb({
             context,
             dimensions.width,
             dimensions.height,
-            mutedColors,
+            baseColors,
             vibrantColors,
             glowRadius,
             activationChance,
@@ -165,7 +162,7 @@ export function GlowingHoneycomb({
         glowSpeed,
         fadeSpeed,
         decayChance,
-        mutedColors,
+        baseColors,
         vibrantColors,
         startAnimation,
         stopAnimation,

@@ -5,8 +5,6 @@ export interface HoneycombCellColors {
     saturationVariation: number;
     baseLightness: number;
     lightnessVariation: number;
-    minLightness: number;
-    maxLightness: number;
     randomLightnessRange: number;
     blendTargetColor: string; // Hex color that honeycomb blends towards
     edgeStroke: string; // Hex color for the edge stroke
