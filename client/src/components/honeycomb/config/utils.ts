@@ -1,4 +1,5 @@
 import { HSLColor } from './types.ts';
+import { Theme, useThemeStore } from '../../../stores/themeStore.ts';
 
 /**
  * Converts hex color to HSL values
@@ -143,4 +144,14 @@ export function alphaBlendRgb(
         g: Math.round(foreground.g * alpha + background.g * invAlpha),
         b: Math.round(foreground.b * alpha + background.b * invAlpha),
     };
+}
+
+export function calculateBlendFactor(mode: Theme | 'vibrant', lightness: number): number {
+    switch (mode) {
+        case 'light':
+            return 0.5;
+        case 'dark':
+        case 'vibrant':
+            return 1 - lightness / 80;
+    }
 }

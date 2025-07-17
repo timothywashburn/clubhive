@@ -18,7 +18,6 @@ export { useMouseTracking } from './hooks/useMouseTracking.ts';
 export { useAnimation } from './hooks/useAnimation.ts';
 
 // Configuration
-export { VIBRANT_COLORS } from './config/colors.ts';
 export { DEFAULT_PHYSICS, DEFAULT_CONFIG, GENERATION_CONFIG } from './config/animation.ts';
 export type {
     HoneycombProps,

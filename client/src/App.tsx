@@ -16,12 +16,14 @@ import { NotFound } from './pages/NotFound';
 import { Account } from './pages/Account.tsx';
 import { About } from './features/about/About.tsx';
 import { StaticHoneycomb } from './components/honeycomb';
+import { useThemeStore } from './stores/themeStore.ts';
 
 export function App() {
     const { isAuthenticated, toggleAuth } = useAuth();
     const [scrollY, setScrollY] = useState(0);
     const backgroundRef = useRef<HTMLDivElement>(null);
     useTheme();
+    const { theme } = useThemeStore();
 
     useEffect(() => {
         const handleScroll = () => {
@@ -31,6 +33,8 @@ export function App() {
         window.addEventListener('scroll', handleScroll);
         return () => window.removeEventListener('scroll', handleScroll);
     }, []);
+
+    if (!theme) return null;
 
     return (
         <BrowserRouter>

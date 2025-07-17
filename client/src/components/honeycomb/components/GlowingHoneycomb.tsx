@@ -57,18 +57,30 @@ class GlowingHoneycombEngine {
         // Calculate dynamic color data with glow effects
         const dynamicColorData = this.colorCalculator.calculateDynamicColorData(this.basePoints, mousePosition, this.staticRandomOffsets);
 
-        // Render frame with dynamic colors
+        // Get glow intensities for sorting
+        const glowIntensities = this.colorCalculator.getGlowIntensities();
+
+        // Create sorted indices by glow intensity (low to high)
+        const sortedIndices = Array.from({ length: this.basePoints.length }, (_, i) => i).sort(
+            (a, b) => glowIntensities[a] - glowIntensities[b]
+        );
+
+        // Sort points and color data by glow intensity
+        const sortedPoints = sortedIndices.map(i => this.basePoints[i]);
+        const sortedColorData = sortedIndices.map(i => dynamicColorData[i]);
+
+        // Render frame with sorted data (low glow intensity cells first)
         if (this.config.showDebug) {
             this.renderer.renderWithDebug(
-                this.basePoints,
-                this.basePoints, // No physics movement, just glow effects
+                sortedPoints,
+                sortedPoints, // No physics movement, just glow effects
                 this.extendedBounds,
-                dynamicColorData,
+                sortedColorData,
                 mousePosition,
                 this.glowRadius
             );
         } else {
-            this.renderer.render(this.basePoints, this.extendedBounds, dynamicColorData);
+            this.renderer.render(sortedPoints, this.extendedBounds, sortedColorData);
         }
     }
 

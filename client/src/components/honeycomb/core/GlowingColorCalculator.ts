@@ -1,7 +1,8 @@
 import { createNoise2D } from 'simplex-noise';
 import { ColorData, HoneycombColors, HSLColor, Point } from '../config/types.ts';
 import { GENERATION_CONFIG } from '../config/animation.ts';
-import { hexToHsl, hexToRgb, rgbToHsl, alphaBlendRgb } from '../config/utils.ts';
+import { hexToHsl, hexToRgb, rgbToHsl, alphaBlendRgb, calculateBlendFactor } from '../config/utils.ts';
+import { useThemeStore } from '../../../stores/themeStore.ts';
 
 // Constants for random intensity boost amounts
 const MIN_INTENSITY_CHANGE = 0.1;
@@ -139,7 +140,9 @@ export class GlowingColorCalculator {
                 )
             );
 
-            const mutedDarknessFactor = this.calculateBlendFactor(mutedBaseLightness);
+            const theme = useThemeStore.getState().theme;
+
+            const mutedDarknessFactor = calculateBlendFactor(theme, mutedBaseLightness);
             const mutedInnerColor = this.blendTowardsTargetHsl(
                 mutedBaseHue,
                 mutedBaseSaturation,
@@ -157,7 +160,12 @@ export class GlowingColorCalculator {
                 this.mutedTargetHsl
             );
 
-            const vibrantDarknessFactor = this.calculateBlendFactor(vibrantBaseLightness);
+            if (theme === 'light') {
+                mutedInnerColor.lightness = Math.min(mutedInnerColor.lightness, this.mutedColors.honeycomb.baseLightness);
+                mutedOuterColor.lightness = Math.min(mutedOuterColor.lightness, this.mutedColors.honeycomb.baseLightness);
+            }
+
+            const vibrantDarknessFactor = calculateBlendFactor('vibrant', vibrantBaseLightness);
             const vibrantInnerColor = this.blendTowardsTargetHsl(
                 vibrantBaseHue,
                 vibrantBaseSaturation,
@@ -174,6 +182,12 @@ export class GlowingColorCalculator {
                 vibrantOuterBlendFactor,
                 this.vibrantTargetHsl
             );
+
+            // TODO: fix the atrocity
+            if (theme === 'light') {
+                vibrantInnerColor.lightness = Math.min(vibrantInnerColor.lightness, 70);
+                vibrantOuterColor.lightness = Math.min(vibrantOuterColor.lightness, 80);
+            }
 
             // Alpha blend muted (background) and vibrant (foreground) colors using glow intensity
             const alpha = glowState.glowIntensity;
@@ -217,10 +231,6 @@ export class GlowingColorCalculator {
         });
     }
 
-    private calculateBlendFactor(lightness: number): number {
-        return 1 - lightness / 80;
-    }
-
     private blendTowardsTargetHsl(
         baseHue: number,
         baseSaturation: number,
@@ -243,6 +253,10 @@ export class GlowingColorCalculator {
         this.activationChance = activationChance;
         this.glowSpeed = glowSpeed;
         this.fadeSpeed = fadeSpeed;
+    }
+
+    getGlowIntensities(): number[] {
+        return this.glowStates.map(state => state.glowIntensity);
     }
 
     private hslToRgb(h: number, s: number, l: number): { r: number; g: number; b: number } {
