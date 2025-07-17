@@ -59,15 +59,11 @@ const upcomingEvents = [
 export function Home() {
     const navigate = useNavigate();
     return (
-        <div className="bg-background ">
+        <div className="h-full relative">
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
                 <div className="text-center">
-                    <h1 className="text-4xl font-bold text-on-surface mb-4">
-                        Welcome to clubhive
-                    </h1>
-                    <p className="text-xl text-on-surface-variant mb-8">
-                        Discover, join, and manage your clubs all in one place
-                    </p>
+                    <h1 className="text-4xl font-bold text-on-surface mb-4">Welcome to clubhive</h1>
+                    <p className="text-xl text-on-surface-variant mb-8">Discover, join, and manage your clubs all in one place</p>
 
                     <div className="max-w-7xl mx-auto px-4 mt-16">
                         <div className="grid grid-cols-2 gap-8">
@@ -76,9 +72,7 @@ export function Home() {
                                 {/* header */}
                                 <div className="flex items-center justify-between mb-4">
                                     <div className="flex items-center">
-                                        <h2 className="text-xl text-on-surface">
-                                            My Upcoming Events
-                                        </h2>
+                                        <h2 className="text-xl text-on-surface">My Upcoming Events</h2>
                                         <CalendarHeart className="text-primary w-6 h-6 ml-2" />
                                     </div>
 
@@ -112,16 +106,12 @@ export function Home() {
                             <div className="bg-surface rounded-lg shadow p-6 border border-outline-variant">
                                 <div className="flex items-center justify-between mb-4">
                                     <div className="flex items-center">
-                                        <h2 className="text-xl text-on-surface">
-                                            Inbox
-                                        </h2>
+                                        <h2 className="text-xl text-on-surface">Inbox</h2>
                                         <Megaphone className="text-primary w-6 h-6 ml-2" />
                                     </div>
 
                                     <button
-                                        onClick={() =>
-                                            navigate('/notifications')
-                                        }
+                                        onClick={() => navigate('/notifications')}
                                         className="bg-primary text-on-primary px-3 py-1.5 rounded-md text-sm font-normal hover:bg-primary/90"
                                     >
                                         + View All
@@ -132,12 +122,7 @@ export function Home() {
 
                                 <div className="space-y-4 mt-4">
                                     {messages.map(msg => (
-                                        <InboxCardHomepage
-                                            key={msg._id}
-                                            sender={msg.sender}
-                                            title={msg.title}
-                                            body={msg.body}
-                                        />
+                                        <InboxCardHomepage key={msg._id} sender={msg.sender} title={msg.title} body={msg.body} />
                                     ))}
                                 </div>
                             </div>

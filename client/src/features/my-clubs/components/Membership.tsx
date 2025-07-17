@@ -14,9 +14,7 @@ export function Membership({ club, isOwner }: MembershipProps) {
     return (
         <div className="space-y-6">
             <div className="bg-surface rounded-lg shadow p-6 border border-outline-variant">
-                <h3 className="text-lg font-medium text-on-surface mb-6">
-                    Membership Card
-                </h3>
+                <h3 className="text-lg font-medium text-on-surface mb-6">Membership Card</h3>
 
                 <div className="mb-8">
                     <div className="flex gap-4">
@@ -28,30 +26,18 @@ export function Membership({ club, isOwner }: MembershipProps) {
                             }}
                         >
                             <div className="absolute top-1/2 left-1/2 w-64 h-64 opacity-8 select-none pointer-events-none transform -translate-x-1/2 -translate-y-1/2">
-                                <img
-                                    src={club.logoImage}
-                                    alt="Club logo background"
-                                    className="w-full h-full object-contain"
-                                />
+                                <img src={club.logoImage} alt="Club logo background" className="w-full h-full object-contain" />
                             </div>
 
-                            <div className="relative z-10 h-full flex flex-col justify-center items-center text-center">
+                            <div className="h-full flex flex-col justify-center items-center text-center">
                                 <div className="mb-4">
-                                    <h2 className="text-3xl font-bold text-on-surface leading-tight">
-                                        {club.name}
-                                    </h2>
+                                    <h2 className="text-3xl font-bold text-on-surface leading-tight">{club.name}</h2>
                                 </div>
-                                {(club.role === 'owner' ||
-                                    club.role === 'officer') && (
+                                {(club.role === 'owner' || club.role === 'officer') && (
                                     <>
                                         <div className="w-16 h-px bg-on-surface-variant/30 mb-3"></div>
-                                        <div
-                                            className="text-lg font-semibold"
-                                            style={{ color: club.brandColor }}
-                                        >
-                                            {club.role === 'owner'
-                                                ? 'Owner'
-                                                : 'Officer'}
+                                        <div className="text-lg font-semibold" style={{ color: club.brandColor }}>
+                                            {club.role === 'owner' ? 'Owner' : 'Officer'}
                                         </div>
                                     </>
                                 )}
@@ -65,12 +51,8 @@ export function Membership({ club, isOwner }: MembershipProps) {
 
                             <div className="p-6 pt-16 h-full flex flex-col">
                                 <div className="mb-4">
-                                    <h4 className="font-bold text-on-surface mb-1">
-                                        John Doe
-                                    </h4>
-                                    <p className="text-sm text-on-surface-variant">
-                                        Valid since {membershipData.joinDate}
-                                    </p>
+                                    <h4 className="font-bold text-on-surface mb-1">John Doe</h4>
+                                    <p className="text-sm text-on-surface-variant">Valid since {membershipData.joinDate}</p>
                                 </div>
 
                                 <div className="flex flex-col justify-between flex-1">
@@ -96,11 +78,7 @@ export function Membership({ club, isOwner }: MembershipProps) {
                                                 backgroundColor: `${club.brandColor}15`,
                                             }}
                                         >
-                                            <img
-                                                src={club.logoImage}
-                                                alt={`${club.name} logo`}
-                                                className="w-8 h-8 object-contain"
-                                            />
+                                            <img src={club.logoImage} alt={`${club.name} logo`} className="w-8 h-8 object-contain" />
                                         </div>
                                     </div>
                                 </div>
@@ -117,20 +95,16 @@ export function Membership({ club, isOwner }: MembershipProps) {
                                 Danger Zone
                             </h4>
                             <p className="text-on-error-container text-sm mb-6">
-                                These actions are irreversible and will
-                                permanently affect your membership.
+                                These actions are irreversible and will permanently affect your membership.
                             </p>
 
                             <div className="space-y-4">
                                 {!isOwner && (
                                     <div className="flex items-center justify-between p-4 border border-error-container rounded-lg bg-surface">
                                         <div>
-                                            <h5 className="font-medium text-error mb-1">
-                                                Leave Club
-                                            </h5>
+                                            <h5 className="font-medium text-error mb-1">Leave Club</h5>
                                             <p className="text-on-error-container text-sm">
-                                                Remove yourself from this club
-                                                and lose access to all content.
+                                                Remove yourself from this club and lose access to all content.
                                             </p>
                                         </div>
                                         <button className="flex items-center px-4 py-2 rounded-lg text-sm font-medium bg-error text-on-error hover:bg-error/90 transition-colors cursor-pointer">
@@ -144,12 +118,9 @@ export function Membership({ club, isOwner }: MembershipProps) {
                                     <>
                                         <div className="flex items-center justify-between p-4 border border-error-container rounded-lg bg-surface">
                                             <div>
-                                                <h5 className="font-medium text-on-error-container mb-1">
-                                                    Transfer Ownership
-                                                </h5>
+                                                <h5 className="font-medium text-on-error-container mb-1">Transfer Ownership</h5>
                                                 <p className="text-on-error-container text-sm">
-                                                    Transfer ownership of this
-                                                    club to another member.
+                                                    Transfer ownership of this club to another member.
                                                 </p>
                                             </div>
                                             <button className="flex items-center px-4 py-2 rounded-lg text-sm font-medium bg-error text-on-error hover:bg-error/90 transition-colors cursor-pointer">
@@ -160,13 +131,9 @@ export function Membership({ club, isOwner }: MembershipProps) {
 
                                         <div className="flex items-center justify-between p-4 border border-error-container rounded-lg bg-surface">
                                             <div>
-                                                <h5 className="font-medium text-on-error-container mb-1">
-                                                    Disband Club
-                                                </h5>
+                                                <h5 className="font-medium text-on-error-container mb-1">Disband Club</h5>
                                                 <p className="text-on-error-container text-sm">
-                                                    Permanently delete this club
-                                                    and all its data. This
-                                                    cannot be undone.
+                                                    Permanently delete this club and all its data. This cannot be undone.
                                                 </p>
                                             </div>
                                             <button className="flex items-center px-4 py-2 rounded-lg text-sm font-medium bg-error text-on-error hover:bg-error/90 transition-colors cursor-pointer">

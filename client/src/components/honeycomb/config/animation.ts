@@ -1,5 +1,4 @@
-import { PhysicsConfig, HoneycombConfig } from './types';
-import { DEFAULT_COLORS } from './colors';
+import { PhysicsConfig, HoneycombConfig } from './types.ts';
 
 export const DEFAULT_PHYSICS: PhysicsConfig = {
     mouseForce: 0.2,
@@ -14,7 +13,7 @@ export const DEFAULT_CONFIG: HoneycombConfig = {
     numPoints: 1000,
     noiseAmount: 0.3,
     showDebug: true,
-    colors: DEFAULT_COLORS,
+    colors: null,
     physics: DEFAULT_PHYSICS,
 };
 

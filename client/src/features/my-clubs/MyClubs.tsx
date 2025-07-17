@@ -15,20 +15,10 @@ import {
 export function MyClubs() {
     const { clubs, events } = useMyClubsData();
 
-    const {
-        selectedClub,
-        setSelectedClub,
-        activeTab,
-        setActiveTab,
-        isPreviewMode,
-        setIsPreviewMode,
-        isOfficer,
-        isOwner,
-        showOfficerView,
-    } = useClubState();
+    const { selectedClub, setSelectedClub, activeTab, setActiveTab, isPreviewMode, setIsPreviewMode, isOfficer, isOwner, showOfficerView } =
+        useClubState();
 
-    const { indicatorStyle, shouldAnimate, setShouldAnimate, tabRefs } =
-        useTabIndicator(activeTab, selectedClub, isPreviewMode);
+    const { indicatorStyle, shouldAnimate, setShouldAnimate, tabRefs } = useTabIndicator(activeTab, selectedClub, isPreviewMode);
 
     const renderTabContent = () => {
         const contentKey = `${selectedClub?.id}-${activeTab}-${isPreviewMode}`;
@@ -37,26 +27,14 @@ export function MyClubs() {
 
         let content = null;
         if (activeTab === 'info') {
-            content = showOfficerView ? (
-                <OfficerInfo club={selectedClub} />
-            ) : (
-                <MemberInfo club={selectedClub} />
-            );
+            content = showOfficerView ? <OfficerInfo club={selectedClub} /> : <MemberInfo club={selectedClub} />;
         } else if (activeTab === 'events') {
-            content = showOfficerView ? (
-                <EventPlanner events={events} />
-            ) : (
-                <Events events={events} />
-            );
+            content = showOfficerView ? <EventPlanner events={events} /> : <Events events={events} />;
         } else if (activeTab === 'stats' && showOfficerView) {
             content = <Stats club={selectedClub} />;
         } else if (activeTab === 'stats' && isPreviewMode) {
             setActiveTab('info');
-            content = showOfficerView ? (
-                <OfficerInfo club={selectedClub} />
-            ) : (
-                <MemberInfo club={selectedClub} />
-            );
+            content = showOfficerView ? <OfficerInfo club={selectedClub} /> : <MemberInfo club={selectedClub} />;
         } else if (activeTab === 'membership') {
             content = <Membership club={selectedClub} isOwner={isOwner} />;
         }
@@ -69,15 +47,11 @@ export function MyClubs() {
     };
 
     return (
-        <div className="bg-background">
+        <div className="h-full relative">
             <div className="px-4 sm:px-6 lg:px-8 py-8">
                 <div className="flex gap-6">
                     <div className="w-80 flex-shrink-0">
-                        <ClubSelector
-                            clubs={clubs}
-                            selectedClub={selectedClub}
-                            onClubSelect={setSelectedClub}
-                        />
+                        <ClubSelector clubs={clubs} selectedClub={selectedClub} onClubSelect={setSelectedClub} />
                     </div>
 
                     <div className="flex-1 min-w-0">
@@ -88,9 +62,7 @@ export function MyClubs() {
                                         club={selectedClub}
                                         isOfficer={isOfficer}
                                         isPreviewMode={isPreviewMode}
-                                        onPreviewToggle={() =>
-                                            setIsPreviewMode(!isPreviewMode)
-                                        }
+                                        onPreviewToggle={() => setIsPreviewMode(!isPreviewMode)}
                                     />
 
                                     <TabNavigation
