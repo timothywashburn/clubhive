@@ -1,11 +1,6 @@
 import { ErrorCode } from '@clubhive/shared';
 import mongoose from 'mongoose';
-import {
-    ApiEndpoint,
-    AuthType,
-    ApiRequest,
-    ApiResponse,
-} from '@/types/api-types';
+import { ApiEndpoint, AuthType, ApiRequest, ApiResponse } from '@/types/api-types';
 
 interface ClubMembershipReq {
     userId: string;
@@ -23,21 +18,13 @@ const clubMembershipSchema = new mongoose.Schema({
     createdAt: { type: Date, default: Date.now },
 });
 
-const ClubMembership =
-    mongoose.models.ClubMembership ||
-    mongoose.model('ClubMembership', clubMembershipSchema);
+const ClubMembership = mongoose.models.ClubMembership || mongoose.model('ClubMembership', clubMembershipSchema);
 
-export const ClubMembershipEndpoint: ApiEndpoint<
-    ClubMembershipReq,
-    ClubMembershipRes
-> = {
+export const ClubMembershipEndpoint: ApiEndpoint<ClubMembershipReq, ClubMembershipRes> = {
     path: '/api/memberships',
     method: 'post',
     auth: AuthType.AUTHENTICATED,
-    handler: async (
-        req: ApiRequest<ClubMembershipReq>,
-        res: ApiResponse<ClubMembershipRes>
-    ) => {
+    handler: async (req: ApiRequest<ClubMembershipReq>, res: ApiResponse<ClubMembershipRes>) => {
         try {
             const { userId, clubId } = req.body;
 
