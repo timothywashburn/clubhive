@@ -1,87 +1,102 @@
 import { useState } from 'react';
-import { Link } from 'react-router';
+import { useClubData } from '../hooks/fetchClubs';
+import type { Club } from '../hooks/fetchClubs';
+import { useTagsData } from '../hooks/fetchTags';
+import type { Tag } from '../hooks/fetchTags';
+import ClubCardSmall from '../features/find-clubs/ClubCardSmall';
+import TagFilterPopover from '../features/find-clubs/FilterTagsButton';
 
-/**
- * THIS CLASS IS AI GENERATED AND TEMPORARY
- *
- * This class is a placeholder that bears no resemblance to the real
- * implementation for this page. This code is temporary and can be
- * replaced by the real implementation at any time.
- */
 export function Clubs() {
     const [searchTerm, setSearchTerm] = useState('');
+    const [selectedClub, setSelectedClub] = useState<Club | null>(null);
+    const { clubs, isLoading, error } = useClubData();
+    const { tags } = useTagsData();
+    const [selectedTags, setSelectedTags] = useState<Tag[]>([]);
+
+    const getClubColors = (id: string) => ['bg-pink-200', 'bg-blue-200', 'bg-green-200'][parseInt(id) % 3];
+
+    if (isLoading) return <p className="p-4 text-on-surface-variant">Loading clubs...</p>;
+    if (error) return <p className="p-4 text-red-500">Error: {error}</p>;
 
     return (
-        <div className="bg-background">
-            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        <div className="h-full relative">
+            <div className="mx-auto px-4 sm:px-6 lg:px-8 py-8">
                 <div className="mb-8">
-                    <h1 className="text-3xl font-bold text-on-background">
-                        Find Clubs
-                    </h1>
-                    <p className="text-on-background-variant mt-2">
-                        Discover clubs that match your interests
-                    </p>
+                    <h1 className="text-3xl font-bold text-on-background">Find Clubs</h1>
+                    <p className="text-on-background-variant mt-2">Discover clubs that match your interests</p>
                 </div>
 
-                <div className="mb-6">
-                    <div className="relative">
-                        <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                            <svg
-                                className="h-5 w-5 text-on-surface-variant"
-                                fill="none"
-                                stroke="currentColor"
-                                viewBox="0 0 24 24"
-                            >
-                                <path
-                                    strokeLinecap="round"
-                                    strokeLinejoin="round"
-                                    strokeWidth={2}
-                                    d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
+                <div className="flex h-10 mb-6">
+                    <TagFilterPopover tags={tags} selectedTags={selectedTags} setSelectedTags={setSelectedTags} />
+                    <input
+                        type="text"
+                        placeholder="Search clubs..."
+                        value={searchTerm}
+                        onChange={e => setSearchTerm(e.target.value)}
+                        className="block w-full pl-10 pr-3 py-2 border text-on-surface border-outline-variant rounded-md rounded-l-none leading-5 bg-surface placeholder-on-surface-variant focus:outline-none focus:ring-1 focus:ring-primary focus:border-primary"
+                    />
+                </div>
+
+                <div className="flex flex-row gap-6">
+                    {/* Left: club list */}
+                    <div className="w-full lg:w-1/3 bg-surface rounded-lg shadow p-6 h-[calc(100vh-10rem)] scrollbar-hide overflow-y-auto space-y-4">
+                        {clubs
+                            .filter(club => club.name.toLowerCase().includes(searchTerm.toLowerCase()))
+                            .filter(club => selectedTags.length === 0 || club.tags.some(tag => selectedTags.some(t => t._id === tag._id)))
+                            .map(club => (
+                                <ClubCardSmall
+                                    key={club._id}
+                                    name={club.name}
+                                    tagline={club.tagline}
+                                    tags={club.tags}
+                                    id={club._id}
+                                    isSelected={selectedClub?._id === club._id}
+                                    onClick={() => setSelectedClub(club)}
                                 />
-                            </svg>
-                        </div>
-                        <input
-                            type="text"
-                            placeholder="Search clubs..."
-                            value={searchTerm}
-                            onChange={e => setSearchTerm(e.target.value)}
-                            className="block w-full pl-10 pr-3 py-2 border border-outline-variant rounded-md leading-5 bg-surface placeholder-on-surface-variant focus:outline-none focus:ring-1 focus:ring-primary focus:border-primary"
-                        />
+                            ))}
                     </div>
-                </div>
 
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                    {[1, 2, 3, 4, 5, 6].map(i => (
-                        <Link to={`/club-profile/${i}`}>
-                            <div
-                                key={i}
-                                className="bg-surface rounded-lg shadow hover:shadow-md transition-shadow p-6 border border-outline-variant"
-                            >
-                                <div className="flex items-center mb-4">
-                                    <div className="w-12 h-12 bg-primary-container rounded-full flex items-center justify-center">
-                                        <span className="text-on-primary-container font-bold">
-                                            C{i}
-                                        </span>
+                    {/* Right: selected club detail */}
+                    <div className="w-full lg:w-2/3 bg-surface rounded-lg shadow p-6">
+                        {selectedClub ? (
+                            <>
+                                <div className="flex items-center gap-10 mb-5">
+                                    <div
+                                        className={`w-30 h-30 rounded-full flex items-center justify-center text-sm font-semibold ${getClubColors(
+                                            selectedClub._id
+                                        )}`}
+                                    >
+                                        picture
                                     </div>
-                                    <div className="ml-4">
-                                        <h3 className="text-lg font-medium text-on-surface">
-                                            Club {i}
-                                        </h3>
-                                        <p className="text-sm text-on-surface-variant">
-                                            50 members
-                                        </p>
+                                    <div className="flex-1 overflow-hidden">
+                                        <h2 className="text-4xl text-on-surface font-bold mb-2">{selectedClub.name}</h2>
+                                        <p className="text-on-surface-variant italic">{selectedClub.tagline || 'No tagline'}</p>
                                     </div>
                                 </div>
-                                <p className="text-on-surface-variant mb-4">
-                                    This is a sample club description. Join us
-                                    for amazing activities and events!
-                                </p>
-                                <button className="w-full bg-primary text-on-primary py-2 rounded-md hover:bg-primary/90 font-medium transition-colors">
-                                    Join Club
+                                <hr className="my-4 border-t border-outline-variant" />
+                                <div className="text-sm text-on-surface-variant mb-4 flex flex-wrap gap-2">
+                                    {selectedClub.tags.map(tag => (
+                                        <span
+                                            key={tag._id}
+                                            className="bg-primary-container text-primary rounded-full px-3 py-1 text-xs font-semibold"
+                                        >
+                                            {tag.text}
+                                        </span>
+                                    ))}
+                                </div>
+                                <div className="mt-6 text-on-surface-variant">{selectedClub.description || 'No description'}</div>
+
+                                <button
+                                    className="mt-6 px-4 py-2 bg-primary text-on-primary rounded-md hover:bg-primary-dark transition-colors"
+                                    onClick={() => alert('View Profile feature coming soon!')}
+                                >
+                                    View Profile
                                 </button>
-                            </div>
-                        </Link>
-                    ))}
+                            </>
+                        ) : (
+                            <p className="text-on-surface-variant">Select a club to see details.</p>
+                        )}
+                    </div>
                 </div>
             </div>
         </div>
