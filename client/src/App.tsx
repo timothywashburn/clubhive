@@ -9,6 +9,7 @@ import { MyClubs } from './features/my-clubs';
 import { Clubs } from './pages/Clubs';
 import { ClubProfile } from './pages/ClubProfile';
 import { Events } from './pages/Events';
+import { EventsPage } from './pages/EventsPage';
 import { Notifications } from './pages/Notifications';
 import { SignIn } from './pages/SignIn';
 import { SignUp } from './pages/SignUp';
@@ -60,6 +61,7 @@ export function App() {
                         <Route path="/clubs" element={<Clubs />} />
                         <Route path="/club-profile/:id" element={<ClubProfile />} />
                         <Route path="/events" element={<Events />} />
+                        <Route path="/events/:id" element={<EventsPage />} />
                         <Route path="/account" element={<Account />} />
                         <Route path="/notifications" element={<Notifications />} />
                         <Route path="/about" element={<About />} />
