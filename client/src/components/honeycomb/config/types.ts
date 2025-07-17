@@ -5,8 +5,6 @@ export interface HoneycombCellColors {
     saturationVariation: number;
     baseLightness: number;
     lightnessVariation: number;
-    minLightness: number;
-    maxLightness: number;
     randomLightnessRange: number;
     blendTargetColor: string; // Hex color that honeycomb blends towards
     edgeStroke: string; // Hex color for the edge stroke
@@ -61,13 +59,18 @@ export interface Velocity {
     vy: number;
 }
 
+export interface HSLColor {
+    hue: number;
+    saturation: number;
+    lightness: number;
+}
+
 export interface ColorData {
     baseHue: number;
     baseSaturation: number;
     baseLightness: number;
     colorNoise: number;
     randomLightnessOffset: number;
-    edgeFactor: number;
     innerColor: {
         hue: number;
         saturation: number;
@@ -85,8 +88,8 @@ export interface ColorData {
 
 export interface HoneycombProps {
     className?: string;
-    numPoints: number;
-    noiseAmount: number;
-    showDebug: boolean;
+    numPoints?: number;
+    noiseAmount?: number;
+    showDebug?: boolean;
     isStatic?: boolean;
 }

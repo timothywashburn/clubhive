@@ -1,12 +1,11 @@
 import React from 'react';
-import { DynamicHoneycombComponent } from './honeycomb/components/DynamicHoneycomb.tsx';
-import { StaticHoneycomb } from './honeycomb/components/StaticHoneycomb.tsx';
-import { GlowingHoneycomb } from './honeycomb/components/GlowingHoneycomb';
-import { MUTED_COLORS, VIBRANT_COLORS } from './honeycomb/config/colors';
+import { DynamicHoneycombComponent } from '../../components/honeycomb/components/DynamicHoneycomb.tsx';
+import { StaticHoneycomb } from '../../components/honeycomb/components/StaticHoneycomb.tsx';
+import { GlowingHoneycomb } from '../../components/honeycomb/components/GlowingHoneycomb';
 
 type HoneycombType = 'static' | 'dynamic' | 'glowing';
 
-interface VoronoiHoneycombProps {
+interface HoneycombProps {
     className?: string;
     numPoints?: number;
     noiseAmount?: number;
@@ -21,7 +20,7 @@ interface VoronoiHoneycombProps {
     fadeSpeed?: number;
 }
 
-export function Honeycomb({
+export function HoneycombTest({
     className = '',
     numPoints = 1000,
     noiseAmount = 0.3,
@@ -34,10 +33,8 @@ export function Honeycomb({
     decayChance = 0.03,
     glowSpeed = 0.02,
     fadeSpeed = 0.01,
-}: VoronoiHoneycombProps) {
-    const type =
-        honeycombType ||
-        (glowing ? 'glowing' : isStatic ? 'static' : 'dynamic');
+}: HoneycombProps) {
+    const type = honeycombType || (glowing ? 'glowing' : isStatic ? 'static' : 'dynamic');
 
     if (type === 'glowing') {
         return (
@@ -51,29 +48,13 @@ export function Honeycomb({
                 decayChance={decayChance}
                 glowSpeed={glowSpeed}
                 fadeSpeed={fadeSpeed}
-                mutedColors={MUTED_COLORS}
-                vibrantColors={VIBRANT_COLORS}
             />
         );
     }
 
     if (type === 'static') {
-        return (
-            <StaticHoneycomb
-                className={className}
-                numPoints={numPoints}
-                noiseAmount={noiseAmount}
-                showDebug={showDebug}
-            />
-        );
+        return <StaticHoneycomb className={className} numPoints={numPoints} noiseAmount={noiseAmount} showDebug={showDebug} />;
     }
 
-    return (
-        <DynamicHoneycombComponent
-            className={className}
-            numPoints={numPoints}
-            noiseAmount={noiseAmount}
-            showDebug={showDebug}
-        />
-    );
+    return <DynamicHoneycombComponent className={className} numPoints={numPoints} noiseAmount={noiseAmount} showDebug={showDebug} />;
 }

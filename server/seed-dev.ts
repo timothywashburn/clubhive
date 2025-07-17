@@ -13,9 +13,7 @@ async function seed() {
     await Tag.deleteMany({});
     await Club.deleteMany({});
 
-    const [ucsd] = await School.insertMany([
-        { name: 'UCSD', location: 'San Diego, CA' },
-    ]);
+    const [ucsd] = await School.insertMany([{ name: 'UCSD', location: 'San Diego, CA' }]);
 
     const tags = await Tag.insertMany([
         { type: 'club', text: 'Technology' },
@@ -122,11 +120,7 @@ async function seed() {
                 'Triton Community Club is committed to making a positive impact in the San Diego community through acts of service, advocacy, and connection. We organize regular volunteering events, community drives, and social impact initiatives that address local needs. The club is open to anyone with a heart for helping others and a desire to build stronger, more connected communities both on and off campus.',
             url: 'https://community.ucsd.edu',
             school: ucsd._id,
-            tags: [
-                tagMap['Service'],
-                tagMap['Community'],
-                tagMap['Leadership'],
-            ],
+            tags: [tagMap['Service'], tagMap['Community'], tagMap['Leadership']],
             socials: {
                 website: 'https://community.ucsd.edu',
                 discord: '',
@@ -140,12 +134,7 @@ async function seed() {
                 'Workshop Central is the go-to club for students eager to learn by doing. Every week, we host beginner-friendly and advanced workshops covering topics like web development, AI, game design, and more. With a focus on accessibility and growth, our events are open to all skill levels. We’re passionate about hands-on learning and helping students build real-world skills outside the classroom.',
             url: 'https://workshopcentral.ucsd.edu',
             school: ucsd._id,
-            tags: [
-                tagMap['Technology'],
-                tagMap['Academic'],
-                tagMap['STEM'],
-                tagMap['Career'],
-            ],
+            tags: [tagMap['Technology'], tagMap['Academic'], tagMap['STEM'], tagMap['Career']],
             socials: {
                 website: 'https://workshopcentral.ucsd.edu',
                 discord: 'https://discord.gg/workshops',
@@ -159,11 +148,7 @@ async function seed() {
                 'Startup Circle is a hub for entrepreneurial students looking to turn their ideas into real ventures. We provide pitch opportunities, mentorship from founders and investors, and connections to funding resources. Whether you’re building a business, app, or product, we support you through every stage of the startup journey.',
             url: 'https://startupcircle.ucsd.edu',
             school: ucsd._id,
-            tags: [
-                tagMap['Entrepreneurship'],
-                tagMap['Career'],
-                tagMap['Leadership'],
-            ],
+            tags: [tagMap['Entrepreneurship'], tagMap['Career'], tagMap['Leadership']],
             socials: {
                 website: 'https://startupcircle.ucsd.edu',
                 discord: '',
@@ -177,12 +162,7 @@ async function seed() {
                 'Triton Gamers brings together students who are passionate about games—whether it’s casual play, competitive esports, or game development. We host tournaments, game nights, and dev jams that build a thriving gaming community. Everyone from button mashers to elite competitors is welcome.',
             url: 'https://gamers.ucsd.edu',
             school: ucsd._id,
-            tags: [
-                tagMap['Gaming & Esports'],
-                tagMap['Community'],
-                tagMap['Social'],
-                tagMap['Technology'],
-            ],
+            tags: [tagMap['Gaming & Esports'], tagMap['Community'], tagMap['Social'], tagMap['Technology']],
             socials: {
                 website: 'https://gamers.ucsd.edu',
                 discord: 'https://discord.gg/gaming',
@@ -196,12 +176,7 @@ async function seed() {
                 'Triton Creatives is a collective of students passionate about visual, musical, and literary arts. We host exhibitions, open mics, and collaborative projects that give creators a space to express and share their work. Whether you are into film, photography, music, or poetry, you will find your creative community here.',
             url: 'https://creatives.ucsd.edu',
             school: ucsd._id,
-            tags: [
-                tagMap['Art'],
-                tagMap['Music'],
-                tagMap['Media & Journalism'],
-                tagMap['Community'],
-            ],
+            tags: [tagMap['Art'], tagMap['Music'], tagMap['Media & Journalism'], tagMap['Community']],
             socials: {
                 website: 'https://creatives.ucsd.edu',
                 discord: '',
@@ -215,12 +190,7 @@ async function seed() {
                 'Diversity in Data is a student-led group focused on inclusive and ethical data practices. We organize talks, collaborative data projects, and community research initiatives aimed at addressing bias in tech. Our goal is to amplify underrepresented voices in data science and ensure data is used for good.',
             url: 'https://diversitydata.ucsd.edu',
             school: ucsd._id,
-            tags: [
-                tagMap['Diversity'],
-                tagMap['STEM'],
-                tagMap['Technology'],
-                tagMap['Academic'],
-            ],
+            tags: [tagMap['Diversity'], tagMap['STEM'], tagMap['Technology'], tagMap['Academic']],
             socials: {
                 website: 'https://diversitydata.ucsd.edu',
                 discord: '',
@@ -234,11 +204,7 @@ async function seed() {
                 'InfoSessions @ UCSD connects students with tech recruiters, engineers, and professionals through weekly events and industry panels. We aim to bridge the gap between education and employment by helping students explore careers, understand job roles, and network effectively.',
             url: 'https://infosessions.ucsd.edu',
             school: ucsd._id,
-            tags: [
-                tagMap['Career'],
-                tagMap['Professional Development'],
-                tagMap['STEM'],
-            ],
+            tags: [tagMap['Career'], tagMap['Professional Development'], tagMap['STEM']],
             socials: {
                 website: 'https://infosessions.ucsd.edu',
                 discord: '',
