@@ -1,6 +1,6 @@
 import * as d3 from 'd3';
 import { Delaunay } from 'd3-delaunay';
-import { ColorData, HoneycombColors, Point } from '../config/types';
+import { ColorData, HoneycombColors, Point } from '../config/types.ts';
 
 export class HoneycombRenderer {
     private ctx: CanvasRenderingContext2D;
@@ -9,13 +9,7 @@ export class HoneycombRenderer {
     private colors: HoneycombColors;
     private showDebug: boolean;
 
-    constructor(
-        ctx: CanvasRenderingContext2D,
-        width: number,
-        height: number,
-        colors: HoneycombColors,
-        showDebug: boolean = false
-    ) {
+    constructor(ctx: CanvasRenderingContext2D, width: number, height: number, colors: HoneycombColors, showDebug: boolean = false) {
         this.ctx = ctx;
         this.width = width;
         this.height = height;
@@ -23,11 +17,7 @@ export class HoneycombRenderer {
         this.showDebug = showDebug;
     }
 
-    render(
-        points: [number, number][],
-        extendedBounds: [number, number, number, number],
-        staticColorData: ColorData[]
-    ): void {
+    render(points: [number, number][], extendedBounds: [number, number, number, number], staticColorData: ColorData[]): void {
         this.clear();
 
         const delaunay = Delaunay.from(points);
@@ -55,12 +45,7 @@ export class HoneycombRenderer {
         this.render(points, extendedBounds, staticColorData);
 
         if (this.showDebug) {
-            this.renderDebugInfo(
-                points,
-                basePoints,
-                mousePosition,
-                mouseRadius
-            );
+            this.renderDebugInfo(points, basePoints, mousePosition, mouseRadius);
         }
     }
 
@@ -68,11 +53,7 @@ export class HoneycombRenderer {
         this.ctx.clearRect(0, 0, this.width, this.height);
     }
 
-    private renderCells(
-        voronoi: d3.Voronoi<[number, number]>,
-        points: [number, number][],
-        staticColorData: ColorData[]
-    ): void {
+    private renderCells(voronoi: d3.Voronoi<[number, number]>, points: [number, number][], staticColorData: ColorData[]): void {
         for (let i = 0; i < points.length; i++) {
             const cell = voronoi.cellPolygon(i);
             if (cell) {
@@ -128,12 +109,7 @@ export class HoneycombRenderer {
         this.ctx.stroke();
     }
 
-    private renderDebugInfo(
-        points: [number, number][],
-        basePoints: [number, number][],
-        mousePosition: Point,
-        mouseRadius: number
-    ): void {
+    private renderDebugInfo(points: [number, number][], basePoints: [number, number][], mousePosition: Point, mouseRadius: number): void {
         this.ctx.save();
 
         // Draw points and connections
@@ -173,13 +149,7 @@ export class HoneycombRenderer {
             this.ctx.strokeStyle = `rgba(0, 255, 0, ${this.colors.debug.mouseRadiusOpacity})`;
             this.ctx.lineWidth = 2;
             this.ctx.beginPath();
-            this.ctx.arc(
-                mousePosition.x,
-                mousePosition.y,
-                mouseRadius,
-                0,
-                2 * Math.PI
-            );
+            this.ctx.arc(mousePosition.x, mousePosition.y, mouseRadius, 0, 2 * Math.PI);
             this.ctx.stroke();
         }
 

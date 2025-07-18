@@ -8,27 +8,19 @@ type Props = {
     setSelectedTags: (tags: Tag[]) => void;
 };
 
-export default function TagFilterPopover({
-    tags,
-    selectedTags,
-    setSelectedTags,
-}: Props) {
+export default function TagFilterPopover({ tags, selectedTags, setSelectedTags }: Props) {
     const [open, setOpen] = useState(false);
     const popoverRef = useRef<HTMLDivElement | null>(null);
 
     // Close the popover when clicking outside
     useEffect(() => {
         function handleClickOutside(event: MouseEvent) {
-            if (
-                popoverRef.current &&
-                !popoverRef.current.contains(event.target as Node)
-            ) {
+            if (popoverRef.current && !popoverRef.current.contains(event.target as Node)) {
                 setOpen(false);
             }
         }
         document.addEventListener('mousedown', handleClickOutside);
-        return () =>
-            document.removeEventListener('mousedown', handleClickOutside);
+        return () => document.removeEventListener('mousedown', handleClickOutside);
     }, []);
 
     const toggleTag = (tagId: string) => {
@@ -53,14 +45,10 @@ export default function TagFilterPopover({
 
             {open && (
                 <div className="absolute mt-2 z-20 w-64 bg-surface border border-outline-variant rounded-lg shadow-lg p-4">
-                    <p className="font-semibold text-sm text-on-surface-variant mb-2">
-                        Select tags:
-                    </p>
+                    <p className="font-semibold text-sm text-on-surface-variant mb-2">Select tags:</p>
                     <div className="flex flex-wrap gap-2 max-h-48 overflow-y-auto">
                         {tags.map(tag => {
-                            const isSelected = selectedTags.find(
-                                selectedTag => selectedTag._id === tag._id
-                            );
+                            const isSelected = selectedTags.find(selectedTag => selectedTag._id === tag._id);
                             return (
                                 <button
                                     key={tag._id}

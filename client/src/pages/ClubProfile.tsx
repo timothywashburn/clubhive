@@ -41,7 +41,7 @@ export function ClubProfile() {
     const [isOpen, setIsOpen] = useState(false);
 
     return (
-        <div className="bg-background">
+        <div className="h-full relative">
             <div className="max-w-5xl mx-auto p-6">
                 <div className="flex justify-start mb-4">
                     <button
@@ -54,9 +54,7 @@ export function ClubProfile() {
 
                 {/* Join Club button*/}
                 <div className="flex justify-end mb-5">
-                    <button className="bg-primary text-on-primary px-4 py-2 rounded-full hover:bg-primary/90 font-medium">
-                        Join Club
-                    </button>
+                    <button className="bg-primary text-on-primary px-4 py-2 rounded-full hover:bg-primary/90 font-medium">Join Club</button>
                 </div>
 
                 {/* Club Profile header*/}
@@ -64,17 +62,13 @@ export function ClubProfile() {
                     {/* logo circle */}
                     <div className="w-1/3 flex items-center justify-center">
                         <div className="w-30 h-30 rounded-full bg-primary-container flex items-center justify-center">
-                            <span className="text-on-primary-container text-3xl font-bold">
-                                logo
-                            </span>
+                            <span className="text-on-primary-container text-3xl font-bold">logo</span>
                         </div>
                     </div>
 
                     {/* club name and description */}
                     <div className="w-2/3 flex items-center">
-                        <h1 className="text-6xl font-semibold text-on-surface text-center">
-                            Club Name
-                        </h1>
+                        <h1 className="text-6xl font-semibold text-on-surface text-center">Club Name</h1>
                     </div>
                 </div>
 
@@ -102,12 +96,8 @@ export function ClubProfile() {
                         {isOpen && (
                             <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
                                 <div className="bg-surface rounded-xl p-6 w-[90%] max-w-md shadow-lg relative">
-                                    <p className="text-on-surface-variant">
-                                        Instagram:...
-                                    </p>
-                                    <p className="text-on-surface-variant">
-                                        Website:... include links
-                                    </p>
+                                    <p className="text-on-surface-variant">Instagram:...</p>
+                                    <p className="text-on-surface-variant">Website:... include links</p>
 
                                     <button
                                         onClick={() => setIsOpen(false)}
@@ -145,28 +135,18 @@ export function ClubProfile() {
                         className="w-full p-4 bg-surface text-on-surface border border-outline-variant rounded-md resize-none text-sm leading-relaxed"
                     />
                     <div className="text-right text-xs text-on-surface-variant mt-1">
-                        {description.trim().split(/\s+/).filter(Boolean).length}
-                        /{maxWords} words
+                        {description.trim().split(/\s+/).filter(Boolean).length}/{maxWords} words
                     </div>
                 </div>
 
                 {/* events */}
-                <h2 className="text-2xl font-semibold text-on-surface mb-4">
-                    Upcoming Events
-                </h2>
+                <h2 className="text-2xl font-semibold text-on-surface mb-4">Upcoming Events</h2>
                 <div className="space-y-4">
                     <div className="space-y-4">
                         {events.map((event, index) => (
-                            <div
-                                key={index}
-                                className="bg-surface rounded-md p-4 border border-outline-variant"
-                            >
-                                <h3 className="font-medium text-on-surface">
-                                    {event.title}
-                                </h3>
-                                <p className="text-on-surface-variant">
-                                    {event.details}
-                                </p>
+                            <div key={index} className="bg-surface rounded-md p-4 border border-outline-variant">
+                                <h3 className="font-medium text-on-surface">{event.title}</h3>
+                                <p className="text-on-surface-variant">{event.details}</p>
                             </div>
                         ))}
                     </div>
@@ -174,25 +154,18 @@ export function ClubProfile() {
 
                 {/* announcements */}
                 <div className="mt-10">
-                    <h2 className="text-2xl font-semibold text-on-surface mb-4">
-                        Announcements
-                    </h2>
+                    <h2 className="text-2xl font-semibold text-on-surface mb-4">Announcements</h2>
                     <div className="bg-surface rounded-lg p-6 border border-outline-variant">
                         <ul className="list-disc list-inside space-y-3 text-on-surface-variant">
                             <li>Club applications open until this date!</li>
                             <li>Our first GBM of the quarter is tomorrow!</li>
-                            <li>
-                                Don't forget to fill out our social event
-                                interest form!
-                            </li>
+                            <li>Don't forget to fill out our social event interest form!</li>
                         </ul>
                     </div>
                 </div>
 
                 {/* gallery */}
-                <h2 className="text-2xl font-semibold text-on-surface mb-4 mt-8">
-                    Gallery
-                </h2>
+                <h2 className="text-2xl font-semibold text-on-surface mb-4 mt-8">Gallery</h2>
                 <div className="overflow-x-auto">
                     {' '}
                     {/* scroll bar for images */}
@@ -213,9 +186,7 @@ export function ClubProfile() {
                 </div>
 
                 {/* club officers */}
-                <h2 className="text-2xl font-semibold text-on-surface mb-4 mt-8">
-                    Our Officers
-                </h2>
+                <h2 className="text-2xl font-semibold text-on-surface mb-4 mt-8">Our Officers</h2>
 
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
                     {[1, 2, 3, 4, 5, 6].map((officer, i) => (
@@ -228,14 +199,8 @@ export function ClubProfile() {
                                     className="inline-block text-gray-500 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700 focus:ring-4 focus:outline-none focus:ring-gray-200 dark:focus:ring-gray-700 rounded-lg text-sm p-1.5"
                                     type="button"
                                 >
-                                    <span className="sr-only">
-                                        Open dropdown
-                                    </span>
-                                    <svg
-                                        className="w-5 h-5"
-                                        fill="currentColor"
-                                        viewBox="0 0 16 3"
-                                    >
+                                    <span className="sr-only">Open dropdown</span>
+                                    <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 16 3">
                                         <path d="M2 0a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3Zm6.041 0a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3ZM14 0a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3Z" />
                                     </svg>
                                 </button>
@@ -246,12 +211,8 @@ export function ClubProfile() {
                                     src="/docs/images/people/profile-picture-3.jpg"
                                     alt="Profile"
                                 />
-                                <h5 className="mb-1 text-xl font-medium text-gray-900 dark:text-white">
-                                    Bob Ross
-                                </h5>
-                                <span className="text-sm text-gray-500 dark:text-gray-400">
-                                    President
-                                </span>
+                                <h5 className="mb-1 text-xl font-medium text-gray-900 dark:text-white">Bob Ross</h5>
+                                <span className="text-sm text-gray-500 dark:text-gray-400">President</span>
                                 <div className="flex mt-4 md:mt-6">
                                     <a className="inline-flex items-center px-4 py-2 text-sm font-medium text-white bg-blue-700 rounded-lg hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">
                                         Contact

@@ -21,17 +21,13 @@ export const getTagsEndpoint: ApiEndpoint<undefined, GetTagsResponse> = {
             });
         } catch (err) {
             console.error('Failed to fetch tags:', err);
-            const message =
-                err instanceof Error ? err.message : 'Unknown error';
+            const message = err instanceof Error ? err.message : 'Unknown error';
             res.status(500).json({
                 success: false,
                 error: {
                     message: 'Failed to fetch tags',
                     code: ErrorCode.INTERNAL_SERVER_ERROR,
-                    details:
-                        process.env.NODE_ENV === 'development'
-                            ? message
-                            : undefined,
+                    details: process.env.NODE_ENV === 'development' ? message : undefined,
                 },
             });
         }

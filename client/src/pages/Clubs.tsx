@@ -17,28 +17,19 @@ export function Clubs() {
     const { tags } = useTagsData();
     const [selectedTags, setSelectedTags] = useState<Tag[]>([]);
 
-    if (isLoading)
-        return <p className="p-4 text-on-surface-variant">Loading clubs...</p>;
+    if (isLoading) return <p className="p-4 text-on-surface-variant">Loading clubs...</p>;
     if (error) return <p className="p-4 text-red-500">Error: {error}</p>;
 
     return (
-        <div className="bg-background">
+        <div className="h-full relative">
             <div className="mx-auto px-4 sm:px-6 lg:px-8 py-8">
                 <div className="mb-8">
-                    <h1 className="text-3xl font-bold text-on-background">
-                        Find Clubs
-                    </h1>
-                    <p className="text-on-background-variant mt-2">
-                        Discover clubs that match your interests
-                    </p>
+                    <h1 className="text-3xl font-bold text-on-background">Find Clubs</h1>
+                    <p className="text-on-background-variant mt-2">Discover clubs that match your interests</p>
                 </div>
 
                 <div className="flex h-10 mb-6">
-                    <TagFilterPopover
-                        tags={tags}
-                        selectedTags={selectedTags}
-                        setSelectedTags={setSelectedTags}
-                    />
+                    <TagFilterPopover tags={tags} selectedTags={selectedTags} setSelectedTags={setSelectedTags} />
                     <input
                         type="text"
                         placeholder="Search clubs..."
@@ -52,11 +43,7 @@ export function Clubs() {
                         <span
                             key={tag._id}
                             className={`rounded-full px-3 py-1 text-xs font-semibold hover:cursor-pointer ${getTagColor(tag._id)}`}
-                            onClick={() =>
-                                setSelectedTags(
-                                    selectedTags.filter(t => t._id !== tag._id)
-                                )
-                            }
+                            onClick={() => setSelectedTags(selectedTags.filter(t => t._id !== tag._id))}
                         >
                             {tag.text}
                         </span>
@@ -68,19 +55,11 @@ export function Clubs() {
                     {/* Left: club list */}
                     <div className="w-full lg:w-1/3 bg-surface rounded-lg shadow p-6 h-[calc(100vh-10rem)] scrollbar-hide overflow-y-auto space-y-4">
                         {clubs
-                            .filter(club =>
-                                club.name
-                                    .toLowerCase()
-                                    .includes(searchTerm.toLowerCase())
-                            )
+                            .filter(club => club.name.toLowerCase().includes(searchTerm.toLowerCase()))
                             .filter(
                                 club =>
                                     selectedTags.length === 0 ||
-                                    selectedTags.every(selectedTag =>
-                                        club.tags.some(
-                                            tag => tag._id === selectedTag._id
-                                        )
-                                    )
+                                    selectedTags.every(selectedTag => club.tags.some(tag => tag._id === selectedTag._id))
                             )
                             .map(club => (
                                 <ClubCardSmall
@@ -103,20 +82,11 @@ export function Clubs() {
                                     <div
                                         className={`w-30 h-30 rounded-full flex items-center justify-center text-sm font-semibold bg-primary-container text-primary`}
                                     >
-                                        <img
-                                            src="/ucsd-logo.png"
-                                            alt={selectedClub.name}
-                                            className="w-30 h-30 object-cover rounded-full"
-                                        />
+                                        <img src="/ucsd-logo.png" alt={selectedClub.name} className="w-30 h-30 object-cover rounded-full" />
                                     </div>
                                     <div className="flex-1 overflow-hidden">
-                                        <h2 className="text-4xl text-on-surface font-bold mb-2">
-                                            {selectedClub.name}
-                                        </h2>
-                                        <p className="text-on-surface-variant italic">
-                                            {selectedClub.tagline ||
-                                                'No tagline'}
-                                        </p>
+                                        <h2 className="text-4xl text-on-surface font-bold mb-2">{selectedClub.name}</h2>
+                                        <p className="text-on-surface-variant italic">{selectedClub.tagline || 'No tagline'}</p>
                                     </div>
                                     <DiscordIcon size={40} />
                                     <InstagramIcon size={40} />
@@ -133,28 +103,19 @@ export function Clubs() {
                                         </span>
                                     ))}
                                 </div>
-                                <div className="mt-6 text-on-surface-variant">
-                                    {selectedClub.description ||
-                                        'No description'}
-                                </div>
+                                <div className="mt-6 text-on-surface-variant">{selectedClub.description || 'No description'}</div>
 
                                 <div className="mt-6 flex justify-center">
                                     <button
                                         className="px-4 py-2 bg-primary text-on-primary rounded-md hover:bg-primary-dark transition-colors"
-                                        onClick={() =>
-                                            alert(
-                                                'View Profile feature coming soon!'
-                                            )
-                                        }
+                                        onClick={() => alert('View Profile feature coming soon!')}
                                     >
                                         View Profile
                                     </button>
                                 </div>
                             </>
                         ) : (
-                            <p className="text-on-surface-variant">
-                                Select a club to see details.
-                            </p>
+                            <p className="text-on-surface-variant">Select a club to see details.</p>
                         )}
                     </div>
                 </div>

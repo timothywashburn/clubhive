@@ -21,17 +21,13 @@ export const testGetClubsEndpoint: ApiEndpoint<undefined, GetClubsResponse> = {
             });
         } catch (err) {
             console.error('Failed to fetch clubs:', err);
-            const message =
-                err instanceof Error ? err.message : 'Unknown error';
+            const message = err instanceof Error ? err.message : 'Unknown error';
             res.status(500).json({
                 success: false,
                 error: {
                     message: 'Failed to fetch clubs',
                     code: ErrorCode.INTERNAL_SERVER_ERROR,
-                    details:
-                        process.env.NODE_ENV === 'development'
-                            ? message
-                            : undefined,
+                    details: process.env.NODE_ENV === 'development' ? message : undefined,
                 },
             });
         }
