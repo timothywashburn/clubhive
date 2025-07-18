@@ -3,8 +3,12 @@ import { useClubData } from '../hooks/fetchClubs';
 import type { Club } from '../hooks/fetchClubs';
 import { useTagsData } from '../hooks/fetchTags';
 import type { Tag } from '../hooks/fetchTags';
-import ClubCardSmall from '../features/find-clubs/ClubCardSmall';
-import TagFilterPopover from '../features/find-clubs/FilterTagsButton';
+import ClubCardSmall from '../features/find-clubs/components/ClubCardSmall';
+import TagFilterPopover from '../features/find-clubs/components/FilterTagsButton';
+import { getTagColor } from '../features/find-clubs/utils/TagColors';
+import { DiscordIcon } from '../components/DiscordIcon';
+import { InstagramIcon } from '../components/InstagramIcon';
+import { GlobeIcon } from '../components/GlobeIcon';
 
 export function Clubs() {
     const [searchTerm, setSearchTerm] = useState('');
@@ -12,9 +16,6 @@ export function Clubs() {
     const { clubs, isLoading, error } = useClubData();
     const { tags } = useTagsData();
     const [selectedTags, setSelectedTags] = useState<Tag[]>([]);
-
-    const getClubColors = (id: string) =>
-        ['bg-pink-200', 'bg-blue-200', 'bg-green-200'][parseInt(id) % 3];
 
     if (isLoading)
         return <p className="p-4 text-on-surface-variant">Loading clubs...</p>;
@@ -46,7 +47,23 @@ export function Clubs() {
                         className="block w-full pl-10 pr-3 py-2 border text-on-surface border-outline-variant rounded-md rounded-l-none leading-5 bg-surface placeholder-on-surface-variant focus:outline-none focus:ring-1 focus:ring-primary focus:border-primary"
                     />
                 </div>
+                <div className="flex flex-col lg:flex-row gap-3">
+                    {selectedTags.map(tag => (
+                        <span
+                            key={tag._id}
+                            className={`rounded-full px-3 py-1 text-xs font-semibold hover:cursor-pointer ${getTagColor(tag._id)}`}
+                            onClick={() =>
+                                setSelectedTags(
+                                    selectedTags.filter(t => t._id !== tag._id)
+                                )
+                            }
+                        >
+                            {tag.text}
+                        </span>
+                    ))}
+                </div>
 
+                <hr className="my-4 border-t border-outline-variant" />
                 <div className="flex flex-row gap-6">
                     {/* Left: club list */}
                     <div className="w-full lg:w-1/3 bg-surface rounded-lg shadow p-6 h-[calc(100vh-10rem)] scrollbar-hide overflow-y-auto space-y-4">
@@ -59,9 +76,9 @@ export function Clubs() {
                             .filter(
                                 club =>
                                     selectedTags.length === 0 ||
-                                    club.tags.some(tag =>
-                                        selectedTags.some(
-                                            t => t._id === tag._id
+                                    selectedTags.every(selectedTag =>
+                                        club.tags.some(
+                                            tag => tag._id === selectedTag._id
                                         )
                                     )
                             )
@@ -84,11 +101,13 @@ export function Clubs() {
                             <>
                                 <div className="flex items-center gap-10 mb-5">
                                     <div
-                                        className={`w-30 h-30 rounded-full flex items-center justify-center text-sm font-semibold ${getClubColors(
-                                            selectedClub._id
-                                        )}`}
+                                        className={`w-30 h-30 rounded-full flex items-center justify-center text-sm font-semibold bg-primary-container text-primary`}
                                     >
-                                        picture
+                                        <img
+                                            src="/ucsd-logo.png"
+                                            alt={selectedClub.name}
+                                            className="w-30 h-30 object-cover rounded-full"
+                                        />
                                     </div>
                                     <div className="flex-1 overflow-hidden">
                                         <h2 className="text-4xl text-on-surface font-bold mb-2">
@@ -99,13 +118,16 @@ export function Clubs() {
                                                 'No tagline'}
                                         </p>
                                     </div>
+                                    <DiscordIcon size={40} />
+                                    <InstagramIcon size={40} />
+                                    <GlobeIcon size={40} />
                                 </div>
                                 <hr className="my-4 border-t border-outline-variant" />
                                 <div className="text-sm text-on-surface-variant mb-4 flex flex-wrap gap-2">
                                     {selectedClub.tags.map(tag => (
                                         <span
                                             key={tag._id}
-                                            className="bg-primary-container text-primary rounded-full px-3 py-1 text-xs font-semibold"
+                                            className={`rounded-full px-3 py-1 text-xs font-semibold ${getTagColor(tag._id)}`}
                                         >
                                             {tag.text}
                                         </span>
@@ -116,16 +138,18 @@ export function Clubs() {
                                         'No description'}
                                 </div>
 
-                                <button
-                                    className="mt-6 px-4 py-2 bg-primary text-on-primary rounded-md hover:bg-primary-dark transition-colors"
-                                    onClick={() =>
-                                        alert(
-                                            'View Profile feature coming soon!'
-                                        )
-                                    }
-                                >
-                                    View Profile
-                                </button>
+                                <div className="mt-6 flex justify-center">
+                                    <button
+                                        className="px-4 py-2 bg-primary text-on-primary rounded-md hover:bg-primary-dark transition-colors"
+                                        onClick={() =>
+                                            alert(
+                                                'View Profile feature coming soon!'
+                                            )
+                                        }
+                                    >
+                                        View Profile
+                                    </button>
+                                </div>
                             </>
                         ) : (
                             <p className="text-on-surface-variant">
