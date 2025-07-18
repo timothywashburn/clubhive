@@ -1,1 +1,107 @@
 @import 'tailwindcss';
+
+@theme {
+    --color-primary: #ea580c;
+    --color-on-primary: #ffffff;
+    --color-primary-container: #f3f4f6;
+    --color-on-primary-container: #374151;
+    --color-secondary: #f3f4f6;
+    --color-on-secondary: #374151;
+    --color-secondary-container: #f3f4f6;
+    --color-on-secondary-container: #374151;
+    --color-success: #00c951;
+    --color-on-success: #ffffff;
+    --color-success-container: #dcfce7;
+    --color-on-success-container: #008236;
+    --color-warning: #efb100;
+    --color-on-warning: #ffffff;
+    --color-error: #ba1a1a;
+    --color-on-error: #ffffff;
+    --color-error-container: #ffdad6;
+    --color-on-error-container: #93000a;
+    --color-background: #f9fafb;
+    --color-on-background: #111827;
+    --color-on-background-variant: #6b7280;
+    --color-surface: #ffffff;
+    --color-surface-variant: #f3f4f6;
+    --color-on-surface: #111827;
+    --color-on-surface-variant: #6b7280;
+    --color-outline: #e5e7eb;
+    --color-outline-variant: #e5e7eb;
+    --color-divider: #e5e7eb;
+    --color-divider-variant: #e5e7eb;
+}
+
+[data-theme='dark'] {
+    --color-primary: #f97316;
+    --color-on-primary: #0f172a;
+    --color-primary-container: #334155;
+    --color-on-primary-container: #f1f5f9;
+    --color-secondary: #1e293b;
+    --color-on-secondary: #cbd5e1;
+    --color-secondary-container: #334155;
+    --color-on-secondary-container: #f1f5f9;
+    --color-success: #00c951;
+    --color-on-success: #ffffff;
+    --color-success-container: #0d542b;
+    --color-on-success-container: #05df72;
+    --color-warning: #efb100;
+    --color-on-warning: #ffffff;
+    --color-error: #690005;
+    --color-on-error: #ffb4ab;
+    --color-error-container: #69000550; /* translucent */
+    --color-on-error-container: #ffdad6;
+    --color-background: #0f172a;
+    --color-on-background: #f1f5f9;
+    --color-on-background-variant: #94a3b8;
+    --color-surface: #1e293b;
+    --color-surface-variant: #334155;
+    --color-on-surface: #f1f5f9;
+    --color-on-surface-variant: #94a3b8;
+    --color-outline: #334155;
+    --color-outline-variant: #334155;
+    --color-divider: #334155;
+    --color-divider-variant: #334155;
+}
+
+/* Scrollbar Styling */
+* {
+    scrollbar-width: auto;
+    scrollbar-color: var(--color-outline) var(--color-background);
+}
+
+*::-webkit-scrollbar {
+    width: 12px;
+}
+
+*::-webkit-scrollbar-track {
+    background: var(--color-background);
+}
+
+*::-webkit-scrollbar-thumb {
+    background-color: var(--color-outline);
+    border-radius: 6px;
+    border: 2px solid var(--color-background);
+}
+
+*::-webkit-scrollbar-thumb:hover {
+    background-color: var(--color-outline-variant);
+}
+
+/* Custom scrollbar for surface containers */
+.scrollbar-surface {
+    scrollbar-color: var(--color-outline) var(--color-surface);
+}
+
+.scrollbar-surface::-webkit-scrollbar-track {
+    background: var(--color-surface);
+}
+
+.scrollbar-surface::-webkit-scrollbar-thumb {
+    background-color: var(--color-surface-variant);
+    border: 2px solid var(--color-surface);
+}
+
+.scrollbar-surface::-webkit-scrollbar-thumb:hover {
+    background-color: var(--color-outline);
+}
