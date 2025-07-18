@@ -1,60 +1,78 @@
-import { useState } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
+import { BrowserRouter, Routes, Route } from 'react-router';
+import { Navbar } from './components/navbar/Navbar.tsx';
+import { Footer } from './components/footer/Footer.tsx';
+import { useAuth } from './hooks/useAuth';
+import { useTheme } from './hooks/useTheme';
+import { Home } from './pages/Home';
+import { MyClubs } from './features/my-clubs';
+import { Clubs } from './pages/Clubs';
+import { ClubProfile } from './pages/ClubProfile';
+import { Events } from './pages/Events';
+import { EventsPage } from './pages/EventsPage';
+import { Notifications } from './pages/Notifications';
+import { SignIn } from './pages/SignIn';
+import { SignUp } from './pages/SignUp';
+import { NotFound } from './pages/NotFound';
+import { Account } from './pages/Account.tsx';
+import { About } from './features/about/About.tsx';
+import { StaticHoneycomb } from './components/honeycomb';
+import { useThemeStore } from './stores/themeStore.ts';
 
 export function App() {
-    const [serverStatus, setServerStatus] = useState<string>('');
-    const [loading, setLoading] = useState(false);
+    const { isAuthenticated, toggleAuth } = useAuth();
+    const [scrollY, setScrollY] = useState(0);
+    const backgroundRef = useRef<HTMLDivElement>(null);
+    useTheme();
+    const { theme } = useThemeStore();
 
-    const testConnection = async () => {
-        setLoading(true);
+    useEffect(() => {
+        const handleScroll = () => {
+            setScrollY(window.scrollY);
+        };
 
-        try {
-            const response = await fetch('/api/health');
+        window.addEventListener('scroll', handleScroll);
+        return () => window.removeEventListener('scroll', handleScroll);
+    }, []);
 
-            if (!response.ok) {
-                throw new Error(
-                    `HTTP ${response.status}: ${response.statusText}`
-                );
-            }
-
-            const data = await response.json();
-            setServerStatus(`Connected: ${data.message}`);
-        } catch (error) {
-            setServerStatus(
-                `Connection failed: ${error instanceof Error ? error.message : 'Unknown error'}`
-            );
-        } finally {
-            setLoading(false);
-        }
-    };
+    if (!theme) return null;
 
     return (
-        <div className="p-8 text-center">
-            <h1 className="text-3xl font-bold">clubhive</h1>
-            <div className="mt-8">
-                <button
-                    onClick={testConnection}
-                    disabled={loading}
-                    className={`px-5 py-2.5 text-white font-medium rounded border-none cursor-pointer ${
-                        loading
-                            ? 'bg-gray-400 cursor-not-allowed'
-                            : 'bg-blue-600 hover:bg-blue-700'
-                    }`}
+        <BrowserRouter>
+            <div className="min-h-screen bg-background flex flex-col">
+                <div
+                    ref={backgroundRef}
+                    className="fixed"
+                    style={{
+                        top: 0,
+                        left: '0',
+                        right: '0',
+                        height: '150vh',
+                        transform: `translateY(${scrollY * -0.05}px)`,
+                    }}
                 >
-                    {loading ? 'Testing...' : 'Test Server Connection'}
-                </button>
-                {serverStatus && (
-                    <p
-                        className={`mt-4 p-2.5 rounded ${
-                            serverStatus.includes('Connected')
-                                ? 'bg-green-100 text-green-800'
-                                : 'bg-red-100 text-red-800'
-                        }`}
-                    >
-                        {serverStatus}
-                    </p>
-                )}
+                    <StaticHoneycomb />
+                </div>
+                <Navbar isAuthenticated={isAuthenticated} toggleAuth={toggleAuth} />
+                <main className="flex-grow">
+                    <Routes>
+                        <Route path="/" element={<Home />} />
+                        <Route path="/my-clubs" element={<MyClubs />} />
+                        <Route path="/clubs" element={<Clubs />} />
+                        <Route path="/club-profile/:id" element={<ClubProfile />} />
+                        <Route path="/events" element={<Events />} />
+                        <Route path="/events/:id" element={<EventsPage />} />
+                        <Route path="/account" element={<Account />} />
+                        <Route path="/notifications" element={<Notifications />} />
+                        <Route path="/about" element={<About />} />
+                        <Route path="/signin" element={<SignIn />} />
+                        <Route path="/signup" element={<SignUp />} />
+                        <Route path="*" element={<NotFound />} />
+                    </Routes>
+                </main>
+                <Footer />
             </div>
-        </div>
+        </BrowserRouter>
     );
 }
 

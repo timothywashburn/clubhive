@@ -2,3 +2,9 @@ ingress:
   host: chdevprox.timothyw.dev
 
 namespace: clubhive-dev
+
+mongodb:
+  storage:
+    size: "2Gi"
+    storageClass: "local-path"
+  port: "30018"
