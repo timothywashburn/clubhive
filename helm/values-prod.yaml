@@ -1,5 +1,5 @@
 ingress:
-  host: clubhiveprox.timothyw.dev
+  host: clubhive.timothyw.dev
 
 namespace: clubhive
 
