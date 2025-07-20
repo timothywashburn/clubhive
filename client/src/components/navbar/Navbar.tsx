@@ -112,7 +112,7 @@ export function Navbar({ isAuthenticated, toggleAuth }: NavbarProps) {
                 {/* Mobile navigation */}
                 <div className="md:hidden flex justify-between items-center h-16">
                     <Link to="/" className="text-xl font-bold text-primary hover:text-primary/90">
-                        clubhive
+                        clubhive!
                     </Link>
 
                     <button
