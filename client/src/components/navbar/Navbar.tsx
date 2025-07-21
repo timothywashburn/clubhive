@@ -49,7 +49,7 @@ export function Navbar({ isAuthenticated, toggleAuth }: NavbarProps) {
                     {/* Left Aligned Content */}
                     <div className="flex items-center space-x-12">
                         <Link to="/" className="text-xl font-bold text-primary hover:text-primary/90">
-                            clubhive!
+                            clubhive!!
                         </Link>
 
                         <div className="flex space-x-6">
