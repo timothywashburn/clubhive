@@ -6,7 +6,7 @@ export const useMyClubsData = () => {
             id: '1',
             name: 'Video Game Development Club',
             description:
-                'Build games, learn game design, and connect with fellow game developers.',
+                "The Computer Science Club is a student-led organization dedicated to fostering curiosity, innovation, and collaboration in the field of computing. Whether you're passionate about software development, cybersecurity, artificial intelligence, or just starting your coding journey, our club provides a supportive environment to learn, build, and grow. We host hands-on workshops, guest speaker events, coding challenges, and collaborative projects that empower members to sharpen their technical skills and make real-world impact. Join us to connect with like-minded peers, explore new technologies, and become part of a vibrant tech-driven community!",
             memberCount: 85,
             role: 'owner',
             tagline: 'Play. Create. Innovate.',
@@ -18,8 +18,7 @@ export const useMyClubsData = () => {
         {
             id: '2',
             name: 'Photography Society',
-            description:
-                'Capture moments and improve your photography skills with fellow enthusiasts.',
+            description: 'Capture moments and improve your photography skills with fellow enthusiasts.',
             memberCount: 42,
             role: 'member',
             tagline: 'Capturing life, one frame at a time',
@@ -31,8 +30,7 @@ export const useMyClubsData = () => {
         {
             id: '3',
             name: 'Debate Team',
-            description:
-                'Sharpen your argumentative skills and compete in intercollegiate debates.',
+            description: 'Sharpen your argumentative skills and compete in intercollegiate debates.',
             memberCount: 28,
             role: 'owner',
             tagline: 'Where words become weapons',
@@ -44,8 +42,7 @@ export const useMyClubsData = () => {
         {
             id: '4',
             name: 'Gaming Club',
-            description:
-                'Play games, compete in tournaments, and hang out with fellow gamers.',
+            description: 'Play games, compete in tournaments, and hang out with fellow gamers.',
             memberCount: 156,
             role: 'member',
             tagline: 'Level up your social game',
@@ -57,8 +54,7 @@ export const useMyClubsData = () => {
         {
             id: '5',
             name: 'Robotics Team',
-            description:
-                'Build robots, compete in competitions, and learn engineering skills.',
+            description: 'Build robots, compete in competitions, and learn engineering skills.',
             memberCount: 34,
             role: 'officer',
             tagline: 'Building the future, one bot at a time',
@@ -70,8 +66,7 @@ export const useMyClubsData = () => {
         {
             id: '6',
             name: 'Drama Club',
-            description:
-                'Perform in plays, improve acting skills, and express creativity.',
+            description: 'Perform in plays, improve acting skills, and express creativity.',
             memberCount: 67,
             role: 'member',
             tagline: "All the world's a stage",
@@ -83,8 +78,7 @@ export const useMyClubsData = () => {
         {
             id: '7',
             name: 'Environmental Club',
-            description:
-                'Promote sustainability and environmental awareness on campus.',
+            description: 'Promote sustainability and environmental awareness on campus.',
             memberCount: 91,
             role: 'member',
             tagline: 'Think green, act now',
@@ -96,8 +90,7 @@ export const useMyClubsData = () => {
         {
             id: '8',
             name: 'Business Club',
-            description:
-                'Network with professionals and develop business skills.',
+            description: 'Network with professionals and develop business skills.',
             memberCount: 123,
             role: 'officer',
             tagline: 'Your network is your net worth',
@@ -276,14 +269,10 @@ export const useMyClubsData = () => {
         };
 
         return {
-            joinDate:
-                joinDates[club.id as keyof typeof joinDates] ||
-                'January 1, 2024',
-            eventsAttended:
-                eventsAttended[club.id as keyof typeof eventsAttended] || 0,
+            joinDate: joinDates[club.id as keyof typeof joinDates] || 'January 1, 2024',
+            eventsAttended: eventsAttended[club.id as keyof typeof eventsAttended] || 0,
             totalEvents: eventsAttended[club.id as keyof typeof eventsAttended]
-                ? eventsAttended[club.id as keyof typeof eventsAttended] +
-                  Math.floor(Math.random() * 5)
+                ? eventsAttended[club.id as keyof typeof eventsAttended] + Math.floor(Math.random() * 5)
                 : 5,
         };
     };

@@ -1,21 +1,13 @@
-import express, {
-    Router,
-    Request,
-    Response,
-    NextFunction,
-    RequestHandler,
-} from 'express';
-import {
-    ApiEndpoint,
-    ApiRequest,
-    ApiResponse,
-    AuthType,
-} from '@/types/api-types';
+import express, { Router, Request, Response, NextFunction, RequestHandler } from 'express';
+import { ApiEndpoint, ApiRequest, ApiResponse, AuthType } from '@/types/api-types';
 import { getClubProfileEndpoint } from '@/api/misc/club-profile-endpoint';
 import { statusEndpoint } from '@/api/misc/status';
 import { testEndpoint } from '@/api/misc/test';
+import { testGetClubsEndpoint } from '@/api/misc/test-club-endpoint';
+import { getTagsEndpoint } from '@/api/misc/tags-endpoint';
 import { changelogEndpoint } from '@/api/misc/changelog';
 import { versionEndpoint } from '@/api/misc/version';
+
 import { ErrorCode } from '@clubhive/shared';
 
 export default class ApiManager {
@@ -31,10 +23,11 @@ export default class ApiManager {
     private registerEndpoints() {
         this.addEndpoint(statusEndpoint);
         this.addEndpoint(testEndpoint);
+        this.addEndpoint(testGetClubsEndpoint);
+        this.addEndpoint(getTagsEndpoint);
         this.addEndpoint(getClubProfileEndpoint);
         this.addEndpoint(changelogEndpoint);
         this.addEndpoint(versionEndpoint);
-
         console.log(`registered api endpoints`);
     }
 
@@ -43,14 +36,8 @@ export default class ApiManager {
 
         this.router.use((req: Request, res: Response, next: NextFunction) => {
             res.header('Access-Control-Allow-Origin', '*');
-            res.header(
-                'Access-Control-Allow-Methods',
-                'GET, POST, PUT, DELETE'
-            );
-            res.header(
-                'Access-Control-Allow-Headers',
-                'Content-Type, Authorization'
-            );
+            res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE');
+            res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization');
             next();
         });
 
@@ -65,34 +52,20 @@ export default class ApiManager {
             next();
         });
 
-        this.router.use(
-            (
-                error: Error,
-                req: Request,
-                res: Response,
-                _next: NextFunction
-            ) => {
-                console.error(error);
-                res.status(500).json({
-                    success: false,
-                    error: {
-                        message: 'Internal server error',
-                        code: ErrorCode.INTERNAL_SERVER_ERROR,
-                        details:
-                            process.env.NODE_ENV === 'development'
-                                ? error.message
-                                : undefined,
-                    },
-                });
-            }
-        );
+        this.router.use((error: Error, req: Request, res: Response, _next: NextFunction) => {
+            console.error(error);
+            res.status(500).json({
+                success: false,
+                error: {
+                    message: 'Internal server error',
+                    code: ErrorCode.INTERNAL_SERVER_ERROR,
+                    details: process.env.NODE_ENV === 'development' ? error.message : undefined,
+                },
+            });
+        });
     }
 
-    private handleAuth: RequestHandler = async (
-        req: ApiRequest,
-        res: ApiResponse,
-        next: NextFunction
-    ): Promise<void> => {
+    private handleAuth: RequestHandler = async (req: ApiRequest, res: ApiResponse, next: NextFunction): Promise<void> => {
         const authHeader = req.headers.authorization;
 
         if (!authHeader?.startsWith('Bearer ')) {
@@ -131,10 +104,7 @@ export default class ApiManager {
 
     private addEndpoint<TReq, TRes>(endpoint: ApiEndpoint<TReq, TRes>) {
         const handlers: RequestHandler[] = [];
-        if (
-            endpoint.auth === AuthType.AUTHENTICATED ||
-            endpoint.auth === AuthType.VERIFIED_EMAIL
-        ) {
+        if (endpoint.auth === AuthType.AUTHENTICATED || endpoint.auth === AuthType.VERIFIED_EMAIL) {
             handlers.push(this.handleAuth);
         }
         handlers.push(endpoint.handler);
