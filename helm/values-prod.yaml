@@ -1,6 +1,7 @@
 ingress:
-  host: clubhiveprox.timothyw.dev
+  host: clubhive.timothyw.dev
 
+branch: main
 namespace: clubhive
 
 mongodb:
