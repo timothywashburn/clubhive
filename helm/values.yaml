@@ -10,6 +10,7 @@ ingress:
   host: ""
   ingressClassName: traefik
 
+branch: ""
 namespace: ""
 
 mongodb:

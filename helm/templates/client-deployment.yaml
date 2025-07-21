@@ -21,7 +21,7 @@ spec:
 {{- end }}
       containers:
       - name: client
-        image: {{ .Values.image.registry }}/client:{{ .Values.image.tag }}
+        image: {{ .Values.image.registry }}/client-{{ .Values.branch }}:{{ .Values.image.tag }}
         imagePullPolicy: {{ .Values.image.pullPolicy }}
         ports:
         - containerPort: 80

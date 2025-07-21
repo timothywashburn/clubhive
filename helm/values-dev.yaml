@@ -1,6 +1,7 @@
 ingress:
   host: chdev.timothyw.dev
 
+branch: dev
 namespace: clubhive-dev
 
 mongodb:
