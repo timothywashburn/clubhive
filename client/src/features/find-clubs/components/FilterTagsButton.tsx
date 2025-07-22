@@ -23,10 +23,13 @@ export default function TagFilterPopover({ tags, selectedTags, setSelectedTags }
         return () => document.removeEventListener('mousedown', handleClickOutside);
     }, []);
 
+    // Logic to toggle tag selection (add/remove from selectedTags)
     const toggleTag = (tagId: string) => {
         if (selectedTags.find(tag => tag._id === tagId)) {
+            // Tag already selected → remove it
             setSelectedTags(selectedTags.filter(tag => tag._id !== tagId));
         } else {
+            // Tag not selected → add it
             const newTag = tags.find(tag => tag._id === tagId);
             if (newTag) {
                 setSelectedTags([...selectedTags, newTag]);

@@ -68,6 +68,7 @@ export function Clubs() {
                                     tagline={club.tagline}
                                     tags={club.tags}
                                     id={club._id}
+                                    createdAt={club.createdAt}
                                     isSelected={selectedClub?._id === club._id}
                                     onClick={() => setSelectedClub(club)}
                                 />
