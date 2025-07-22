@@ -1,14 +1,18 @@
 import { useState } from 'react';
-import { ChevronLeft, ChevronRight } from 'lucide-react';
+import { ChevronLeft, ChevronRight, Edit3 } from 'lucide-react';
 import { Event } from '../../types';
+import { EventModal } from './EventModal';
 
 interface CalendarViewProps {
     events: Event[];
+    onUpdateEvent?: (event: Event) => void;
 }
 
-export function CalendarView({ events }: CalendarViewProps) {
+export function CalendarView({ events, onUpdateEvent }: CalendarViewProps) {
     const [currentMonth, setCurrentMonth] = useState(new Date());
     const [selectedDate, setSelectedDate] = useState<Date>(new Date());
+    const [editingEvent, setEditingEvent] = useState<Event | null>(null);
+    const [isModalOpen, setIsModalOpen] = useState(false);
 
     const getEventsForDate = (date: Date) => {
         const dateStr = date.toLocaleDateString('en-US', {
@@ -81,6 +85,29 @@ export function CalendarView({ events }: CalendarViewProps) {
         const today = new Date();
         setCurrentMonth(new Date(today.getFullYear(), today.getMonth(), 1));
         setSelectedDate(today);
+    };
+
+    const handleEditEvent = (event: Event) => {
+        setEditingEvent(event);
+        setIsModalOpen(true);
+    };
+
+    const handleSaveEvent = (updatedEvent: Event) => {
+        if (onUpdateEvent) {
+            onUpdateEvent(updatedEvent);
+        }
+        setEditingEvent(null);
+        setIsModalOpen(false);
+    };
+
+    const handleCloseModal = () => {
+        setEditingEvent(null);
+        setIsModalOpen(false);
+    };
+
+    const handleCreateEvent = () => {
+        setEditingEvent(null);
+        setIsModalOpen(true);
     };
 
     const calendarDays = getCalendarDays();
@@ -231,23 +258,31 @@ export function CalendarView({ events }: CalendarViewProps) {
                                 {getEventsForDate(selectedDate).map(event => (
                                     <div
                                         key={event.id}
-                                        className="border border-outline-variant rounded-md p-3"
+                                        onClick={() => handleEditEvent(event)}
+                                        className="border border-outline-variant rounded-md p-3 cursor-pointer hover:bg-surface-variant transition-colors group"
                                     >
-                                        <h5 className="font-medium text-on-surface mb-1">
-                                            {event.title}
-                                        </h5>
-                                        <p className="text-sm text-on-surface-variant mb-2">
-                                            {event.time}
-                                        </p>
-                                        <p className="text-sm text-on-surface-variant mb-2">
-                                            {event.location}
-                                        </p>
-                                        <p className="text-sm text-on-surface">
-                                            {event.description}
-                                        </p>
-                                        <p className="text-xs text-on-surface-variant mt-2">
-                                            {event.attendees} attendees
-                                        </p>
+                                        <div className="flex items-start justify-between">
+                                            <div className="flex-1 min-w-0">
+                                                <h5 className="font-medium text-on-surface mb-1 truncate">
+                                                    {event.title}
+                                                </h5>
+                                                <p className="text-sm text-on-surface-variant mb-1">
+                                                    {event.startTime && event.endTime 
+                                                        ? `${event.startTime} - ${event.endTime}`
+                                                        : event.time
+                                                    }
+                                                </p>
+                                                <p className="text-sm text-on-surface-variant truncate">
+                                                    {event.location}
+                                                </p>
+                                            </div>
+                                            <Edit3 className="h-4 w-4 text-on-surface-variant opacity-0 group-hover:opacity-100 transition-opacity ml-2 flex-shrink-0" />
+                                        </div>
+                                        <div className="mt-2 pt-2 border-t border-outline-variant/50">
+                                            <p className="text-xs text-on-surface-variant text-center">
+                                                Click to edit event details
+                                            </p>
+                                        </div>
                                     </div>
                                 ))}
                             </div>
@@ -258,7 +293,10 @@ export function CalendarView({ events }: CalendarViewProps) {
                         )}
                     </div>
                     <div className="p-6 border-t border-outline-variant">
-                        <button className="w-full bg-primary text-on-primary px-4 py-2 rounded-md hover:bg-primary/90 font-medium cursor-pointer transition-colors">
+                        <button 
+                            onClick={handleCreateEvent}
+                            className="w-full bg-primary text-on-primary px-4 py-2 rounded-md hover:bg-primary/90 font-medium cursor-pointer transition-colors"
+                        >
                             Create Event for{' '}
                             {selectedDate.toLocaleDateString('en-US', {
                                 month: 'short',
@@ -268,6 +306,14 @@ export function CalendarView({ events }: CalendarViewProps) {
                     </div>
                 </div>
             </div>
+
+            <EventModal
+                event={editingEvent}
+                isOpen={isModalOpen}
+                onClose={handleCloseModal}
+                onSave={handleSaveEvent}
+                selectedDate={selectedDate}
+            />
         </div>
     );
 }

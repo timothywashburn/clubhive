@@ -3,15 +3,17 @@ import { Event } from '../types';
 
 interface EventsProps {
     events: Event[];
+    onEditEvent?: (event: Event) => void;
 }
 
-export function Events({ events }: EventsProps) {
+export function Events({ events, onEditEvent }: EventsProps) {
     return (
         <div className="space-y-4">
             {events.map(event => (
                 <div
                     key={event.id}
-                    className="bg-surface rounded-lg shadow p-6 border border-outline-variant"
+                    onClick={() => onEditEvent?.(event)}
+                    className="bg-surface rounded-lg shadow p-6 border border-outline-variant cursor-pointer hover:bg-surface-variant transition-colors"
                 >
                     <h3 className="text-lg font-medium text-on-surface mb-2">
                         {event.title}

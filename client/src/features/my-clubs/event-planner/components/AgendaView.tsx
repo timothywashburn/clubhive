@@ -4,6 +4,7 @@ import { Calendar, Clock, MapPin, Users } from 'lucide-react';
 
 interface AgendaViewProps {
     events: Event[];
+    onEditEvent?: (event: Event) => void;
 }
 
 function TableHeader() {
@@ -17,9 +18,12 @@ function TableHeader() {
     );
 }
 
-function AgendaItemCard({ event }: { event: Event }) {
+function AgendaItemCard({ event, onEditEvent }: { event: Event; onEditEvent?: (event: Event) => void }) {
     return (
-        <div className="hidden md:flex bg-surface border-b border-outline-variant hover:bg-surface-variant cursor-pointer transition-colors">
+        <div 
+            className="hidden md:flex bg-surface border-b border-outline-variant hover:bg-surface-variant cursor-pointer transition-colors"
+            onClick={() => onEditEvent?.(event)}
+        >
             <div className="flex-1 max-w-[35%] pr-4 py-4 px-6">
                 <div className="flex flex-col">
                     <h3 className="text-on-surface text-sm font-semibold mb-1">
@@ -66,7 +70,7 @@ function AgendaItemCard({ event }: { event: Event }) {
     );
 }
 
-export function AgendaView({ events }: AgendaViewProps) {
+export function AgendaView({ events, onEditEvent }: AgendaViewProps) {
     // Group events by month
     const groupEventsByMonth = (events: Event[]) => {
         const grouped: { [key: string]: Event[] } = {};
@@ -104,7 +108,7 @@ export function AgendaView({ events }: AgendaViewProps) {
         <>
             {/* Mobile/Small screen view */}
             <div className="md:hidden">
-                <Events events={events} />
+                <Events events={events} onEditEvent={onEditEvent} />
             </div>
 
             {/* Desktop/Large screen table view */}
@@ -117,7 +121,7 @@ export function AgendaView({ events }: AgendaViewProps) {
                         <div className="bg-surface rounded-lg overflow-hidden border border-outline-variant">
                             <TableHeader />
                             {eventsByMonth[month].map(event => (
-                                <AgendaItemCard key={event.id} event={event} />
+                                <AgendaItemCard key={event.id} event={event} onEditEvent={onEditEvent} />
                             ))}
                         </div>
                     </div>

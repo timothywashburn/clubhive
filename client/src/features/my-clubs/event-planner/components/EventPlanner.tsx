@@ -6,11 +6,12 @@ import { AgendaView } from './AgendaView';
 
 interface EventPlannerProps {
     events: Event[];
+    onUpdateEvent?: (event: Event) => void;
 }
 
 type ViewMode = 'calendar' | 'agenda';
 
-export function EventPlanner({ events }: EventPlannerProps) {
+export function EventPlanner({ events, onUpdateEvent }: EventPlannerProps) {
     const [viewMode, setViewMode] = useState<ViewMode>('calendar');
 
     return (
@@ -50,9 +51,9 @@ export function EventPlanner({ events }: EventPlannerProps) {
             </div>
 
             {viewMode === 'calendar' ? (
-                <CalendarView events={events} />
+                <CalendarView events={events} onUpdateEvent={onUpdateEvent} />
             ) : (
-                <AgendaView events={events} />
+                <AgendaView events={events} onEditEvent={onUpdateEvent} />
             )}
         </div>
     );
