@@ -22,7 +22,7 @@ export const getClubProfileEndpoint: ApiEndpoint<GetClubRequest, GetClubResponse
                 success: false,
                 error: {
                     message: 'Invalid club ID format',
-                    code: 'BAD_REQUEST' as any,
+                    code: 'BAD_REQUEST' as any, // TODO: edit this check for valid clubId block
                 },
             });
             return;
