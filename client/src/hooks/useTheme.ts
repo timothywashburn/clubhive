@@ -1,27 +1,37 @@
 import { useEffect } from 'react';
-import { Theme, ThemePreference, useThemeStore } from '../stores/themeStore';
+import { ThemePreference, useThemeStore } from '../stores/themeStore';
 
 export function useTheme() {
     const { preference, setTheme, setPreference } = useThemeStore();
 
     useEffect(() => {
-        const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
-
-        const getTheme = () => {
+        const getStoredTheme = () => {
             const storedTheme = localStorage.getItem('theme');
-            if (storedTheme) {
-                setTheme(storedTheme as Theme);
-                setPreference(storedTheme as ThemePreference);
-                localStorage.setItem('theme', storedTheme);
-            } else {
-                setTheme(mediaQuery.matches ? 'dark' : 'light');
-                setPreference('system');
-                localStorage.removeItem('theme');
+            if (storedTheme) setPreference(storedTheme as ThemePreference);
+        };
+
+        getStoredTheme();
+    }, [setPreference]);
+
+    useEffect(() => {
+        const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
+        const getTheme = () => {
+            switch (preference) {
+                case 'dark':
+                    setTheme('dark');
+                    break;
+                case 'light':
+                    setTheme('light');
+                    break;
+                case 'system':
+                default:
+                    setTheme(mediaQuery.matches ? 'dark' : 'light');
+                    break;
             }
         };
 
         getTheme();
         mediaQuery.addEventListener('change', getTheme);
         return () => mediaQuery.removeEventListener('change', getTheme);
-    }, [preference, setTheme, setPreference]);
+    }, [preference, setTheme]);
 }
