@@ -3,7 +3,6 @@ import cors from 'cors';
 import mongoose from 'mongoose';
 import dotenv from 'dotenv';
 import ApiManager from '@/controllers/api-manager';
-import '@/models/club-schema';
 
 dotenv.config();
 
