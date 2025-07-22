@@ -27,18 +27,11 @@ export function DevPanel({
             <div className="space-y-3">
                 <div>
                     <label className="block text-xs mb-1">
-                        Honeycomb Type:{' '}
-                        <span className="text-yellow-400 capitalize">
-                            {honeycombType}
-                        </span>
+                        Honeycomb Type: <span className="text-yellow-400 capitalize">{honeycombType}</span>
                     </label>
                     <select
                         value={honeycombType}
-                        onChange={e =>
-                            onHoneycombTypeChange(
-                                e.target.value as HoneycombType
-                            )
-                        }
+                        onChange={e => onHoneycombTypeChange(e.target.value as HoneycombType)}
                         className="w-full bg-gray-700 text-white border border-gray-600 rounded px-2 py-1 text-xs"
                     >
                         <option value="static">Static</option>
@@ -49,10 +42,7 @@ export function DevPanel({
 
                 <div>
                     <label className="block text-xs mb-1">
-                        Noise Amount:{' '}
-                        <span className="text-yellow-400">
-                            {noiseAmount.toFixed(2)}
-                        </span>
+                        Noise Amount: <span className="text-yellow-400">{noiseAmount.toFixed(2)}</span>
                     </label>
                     <input
                         type="range"
@@ -60,21 +50,14 @@ export function DevPanel({
                         max="1"
                         step="0.05"
                         value={noiseAmount}
-                        onChange={e =>
-                            onNoiseAmountChange(parseFloat(e.target.value))
-                        }
+                        onChange={e => onNoiseAmountChange(parseFloat(e.target.value))}
                         className="w-full h-2 bg-gray-600 rounded-lg appearance-none cursor-pointer slider"
                     />
                 </div>
 
                 <div>
                     <label className="flex items-center text-xs">
-                        <input
-                            type="checkbox"
-                            checked={showDebug}
-                            onChange={e => onShowDebugChange(e.target.checked)}
-                            className="mr-2"
-                        />
+                        <input type="checkbox" checked={showDebug} onChange={e => onShowDebugChange(e.target.checked)} className="mr-2" />
                         Show Debug Visualization
                     </label>
                 </div>
