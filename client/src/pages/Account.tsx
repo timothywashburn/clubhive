@@ -301,7 +301,7 @@ export function Account() {
                                                 className={`
                                                     flex items-center gap-2 px-4 py-2 rounded-md text-sm font-medium transition-all duration-200
                                                     ${
-                                                        preference === option.value
+                                                        preference === option.value || (!preference && option.value === 'system')
                                                             ? 'bg-primary text-on-primary shadow-sm'
                                                             : 'text-on-surface-variant hover:text-on-surface hover:bg-surface'
                                                     }
