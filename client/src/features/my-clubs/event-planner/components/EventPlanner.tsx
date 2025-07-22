@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { Calendar, List } from 'lucide-react';
-import { Event } from '../types';
+import { Event } from '../../types';
 import { CalendarView } from './CalendarView';
 import { AgendaView } from './AgendaView';
 

@@ -1,5 +1,5 @@
-import { Event } from '../types';
-import { Events } from './Events';
+import { Event } from '../../types';
+import { Events } from '../../components/Events';
 import { Calendar, Clock, MapPin, Users } from 'lucide-react';
 
 interface AgendaViewProps {

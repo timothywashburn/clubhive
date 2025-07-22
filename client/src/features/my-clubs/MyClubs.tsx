@@ -6,11 +6,11 @@ import {
     MemberInfo,
     OfficerInfo,
     Events,
-    EventPlanner,
     Stats,
     Membership,
     EmptyState,
 } from './components';
+import { EventPlanner } from './event-planner';
 
 export function MyClubs() {
     const { clubs, events } = useMyClubsData();

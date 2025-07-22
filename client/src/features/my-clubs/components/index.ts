@@ -4,7 +4,6 @@ export { TabNavigation } from './TabNavigation';
 export { MemberInfo } from './MemberInfo';
 export { OfficerInfo } from './OfficerInfo';
 export { Events } from './Events';
-export { EventPlanner } from './EventPlanner';
 export { Stats } from './Stats';
 export { Membership } from './Membership';
 export { EmptyState } from './EmptyState';
