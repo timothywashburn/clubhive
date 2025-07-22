@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { Link } from 'react-router';
 import { useClubData } from '../hooks/fetchClubs';
 import type { Club } from '../hooks/fetchClubs';
 import { useTagsData } from '../hooks/fetchTags';
@@ -86,12 +87,12 @@ export function Clubs() {
                                 </div>
                                 <div className="mt-6 text-on-surface-variant">{selectedClub.description || 'No description'}</div>
 
-                                <button
-                                    className="mt-6 px-4 py-2 bg-primary text-on-primary rounded-md hover:bg-primary-dark transition-colors"
-                                    onClick={() => alert('View Profile feature coming soon!')}
+                                <Link
+                                    to={`/club-profile/${selectedClub._id}`}
+                                    className="mt-6 inline-block px-4 py-2 bg-primary text-on-primary rounded-md hover:bg-primary-dark transition-colors"
                                 >
                                     View Profile
-                                </button>
+                                </Link>
                             </>
                         ) : (
                             <p className="text-on-surface-variant">Select a club to see details.</p>

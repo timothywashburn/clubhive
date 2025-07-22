@@ -27,9 +27,7 @@ export function EventsPage() {
 
                 <div className="flex justify-between items-center">
                     {/* event title */}
-                    <h1 className="text-4xl font-bold text-on-surface mb-4">
-                        Event Name
-                    </h1>
+                    <h1 className="text-4xl font-bold text-on-surface mb-4">Event Name</h1>
                 </div>
 
                 {/* flyer/thumbnail placeholder */}
@@ -55,12 +53,8 @@ export function EventsPage() {
                         <span className="bg-surface-variant text-on-surface-variant px-3 py-1 rounded-md text-sm">
                             📅 September 1, 2025 – 6:00 PM
                         </span>
-                        <span className="bg-surface-variant text-on-surface-variant px-3 py-1 rounded-md text-sm">
-                            📍 Price Center
-                        </span>
-                        <span className="bg-surface-variant text-on-surface-variant px-3 py-1 rounded-md text-sm">
-                            🎉 Professional
-                        </span>
+                        <span className="bg-surface-variant text-on-surface-variant px-3 py-1 rounded-md text-sm">📍 Price Center</span>
+                        <span className="bg-surface-variant text-on-surface-variant px-3 py-1 rounded-md text-sm">🎉 Professional</span>
                     </div>
 
                     {/* share, save buttons */}
@@ -88,9 +82,7 @@ export function EventsPage() {
                     {share && (
                         <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
                             <div className="bg-surface rounded-xl p-6 w-[90%] max-w-sm shadow-lg relative">
-                                <h2 className="text-lg font-semibold text-on-surface mb-4">
-                                    Share This Event
-                                </h2>
+                                <h2 className="text-lg font-semibold text-on-surface mb-4">Share This Event</h2>
                                 <div className="space-y-2 text-on-surface-variant">
                                     <p>🔗 Copy Link</p>
                                     <p>📧 Share via Email</p>
@@ -110,22 +102,15 @@ export function EventsPage() {
 
                 {/* location description box */}
                 <div className="bg-surface-variant p-4 rounded-md mb-6">
-                    <h3 className="font-medium text-on-secondary-container mb-2">
-                        How to get there!
-                    </h3>
-                    <p className="text-on-surface-variant text-sm">
-                        This event will be held in Price Center, located at:
-                    </p>
+                    <h3 className="font-medium text-on-secondary-container mb-2">How to get there!</h3>
+                    <p className="text-on-surface-variant text-sm">This event will be held in Price Center, located at:</p>
                 </div>
 
                 {/* about event description box */}
                 <div className="bg-surface-variant p-4 rounded-md min-h-[200px]">
-                    <h3 className="font-medium text-on-secondary-container mb-2">
-                        About Event:
-                    </h3>
+                    <h3 className="font-medium text-on-secondary-container mb-2">About Event:</h3>
                     <p className="text-on-surface-variant text-sm">
-                        Come meet fellow students and network with club leaders!
-                        We'll have games, free food, and an overview of our
+                        Come meet fellow students and network with club leaders! We'll have games, free food, and an overview of our
                         upcoming projects.
                     </p>
                 </div>
