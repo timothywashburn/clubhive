@@ -26,7 +26,7 @@ const ClubCardSmall: React.FC<ClubCardProps> = ({ name, tagline, id, isSelected,
         >
             <div>
                 {isUnderAMonthOld && (
-                    <span className=" absolute top-2 right-2 text-xs bg-blue-500 text-blue-1000 px-2 py-1 rounded-lg">New</span>
+                    <span className=" absolute top-2 right-2 text-xs bg-blue-500 text-white font-semibold px-2 py-1 rounded-lg">New</span>
                 )}
             </div>
             <div className="flex items-center gap-3 mb-2">

@@ -2,15 +2,17 @@ import React from 'react';
 
 interface InstagramIconProps {
     size?: number;
+    className?: string;
 }
 
-export const InstagramIcon: React.FC<InstagramIconProps> = ({ size = 24 }) => (
+export const InstagramIcon: React.FC<InstagramIconProps> = ({ size = 24, className }) => (
     <svg
         width={size}
         height={size}
         viewBox="0 0 24 24"
         fill="none"
-        stroke="#E4405F"
+        stroke="currentColor"
+        className={className}
         strokeWidth="2"
         strokeLinecap="round"
         strokeLinejoin="round"

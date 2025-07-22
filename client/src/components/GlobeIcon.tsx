@@ -2,15 +2,17 @@ import React from 'react';
 
 interface GlobeIconProps {
     size?: number;
+    className?: string;
 }
 
-export const GlobeIcon: React.FC<GlobeIconProps> = ({ size = 24 }) => (
+export const GlobeIcon: React.FC<GlobeIconProps> = ({ size = 24, className }) => (
     <svg
         width={size}
         height={size}
         viewBox="0 0 24 24"
         fill="none"
-        stroke="#4B5563"
+        stroke="currentColor"
+        className={className}
         strokeWidth="2"
         strokeLinecap="round"
         strokeLinejoin="round"

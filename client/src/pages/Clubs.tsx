@@ -53,7 +53,7 @@ export function Clubs() {
                 <hr className="my-4 border-t border-outline-variant" />
                 <div className="flex flex-row gap-6">
                     {/* Left: club list */}
-                    <div className="w-full lg:w-1/3 bg-surface rounded-lg shadow p-6 h-[calc(100vh-10rem)] scrollbar-hide overflow-y-auto space-y-4">
+                    <div className="w-full lg:w-1/3 bg-surface rounded-lg shadow p-6 h-[calc(100vh-10rem)] overflow-y-auto space-y-4">
                         {clubs
                             .filter(club => club.name.toLowerCase().includes(searchTerm.toLowerCase()))
                             .filter(
@@ -79,19 +79,27 @@ export function Clubs() {
                     <div className="w-full lg:w-2/3 bg-surface rounded-lg shadow p-6">
                         {selectedClub ? (
                             <>
-                                <div className="flex items-center gap-10 mb-5">
+                                <div className="flex items-center gap-7">
                                     <div
                                         className={`w-30 h-30 rounded-full flex items-center justify-center text-sm font-semibold bg-primary-container text-primary`}
                                     >
                                         <img src="/ucsd-logo.png" alt={selectedClub.name} className="w-30 h-30 object-cover rounded-full" />
                                     </div>
-                                    <div className="flex-1 overflow-hidden">
+                                    <div className="flex flex-col flex-1 overflow-hidden -mb-6">
                                         <h2 className="text-4xl text-on-surface font-bold mb-2">{selectedClub.name}</h2>
                                         <p className="text-on-surface-variant italic">{selectedClub.tagline || 'No tagline'}</p>
+                                        <div className="flex gap-5 justify-end">
+                                            <div className="w-10 h-10 bg-discord rounded-full p-1">
+                                                <DiscordIcon className="w-full h-full text-white" />
+                                            </div>
+                                            <div className="w-10 h-10 bg-instagram rounded-full p-1">
+                                                <InstagramIcon className="w-full h-full text-white" />
+                                            </div>
+                                            <div className="w-10 h-10 bg-globe rounded-full p-1">
+                                                <GlobeIcon className="w-full h-full text-white" />
+                                            </div>
+                                        </div>
                                     </div>
-                                    <DiscordIcon size={40} />
-                                    <InstagramIcon size={40} />
-                                    <GlobeIcon size={40} />
                                 </div>
                                 <hr className="my-4 border-t border-outline-variant" />
                                 <div className="text-sm text-on-surface-variant mb-4 flex flex-wrap gap-2">
