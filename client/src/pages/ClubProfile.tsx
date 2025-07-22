@@ -169,10 +169,17 @@ export function ClubProfile() {
                 )}
 
                 {/* club description */}
-                <div className="mt-8">
-                    <p className="text-on-surface leading-relaxed whitespace-pre-line border border-outline-variant p-4 rounded-md bg-surface">
-                        {club.description}
-                    </p>
+                <h2 className="mt-10 text-2xl font-semibold text-on-surface mb-4">About Our Club: </h2>
+                <div className="mt-2 grid grid-cols-1 md:grid-cols-4 gap-4">
+                    <div className="md:col-span-3">
+                        <p className="text-on-surface leading-relaxed whitespace-pre-line border border-outline-variant p-4 rounded-md bg-surface">
+                            {club.description}
+                        </p>
+                    </div>
+                    <div className="bg-surface rounded-md p-4 border border-outline-variant text-on-surface text-center">
+                        <p className="text-sm text-on-surface-variant">Members</p>
+                        <p className="text-2xl font-semibold">{club.memberCount ?? 'N/A'}</p>
+                    </div>
                 </div>
 
                 {/* events */}
