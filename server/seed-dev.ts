@@ -4,7 +4,8 @@ import Club from './src/models/club-schema';
 import School from './src/models/school-schema';
 import Tag from './src/models/tag-schema';
 
-dotenv.config();
+dotenv.config({ path: '.env' });
+// dotenv.config({ path: '.env.local' });
 
 async function seed() {
     console.log('Connecting to MongoDB at:', process.env.MONGODB_URI);

@@ -8,6 +8,15 @@ export type Club = {
     description: string;
     members: string[];
     tags: Tag[];
+    createdAt: Date;
+    updatedAt: Date;
+    socials: {
+        website?: string;
+        discord?: string;
+        instagram?: string;
+    };
+    clubLogo?: string; // URL or ObjectId reference to the club logo image
+    pictures?: string[]; // Array of URLs or ObjectId references to club pictures
 };
 
 export const useClubData = () => {

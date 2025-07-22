@@ -3,7 +3,7 @@ import { ApiEndpoint, ApiRequest, ApiResponse, AuthType } from '@/types/api-type
 import { getClubProfileEndpoint } from '@/api/misc/club-profile-endpoint';
 import { statusEndpoint } from '@/api/misc/status';
 import { testEndpoint } from '@/api/misc/test';
-import { testGetClubsEndpoint } from '@/api/misc/test-club-endpoint';
+import { testGetClubsEndpoint } from '@/api/misc/clubs-endpoint';
 import { getTagsEndpoint } from '@/api/misc/tags-endpoint';
 import { changelogEndpoint } from '@/api/misc/changelog';
 import { versionEndpoint } from '@/api/misc/version';
