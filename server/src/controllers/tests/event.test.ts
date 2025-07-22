@@ -107,12 +107,6 @@ describe('Save Event', () => {
 
     // save event copy error case
     it('should throw an error & return 400', async () => {
-        const copySavedClub = {
-            user: mockObjectId,
-            club: mockObjectId2,
-        };
-        mockSavedEvent.create.mockResolvedValue(copySavedClub as any);
-
         await saveEvent(mockReq as Request, mockRes as Response);
 
         expect(mockRes.status).toHaveBeenCalledWith(201);

@@ -107,12 +107,6 @@ describe('Join Club', () => {
 
     // join club duplicate error case
     it('should throw an error & return 400', async () => {
-        const copyClubMembership = {
-            user: mockObjectId,
-            club: mockObjectId2,
-        };
-        mockClubMembership.create.mockResolvedValue(copyClubMembership as any);
-
         await joinClub(mockReq as Request, mockRes as Response);
 
         expect(mockRes.status).toHaveBeenCalledWith(201);

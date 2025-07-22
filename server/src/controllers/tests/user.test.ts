@@ -4,23 +4,26 @@ import { createUser } from '../user-controller';
 import mongoose from 'mongoose';
 
 jest.mock('../models/User');
+jest.mock('../models/Auth');
 const mockObjectId = new mongoose.Types.ObjectId();
 import User from '../../models/user-schema';
+import Auth from '../../models/auth-schema';
 import { EducationType, Year } from '../../models/user-schema';
 
 const mockUser = User as jest.Mocked<typeof User>;
-const mockUserCopy = User as jest.Mocked<typeof User>;
+const mockAuth = Auth as jest.Mocked<typeof Auth>;
 
 describe('User Controller', () => {
     let mockReq: Partial<Request>;
     let mockRes: Partial<Response>;
     beforeEach(() => {
         mockReq = {
+            // input
             body: {
                 name: 'New User',
                 school: mockObjectId,
                 major: 'Undeclared',
-                educationType: 'Undergraduate',
+                educationType: EducationType.UNDERGRADUATE,
                 year: Year.FIRST,
                 email: 'newUser@example.com',
                 password: 'password',
@@ -37,39 +40,30 @@ describe('User Controller', () => {
     // user success case
     it('should create an user & return 201', async () => {
         const newUser = {
+            // expected output
             name: 'New User',
             school: mockObjectId,
             major: 'Undeclared',
             educationType: EducationType.UNDERGRADUATE,
             year: Year.FIRST,
+        };
+
+        const newAuth = {
             email: 'newUser@example.com',
             password: 'password',
-            createdAt: new Date(),
-            updatedAt: new Date(),
+            emailVerified: false,
         };
-        mockUser.create.mockResolvedValue(newUser as any);
+        const result = mockUser.create.mockResolvedValue(newUser as any);
+        const result2 = mockAuth.create.mockResolvedValue(newAuth as any);
 
         await createUser(mockReq as Request, mockRes as Response);
 
         expect(mockUser.create).toHaveBeenCalledWith(mockReq.body);
         expect(mockRes.status).toHaveBeenCalledWith(201);
-        expect(mockRes.json).toHaveBeenCalledWith(newUser);
-
-        // this shouldnt work bc the test needs to account for the auth document
+        expect(mockRes.json).toHaveBeenCalledWith({ newUser: result, newAuth: result2 });
     });
 
     it('should state that user already exists and return 400', async () => {
-        const copyUser = {
-            name: 'New User',
-            school: mockObjectId,
-            major: 'Undeclared',
-            educationType: EducationType.UNDERGRADUATE,
-            year: Year.FIRST,
-            email: 'newUser@example.com',
-            password: 'password',
-        };
-        mockUserCopy.create.mockResolvedValue(copyUser as any);
-
         await createUser(mockReq as Request, mockRes as Response);
 
         expect(mockRes.status).toHaveBeenCalledWith(400);
