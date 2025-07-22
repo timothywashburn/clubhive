@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
-import { X, Upload, Tag } from 'lucide-react';
+import { X, Upload, Tag, Calendar } from 'lucide-react';
 import { Event } from '../../types';
+import { WebDateTimeRangePicker } from '../../../../components/date-picker';
 
 interface EventModalProps {
     event: Event | null;
@@ -46,6 +47,11 @@ export function EventModal({ event, isOpen, onClose, onSave, selectedDate }: Eve
         published: false,
     });
 
+    const [showDateTimePicker, setShowDateTimePicker] = useState(false);
+    const [dateTimePickerDate, setDateTimePickerDate] = useState<Date | undefined>();
+    const [dateTimePickerStartTime, setDateTimePickerStartTime] = useState<Date | undefined>();
+    const [dateTimePickerEndTime, setDateTimePickerEndTime] = useState<Date | undefined>();
+
 
     useEffect(() => {
         if (event) {
@@ -87,6 +93,81 @@ export function EventModal({ event, isOpen, onClose, onSave, selectedDate }: Eve
         e.preventDefault();
         onSave(formData);
         onClose();
+    };
+
+    const handleOpenDateTimePicker = () => {
+        // Initialize picker with current form data
+        if (formData.date) {
+            setDateTimePickerDate(new Date(formData.date));
+        } else if (selectedDate) {
+            setDateTimePickerDate(selectedDate);
+        } else {
+            setDateTimePickerDate(new Date());
+        }
+
+        // Parse current times or set defaults
+        const today = new Date();
+        if (formData.startTime) {
+            const [hours, minutes] = formData.startTime.split(':').map(Number);
+            const startTime = new Date(today);
+            startTime.setHours(hours, minutes, 0, 0);
+            setDateTimePickerStartTime(startTime);
+        } else {
+            const defaultStart = new Date(today);
+            defaultStart.setHours(9, 0, 0, 0);
+            setDateTimePickerStartTime(defaultStart);
+        }
+
+        if (formData.endTime) {
+            const [hours, minutes] = formData.endTime.split(':').map(Number);
+            const endTime = new Date(today);
+            endTime.setHours(hours, minutes, 0, 0);
+            setDateTimePickerEndTime(endTime);
+        } else {
+            const defaultEnd = new Date(today);
+            defaultEnd.setHours(10, 0, 0, 0);
+            setDateTimePickerEndTime(defaultEnd);
+        }
+
+        setShowDateTimePicker(true);
+    };
+
+    const handleDateTimePickerDone = (date: Date, startTime: Date, endTime: Date) => {
+        setFormData(prev => ({
+            ...prev,
+            date: date.toISOString().split('T')[0],
+            startTime: startTime.toTimeString().slice(0, 5),
+            endTime: endTime.toTimeString().slice(0, 5),
+            time: `${startTime.toTimeString().slice(0, 5)} - ${endTime.toTimeString().slice(0, 5)}`,
+        }));
+        setShowDateTimePicker(false);
+    };
+
+    const formatSelectedDateTime = () => {
+        if (!formData.date || !formData.startTime || !formData.endTime) {
+            return 'Select date and time';
+        }
+
+        const date = new Date(formData.date);
+        const dateStr = date.toLocaleDateString(undefined, {
+            weekday: 'short',
+            month: 'short',
+            day: 'numeric',
+            year: 'numeric',
+        });
+
+        const formatTime = (timeStr: string) => {
+            const [hours, minutes] = timeStr.split(':').map(Number);
+            const time = new Date();
+            time.setHours(hours, minutes);
+            return time.toLocaleTimeString(undefined, {
+                hour: 'numeric',
+                minute: '2-digit',
+                hour12: true,
+            });
+        };
+
+        return `${dateStr} • ${formatTime(formData.startTime)} - ${formatTime(formData.endTime)}`;
     };
 
     if (!isOpen) return null;
@@ -199,42 +280,18 @@ export function EventModal({ event, isOpen, onClose, onSave, selectedDate }: Eve
 
                     <div>
                         <label className="block text-sm font-medium text-on-surface mb-2">
-                            Date
+                            Date & Time
                         </label>
-                        <input
-                            type="date"
-                            value={formData.date}
-                            onChange={e => handleInputChange('date', e.target.value)}
-                            className="w-full px-3 py-2 border border-outline-variant rounded-md focus:outline-none focus:ring-2 focus:ring-primary bg-surface text-on-surface"
-                            required
-                        />
-                    </div>
-
-                    <div className="grid grid-cols-2 gap-4">
-                        <div>
-                            <label className="block text-sm font-medium text-on-surface mb-2">
-                                Start Time
-                            </label>
-                            <input
-                                type="time"
-                                value={formData.startTime}
-                                onChange={e => handleInputChange('startTime', e.target.value)}
-                                className="w-full px-3 py-2 border border-outline-variant rounded-md focus:outline-none focus:ring-2 focus:ring-primary bg-surface text-on-surface"
-                                required
-                            />
-                        </div>
-                        <div>
-                            <label className="block text-sm font-medium text-on-surface mb-2">
-                                End Time
-                            </label>
-                            <input
-                                type="time"
-                                value={formData.endTime}
-                                onChange={e => handleInputChange('endTime', e.target.value)}
-                                className="w-full px-3 py-2 border border-outline-variant rounded-md focus:outline-none focus:ring-2 focus:ring-primary bg-surface text-on-surface"
-                                required
-                            />
-                        </div>
+                        <button
+                            type="button"
+                            onClick={handleOpenDateTimePicker}
+                            className="w-full px-3 py-2 border border-outline-variant rounded-md focus:outline-none focus:ring-2 focus:ring-primary bg-surface text-on-surface text-left hover:bg-surface-variant transition-colors cursor-pointer flex items-center gap-2"
+                        >
+                            <Calendar className="h-4 w-4 text-on-surface-variant" />
+                            <span className={formData.date && formData.startTime && formData.endTime ? 'text-on-surface' : 'text-on-surface-variant'}>
+                                {formatSelectedDateTime()}
+                            </span>
+                        </button>
                     </div>
 
                     <div>
@@ -371,6 +428,30 @@ export function EventModal({ event, isOpen, onClose, onSave, selectedDate }: Eve
                     </div>
                 </div>
             </div>
+
+            {/* Date Time Picker Modal */}
+            {showDateTimePicker && (
+                <div 
+                    className="fixed inset-0 bg-black/50 flex items-center justify-center z-[60] p-4"
+                    onClick={(e) => {
+                        e.stopPropagation();
+                        setShowDateTimePicker(false);
+                    }}
+                >
+                    <div onClick={(e) => e.stopPropagation()}>
+                        <WebDateTimeRangePicker
+                            date={dateTimePickerDate}
+                            startTime={dateTimePickerStartTime}
+                            endTime={dateTimePickerEndTime}
+                            onDateChange={setDateTimePickerDate}
+                            onStartTimeChange={setDateTimePickerStartTime}
+                            onEndTimeChange={setDateTimePickerEndTime}
+                            onDismiss={() => setShowDateTimePicker(false)}
+                            onDone={(date, startTime, endTime) => handleDateTimePickerDone(date, startTime, endTime)}
+                        />
+                    </div>
+                </div>
+            )}
         </div>
     );
 }
