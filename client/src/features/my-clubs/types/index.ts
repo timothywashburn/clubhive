@@ -9,6 +9,7 @@ export interface Club {
     meetingTime: string;
     logoImage: string;
     brandColor: string;
+    url: string;
 }
 
 export interface Event {
