@@ -7,9 +7,7 @@ import type { Tag } from '../hooks/fetchTags';
 import ClubCardSmall from '../features/find-clubs/components/ClubCardSmall';
 import TagFilterPopover from '../features/find-clubs/components/FilterTagsButton';
 import { getTagColor } from '../features/find-clubs/utils/TagColors';
-import { DiscordIcon } from '../components/DiscordIcon';
-import { InstagramIcon } from '../components/InstagramIcon';
-import { GlobeIcon } from '../components/GlobeIcon';
+import SocialLinks from '../features/find-clubs/components/SocialLinks';
 
 export function Clubs() {
     const [searchTerm, setSearchTerm] = useState('');
@@ -89,17 +87,11 @@ export function Clubs() {
                                     <div className="flex flex-col flex-1 overflow-hidden -mb-6">
                                         <h2 className="text-4xl text-on-surface font-bold mb-2">{selectedClub.name}</h2>
                                         <p className="text-on-surface-variant italic">{selectedClub.tagline || 'No tagline'}</p>
-                                        <div className="flex gap-5 justify-end">
-                                            <div className="w-10 h-10 bg-discord rounded-full p-1.25 ">
-                                                <DiscordIcon className="w-full h-full text-white " />
-                                            </div>
-                                            <div className="w-10 h-10 bg-instagram rounded-full p-1.25 ">
-                                                <InstagramIcon className="w-full h-full text-white" />
-                                            </div>
-                                            <div className="w-10 h-10 bg-globe rounded-full p-1.25 ">
-                                                <GlobeIcon className="w-full h-full text-white" />
-                                            </div>
-                                        </div>
+                                        <SocialLinks
+                                            discordUrl={selectedClub.socials.discord}
+                                            instagramUrl={selectedClub.socials.instagram}
+                                            websiteUrl={selectedClub.socials.website}
+                                        />
                                     </div>
                                 </div>
                                 <hr className="my-4 border-t border-outline-variant" />
