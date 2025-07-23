@@ -6,8 +6,9 @@ import { useAuth } from './hooks/useAuth';
 import { useTheme } from './hooks/useTheme';
 import { Home } from './pages/Home';
 import { MyClubs } from './features/my-clubs';
-import { Clubs } from './pages/Clubs';
+import { Clubs } from './pages/ClubSearch.tsx';
 import { ClubProfile } from './pages/ClubProfile';
+import { ClubRegistration } from './pages/ClubRegistration.tsx';
 import { Events } from './pages/Events';
 import { EventsPage } from './pages/EventsPage';
 import { Notifications } from './pages/Notifications';
@@ -67,6 +68,7 @@ export function App() {
                         <Route path="/about" element={<About />} />
                         <Route path="/signin" element={<SignIn />} />
                         <Route path="/signup" element={<SignUp />} />
+                        <Route path="/register" element={<ClubRegistration />} />
                         <Route path="*" element={<NotFound />} />
                     </Routes>
                 </main>
