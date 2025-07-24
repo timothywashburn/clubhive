@@ -59,7 +59,7 @@ export function App() {
                         <Route path="/" element={<Home />} />
                         <Route path="/my-clubs" element={<MyClubs />} />
                         <Route path="/clubs" element={<Clubs />} />
-                        <Route path="/club-profile/:id" element={<ClubProfile />} />
+                        <Route path="/club-profile/:url" element={<ClubProfile />} />
                         <Route path="/events" element={<Events />} />
                         <Route path="/events/:id" element={<EventsPage />} />
                         <Route path="/account" element={<Account />} />
