@@ -1,4 +1,6 @@
 import { Link } from 'react-router';
+import React, { useState } from 'react';
+
 /**
  * THIS CLASS IS AI GENERATED AND TEMPORARY
  *
@@ -7,34 +9,49 @@ import { Link } from 'react-router';
  * replaced by the real implementation at any time.
  */
 export function Events() {
+    const [searchTerm, setSearchTerm] = useState('');
+    const events = [
+        { id: 1, name: 'Event 1', club: 'Club 1' },
+        { id: 2, name: 'Event 2', club: 'Club 2' },
+        { id: 3, name: 'Event 3', club: 'Club 3' },
+    ];
+    const filteredEvents = events.filter(event => event.name.toLowerCase().includes(searchTerm.toLowerCase()));
+
     return (
         <div className="h-full relative">
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-                <div className="mb-8">
+                <input
+                    type="text"
+                    placeholder="Search events..."
+                    value={searchTerm}
+                    onChange={e => setSearchTerm(e.target.value)}
+                    className="block w-full pl-10 pr-3 py-2 border text-on-surface border-outline-variant rounded-md leading-5 bg-surface placeholder-on-surface-variant focus:outline-none focus:ring-1 focus:ring-primary focus:border-primary"
+                />
+                <div className="mb-8 mt-8">
                     <h1 className="text-3xl font-bold text-on-surface">Events</h1>
                     <p className="text-on-surface-variant mt-2">Discover upcoming events from clubs you follow</p>
                 </div>
 
                 <div className="space-y-6">
                     {/* Placeholder event cards */}
-                    {[1, 2, 3, 4].map(i => (
-                        <div key={i} className="bg-surface rounded-lg shadow p-6 border border-outline-variant">
+                    {filteredEvents.map(event => (
+                        <div key={event.id} className="bg-surface rounded-lg shadow p-6 border border-outline-variant">
                             <div className="flex items-start justify-between">
                                 <div className="flex-1">
                                     <div className="flex items-center mb-2">
                                         <div className="w-10 h-10 bg-primary/10 rounded-full flex items-center justify-center mr-3">
-                                            <span className="text-primary font-bold text-sm">C{i}</span>
+                                            <span className="text-primary font-bold text-sm">C{event.id}</span>
                                         </div>
                                         <div>
-                                            <Link to={`/events/${i}`} className="text-lg font-medium text-primary hover:underline">
-                                                Event {i}
+                                            <Link to={`/events/${event.id}`} className="text-lg font-medium text-primary hover:underline">
+                                                {event.name}
                                             </Link>
 
                                             {/*<h3 className="text-lg font-medium text-on-surface">
                                                 Event {i}
                                             </h3>*/}
 
-                                            <p className="text-sm text-on-surface-variant">Club {i}</p>
+                                            <p className="text-sm text-on-surface-variant">{event.club}</p>
                                         </div>
                                     </div>
                                     <p className="text-on-surface-variant mb-4">
@@ -50,7 +67,7 @@ export function Events() {
                                                     d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"
                                                 />
                                             </svg>
-                                            Jan {15 + i}, 2024
+                                            Jan {15 + event.id}, 2024
                                         </div>
                                         <div className="flex items-center">
                                             <svg className="h-4 w-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -61,7 +78,7 @@ export function Events() {
                                                     d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"
                                                 />
                                             </svg>
-                                            {6 + i}:00 PM
+                                            {6 + event.id}:00 PM
                                         </div>
                                         <div className="flex items-center">
                                             <svg className="h-4 w-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
