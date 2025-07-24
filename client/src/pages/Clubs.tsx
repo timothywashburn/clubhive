@@ -117,7 +117,7 @@ export function Clubs() {
 
                                 <div className="mt-6 flex justify-center">
                                     <Link
-                                        to={`/club-profile/${selectedClub._id}`}
+                                        to={`/club-profile/${selectedClub.url}`}
                                         className="mt-6 inline-block px-4 py-2 bg-primary text-on-primary rounded-md hover:bg-primary-dark transition-colors"
                                     >
                                         View Profile
