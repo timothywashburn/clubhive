@@ -3,7 +3,7 @@ import dotenv from 'dotenv';
 import Club from './src/models/club-schema';
 import School from './src/models/school-schema';
 import Tag from './src/models/tag-schema';
-
+import Image from './src/models/image-schema';
 dotenv.config({ path: '.env' });
 // dotenv.config({ path: '.env.local' });
 
@@ -91,6 +91,8 @@ async function seed() {
                 discord: 'https://discord.gg/hackucsd',
                 instagram: 'https://instagram.com/hackucsd',
             },
+            clubLogo: null,
+            pictures: [],
         },
         {
             name: 'Women in Computing',
@@ -113,6 +115,8 @@ async function seed() {
                 discord: '',
                 instagram: 'https://instagram.com/wic_ucsd',
             },
+            clubLogo: null,
+            pictures: [],
         },
         {
             name: 'Triton Community Club',
@@ -127,6 +131,8 @@ async function seed() {
                 discord: '',
                 instagram: '',
             },
+            clubLogo: null,
+            pictures: [],
         },
         {
             name: 'Workshop Central',
@@ -141,6 +147,8 @@ async function seed() {
                 discord: 'https://discord.gg/workshops',
                 instagram: 'https://instagram.com/workshopcentral',
             },
+            clubLogo: null,
+            pictures: [],
         },
         {
             name: 'Startup Circle',
@@ -155,6 +163,8 @@ async function seed() {
                 discord: '',
                 instagram: 'https://instagram.com/startupcircle',
             },
+            clubLogo: null,
+            pictures: [],
         },
         {
             name: 'Triton Gamers',
@@ -169,6 +179,8 @@ async function seed() {
                 discord: 'https://discord.gg/gaming',
                 instagram: 'https://instagram.com/ucsdcgg',
             },
+            clubLogo: null,
+            pictures: [],
         },
         {
             name: 'Triton Creatives',
@@ -183,6 +195,8 @@ async function seed() {
                 discord: '',
                 instagram: 'https://instagram.com/tritoncreatives',
             },
+            clubLogo: null,
+            pictures: [],
         },
         {
             name: 'Diversity in Data',
@@ -197,6 +211,8 @@ async function seed() {
                 discord: '',
                 instagram: 'https://instagram.com/diversitydata',
             },
+            clubLogo: null,
+            pictures: [],
         },
         {
             name: 'InfoSessions @ UCSD',
@@ -211,6 +227,8 @@ async function seed() {
                 discord: '',
                 instagram: '',
             },
+            clubLogo: null,
+            pictures: [],
         },
     ]);
     console.log('Seeding complete!');

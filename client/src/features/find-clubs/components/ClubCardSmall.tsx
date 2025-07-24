@@ -1,8 +1,6 @@
 import React from 'react';
-import { useMyClubsData } from '../../my-clubs/hooks';
 import type { Tag } from '../../../hooks/fetchTags';
-import { getTagColor } from '../utils/TagColors'; // Adjust the import path as necessary
-
+import { getTagColor } from '../utils/TagColors';
 type ClubCardProps = {
     name: string;
     tagline: string;
