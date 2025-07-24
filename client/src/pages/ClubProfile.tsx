@@ -6,8 +6,9 @@ import { useNavigate, useParams } from 'react-router';
  * might look like, may be temporary and changed.
  */
 export function ClubProfile() {
-    const { id } = useParams();
+    const { url } = useParams<{ url: string }>();
     const [club, setClub] = useState(null);
+    const [error, setError] = useState('');
 
     const events = [
         //TODO: replace with real data!
@@ -30,28 +31,28 @@ export function ClubProfile() {
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
-        console.log('➡️ Fetching club ID:', id);
-        const fetchClub = async () => {
-            try {
-                const res = await fetch(`/api/clubs/${id}`);
-                const json = await res.json();
-                console.log('API response:', json);
+        if (!url) return;
+        fetch(`/api/clubs/by-url/${url}`)
+            .then(res => res.json())
+            .then(data => {
+                console.log('Fetch result:', data);
 
-                if (json.success) {
-                    console.log('Club loaded:', json.data.club);
-                    setClub(json.data.club);
+                if (data.success) {
+                    setClub(data.data.club);
                 } else {
-                    console.warn('Club fetch failed:', json.message);
+                    setError(data.error?.message || 'Unknown error');
+                    //for troubleshooting:
+                    console.error('Failed to load club:', data.error?.message);
                 }
-            } catch (error) {
-                console.error('Fetch error:', error);
-            } finally {
-                setLoading(false);
-            }
-        };
+            })
+            .catch(err => {
+                setError(err.message);
+                //for troubleshooting
+                console.error('Network error:', err);
+            })
 
-        if (id) fetchClub();
-    }, [id]);
+            .finally(() => setLoading(false));
+    }, [url]);
 
     if (loading) return <div className="text-yellow-600 p-4">Loading club...</div>;
     if (!club) return <div className="text-red 500 p-4">Club not found.</div>;
