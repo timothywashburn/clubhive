@@ -1,5 +1,9 @@
 import { Link } from 'react-router';
 import React, { useState } from 'react';
+import TagFilterPopover from '../features/find-clubs/components/FilterTagsButton';
+import type { Tag } from '../hooks/fetchTags';
+import { useTagsData } from '../hooks/fetchTags';
+import { getTagColor } from '../features/find-clubs/utils/TagColors';
 
 /**
  * THIS CLASS IS AI GENERATED AND TEMPORARY
@@ -10,26 +14,48 @@ import React, { useState } from 'react';
  */
 export function Events() {
     const [searchTerm, setSearchTerm] = useState('');
+    const { tags } = useTagsData();
+    const [selectedTags, setSelectedTags] = useState<Tag[]>([]);
+    const tagMap = Object.fromEntries(tags.map(t => [t.text, t._id]));
+
     const events = [
-        { id: 1, name: 'Event 1', club: 'Club 1' },
-        { id: 2, name: 'Event 2', club: 'Club 2' },
+        { id: 1, name: 'Event 1', club: 'Club 1', tags: [tagMap['Art'], tagMap['Music']] },
+        { id: 2, name: 'Event 2', club: 'Club 2', tags: [tagMap['Art']] },
         { id: 3, name: 'Event 3', club: 'Club 3' },
     ];
-    const filteredEvents = events.filter(event => event.name.toLowerCase().includes(searchTerm.toLowerCase()));
+    const filteredEvents = events
+        .filter(event => event.name.toLowerCase().includes(searchTerm.toLowerCase()))
+        .filter(event => selectedTags.length === 0 || selectedTags.every(tag => event.tags?.includes(tag._id)));
 
     return (
         <div className="h-full relative">
-            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-                <input
-                    type="text"
-                    placeholder="Search events..."
-                    value={searchTerm}
-                    onChange={e => setSearchTerm(e.target.value)}
-                    className="block w-full pl-10 pr-3 py-2 border text-on-surface border-outline-variant rounded-md leading-5 bg-surface placeholder-on-surface-variant focus:outline-none focus:ring-1 focus:ring-primary focus:border-primary"
-                />
-                <div className="mb-8 mt-8">
+            <div className="mx-auto px-4 sm:px-6 lg:px-8 py-8">
+                <div className="mb-8">
                     <h1 className="text-3xl font-bold text-on-surface">Events</h1>
                     <p className="text-on-surface-variant mt-2">Discover upcoming events from clubs you follow</p>
+                </div>
+
+                <div className="flex h-10 mb-6">
+                    <TagFilterPopover tags={tags} selectedTags={selectedTags} setSelectedTags={setSelectedTags} />
+                    <input
+                        type="text"
+                        placeholder="Search events..."
+                        value={searchTerm}
+                        onChange={e => setSearchTerm(e.target.value)}
+                        className="block w-full pl-10 pr-3 py-2 border text-on-surface border-outline-variant rounded-md leading-5 bg-surface placeholder-on-surface-variant focus:outline-none focus:ring-1 focus:ring-primary focus:border-primary"
+                    />
+                </div>
+
+                <div className="flex flex-col lg:flex-row gap-3">
+                    {selectedTags.map(tag => (
+                        <span
+                            key={tag._id}
+                            className={`rounded-full px-3 py-1 text-xs font-semibold hover:cursor-pointer ${getTagColor(tag._id)}`}
+                            onClick={() => setSelectedTags(selectedTags.filter(t => t._id !== tag._id))}
+                        >
+                            {tag.text}
+                        </span>
+                    ))}
                 </div>
 
                 <div className="space-y-6">
