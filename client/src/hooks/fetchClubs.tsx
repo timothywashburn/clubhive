@@ -6,6 +6,7 @@ export type Club = {
     name: string;
     tagline: string;
     description: string;
+    url: string;
     members: string[];
     tags: Tag[];
     createdAt: Date;
