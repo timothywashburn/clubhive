@@ -1,10 +1,13 @@
-import FilterTagsButton from '../features/find-clubs/components/FilterTagsButton';
 import { useTagsData } from '../hooks/fetchTags';
-import { Tag } from '../hooks/fetchTags';
 import { useState } from 'react';
+import { TagSelectionPopup } from '../features/find-clubs/components/TagsSelectionPopup';
+import { useTagSelection } from '../features/find-clubs/hooks/useTagSelection';
+import { getTagColor } from '../features/find-clubs/utils/TagColors';
+
 export function ClubRegistration() {
     const { tags } = useTagsData();
-    const [selectedTags, setSelectedTags] = useState<Tag[]>([]);
+    const { selectedTags, toggleTagById } = useTagSelection();
+
     const inputClass =
         'mt-1 block w-full rounded-md text-on-primary-container border border-outline-variant bg-surface px-3 py-2 shadow-sm ' +
         'focus:border-primary focus:ring focus:ring-primary focus:ring-opacity-50 focus:outline-none';
@@ -28,6 +31,8 @@ export function ClubRegistration() {
                         <form className="overflow-y-auto">
                             <h2 className="text-xl font-semibold text-on-background mb-4">Club Information</h2>
                             <hr className="my-4 border-t border-outline-variant" />
+
+                            {/* Club Details */}
                             <div className="grid grid-cols-2 gap-6">
                                 <div>
                                     <label htmlFor="club-name" className="block text-sm font-medium text-on-background">
@@ -39,7 +44,9 @@ export function ClubRegistration() {
                                     <label htmlFor="club-school" className="block text-sm font-medium text-on-background">
                                         School
                                     </label>
-                                    <input type="text" id="club-school" className={inputClass} />
+                                    <select id="club-school" className={inputClass}>
+                                        <option value="UCSD">UCSD</option>
+                                    </select>
                                 </div>
                                 <div>
                                     <label htmlFor="club-tagline" className="block text-sm font-medium text-on-background">
@@ -54,6 +61,8 @@ export function ClubRegistration() {
                                     <input type="text" id="club-url" className={inputClass} />
                                 </div>
                             </div>
+
+                            {/* Social Links */}
                             <div className="mt-5 grid grid-cols-3 gap-6">
                                 <div>
                                     <label htmlFor="club-discord" className="block text-sm font-medium text-on-background">
@@ -75,11 +84,30 @@ export function ClubRegistration() {
                                 </div>
                             </div>
 
+                            {/* Description */}
                             <div className="mt-5">
                                 <label htmlFor="club-description" className="block text-sm font-medium text-on-background">
                                     Description
                                 </label>
                                 <textarea id="club-description" rows={4} className={inputClass}></textarea>
+                            </div>
+
+                            {/* Tags */}
+                            <div className="mt-5">
+                                <label className="block text-sm font-medium text-on-background">Tags</label>
+                                <TagSelectionPopup
+                                    tags={tags}
+                                    selectedTags={selectedTags}
+                                    toggleTag={tagId => toggleTagById(tagId, tags)}
+                                    inline
+                                />
+                                <div className="mt-2 flex flex-wrap gap-2">
+                                    {selectedTags.map(tag => (
+                                        <span key={tag._id} className={`px-2 py-1 rounded-full text-xs ${getTagColor(tag._id)}`}>
+                                            {tag.text}
+                                        </span>
+                                    ))}
+                                </div>
                             </div>
 
                             <div className="mt-6">

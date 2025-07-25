@@ -5,7 +5,7 @@ import type { Club } from '../hooks/fetchClubs';
 import { useTagsData } from '../hooks/fetchTags';
 import type { Tag } from '../hooks/fetchTags';
 import ClubCardSmall from '../features/find-clubs/components/ClubCardSmall';
-import TagFilterPopover from '../features/find-clubs/components/FilterTagsButton';
+import FilterTagsButton from '../features/find-clubs/components/FilterTagsButton';
 import { getTagColor } from '../features/find-clubs/utils/TagColors';
 import SocialLinks from '../features/find-clubs/components/SocialLinks';
 
@@ -28,13 +28,13 @@ export function Clubs() {
                 </div>
 
                 <div className="flex h-10 mb-6">
-                    <TagFilterPopover tags={tags} selectedTags={selectedTags} setSelectedTags={setSelectedTags} />
+                    <FilterTagsButton tags={tags} />
                     <input
                         type="text"
                         placeholder="Search clubs..."
                         value={searchTerm}
                         onChange={e => setSearchTerm(e.target.value)}
-                        className="block w-full pl-10 pr-3 py-2 border text-on-surface border-outline-variant rounded-md rounded-l-none leading-5 bg-surface placeholder-on-surface-variant focus:outline-none focus:ring-1 focus:ring-primary focus:border-primary"
+                        className="block w-full pl-10 pr-3 py-2 border text-on-surface border-outline-variant rounded-md rounded-l-none leading-5 bg-surface placeholder-on-surface-variant focus:outline-none focus:border-primary"
                     />
                 </div>
                 <div className="flex flex-col lg:flex-row gap-3">
