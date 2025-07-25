@@ -23,7 +23,7 @@ export function ClubRegistration() {
             <div className="max-w-7xl mx-auto px-6 sm:px-8 lg:px-10 py-8">
                 <div className="mb-8">
                     <h1 className="text-3xl font-bold text-on-background">Register Your Club</h1>
-                    <p className="text-on-background-variant mt-2">Fill out the form below to register your club.</p>
+                    <p className="text-on-background-variant mt-2">Fill out the form below to register your club to clubhive.</p>
                     <div className="bg-surface rounded-lg shadow p-6 mt-4">
                         <form className="overflow-y-auto">
                             <h2 className="text-xl font-semibold text-on-background mb-4">Club Information</h2>
