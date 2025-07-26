@@ -4,36 +4,30 @@ import SavedEvents from '../models/saved-events';
 
 export const createEvent = async (req: Request, res: Response) => {
     const {
+        club,
         name,
-        tags,
+        description,
+        type,
+        location,
         date,
         startTime,
         endTime,
-        locationName,
-        locationAddress,
-        club,
         picture,
-        description,
-        eventType,
-        locationDescription,
-        requirements,
+        tags,
     } = req.body;
 
     try {
         const newEvent = new Event({
+            club: club,
             name: name,
-            tags: tags,
+            description: description,
+            type: type,
+            location: location,
             date: date,
             startTime: startTime,
             endTime: endTime,
-            locationName: locationName,
-            locationAddress: locationAddress,
-            club: club,
             picture: picture,
-            description: description,
-            eventType: eventType,
-            locationDescription: locationDescription,
-            requirements: requirements,
+            tags: tags,
         });
         const result = await newEvent.save();
         res.status(201).json({ newEvent: result });
@@ -43,24 +37,21 @@ export const createEvent = async (req: Request, res: Response) => {
 };
 
 export const saveEvent = async (req: Request, res: Response) => {
-    const { user, event } = req.body;
+    const { userId, eventId } = req.body;
 
     const eventIsSaved = await SavedEvents.findOne({
-        userId: user,
-        eventId: event,
+        userId: userId,
+        eventId: eventId,
     });
     if (eventIsSaved) {
         console.log('Event is saved.');
-        return res
-            .status(400)
-            .json({ error: 'Event is already saved to user' });
+        res.status(400).json({ error: 'Event is already saved to user' });
+        return;
     }
     try {
-        const savedAt = Date.now();
         const saveEvent = new SavedEvents({
-            user: user,
-            event: event,
-            saved_at: savedAt,
+            userId: userId,
+            eventId: eventId,
         });
         const result = await saveEvent.save();
         res.status(201).json({ saveEvent: result });

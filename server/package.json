@@ -6,9 +6,16 @@
   "scripts": {
     "build": "cd ../shared && npm run build && cd ../server && tsc --build && tsc-alias",
     "dev": "npx tsx watch src/server.ts",
-    "start": "node dist/server.js"
+    "start": "node dist/server.js",
+    "test": "jest"
   },
   "devDependencies": {
+    "@babel/core": "^7.28.0",
+    "@babel/preset-env": "^7.28.0",
+    "@babel/preset-typescript": "^7.27.1",
+    "@types/jest": "^30.0.0",
+    "babel-jest": "^30.0.4",
+    "jest": "^30.0.4",
     "tsc-alias": "^1.8.16",
     "typescript": "^5.8.3"
   },
