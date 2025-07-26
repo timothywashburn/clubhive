@@ -3,6 +3,8 @@ import dotenv from 'dotenv';
 import Club from './src/models/club-schema';
 import School from './src/models/school-schema';
 import Tag from './src/models/tag-schema';
+import Event from './src/models/event-schema';
+import { EventType } from './src/models/event-schema';
 
 dotenv.config({ path: '.env' });
 // dotenv.config({ path: '.env.local' });
@@ -13,6 +15,7 @@ async function seed() {
     await School.deleteMany({});
     await Tag.deleteMany({});
     await Club.deleteMany({});
+    await Event.deleteMany({});
 
     const [ucsd] = await School.insertMany([{ name: 'UCSD', location: 'San Diego, CA' }]);
 
@@ -213,6 +216,27 @@ async function seed() {
             },
         },
     ]);
+
+    const wic = await Club.findOne({ name: 'Women in Computing' });
+    if (!wic) {
+        throw new Error('Could not find club: Women in Computing');
+    }
+
+    const events = await Event.insertMany([
+        {
+            club: wic._id,
+            name: 'First GBM!',
+            description: 'Welcome everyone to our first general body meeting!',
+            type: EventType.ANYONE,
+            location: 'Qualcomm Panel Room',
+            date: new Date('2025-10-01'),
+            startTime: '18:30:00',
+            endTime: '20:00:00',
+            picture: null,
+            tags: [tagMap['Career'], tagMap['STEM'], tagMap['Social']],
+        },
+    ]);
+
     console.log('Seeding complete!');
     mongoose.connection.close();
 }

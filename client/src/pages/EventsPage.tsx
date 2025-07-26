@@ -1,5 +1,5 @@
 import { useParams, useNavigate, Link } from 'react-router';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 
 /**
  * This is the static frontend mockup of what an event would look like,
@@ -8,9 +8,32 @@ import { useState } from 'react';
 
 export function EventsPage() {
     const { id } = useParams();
+    const [event, setEvent] = useState(null);
+    const [loading, setLoading] = useState(true);
     const navigate = useNavigate();
     const [saved, setSaved] = useState(false);
     const [share, setShared] = useState(false);
+
+    useEffect(() => {
+        async function fetchEvent() {
+            try {
+                const res = await fetch(`/api/events/${id}`);
+                if (!res.ok) {
+                    throw new Error('Failed to fetch event');
+                }
+                const data = await res.json();
+                setEvent(data.event);
+            } catch (err) {
+                console.error(err);
+            } finally {
+                setLoading(false);
+            }
+        }
+        fetchEvent();
+    }, [id]);
+
+    if (loading) return <div> Loading event...</div>;
+    if (!event) return <div>Event not found.</div>;
 
     return (
         <div className="bg-background min-h-screen p-6">
@@ -21,28 +44,32 @@ export function EventsPage() {
                         onClick={() => navigate('/events')}
                         className="bg-surface text-on-surface border border-outline px-4 py-2 rounded-full hover:bg-outline-variant/30 font-medium transition-colors"
                     >
-                        ← Find Clubs
+                        ← Find Events
                     </button>
                 </div>
 
                 <div className="flex justify-between items-center">
                     {/* event title */}
-                    <h1 className="text-4xl font-bold text-on-surface mb-4">Event Name</h1>
+                    <h1 className="text-4xl font-bold text-on-surface mb-4">{event.name}</h1>
                 </div>
 
                 {/* flyer/thumbnail placeholder */}
                 <div className="w-full h-64 bg-outline-variant rounded-md flex items-center justify-center text-on-surface-variant mb-8">
-                    Event flyer/thumbnail
+                    {event.flyerUrl ? (
+                        <img src={event.flyerUrl} alt="Event Flyer" className="h-full object-contain" />
+                    ) : (
+                        'Event flyer/thumbnail'
+                    )}
                 </div>
 
                 {/* tags */}
                 <div className="flex flex-wrap gap-2 mb-4">
-                    {['Social', 'Networking', 'Tech'].map((tag, idx) => (
+                    {event.tags.map(tag => (
                         <span
-                            key={idx}
+                            key={tag._id}
                             className="bg-secondary-container text-on-secondary-container px-3 py-1 rounded-full text-sm font-medium"
                         >
-                            #{tag}
+                            {tag.text}
                         </span>
                     ))}
                 </div>
@@ -51,10 +78,10 @@ export function EventsPage() {
                 <div className="flex flex-wrap gap-4 items-center justify-between mb-4 mt-8">
                     <div className="flex gap-4 flex-wrap">
                         <span className="bg-surface-variant text-on-surface-variant px-3 py-1 rounded-md text-sm">
-                            📅 September 1, 2025 – 6:00 PM
+                            📅 {new Date(event.date).toLocaleDateString()} - {event.time}
                         </span>
-                        <span className="bg-surface-variant text-on-surface-variant px-3 py-1 rounded-md text-sm">📍 Price Center</span>
-                        <span className="bg-surface-variant text-on-surface-variant px-3 py-1 rounded-md text-sm">🎉 Professional</span>
+                        <span className="bg-surface-variant text-on-surface-variant px-3 py-1 rounded-md text-sm">📍 {event.location}</span>
+                        <span className="bg-surface-variant text-on-surface-variant px-3 py-1 rounded-md text-sm">🎉 {event.type}</span>
                     </div>
 
                     {/* share, save buttons */}
@@ -106,13 +133,18 @@ export function EventsPage() {
                     <p className="text-on-surface-variant text-sm">This event will be held in Price Center, located at:</p>
                 </div>
 
+                {/* Hosted by: */}
+                <div className="bg-surface-variant p-4 rounded-md mb-6">
+                    <h3 className="font-medium text-on-secondary-container mb-2">Hosted by</h3>
+                    <Link to={`/clubs/${event.hostingClub.url}`} className="text-blue-600 hover:underline font-medium">
+                        {event.hostingClub.name}
+                    </Link>
+                </div>
+
                 {/* about event description box */}
-                <div className="bg-surface-variant p-4 rounded-md min-h-[200px]">
+                <div className="bg-surface-variant p-4 rounded-md">
                     <h3 className="font-medium text-on-secondary-container mb-2">About Event:</h3>
-                    <p className="text-on-surface-variant text-sm">
-                        Come meet fellow students and network with club leaders! We'll have games, free food, and an overview of our
-                        upcoming projects.
-                    </p>
+                    <p className="text-on-surface-variant text-sm">{event.description}</p>
                 </div>
             </div>
         </div>
