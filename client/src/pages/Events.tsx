@@ -18,14 +18,30 @@ export function Events() {
     const [selectedTags, setSelectedTags] = useState<Tag[]>([]);
     const tagMap = Object.fromEntries(tags.map(t => [t.text, t._id]));
 
-    const events = [
-        { id: 1, name: 'Event 1', club: 'Club 1', tags: [tagMap['Art'], tagMap['Music']] },
-        { id: 2, name: 'Event 2', club: 'Club 2', tags: [tagMap['Art']] },
-        { id: 3, name: 'Event 3', club: 'Club 3' },
-    ];
-    const filteredEvents = events
-        .filter(event => event.name.toLowerCase().includes(searchTerm.toLowerCase()))
-        .filter(event => selectedTags.length === 0 || selectedTags.every(tag => event.tags?.includes(tag._id)));
+    const [events, setEvents] = useState<any[]>([]);
+    useEffect(() => {
+        const fetchEvents = async () => {
+            try {
+                const res = await fetch('/api/events');
+                const data = await res.json();
+                if (data.success) {
+                    setEvents(Array.isArray(data.data.events) ? data.data.events : []);
+                    console.log('Fetched events:', data.data);
+                }
+            } catch (err) {
+                console.error('Error fetching events:', err);
+            }
+        };
+        fetchEvents();
+    }, []);
+
+    const filteredEvents = Array.isArray(events)
+        ? events
+              .filter(event => event.title.toLowerCase().includes(searchTerm.toLowerCase()))
+              .filter(event => selectedTags.length === 0 || selectedTags.every(tag => event.tags?.includes(tag)))
+        : [];
+
+    console.log('Filtered events:', filteredEvents);
 
     return (
         <div className="h-full relative">
@@ -61,28 +77,26 @@ export function Events() {
                 <div className="space-y-6 mt-6">
                     {/* Placeholder event cards */}
                     {filteredEvents.map(event => (
-                        <div key={event.id} className="bg-surface rounded-lg shadow p-6 border border-outline-variant">
+                        <div key={event._id} className="bg-surface rounded-lg shadow p-6 border border-outline-variant">
                             <div className="flex items-start justify-between">
                                 <div className="flex-1">
                                     <div className="flex items-center mb-2">
                                         <div className="w-10 h-10 bg-primary/10 rounded-full flex items-center justify-center mr-3">
-                                            <span className="text-primary font-bold text-sm">C{event.id}</span>
+                                            <span className="text-primary font-bold text-sm">C</span>
                                         </div>
                                         <div>
-                                            <Link to={`/events/${event.id}`} className="text-lg font-medium text-primary hover:underline">
-                                                {event.name}
+                                            <Link to={`/events/${event._id}`} className="text-lg font-medium text-primary hover:underline">
+                                                {event.name || 'Event'}
                                             </Link>
 
                                             {/*<h3 className="text-lg font-medium text-on-surface">
                                                 Event {i}
                                             </h3>*/}
 
-                                            <p className="text-sm text-on-surface-variant">{event.club}</p>
+                                            <p className="text-sm text-on-surface-variant">{event.clubName}</p>
                                         </div>
                                     </div>
-                                    <p className="text-on-surface-variant mb-4">
-                                        Join us for an exciting event! This is a sample event description with details about what to expect.
-                                    </p>
+                                    <p className="text-on-surface-variant mb-4">{event.description || 'Join use for an exciting event!'}</p>
                                     <div className="flex items-center text-sm text-on-surface-variant space-x-4">
                                         <div className="flex items-center">
                                             <svg className="h-4 w-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -93,7 +107,11 @@ export function Events() {
                                                     d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"
                                                 />
                                             </svg>
-                                            Jan {15 + event.id}, 2024
+                                            {new Date(event.date).toLocaleDateString(undefined, {
+                                                month: 'short',
+                                                day: 'numeric',
+                                                year: 'numeric',
+                                            })}
                                         </div>
                                         <div className="flex items-center">
                                             <svg className="h-4 w-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -104,7 +122,7 @@ export function Events() {
                                                     d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"
                                                 />
                                             </svg>
-                                            {6 + event.id}:00 PM
+                                            {event.time || 'TBD'}
                                         </div>
                                         <div className="flex items-center">
                                             <svg className="h-4 w-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -121,7 +139,7 @@ export function Events() {
                                                     d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"
                                                 />
                                             </svg>
-                                            Student Center
+                                            {event.location || 'TBD'}
                                         </div>
                                     </div>
                                 </div>

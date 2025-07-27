@@ -5,6 +5,7 @@ import { statusEndpoint } from '@/api/misc/status';
 import { testEndpoint } from '@/api/misc/test';
 import { testGetClubsEndpoint } from '@/api/misc/clubs-endpoint';
 import { getTagsEndpoint } from '@/api/misc/tags-endpoint';
+import { getEventsEndpoint } from '@/api/misc/events-endpoint';
 import { changelogEndpoint } from '@/api/misc/changelog';
 import { versionEndpoint } from '@/api/misc/version';
 
@@ -26,6 +27,7 @@ export default class ApiManager {
         this.addEndpoint(testGetClubsEndpoint);
         this.addEndpoint(getTagsEndpoint);
         this.addEndpoint(getClubProfileEndpoint);
+        this.addEndpoint(getEventsEndpoint);
         this.addEndpoint(changelogEndpoint);
         this.addEndpoint(versionEndpoint);
         console.log(`registered api endpoints`);
