@@ -1,49 +1,56 @@
-import { Request, Response } from 'express';
-import Club from '../models/club-schema';
-import User from '../models/user-schema';
+import { CreateClubRequest, UpdateClubRequest } from '@clubhive/shared';
+import Club, { ClubDoc } from '../models/club-schema';
+import ClubMembership from '../models/club-membership-schema';
+import { updateDocument } from '@/utils/db-doc-utils';
 
-export const createClub = async (req: Request, res: Response) => {
-    const { name, members, motto, description, tags, clubLogo } = req.body;
-
-    try {
-        // user can enter a logo when they create the club, but there should be a default
-        // maybe will have default autofilled values in the club creation page bc idk how to do that here
-        // idk how default values will be handled
+export default class ClubController {
+    static async createClub(data: CreateClubRequest): Promise<ClubDoc> {
         const newClub = new Club({
-            name: name,
-            members: members,
-            motto: motto,
-            description: description,
-            tags: tags,
-            clubLogo: clubLogo,
+            school: data.school,
+            name: data.name,
+            tagline: data.tagline,
+            description: data.description || '',
+            url: data.url || '',
+            socials: data.socials || {
+                website: '',
+                discord: '',
+                instagram: '',
+            },
+            clubLogo: data.clubLogo,
+            pictures: data.pictures || [],
+            tags: data.tags || [],
         });
-        const result = await newClub.save();
-        return res.status(201).json({ newClub: result });
-    } catch (error) {
-        return res.status(500).json({ error: 'Error creating club' });
-    }
-};
 
-// export const joinClub = async (req: Request, res: Response) => {
-//     const { userId, clubId } = req.body;
-//
-//     // look thru user club[] to find club_id to see if user is already in the club
-//     const user = await User.findById(userId);
-//     const club = await Club.findById(clubId);
-//     if (!user) {
-//         return res.status(200).json({ error: 'User not found' });
-//     } else if (!club) {
-//         return res.status(200).json({ error: 'Club not found' });
-//     } else if (user.clubs.includes(clubId)) {
-//         return res.status(200).json({ error: 'User is already in club' });
-//     }
-//
-//     try {
-//         user.clubs.push(clubId);
-//         club.members.push(userId);
-//         await user.save();
-//         await club.save();
-//     } catch (error) {
-//         return res.status(500).json({ error: 'Error joining club' });
-//     }
-// };
+        const result = await newClub.save();
+        const populatedClub = await Club.findById(result._id).populate('school').populate('tags').exec();
+
+        return populatedClub!;
+    }
+
+    static async getAllClubs(): Promise<ClubDoc[]> {
+        return await Club.find({}).populate('school').populate('tags').exec();
+    }
+
+    static async updateClub(id: string, updates: UpdateClubRequest): Promise<ClubDoc> {
+        const result = await updateDocument(Club, id, updates);
+        await result.populate('school');
+        await result.populate('tags');
+        return result;
+    }
+
+    static async deleteClub(id: string): Promise<boolean> {
+        const result = await Club.findByIdAndDelete(id).exec();
+        return result !== null;
+    }
+
+    static async getClubsByUserId(userId: string): Promise<ClubDoc[]> {
+        const memberships = await ClubMembership.find({ userId })
+            .populate<{ clubId: ClubDoc }>({
+                path: 'clubId',
+                populate: [{ path: 'school' }, { path: 'tags' }],
+            })
+            .exec();
+
+        return memberships.map(membership => membership.clubId);
+    }
+}

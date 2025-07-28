@@ -16,10 +16,13 @@
   ],
   "author": "",
   "license": "ISC",
-  "devDependencies": {
-    "typescript": "^5.0.0"
-  },
   "files": [
     "dist/**/*"
-  ]
+  ],
+  "dependencies": {
+    "zod": "^4.0.10"
+  },
+  "devDependencies": {
+    "typescript": "^5.0.0"
+  }
 }

@@ -1,11 +1,17 @@
 import mongoose from 'mongoose';
-import dotenv from 'dotenv';
-import Club from './src/models/club-schema';
-import School from './src/models/school-schema';
-import Tag from './src/models/tag-schema';
+import { config } from 'dotenv';
+import Club from '../src/models/club-schema';
+import School from '../src/models/school-schema';
+import Tag from '../src/models/tag-schema';
+import User, { EducationType, Year } from '../src/models/user-schema';
+import ClubMembership, { ClubRole } from '../src/models/club-membership-schema';
 
-dotenv.config({ path: '.env' });
-// dotenv.config({ path: '.env.local' });
+config({ path: '.env' });
+// config({ path: '.env.local' });
+
+const TEST_USER_ID = new mongoose.Types.ObjectId('507f1f77bcf86cd799439020');
+const UCSD_SCHOOL_ID = new mongoose.Types.ObjectId('507f1f77bcf86cd799439021');
+const CS_CLUB_ID = new mongoose.Types.ObjectId('507f1f77bcf86cd799439022');
 
 async function seed() {
     console.log('Connecting to MongoDB at:', process.env.MONGODB_URI);
@@ -13,8 +19,10 @@ async function seed() {
     await School.deleteMany({});
     await Tag.deleteMany({});
     await Club.deleteMany({});
+    await User.deleteMany({});
+    await ClubMembership.deleteMany({});
 
-    const [ucsd] = await School.insertMany([{ name: 'UCSD', location: 'San Diego, CA' }]);
+    const [ucsd] = await School.insertMany([{ _id: UCSD_SCHOOL_ID, name: 'UCSD', location: 'San Diego, CA' }]);
 
     const tags = await Tag.insertMany([
         { type: 'club', text: 'Technology' },
@@ -47,8 +55,27 @@ async function seed() {
 
     const tagMap = Object.fromEntries(tags.map(t => [t.text, t._id]));
 
-    await Club.insertMany([
+    const [testUser, testUser2] = await User.insertMany([
         {
+            _id: TEST_USER_ID,
+            name: 'Test User',
+            school: ucsd._id,
+            major: 'Computer Science',
+            educationType: EducationType.UNDERGRADUATE,
+            year: Year.THIRD,
+        },
+        {
+            name: 'Test User 2',
+            school: ucsd._id,
+            major: 'Data Science',
+            educationType: EducationType.GRADUATE,
+            year: Year.FIRST,
+        },
+    ]);
+
+    const clubs = await Club.insertMany([
+        {
+            _id: CS_CLUB_ID,
             name: 'Computer Science Club',
             tagline: 'Innovate, Code, Collaborate',
             description:
@@ -68,7 +95,6 @@ async function seed() {
                 discord: 'https://discord.gg/csclub',
                 instagram: 'https://instagram.com/csclub',
             },
-            clubLogo: null,
             pictures: [],
         },
         {
@@ -213,6 +239,16 @@ async function seed() {
             },
         },
     ]);
+
+    await ClubMembership.insertMany([
+        { userId: testUser._id, clubId: clubs[0]._id, role: ClubRole.OWNER },
+        { userId: testUser._id, clubId: clubs[1]._id, role: ClubRole.MEMBER },
+        { userId: testUser._id, clubId: clubs[4]._id, role: ClubRole.OFFICER },
+
+        { userId: testUser2._id, clubId: clubs[2]._id, role: ClubRole.MEMBER },
+        { userId: testUser2._id, clubId: clubs[6]._id, role: ClubRole.OWNER },
+    ]);
+
     console.log('Seeding complete!');
     mongoose.connection.close();
 }

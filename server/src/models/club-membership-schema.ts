@@ -1,16 +1,4 @@
-import mongoose, { Schema, Document, ObjectId } from 'mongoose';
-
-// mongoose adds an _id property by default for each document
-// it is of type ObjectId
-
-export interface ClubMembershipData extends Document {
-    _id: ObjectId;
-    userId: ObjectId;
-    clubId: ObjectId;
-    role: ClubRole;
-    createdAt: Date;
-    updatedAt: Date;
-}
+import mongoose, { Schema, InferSchemaType, HydratedDocument } from 'mongoose';
 
 export enum ClubRole {
     OWNER = 'owner',
@@ -19,29 +7,34 @@ export enum ClubRole {
     PRINCIPAL_MEMBER = 'principal_member',
 }
 
-const ClubMembershipSchema: Schema<ClubMembershipData> = new Schema(
+const schema = new Schema(
     {
-        userId: {
+        _id: {
+            type: mongoose.Schema.Types.ObjectId,
+            required: true,
+            auto: true,
+        },
+        user: {
             type: mongoose.Schema.Types.ObjectId,
             ref: 'User',
             required: true,
         },
-        clubId: {
+        club: {
             type: mongoose.Schema.Types.ObjectId,
             ref: 'Club',
             required: true,
         },
         role: {
             type: String,
-            enum: Object.values(ClubRole), // can be edited as needed
+            enum: Object.values(ClubRole),
             required: true,
         },
     },
     { timestamps: true }
 );
 
-const ClubMembership = mongoose.model<ClubMembershipData>(
-    'ClubMembership',
-    ClubMembershipSchema
-);
+export type ClubMembershipSchema = InferSchemaType<typeof schema>;
+export type ClubMembershipDoc = HydratedDocument<InferSchemaType<typeof schema>>;
+
+const ClubMembership = mongoose.model('ClubMembership', schema);
 export default ClubMembership;

@@ -1,7 +1,7 @@
 import { ApiEndpoint, AuthType } from '@/types/api-types';
-import { ErrorCode } from '@clubhive/shared';
+import { ErrorCode, TagData } from '@clubhive/shared';
 import Tag from '@/models/tag-schema';
-import { TagData } from '@/models/tag-schema';
+import { serializeRecursive } from '@/utils/db-doc-utils';
 
 export interface GetTagsResponse {
     tags: TagData[];
@@ -17,7 +17,9 @@ export const getTagsEndpoint: ApiEndpoint<undefined, GetTagsResponse> = {
 
             res.json({
                 success: true,
-                data: { tags },
+                data: {
+                    tags: serializeRecursive(tags),
+                },
             });
         } catch (err) {
             console.error('Failed to fetch tags:', err);

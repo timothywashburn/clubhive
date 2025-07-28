@@ -1,10 +1,10 @@
 import { ApiEndpoint, ApiRequest, ApiResponse, AuthType } from '@/types/api-types';
 import Club from '@/models/club-schema';
-import { ClubData } from '@/models/club-schema';
 import '@/models/school-schema';
 import '@/models/image-schema';
 import '@/models/tag-schema';
-import { ErrorCode } from '@clubhive/shared';
+import { ClubData, ErrorCode } from '@clubhive/shared';
+import { serializeRecursive } from '@/utils/db-doc-utils';
 
 type GetClubRequest = { url: string };
 type GetClubResponse = { club: ClubData };
@@ -32,12 +32,11 @@ export const getClubProfileEndpoint: ApiEndpoint<GetClubRequest, GetClubResponse
             }
             res.json({
                 success: true,
-                data: { club },
+                data: { club: serializeRecursive(club) },
             });
         } catch (err) {
             const message = err instanceof Error ? err.message : 'Unkown error';
 
-            //for troubleshooting:
             console.error('Failed to fetch club:', err);
 
             res.status(500).json({
