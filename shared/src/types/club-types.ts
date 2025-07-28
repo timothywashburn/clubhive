@@ -1,4 +1,5 @@
 import { z } from 'zod';
+import { ClubRole } from './club-membership-types';
 
 export const tagSchema = z.object({
     _id: z.string(),
@@ -67,9 +68,14 @@ export const updateClubRequestSchema = z.object({
     tags: z.array(z.string()).optional(),
 });
 
+export const userClubSchema = clubSchema.extend({
+    userRole: z.enum(ClubRole),
+});
+
 export type TagData = z.infer<typeof tagSchema>;
 export type SchoolData = z.infer<typeof schoolSchema>;
 export type ClubData = z.infer<typeof clubSchema>;
+export type UserClubData = z.infer<typeof userClubSchema>;
 export type CreateClubRequest = z.infer<typeof createClubRequestSchema>;
 export type UpdateClubRequest = z.infer<typeof updateClubRequestSchema>;
 
@@ -79,6 +85,10 @@ export interface CreateClubResponse {
 
 export interface GetClubsResponse {
     clubs: ClubData[];
+}
+
+export interface GetMyClubsResponse {
+    clubs: UserClubData[];
 }
 
 export interface GetClubResponse {

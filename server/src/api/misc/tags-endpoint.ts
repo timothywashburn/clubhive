@@ -17,9 +17,7 @@ export const getTagsEndpoint: ApiEndpoint<undefined, GetTagsResponse> = {
 
             res.json({
                 success: true,
-                data: {
-                    tags: serializeRecursive(tags),
-                },
+                tags: serializeRecursive(tags),
             });
         } catch (err) {
             console.error('Failed to fetch tags:', err);

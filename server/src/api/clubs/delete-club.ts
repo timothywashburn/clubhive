@@ -23,9 +23,7 @@ export const deleteClubEndpoint: ApiEndpoint<undefined, DeleteClubResponse> = {
 
             res.json({
                 success: true,
-                data: {
-                    deleted: true,
-                },
+                deleted: true,
             });
         } catch (error) {
             console.error('Error deleting club:', error);

@@ -1,28 +1,21 @@
 import { Eye } from 'lucide-react';
-import { Club } from '../types';
+import { UserClubData } from '@clubhive/shared';
 import { useMyClubsData } from '../hooks';
 
 interface ClubHeaderProps {
-    club: Club;
+    club: UserClubData;
     isOfficer: boolean;
     isPreviewMode: boolean;
     onPreviewToggle: () => void;
 }
 
-export function ClubHeader({
-    club,
-    isOfficer,
-    isPreviewMode,
-    onPreviewToggle,
-}: ClubHeaderProps) {
+export function ClubHeader({ club, isOfficer, isPreviewMode, onPreviewToggle }: ClubHeaderProps) {
     const { getClubColors } = useMyClubsData();
 
     return (
         <div className="flex items-center justify-between mb-4">
             <div className="flex items-center space-x-4">
-                <div
-                    className={`w-12 h-12 rounded-full flex items-center justify-center text-lg font-bold ${getClubColors(club.id)}`}
-                >
+                <div className={`w-12 h-12 rounded-full flex items-center justify-center text-lg font-bold ${getClubColors(club._id)}`}>
                     {club.name
                         .split(' ')
                         .map(word => word[0])
@@ -31,12 +24,8 @@ export function ClubHeader({
                         .slice(0, 2)}
                 </div>
                 <div>
-                    <h2 className="text-2xl font-semibold text-on-surface">
-                        {club.name}
-                    </h2>
-                    <p className="text-on-surface-variant text-sm italic">
-                        {club.tagline}
-                    </p>
+                    <h2 className="text-2xl font-semibold text-on-surface">{club.name}</h2>
+                    <p className="text-on-surface-variant text-sm italic">{club.tagline}</p>
                 </div>
             </div>
             {isOfficer && (

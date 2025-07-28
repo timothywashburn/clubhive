@@ -32,7 +32,7 @@ export const getClubProfileEndpoint: ApiEndpoint<GetClubRequest, GetClubResponse
             }
             res.json({
                 success: true,
-                data: { club: serializeRecursive(club) },
+                club: serializeRecursive(club),
             });
         } catch (err) {
             const message = err instanceof Error ? err.message : 'Unkown error';

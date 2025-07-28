@@ -21,8 +21,6 @@ export function StaticHoneycomb({ className = '', numPoints = 7000, noiseAmount 
             colors: baseColors,
         };
 
-        console.log('baseColors', baseColors);
-
         // Create honeycomb instance
         const honeycomb = new HoneycombBase(config, context, dimensions.width, dimensions.height);
 

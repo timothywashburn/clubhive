@@ -2,6 +2,7 @@ import { CreateClubRequest, UpdateClubRequest } from '@clubhive/shared';
 import Club, { ClubDoc } from '../models/club-schema';
 import ClubMembership from '../models/club-membership-schema';
 import { updateDocument } from '@/utils/db-doc-utils';
+import { ClubRole } from '@clubhive/shared/src/types/club-membership-types';
 
 export default class ClubController {
     static async createClub(data: CreateClubRequest): Promise<ClubDoc> {
@@ -43,14 +44,17 @@ export default class ClubController {
         return result !== null;
     }
 
-    static async getClubsByUserId(userId: string): Promise<ClubDoc[]> {
-        const memberships = await ClubMembership.find({ userId })
-            .populate<{ clubId: ClubDoc }>({
-                path: 'clubId',
+    static async getClubsByUserId(userId: string): Promise<{ doc: ClubDoc; userRole: ClubRole }[]> {
+        const memberships = await ClubMembership.find({ user: userId })
+            .populate<{ club: ClubDoc }>({
+                path: 'club',
                 populate: [{ path: 'school' }, { path: 'tags' }],
             })
             .exec();
 
-        return memberships.map(membership => membership.clubId);
+        return memberships.map(membership => ({
+            doc: membership.club,
+            userRole: membership.role,
+        }));
     }
 }

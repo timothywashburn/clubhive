@@ -26,9 +26,7 @@ export const updateClubEndpoint: ApiEndpoint<UpdateClubRequest, UpdateClubRespon
 
             res.json({
                 success: true,
-                data: {
-                    club: clubSchema.parse(serializeRecursive(club)),
-                },
+                club: clubSchema.parse(serializeRecursive(club)),
             });
         } catch (error) {
             let message = 'Error updating club';

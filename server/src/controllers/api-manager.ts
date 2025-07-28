@@ -121,7 +121,7 @@ export default class ApiManager {
         // TODO: Decode token and set req.auth
         req.auth = {
             authId: 'test-auth-id',
-            user: '507f1f77bcf86cd799439020',
+            userId: '507f1f77bcf86cd799439020',
         };
 
         next();

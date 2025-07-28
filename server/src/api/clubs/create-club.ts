@@ -15,9 +15,7 @@ export const createClubEndpoint: ApiEndpoint<CreateClubRequest, CreateClubRespon
 
             res.json({
                 success: true,
-                data: {
-                    club: clubSchema.parse(serializeRecursive(club)),
-                },
+                club: clubSchema.parse(serializeRecursive(club)),
             });
         } catch (error) {
             let message = 'Error creating club';

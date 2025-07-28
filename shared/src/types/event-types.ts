@@ -48,9 +48,14 @@ export const updateEventRequestSchema = z.object({
     tags: z.array(z.string()).optional(),
 });
 
+export const getEventsQuerySchema = z.object({
+    clubId: z.string().optional(),
+});
+
 export type EventData = z.infer<typeof eventSchema>;
 export type CreateEventRequest = z.infer<typeof createEventRequestSchema>;
 export type UpdateEventRequest = z.infer<typeof updateEventRequestSchema>;
+export type GetEventsQuery = z.infer<typeof getEventsQuerySchema>;
 
 export interface CreateEventResponse {
     event: EventData;

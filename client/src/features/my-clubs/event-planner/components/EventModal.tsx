@@ -1,50 +1,34 @@
 import { useState, useEffect } from 'react';
 import { X, Upload, Tag, Calendar } from 'lucide-react';
-import { Event } from '../../types';
+import { EventData, EventType, TagData } from '@clubhive/shared';
 import { WebDateTimeRangePicker } from '../../../../components/date-picker';
 
 interface EventModalProps {
-    event: Event | null;
+    event: EventData | null;
     isOpen: boolean;
     onClose: () => void;
-    onSave: (event: Event) => void;
+    onSave: (event: EventData) => void;
     selectedDate?: Date;
 }
 
-const OPEN_TO_OPTIONS = [
-    { value: 'club-executives', label: 'Club Executives' },
-    { value: 'club-officers', label: 'Club Officers' },
-    { value: 'students', label: 'Students' },
-    { value: 'everyone', label: 'Everyone' },
-] as const;
+// Just use EventData with some optional fields for new events
+type EventFormData = Omit<EventData, '_id' | 'club'> & {
+    _id?: string;
+    club?: string;
+};
 
-const COMMON_TAGS = [
-    'Free Food',
-    'Fundraiser',
-    'Social',
-    'Educational',
-    'Workshop',
-    'Meeting',
-    'Competition',
-    'Volunteer',
-    'Networking',
-];
+const COMMON_TAGS = ['Free Food', 'Fundraiser', 'Social', 'Educational', 'Workshop', 'Meeting', 'Competition', 'Volunteer', 'Networking'];
 
 export function EventModal({ event, isOpen, onClose, onSave, selectedDate }: EventModalProps) {
-    const [formData, setFormData] = useState<Event>({
-        id: '',
-        title: '',
+    const [formData, setFormData] = useState<EventFormData>({
+        name: '',
+        description: '',
         date: '',
-        time: '',
         startTime: '',
         endTime: '',
         location: '',
-        description: '',
-        attendees: 0,
-        openTo: 'students',
-        pictures: [],
+        type: EventType.UCSD_STUDENTS,
         tags: [],
-        published: false,
     });
 
     const [showDateTimePicker, setShowDateTimePicker] = useState(false);
@@ -52,46 +36,79 @@ export function EventModal({ event, isOpen, onClose, onSave, selectedDate }: Eve
     const [dateTimePickerStartTime, setDateTimePickerStartTime] = useState<Date | undefined>();
     const [dateTimePickerEndTime, setDateTimePickerEndTime] = useState<Date | undefined>();
 
-
     useEffect(() => {
         if (event) {
-            setFormData(event);
+            setFormData({
+                _id: event._id,
+                club: event.club,
+                name: event.name,
+                description: event.description,
+                date: event.date,
+                startTime: event.startTime,
+                endTime: event.endTime,
+                location: event.location,
+                type: event.type,
+                tags: event.tags,
+                picture: event.picture,
+            });
         } else if (selectedDate) {
             // Pre-fill date for new events
             setFormData(prev => ({
                 ...prev,
                 date: selectedDate.toISOString().split('T')[0],
-                id: Date.now().toString(), // Generate a temporary ID for new events
+                _id: Date.now().toString(), // Generate a temporary ID for new events
             }));
         }
     }, [event, selectedDate]);
 
-    const handleInputChange = (field: keyof Event, value: any) => {
+    const handleInputChange = (field: keyof EventFormData, value: any) => {
         setFormData(prev => ({
             ...prev,
             [field]: value,
         }));
     };
 
-    const handleAddTag = (tag: string) => {
-        if (tag && !formData.tags?.includes(tag)) {
+    const handleAddTag = (tagText: string) => {
+        if (tagText && !formData.tags?.some(existingTag => existingTag.text === tagText)) {
+            // Create a temporary tag object for new tags
+            const newTag: TagData = {
+                _id: Date.now().toString(),
+                type: 'event',
+                text: tagText,
+            };
             setFormData(prev => ({
                 ...prev,
-                tags: [...(prev.tags || []), tag],
+                tags: [...(prev.tags || []), newTag],
             }));
         }
     };
 
-    const handleRemoveTag = (tagToRemove: string) => {
+    const handleRemoveTag = (tagId: string) => {
         setFormData(prev => ({
             ...prev,
-            tags: (prev.tags || []).filter(tag => tag !== tagToRemove),
+            tags: (prev.tags || []).filter(tag => tag._id !== tagId),
         }));
     };
 
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
-        onSave(formData);
+
+        // Convert formData to EventData
+        const eventData: EventData = {
+            _id: formData._id || Date.now().toString(),
+            club: formData.club || '', // This should be set by the parent component
+            name: formData.name,
+            description: formData.description,
+            date: formData.date,
+            startTime: formData.startTime,
+            endTime: formData.endTime,
+            location: formData.location,
+            type: formData.type,
+            tags: formData.tags,
+            picture: formData.picture,
+        };
+
+        onSave(eventData);
         onClose();
     };
 
@@ -138,7 +155,6 @@ export function EventModal({ event, isOpen, onClose, onSave, selectedDate }: Eve
             date: date.toISOString().split('T')[0],
             startTime: startTime.toTimeString().slice(0, 5),
             endTime: endTime.toTimeString().slice(0, 5),
-            time: `${startTime.toTimeString().slice(0, 5)} - ${endTime.toTimeString().slice(0, 5)}`,
         }));
         setShowDateTimePicker(false);
     };
@@ -173,23 +189,15 @@ export function EventModal({ event, isOpen, onClose, onSave, selectedDate }: Eve
     if (!isOpen) return null;
 
     return (
-        <div 
-            className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4"
-            onClick={onClose}
-        >
-            <div 
+        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4" onClick={onClose}>
+            <div
                 className="bg-surface rounded-lg shadow-xl w-full max-w-[1400px] max-h-[90vh] overflow-hidden flex flex-col"
                 onClick={e => e.stopPropagation()}
             >
                 {/* Header - Sticky */}
                 <div className="sticky top-0 z-10 bg-surface flex items-center justify-between p-6 border-b border-outline-variant">
-                    <h2 className="text-xl font-semibold text-on-surface">
-                        {event ? 'Edit Event' : 'Create Event'}
-                    </h2>
-                    <button
-                        onClick={onClose}
-                        className="p-2 hover:bg-surface-variant rounded-md transition-colors cursor-pointer"
-                    >
+                    <h2 className="text-xl font-semibold text-on-surface">{event ? 'Edit Event' : 'Create Event'}</h2>
+                    <button onClick={onClose} className="p-2 hover:bg-surface-variant rounded-md transition-colors cursor-pointer">
                         <X className="h-5 w-5 text-on-surface" />
                     </button>
                 </div>
@@ -200,189 +208,112 @@ export function EventModal({ event, isOpen, onClose, onSave, selectedDate }: Eve
                     <div className="flex-1 min-w-0 flex flex-col" style={{ maxWidth: '60%' }}>
                         <form id="event-form" onSubmit={handleSubmit} className="flex flex-col h-full">
                             <div className="flex-1 overflow-y-auto p-6 space-y-6">
-                        {/* Published Status - Prominent Position */}
-                        <div className="bg-surface-variant/50 p-4 rounded-lg border-l-4 border-primary">
-                            <div className="flex items-center justify-between">
+                                {/* Event Type Selection */}
                                 <div>
-                                    <h4 className="text-sm font-medium text-on-surface">Event Status</h4>
-                                    <p className="text-xs text-on-surface-variant mt-1">
-                                        {formData.published ? 'This event is published and visible to members' : 'This event is a draft and not visible to members'}
-                                    </p>
-                                </div>
-                                <label className="relative inline-flex items-center cursor-pointer">
-                                    <input
-                                        type="checkbox"
-                                        checked={formData.published}
-                                        onChange={e => handleInputChange('published', e.target.checked)}
-                                        className="sr-only peer"
-                                    />
-                                    <div className="w-11 h-6 bg-surface-variant peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-primary/20 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-primary"></div>
-                                    <span className="ml-3 text-sm font-medium text-on-surface">
-                                        {formData.published ? 'Published' : 'Draft'}
-                                    </span>
-                                </label>
-                            </div>
-                        </div>
-
-                        <div>
-                            <label className="block text-sm font-medium text-on-surface mb-2">
-                                Event Name
-                            </label>
-                            <input
-                                type="text"
-                                value={formData.title}
-                                onChange={e => handleInputChange('title', e.target.value)}
-                                className="w-full px-3 py-2 border border-outline-variant rounded-md focus:outline-none focus:ring-2 focus:ring-primary bg-surface text-on-surface"
-                                required
-                            />
-                        </div>
-
-                    <div>
-                        <label className="block text-sm font-medium text-on-surface mb-2">
-                            Description
-                        </label>
-                        <textarea
-                            value={formData.description}
-                            onChange={e => handleInputChange('description', e.target.value)}
-                            rows={3}
-                            className="w-full px-3 py-2 border border-outline-variant rounded-md focus:outline-none focus:ring-2 focus:ring-primary bg-surface text-on-surface resize-none"
-                        />
-                    </div>
-
-                    <div>
-                        <label className="block text-sm font-medium text-on-surface mb-2">
-                            Open To
-                        </label>
-                        <select
-                            value={formData.openTo}
-                            onChange={e => handleInputChange('openTo', e.target.value)}
-                            className="w-full px-3 py-2 border border-outline-variant rounded-md focus:outline-none focus:ring-2 focus:ring-primary bg-surface text-on-surface"
-                        >
-                            {OPEN_TO_OPTIONS.map(option => (
-                                <option key={option.value} value={option.value}>
-                                    {option.label}
-                                </option>
-                            ))}
-                        </select>
-                    </div>
-
-                    <div>
-                        <label className="block text-sm font-medium text-on-surface mb-2">
-                            Location
-                        </label>
-                        <input
-                            type="text"
-                            value={formData.location}
-                            onChange={e => handleInputChange('location', e.target.value)}
-                            className="w-full px-3 py-2 border border-outline-variant rounded-md focus:outline-none focus:ring-2 focus:ring-primary bg-surface text-on-surface"
-                        />
-                    </div>
-
-                    <div>
-                        <label className="block text-sm font-medium text-on-surface mb-2">
-                            Date & Time
-                        </label>
-                        <button
-                            type="button"
-                            onClick={handleOpenDateTimePicker}
-                            className="w-full px-3 py-2 border border-outline-variant rounded-md focus:outline-none focus:ring-2 focus:ring-primary bg-surface text-on-surface text-left hover:bg-surface-variant transition-colors cursor-pointer flex items-center gap-2"
-                        >
-                            <Calendar className="h-4 w-4 text-on-surface-variant" />
-                            <span className={formData.date && formData.startTime && formData.endTime ? 'text-on-surface' : 'text-on-surface-variant'}>
-                                {formatSelectedDateTime()}
-                            </span>
-                        </button>
-                    </div>
-
-                    <div>
-                        <label className="block text-sm font-medium text-on-surface mb-2">
-                            Pictures
-                        </label>
-                        <div className="border-2 border-dashed border-outline-variant rounded-lg p-6 text-center">
-                            <Upload className="h-8 w-8 text-on-surface-variant mx-auto mb-2" />
-                            <p className="text-sm text-on-surface-variant mb-2">
-                                Click to upload or drag and drop
-                            </p>
-                            <p className="text-xs text-on-surface-variant">
-                                PNG, JPG up to 10MB
-                            </p>
-                            <input
-                                type="file"
-                                multiple
-                                accept="image/*"
-                                className="hidden"
-                                onChange={e => {
-                                    // Handle file upload logic here
-                                    console.log('Files selected:', e.target.files);
-                                }}
-                            />
-                        </div>
-                        {formData.pictures && formData.pictures.length > 0 && (
-                            <div className="mt-3 grid grid-cols-3 gap-2">
-                                {formData.pictures.map((picture, index) => (
-                                    <div key={index} className="relative">
-                                        <img
-                                            src={picture}
-                                            alt={`Event ${index + 1}`}
-                                            className="w-full h-20 object-cover rounded border"
-                                        />
-                                        <button
-                                            type="button"
-                                            onClick={() => {
-                                                const newPictures = (formData.pictures || []).filter((_, i) => i !== index);
-                                                handleInputChange('pictures', newPictures);
-                                            }}
-                                            className="absolute -top-1 -right-1 bg-error text-on-error rounded-full w-5 h-5 flex items-center justify-center text-xs cursor-pointer"
-                                        >
-                                            ×
-                                        </button>
-                                    </div>
-                                ))}
-                            </div>
-                        )}
-                    </div>
-
-                    <div>
-                        <label className="block text-sm font-medium text-on-surface mb-2">
-                            Tags
-                        </label>
-                        <div className="flex flex-wrap gap-2 mb-3">
-                            {COMMON_TAGS.map(tag => (
-                                <button
-                                    key={tag}
-                                    type="button"
-                                    onClick={() => handleAddTag(tag)}
-                                    disabled={formData.tags?.includes(tag)}
-                                    className={`px-3 py-1 rounded-full text-xs font-medium transition-colors ${
-                                        formData.tags?.includes(tag)
-                                            ? 'bg-primary/20 text-primary cursor-not-allowed'
-                                            : 'bg-surface-variant text-on-surface-variant hover:bg-primary/10 hover:text-primary cursor-pointer'
-                                    }`}
-                                >
-                                    {tag}
-                                </button>
-                            ))}
-                        </div>
-                        {formData.tags && formData.tags.length > 0 && (
-                            <div className="mt-3 flex flex-wrap gap-2">
-                                {formData.tags.map(tag => (
-                                    <span
-                                        key={tag}
-                                        className="inline-flex items-center gap-1 px-3 py-1 bg-primary/20 text-primary rounded-full text-xs font-medium"
+                                    <label className="block text-sm font-medium text-on-surface mb-2">Event Type</label>
+                                    <select
+                                        value={formData.type}
+                                        onChange={e => handleInputChange('type', e.target.value as EventType)}
+                                        className="w-full px-3 py-2 border border-outline-variant rounded-md focus:outline-none focus:ring-2 focus:ring-primary bg-surface text-on-surface"
                                     >
-                                        {tag}
-                                        <button
-                                            type="button"
-                                            onClick={() => handleRemoveTag(tag)}
-                                            className="hover:text-error transition-colors cursor-pointer"
+                                        {Object.values(EventType).map(type => (
+                                            <option key={type} value={type}>
+                                                {type}
+                                            </option>
+                                        ))}
+                                    </select>
+                                </div>
+
+                                <div>
+                                    <label className="block text-sm font-medium text-on-surface mb-2">Event Name</label>
+                                    <input
+                                        type="text"
+                                        value={formData.name}
+                                        onChange={e => handleInputChange('name', e.target.value)}
+                                        className="w-full px-3 py-2 border border-outline-variant rounded-md focus:outline-none focus:ring-2 focus:ring-primary bg-surface text-on-surface"
+                                        required
+                                    />
+                                </div>
+
+                                <div>
+                                    <label className="block text-sm font-medium text-on-surface mb-2">Description</label>
+                                    <textarea
+                                        value={formData.description}
+                                        onChange={e => handleInputChange('description', e.target.value)}
+                                        rows={3}
+                                        className="w-full px-3 py-2 border border-outline-variant rounded-md focus:outline-none focus:ring-2 focus:ring-primary bg-surface text-on-surface resize-none"
+                                    />
+                                </div>
+
+                                <div>
+                                    <label className="block text-sm font-medium text-on-surface mb-2">Location</label>
+                                    <input
+                                        type="text"
+                                        value={formData.location}
+                                        onChange={e => handleInputChange('location', e.target.value)}
+                                        className="w-full px-3 py-2 border border-outline-variant rounded-md focus:outline-none focus:ring-2 focus:ring-primary bg-surface text-on-surface"
+                                    />
+                                </div>
+
+                                <div>
+                                    <label className="block text-sm font-medium text-on-surface mb-2">Date & Time</label>
+                                    <button
+                                        type="button"
+                                        onClick={handleOpenDateTimePicker}
+                                        className="w-full px-3 py-2 border border-outline-variant rounded-md focus:outline-none focus:ring-2 focus:ring-primary bg-surface text-on-surface text-left hover:bg-surface-variant transition-colors cursor-pointer flex items-center gap-2"
+                                    >
+                                        <Calendar className="h-4 w-4 text-on-surface-variant" />
+                                        <span
+                                            className={
+                                                formData.date && formData.startTime && formData.endTime
+                                                    ? 'text-on-surface'
+                                                    : 'text-on-surface-variant'
+                                            }
                                         >
-                                            ×
-                                        </button>
-                                    </span>
-                                ))}
-                            </div>
-                        )}
-                    </div>
+                                            {formatSelectedDateTime()}
+                                        </span>
+                                    </button>
+                                </div>
+
+                                <div>
+                                    <label className="block text-sm font-medium text-on-surface mb-2">Tags</label>
+                                    <div className="flex flex-wrap gap-2 mb-3">
+                                        {COMMON_TAGS.map(tag => (
+                                            <button
+                                                key={tag}
+                                                type="button"
+                                                onClick={() => handleAddTag(tag)}
+                                                disabled={formData.tags?.some(t => t.text === tag)}
+                                                className={`px-3 py-1 rounded-full text-xs font-medium transition-colors ${
+                                                    formData.tags?.some(t => t.text === tag)
+                                                        ? 'bg-primary/20 text-primary cursor-not-allowed'
+                                                        : 'bg-surface-variant text-on-surface-variant hover:bg-primary/10 hover:text-primary cursor-pointer'
+                                                }`}
+                                            >
+                                                {tag}
+                                            </button>
+                                        ))}
+                                    </div>
+                                    {formData.tags && formData.tags.length > 0 && (
+                                        <div className="mt-3 flex flex-wrap gap-2">
+                                            {formData.tags.map(tag => (
+                                                <span
+                                                    key={tag._id}
+                                                    className="inline-flex items-center gap-1 px-3 py-1 bg-primary/20 text-primary rounded-full text-xs font-medium"
+                                                >
+                                                    {tag.text}
+                                                    <button
+                                                        type="button"
+                                                        onClick={() => handleRemoveTag(tag._id)}
+                                                        className="hover:text-error transition-colors cursor-pointer"
+                                                    >
+                                                        ×
+                                                    </button>
+                                                </span>
+                                            ))}
+                                        </div>
+                                    )}
+                                </div>
                             </div>
                         </form>
                     </div>
@@ -390,9 +321,7 @@ export function EventModal({ event, isOpen, onClose, onSave, selectedDate }: Eve
                     {/* Resources Section - Placeholder for future content */}
                     <div className="flex-1 border-l border-outline-variant bg-surface-variant/30 flex flex-col">
                         <div className="flex-1 p-6">
-                            <h3 className="text-lg font-medium text-on-surface mb-4">
-                                Event Resources
-                            </h3>
+                            <h3 className="text-lg font-medium text-on-surface mb-4">Event Resources</h3>
                             <div className="text-sm text-on-surface-variant">
                                 <p>Resources to help you plan your event will appear here.</p>
                                 <p className="mt-2">This section will contain:</p>
@@ -431,14 +360,14 @@ export function EventModal({ event, isOpen, onClose, onSave, selectedDate }: Eve
 
             {/* Date Time Picker Modal */}
             {showDateTimePicker && (
-                <div 
+                <div
                     className="fixed inset-0 bg-black/50 flex items-center justify-center z-[60] p-4"
-                    onClick={(e) => {
+                    onClick={e => {
                         e.stopPropagation();
                         setShowDateTimePicker(false);
                     }}
                 >
-                    <div onClick={(e) => e.stopPropagation()}>
+                    <div onClick={e => e.stopPropagation()}>
                         <WebDateTimeRangePicker
                             date={dateTimePickerDate}
                             startTime={dateTimePickerStartTime}

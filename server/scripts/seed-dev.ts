@@ -4,7 +4,10 @@ import Club from '../src/models/club-schema';
 import School from '../src/models/school-schema';
 import Tag from '../src/models/tag-schema';
 import User, { EducationType, Year } from '../src/models/user-schema';
-import ClubMembership, { ClubRole } from '../src/models/club-membership-schema';
+import ClubMembership from '../src/models/club-membership-schema';
+import Event from '../src/models/event-schema';
+import { EventType } from '@clubhive/shared';
+import { ClubRole } from '@clubhive/shared/src/types/club-membership-types';
 
 config({ path: '.env' });
 // config({ path: '.env.local' });
@@ -21,6 +24,7 @@ async function seed() {
     await Club.deleteMany({});
     await User.deleteMany({});
     await ClubMembership.deleteMany({});
+    await Event.deleteMany({});
 
     const [ucsd] = await School.insertMany([{ _id: UCSD_SCHOOL_ID, name: 'UCSD', location: 'San Diego, CA' }]);
 
@@ -51,9 +55,28 @@ async function seed() {
         { type: 'club', text: 'Finance & Investing' },
         { type: 'club', text: 'Languages' },
         { type: 'club', text: 'Coding' },
+        // Event tags
+        { type: 'event', text: 'Workshop' },
+        { type: 'event', text: 'Networking' },
+        { type: 'event', text: 'Competition' },
+        { type: 'event', text: 'Meeting' },
+        { type: 'event', text: 'Educational' },
+        { type: 'event', text: 'Social' },
+        { type: 'event', text: 'Professional' },
+        { type: 'event', text: 'Tournament' },
+        { type: 'event', text: 'Hackathon' },
+        { type: 'event', text: 'Tech Talk' },
+        { type: 'event', text: 'Panel' },
+        { type: 'event', text: 'Volunteer' },
+        { type: 'event', text: 'Fair' },
+        { type: 'event', text: 'Debate' },
+        { type: 'event', text: 'Review' },
+        { type: 'event', text: 'Preparation' },
+        { type: 'event', text: 'Photography' },
     ]);
 
-    const tagMap = Object.fromEntries(tags.map(t => [t.text, t._id]));
+    const clubTagMap = Object.fromEntries(tags.filter(t => t.type === 'club').map(t => [t.text, t._id]));
+    const eventTagMap = Object.fromEntries(tags.filter(t => t.type === 'event').map(t => [t.text, t._id]));
 
     const [testUser, testUser2] = await User.insertMany([
         {
@@ -83,12 +106,12 @@ async function seed() {
             url: 'cs-club',
             school: ucsd._id,
             tags: [
-                tagMap['Technology'],
-                tagMap['Academic'],
-                tagMap['Professional Development'],
-                tagMap['STEM'],
-                tagMap['Career'],
-                tagMap['Coding'],
+                clubTagMap['Technology'],
+                clubTagMap['Academic'],
+                clubTagMap['Professional Development'],
+                clubTagMap['STEM'],
+                clubTagMap['Career'],
+                clubTagMap['Coding'],
             ],
             socials: {
                 website: 'https://csclub.ucsd.edu',
@@ -105,12 +128,12 @@ async function seed() {
             url: 'hack-the-triton',
             school: ucsd._id,
             tags: [
-                tagMap['Technology'],
-                tagMap['Entrepreneurship'],
-                tagMap['Professional Development'],
-                tagMap['STEM'],
-                tagMap['Career'],
-                tagMap['Coding'],
+                clubTagMap['Technology'],
+                clubTagMap['Entrepreneurship'],
+                clubTagMap['Professional Development'],
+                clubTagMap['STEM'],
+                clubTagMap['Career'],
+                clubTagMap['Coding'],
             ],
             socials: {
                 website: 'https://hackthetriton.ucsd.edu',
@@ -126,13 +149,13 @@ async function seed() {
             url: 'wic',
             school: ucsd._id,
             tags: [
-                tagMap['Diversity'],
-                tagMap['Technology'],
-                tagMap['Professional Development'],
-                tagMap['Academic'],
-                tagMap['STEM'],
-                tagMap['Career'],
-                tagMap['Coding'],
+                clubTagMap['Diversity'],
+                clubTagMap['Technology'],
+                clubTagMap['Professional Development'],
+                clubTagMap['Academic'],
+                clubTagMap['STEM'],
+                clubTagMap['Career'],
+                clubTagMap['Coding'],
             ],
             socials: {
                 website: 'https://wic.ucsd.edu',
@@ -147,7 +170,7 @@ async function seed() {
                 'Triton Community Club is committed to making a positive impact in the San Diego community through acts of service, advocacy, and connection. We organize regular volunteering events, community drives, and social impact initiatives that address local needs. The club is open to anyone with a heart for helping others and a desire to build stronger, more connected communities both on and off campus.',
             url: 'triton-community',
             school: ucsd._id,
-            tags: [tagMap['Service'], tagMap['Community'], tagMap['Leadership']],
+            tags: [clubTagMap['Service'], clubTagMap['Community'], clubTagMap['Leadership']],
             socials: {
                 website: 'https://community.ucsd.edu',
                 discord: '',
@@ -161,7 +184,7 @@ async function seed() {
                 'Workshop Central is the go-to club for students eager to learn by doing. Every week, we host beginner-friendly and advanced workshops covering topics like web development, AI, game design, and more. With a focus on accessibility and growth, our events are open to all skill levels. We’re passionate about hands-on learning and helping students build real-world skills outside the classroom.',
             url: 'workshop-central',
             school: ucsd._id,
-            tags: [tagMap['Technology'], tagMap['Academic'], tagMap['STEM'], tagMap['Career']],
+            tags: [clubTagMap['Technology'], clubTagMap['Academic'], clubTagMap['STEM'], clubTagMap['Career']],
             socials: {
                 website: 'https://workshopcentral.ucsd.edu',
                 discord: 'https://discord.gg/workshops',
@@ -175,7 +198,7 @@ async function seed() {
                 'Startup Circle is a hub for entrepreneurial students looking to turn their ideas into real ventures. We provide pitch opportunities, mentorship from founders and investors, and connections to funding resources. Whether you’re building a business, app, or product, we support you through every stage of the startup journey.',
             url: 'startup-circle',
             school: ucsd._id,
-            tags: [tagMap['Entrepreneurship'], tagMap['Career'], tagMap['Leadership']],
+            tags: [clubTagMap['Entrepreneurship'], clubTagMap['Career'], clubTagMap['Leadership']],
             socials: {
                 website: 'https://startupcircle.ucsd.edu',
                 discord: '',
@@ -189,7 +212,7 @@ async function seed() {
                 'Triton Gamers brings together students who are passionate about games—whether it’s casual play, competitive esports, or game development. We host tournaments, game nights, and dev jams that build a thriving gaming community. Everyone from button mashers to elite competitors is welcome.',
             url: 'triton-gamers',
             school: ucsd._id,
-            tags: [tagMap['Gaming & Esports'], tagMap['Community'], tagMap['Social'], tagMap['Technology']],
+            tags: [clubTagMap['Gaming & Esports'], clubTagMap['Community'], clubTagMap['Social'], clubTagMap['Technology']],
             socials: {
                 website: 'https://gamers.ucsd.edu',
                 discord: 'https://discord.gg/gaming',
@@ -203,7 +226,7 @@ async function seed() {
                 'Triton Creatives is a collective of students passionate about visual, musical, and literary arts. We host exhibitions, open mics, and collaborative projects that give creators a space to express and share their work. Whether you are into film, photography, music, or poetry, you will find your creative community here.',
             url: 'triton-creatives',
             school: ucsd._id,
-            tags: [tagMap['Art'], tagMap['Music'], tagMap['Media & Journalism'], tagMap['Community']],
+            tags: [clubTagMap['Art'], clubTagMap['Music'], clubTagMap['Media & Journalism'], clubTagMap['Community']],
             socials: {
                 website: 'https://creatives.ucsd.edu',
                 discord: '',
@@ -217,7 +240,7 @@ async function seed() {
                 'Diversity in Data is a student-led group focused on inclusive and ethical data practices. We organize talks, collaborative data projects, and community research initiatives aimed at addressing bias in tech. Our goal is to amplify underrepresented voices in data science and ensure data is used for good.',
             url: 'diversity-in-data',
             school: ucsd._id,
-            tags: [tagMap['Diversity'], tagMap['STEM'], tagMap['Technology'], tagMap['Academic']],
+            tags: [clubTagMap['Diversity'], clubTagMap['STEM'], clubTagMap['Technology'], clubTagMap['Academic']],
             socials: {
                 website: 'https://diversitydata.ucsd.edu',
                 discord: '',
@@ -231,7 +254,7 @@ async function seed() {
                 'InfoSessions @ UCSD connects students with tech recruiters, engineers, and professionals through weekly events and industry panels. We aim to bridge the gap between education and employment by helping students explore careers, understand job roles, and network effectively.',
             url: 'infosessions-at-ucsd',
             school: ucsd._id,
-            tags: [tagMap['Career'], tagMap['Professional Development'], tagMap['STEM']],
+            tags: [clubTagMap['Career'], clubTagMap['Professional Development'], clubTagMap['STEM']],
             socials: {
                 website: 'https://infosessions.ucsd.edu',
                 discord: '',
@@ -241,13 +264,207 @@ async function seed() {
     ]);
 
     await ClubMembership.insertMany([
-        { userId: testUser._id, clubId: clubs[0]._id, role: ClubRole.OWNER },
-        { userId: testUser._id, clubId: clubs[1]._id, role: ClubRole.MEMBER },
-        { userId: testUser._id, clubId: clubs[4]._id, role: ClubRole.OFFICER },
+        { user: testUser._id, club: clubs[0]._id, role: ClubRole.OWNER },
+        { user: testUser._id, club: clubs[1]._id, role: ClubRole.MEMBER },
+        { user: testUser._id, club: clubs[4]._id, role: ClubRole.OFFICER },
 
-        { userId: testUser2._id, clubId: clubs[2]._id, role: ClubRole.MEMBER },
-        { userId: testUser2._id, clubId: clubs[6]._id, role: ClubRole.OWNER },
+        { user: testUser2._id, club: clubs[2]._id, role: ClubRole.MEMBER },
+        { user: testUser2._id, club: clubs[6]._id, role: ClubRole.OWNER },
     ]);
+
+    // Seed events for Computer Science Club (all events from useMyClubsData)
+    const csClubEvents = [
+        {
+            club: clubs[0]._id, // Computer Science Club
+            name: 'Club Meeting',
+            description: 'Monthly club meeting before summer break.',
+            type: EventType.CLUB_MEMBERS,
+            location: 'Engineering Building Room 205',
+            date: '2025-06-25',
+            startTime: '15:00',
+            endTime: '16:00',
+            tags: [eventTagMap['Meeting']],
+        },
+        {
+            club: clubs[0]._id,
+            name: 'Month-End Review',
+            description: 'Review June accomplishments and July goals.',
+            type: EventType.CLUB_MEMBERS,
+            location: 'Conference Room A',
+            date: '2025-06-30',
+            startTime: '16:00',
+            endTime: '17:00',
+            tags: [eventTagMap['Review'], eventTagMap['Meeting']],
+        },
+        {
+            club: clubs[0]._id,
+            name: 'Independence Day Prep',
+            description: 'Prepare for July 4th celebration activities.',
+            type: EventType.CLUB_MEMBERS,
+            location: 'Student Center',
+            date: '2025-07-01',
+            startTime: '10:00',
+            endTime: '12:00',
+            tags: [eventTagMap['Preparation'], eventTagMap['Social']],
+        },
+        {
+            club: clubs[0]._id,
+            name: 'July Kickoff',
+            description: 'Start July with team building activities.',
+            type: EventType.CLUB_MEMBERS,
+            location: 'Main Hall',
+            date: '2025-07-02',
+            startTime: '14:00',
+            endTime: '16:00',
+            tags: [eventTagMap['Social'], eventTagMap['Meeting']],
+        },
+        {
+            club: clubs[0]._id,
+            name: 'Coding Workshop',
+            description: 'Introduction to React and modern web development.',
+            type: EventType.UCSD_STUDENTS,
+            location: 'Computer Lab',
+            date: '2025-07-08',
+            startTime: '14:00',
+            endTime: '17:00',
+            tags: [eventTagMap['Workshop'], eventTagMap['Educational']],
+        },
+        {
+            club: clubs[0]._id,
+            name: 'Photography Workshop',
+            description: 'Learn advanced lighting techniques and composition.',
+            type: EventType.UCSD_STUDENTS,
+            location: 'Art Building Studio 3',
+            date: '2025-07-15',
+            startTime: '14:00',
+            endTime: '16:00',
+            tags: [eventTagMap['Workshop'], eventTagMap['Photography']],
+        },
+        {
+            club: clubs[0]._id,
+            name: 'Gaming Tournament',
+            description: 'Weekly esports tournament with prizes.',
+            type: EventType.UCSD_STUDENTS,
+            location: 'Game Room',
+            date: '2025-07-15',
+            startTime: '19:00',
+            endTime: '22:00',
+            tags: [eventTagMap['Tournament'], eventTagMap['Competition']],
+        },
+        {
+            club: clubs[0]._id,
+            name: 'Hackathon Prep',
+            description: 'Prepare for upcoming hackathon event.',
+            type: EventType.CLUB_MEMBERS,
+            location: 'Tech Lab',
+            date: '2025-07-22',
+            startTime: '13:00',
+            endTime: '15:00',
+            tags: [eventTagMap['Hackathon'], eventTagMap['Preparation']],
+        },
+        {
+            club: clubs[0]._id,
+            name: 'Tech Talk',
+            description: 'Guest speaker on AI and machine learning.',
+            type: EventType.UCSD_STUDENTS,
+            location: 'Auditorium',
+            date: '2025-07-22',
+            startTime: '16:00',
+            endTime: '17:30',
+            tags: [eventTagMap['Tech Talk'], eventTagMap['Educational']],
+        },
+        {
+            club: clubs[0]._id,
+            name: 'Networking Event',
+            description: 'Connect with industry professionals.',
+            type: EventType.UCSD_STUDENTS,
+            location: 'Business Center',
+            date: '2025-07-22',
+            startTime: '18:30',
+            endTime: '20:00',
+            tags: [eventTagMap['Networking'], eventTagMap['Professional']],
+        },
+        {
+            club: clubs[0]._id,
+            name: 'Panel Discussion',
+            description: 'Panel on career paths in technology.',
+            type: EventType.UCSD_STUDENTS,
+            location: 'Conference Hall',
+            date: '2025-07-22',
+            startTime: '20:00',
+            endTime: '21:30',
+            tags: [eventTagMap['Panel'], eventTagMap['Professional']],
+        },
+        {
+            club: clubs[0]._id,
+            name: 'Debate Practice',
+            description: 'Practice session for upcoming competition.',
+            type: EventType.CLUB_MEMBERS,
+            location: 'Debate Hall',
+            date: '2025-07-25',
+            startTime: '15:00',
+            endTime: '17:00',
+            tags: [eventTagMap['Debate'], eventTagMap['Competition']],
+        },
+        {
+            club: clubs[0]._id,
+            name: 'Summer Fair',
+            description: 'Annual summer celebration and fair.',
+            type: EventType.ANYONE,
+            location: 'Campus Quad',
+            date: '2025-08-01',
+            startTime: '11:00',
+            endTime: '17:00',
+            tags: [eventTagMap['Fair'], eventTagMap['Social']],
+        },
+        {
+            club: clubs[0]._id,
+            name: 'Volunteer Day',
+            description: 'Community service project.',
+            type: EventType.ANYONE,
+            location: 'Community Center',
+            date: '2025-08-05',
+            startTime: '09:00',
+            endTime: '15:00',
+            tags: [eventTagMap['Volunteer'], eventTagMap['Social']],
+        },
+    ];
+
+    await Event.insertMany(csClubEvents);
+
+    // Add 2 events for each other club in the same date range
+    const otherClubsEvents = [];
+
+    // For each club except the first one (Computer Science Club)
+    for (let i = 1; i < clubs.length; i++) {
+        const club = clubs[i];
+        otherClubsEvents.push(
+            {
+                club: club._id,
+                name: 'Weekly Workshop',
+                description: `Interactive workshop hosted by ${club.name}.`,
+                type: EventType.UCSD_STUDENTS,
+                location: 'Student Center Room 101',
+                date: '2025-07-10',
+                startTime: '18:00',
+                endTime: '20:00',
+                tags: [eventTagMap['Workshop'], eventTagMap['Educational']],
+            },
+            {
+                club: club._id,
+                name: 'Social Mixer',
+                description: `Meet other members and learn more about ${club.name}.`,
+                type: EventType.UCSD_STUDENTS,
+                location: 'Campus Quad',
+                date: '2025-07-25',
+                startTime: '17:00',
+                endTime: '19:00',
+                tags: [eventTagMap['Social'], eventTagMap['Networking']],
+            }
+        );
+    }
+
+    await Event.insertMany(otherClubsEvents);
 
     console.log('Seeding complete!');
     mongoose.connection.close();

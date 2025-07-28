@@ -6,16 +6,14 @@ import { serializeRecursive } from '@/utils/db-doc-utils';
 export const getClubsEndpoint: ApiEndpoint<undefined, GetClubsResponse> = {
     path: '/api/clubs',
     method: 'get',
-    auth: AuthType.VERIFIED_EMAIL,
+    auth: AuthType.NONE,
     handler: async (req, res) => {
         try {
             const clubs = await ClubController.getAllClubs();
 
             res.json({
                 success: true,
-                data: {
-                    clubs: clubs.map(club => clubSchema.parse(serializeRecursive(club))),
-                },
+                clubs: clubs.map(club => clubSchema.parse(serializeRecursive(club))),
             });
         } catch (error) {
             console.error('Error fetching clubs:', error);

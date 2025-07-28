@@ -15,9 +15,7 @@ export const createEventEndpoint: ApiEndpoint<CreateEventRequest, CreateEventRes
 
             res.json({
                 success: true,
-                data: {
-                    event: eventSchema.parse(serializeRecursive(event)),
-                },
+                event: eventSchema.parse(serializeRecursive(event)),
             });
         } catch (error) {
             let message = 'Error creating event';

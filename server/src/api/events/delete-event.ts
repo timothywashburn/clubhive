@@ -23,7 +23,7 @@ export const deleteEventEndpoint: ApiEndpoint<undefined, DeleteEventResponse> = 
 
             res.json({
                 success: true,
-                data: { deleted },
+                deleted,
             });
         } catch (error) {
             console.error('Error deleting event:', error);

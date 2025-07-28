@@ -7,15 +7,11 @@ export const useClubData = () => {
     const [error, setError] = useState<string | null>(null);
 
     useEffect(() => {
-        fetch('/api/clubs', {
-            headers: {
-                Authorization: `Bearer temp`,
-            },
-        })
+        fetch('/api/clubs')
             .then(res => res.json())
             .then(data => {
                 if (data.success) {
-                    setClubs(data.data.clubs);
+                    setClubs(data.clubs);
                 } else {
                     setError(data.error?.message || 'Unknown error');
                 }

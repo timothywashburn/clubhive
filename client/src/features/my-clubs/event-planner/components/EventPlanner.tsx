@@ -1,12 +1,12 @@
 import { useState } from 'react';
 import { Calendar, List } from 'lucide-react';
-import { Event } from '../../types';
+import { EventData } from '@clubhive/shared';
 import { CalendarView } from './CalendarView';
 import { AgendaView } from './AgendaView';
 
 interface EventPlannerProps {
-    events: Event[];
-    onUpdateEvent?: (event: Event) => void;
+    events: EventData[];
+    onUpdateEvent?: (event: EventData) => void;
 }
 
 type ViewMode = 'calendar' | 'agenda';
@@ -23,11 +23,7 @@ export function EventPlanner({ events, onUpdateEvent }: EventPlannerProps) {
                         onClick={() => setViewMode('calendar')}
                         className={`
                             flex items-center gap-2 px-3 py-2 rounded-md text-sm font-medium transition-colors cursor-pointer
-                            ${
-                                viewMode === 'calendar'
-                                    ? 'bg-primary text-on-primary'
-                                    : 'text-on-surface-variant hover:text-on-surface'
-                            }
+                            ${viewMode === 'calendar' ? 'bg-primary text-on-primary' : 'text-on-surface-variant hover:text-on-surface'}
                         `}
                     >
                         <Calendar className="h-4 w-4" />
@@ -37,11 +33,7 @@ export function EventPlanner({ events, onUpdateEvent }: EventPlannerProps) {
                         onClick={() => setViewMode('agenda')}
                         className={`
                             flex items-center gap-2 px-3 py-2 rounded-md text-sm font-medium transition-colors cursor-pointer
-                            ${
-                                viewMode === 'agenda'
-                                    ? 'bg-primary text-on-primary'
-                                    : 'text-on-surface-variant hover:text-on-surface'
-                            }
+                            ${viewMode === 'agenda' ? 'bg-primary text-on-primary' : 'text-on-surface-variant hover:text-on-surface'}
                         `}
                     >
                         <List className="h-4 w-4" />

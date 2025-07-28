@@ -1,11 +1,5 @@
 import mongoose, { Schema, InferSchemaType, HydratedDocument } from 'mongoose';
-
-export enum ClubRole {
-    OWNER = 'owner',
-    MEMBER = 'member',
-    OFFICER = 'officer',
-    PRINCIPAL_MEMBER = 'principal_member',
-}
+import { ClubRole } from '@clubhive/shared/src/types/club-membership-types';
 
 const schema = new Schema(
     {
