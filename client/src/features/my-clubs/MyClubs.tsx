@@ -13,7 +13,7 @@ export function MyClubs() {
     const { indicatorStyle, shouldAnimate, setShouldAnimate, tabRefs } = useTabIndicator(activeTab, selectedClub, isPreviewMode);
 
     const renderTabContent = () => {
-        const contentKey = `${selectedClub?.id}-${activeTab}-${isPreviewMode}`;
+        const contentKey = `${selectedClub?._id}-${activeTab}-${isPreviewMode}`;
 
         if (!selectedClub) return null;
 

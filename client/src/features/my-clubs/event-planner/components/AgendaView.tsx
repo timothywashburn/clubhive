@@ -18,7 +18,7 @@ function TableHeader() {
     );
 }
 
-function AgendaItemCard({ event, onEditEvent }: { event: Event; onEditEvent?: (event: Event) => void }) {
+function AgendaItemCard({ event, onEditEvent }: { event: EventData; onEditEvent?: (event: EventData) => void }) {
     return (
         <div
             className="hidden md:flex bg-surface border-b border-outline-variant hover:bg-surface-variant cursor-pointer transition-colors"
@@ -62,8 +62,8 @@ function AgendaItemCard({ event, onEditEvent }: { event: Event; onEditEvent?: (e
 
 export function AgendaView({ events, onEditEvent }: AgendaViewProps) {
     // Group events by month
-    const groupEventsByMonth = (events: Event[]) => {
-        const grouped: { [key: string]: Event[] } = {};
+    const groupEventsByMonth = (events: EventData[]) => {
+        const grouped: { [key: string]: EventData[] } = {};
 
         events.forEach(event => {
             const eventDate = new Date(event.date);

@@ -69,12 +69,12 @@ export function CalendarView({ events, onUpdateEvent }: CalendarViewProps) {
         setSelectedDate(today);
     };
 
-    const handleEditEvent = (event: Event) => {
+    const handleEditEvent = (event: EventData) => {
         setEditingEvent(event);
         setIsModalOpen(true);
     };
 
-    const handleSaveEvent = (updatedEvent: Event) => {
+    const handleSaveEvent = (updatedEvent: EventData) => {
         if (onUpdateEvent) {
             onUpdateEvent(updatedEvent);
         }
