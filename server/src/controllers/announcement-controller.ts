@@ -24,7 +24,7 @@ export const createAnnouncement = async (req: Request, res: Response) => {
         const userNotifs = memberships.map(
             membership =>
                 new UserNotification({
-                    userId: membership.userId,
+                    userId: membership.user,
                     notificationId: result._id,
                     read: false,
                 })
@@ -32,7 +32,7 @@ export const createAnnouncement = async (req: Request, res: Response) => {
 
         await UserNotification.insertMany(userNotifs);
 
-        res.status(201).json({ newAnnouncgement: result });
+        res.status(201).json({ newAnnouncement: result });
     } catch (error) {
         res.status(500).json({ err: 'Error creating announcement', error });
     }
@@ -51,7 +51,7 @@ export const getNotifications = async (req: Request, res: Response) => {
         const notifications = (
             await Promise.all(
                 userNotifs.map(async entry => {
-                    const notif = await Announcement.findById(entry.notificationId);
+                    const notif = await Announcement.findById(entry.notification);
                     if (!notif) return null;
 
                     return {
