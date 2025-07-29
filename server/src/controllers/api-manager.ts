@@ -18,6 +18,7 @@ import { deleteClubEndpoint } from '@/api/clubs/delete-club';
 import { getClubsEndpoint } from '@/api/clubs/get-clubs';
 import { updateClubEndpoint } from '@/api/clubs/update-club';
 import { getMyClubsEndpoint } from '@/api/me/clubs';
+import { getNotificationsEndpoint } from '@/api/notifications/get-notifications';
 
 export default class ApiManager {
     private static instance: ApiManager;
@@ -49,6 +50,9 @@ export default class ApiManager {
         this.addEndpoint(getEventsEndpoint);
         this.addEndpoint(updateEventEndpoint);
         this.addEndpoint(deleteEventEndpoint);
+
+        // Notifications endpoints
+        this.addEndpoint(getNotificationsEndpoint);
 
         // Me endpoints
         this.addEndpoint(getMyClubsEndpoint);

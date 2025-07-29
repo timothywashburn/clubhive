@@ -46,7 +46,8 @@ export const getNotifications = async (req: Request, res: Response) => {
     }
 
     try {
-        const userNotifs = await UserNotification.find({ userId });
+        const userNotifs = await UserNotification.find({ user: userId });
+        console.log('Found userNotifs:', userNotifs);
 
         const notifications = (
             await Promise.all(
@@ -65,7 +66,7 @@ export const getNotifications = async (req: Request, res: Response) => {
             .filter(notif => notif !== null)
             .sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
 
-        res.status(200).json({ notifications });
+        res.status(200).json({ success: true, notifications });
     } catch (err) {
         console.error('Error fetching notifications:', err);
         res.status(500).json({ error: 'Server error' });

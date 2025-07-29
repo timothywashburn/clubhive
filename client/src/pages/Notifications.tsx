@@ -1,37 +1,34 @@
+import { useState, useEffect } from 'react';
 import { NotificationCard } from '../features/notifications/NotificationCard.tsx';
-import { useState } from 'react';
 import { NotifExpanded } from '../features/notifications/NotifExpanded.tsx';
 
-const notifications = [
-    {
-        _id: 1,
-        club: 'Computer Science Club',
-        title: 'Meeting Location Changed',
-        body:
-            'Attention all members: the Computer Science Club meeting location has been changed for this week. New ' +
-            'Location: Room 204, Engineering Building Date and Time: Thursday at 5:00 PM (same time as usual) Please ' +
-            "make sure to go to the updated room. We'll still have our regular activities, updates on upcoming projects, " +
-            'and time to connect with fellow members. Looking forward to seeing you there.',
-        date: '2025-07-15',
-        read: false,
-    },
-    {
-        _id: 2,
-        club: 'Photography Society',
-        title: 'Sign up for new event',
-        body:
-            'Attention all members: the Computer Science Club meeting location has been changed for this week. New ' +
-            'Location: Room 204, Engineering Building Date and Time: Thursday at 5:00 PM (same time as usual) Please ' +
-            "make sure to go to the updated room. We'll still have our regular activities, updates on upcoming projects, " +
-            'and time to connect with fellow members. Looking forward to seeing you there.',
-        date: '2025-07-15',
-        read: false,
-    },
-];
-
 export function Notifications() {
+    const [notifications, setNotifications] = useState([]);
     const [selected, setSelected] = useState<number | null>(null);
     const selectedNotification = notifications.find(n => n._id === selected);
+
+    const userId = '68827dbf0b88d24e410fcf91';
+
+    useEffect(() => {
+        (async () => {
+            try {
+                const res = await fetch(`/api/notifications/${userId}`);
+                const data = await res.json();
+                // eslint-disable-next-line no-console
+                console.log('Fetched data:', data);
+
+                if (data.success) {
+                    setNotifications(data.notifications);
+                } else {
+                    // eslint-disable-next-line no-console
+                    console.log('Failed to fetch notifications');
+                }
+            } catch (err) {
+                // eslint-disable-next-line no-console
+                console.log('Error fetching notifications:', err);
+            }
+        })();
+    }, [userId]);
 
     return (
         <div className="h-full relative">
@@ -49,9 +46,11 @@ export function Notifications() {
                                 <button className="text-sm text-primary hover:text-primary/90">Mark all as read</button>
                             </div>
                         </div>
+
                         <div className="p-2 space-y-2">
                             {notifications.map(notification => (
                                 <NotificationCard
+                                    key={notification._id}
                                     club={notification.club}
                                     title={notification.title}
                                     date={notification.date}
