@@ -39,7 +39,7 @@ export function App() {
 
     return (
         <BrowserRouter>
-            <div className="min-h-screen bg-background flex flex-col">
+            <div className="h-screen flex flex-col">
                 <div
                     ref={backgroundRef}
                     className="fixed"
@@ -49,12 +49,13 @@ export function App() {
                         right: '0',
                         height: '150vh',
                         transform: `translateY(${scrollY * -0.05}px)`,
+                        zIndex: -1,
                     }}
                 >
                     <StaticHoneycomb />
                 </div>
                 <Navbar isAuthenticated={isAuthenticated} toggleAuth={toggleAuth} />
-                <main className="flex-grow">
+                <main className="flex-1 overflow-auto">
                     <Routes>
                         <Route path="/" element={<Home />} />
                         <Route path="/my-clubs" element={<MyClubs />} />
