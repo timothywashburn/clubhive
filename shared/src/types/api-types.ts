@@ -21,10 +21,14 @@ export interface AuthInfo {
     userId: string;
 }
 
-export interface ApiSuccessResponse<TRes = unknown> {
+export type ApiSuccessResponse<TRes = unknown> = TRes & {
     success: true;
-    data: TRes;
-}
+};
+
+// export interface ApiSuccessResponse<TRes = unknown> {
+//     success: true;
+//     data: TRes;
+// }
 
 export interface ApiErrorResponse {
     success: false;
@@ -35,6 +39,8 @@ export interface ApiErrorResponse {
     };
 }
 
-export type ApiResponseBody<TRes = unknown> =
-    | ApiSuccessResponse<TRes>
-    | ApiErrorResponse;
+export type ApiResponseBody<TRes = unknown> = ApiSuccessResponse<TRes> | ApiErrorResponse;
+
+export function isSuccess<T>(data: ApiResponseBody<T>): data is ApiSuccessResponse<T> {
+    return data.success;
+}

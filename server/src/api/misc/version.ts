@@ -41,13 +41,9 @@ export const versionEndpoint: ApiEndpoint<undefined, VersionResponse> = {
             const content = fs.readFileSync(changelogPath, 'utf-8');
             const currentVersion = getCurrentVersion(content);
 
-            const response: VersionResponse = {
-                currentVersion,
-            };
-
             res.json({
                 success: true,
-                data: response,
+                currentVersion,
             });
         } catch (error) {
             console.error('Error reading version:', error);

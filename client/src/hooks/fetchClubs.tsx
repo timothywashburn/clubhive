@@ -1,27 +1,8 @@
 import { useEffect, useState } from 'react';
-import type { Tag } from './fetchTags';
-
-export type Club = {
-    _id: string;
-    name: string;
-    tagline: string;
-    description: string;
-    url: string;
-    members: string[];
-    tags: Tag[];
-    createdAt: Date;
-    updatedAt: Date;
-    socials: {
-        website?: string;
-        discord?: string;
-        instagram?: string;
-    };
-    clubLogo?: string; // URL or ObjectId reference to the club logo image
-    pictures?: string[]; // Array of URLs or ObjectId references to club pictures
-};
+import { ClubData } from '@clubhive/shared';
 
 export const useClubData = () => {
-    const [clubs, setClubs] = useState<Club[]>([]);
+    const [clubs, setClubs] = useState<ClubData[]>([]);
     const [isLoading, setIsLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
 
@@ -30,7 +11,7 @@ export const useClubData = () => {
             .then(res => res.json())
             .then(data => {
                 if (data.success) {
-                    setClubs(data.data.clubs);
+                    setClubs(data.clubs);
                 } else {
                     setError(data.error?.message || 'Unknown error');
                 }
