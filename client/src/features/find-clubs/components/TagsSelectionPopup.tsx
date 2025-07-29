@@ -4,7 +4,6 @@ import type { TagData } from '@clubhive/shared';
 type TagSelectionPopupProps = {
     tags: TagData[];
     selectedTags: TagData[];
-    // toggleTag: (tagId: string) => void;
     setSelectedTags: (tags: TagData[]) => void;
     inline?: boolean;
 };
