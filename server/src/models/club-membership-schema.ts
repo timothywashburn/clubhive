@@ -4,9 +4,9 @@ import mongoose, { Schema, Document, ObjectId } from 'mongoose';
 // it is of type ObjectId
 
 export interface ClubMembershipData extends Document {
-    _id: ObjectId;
-    userId: ObjectId;
-    clubId: ObjectId;
+    _id: string;
+    userId: string;
+    clubId: string;
     role: ClubRole;
     createdAt: Date;
     updatedAt: Date;
@@ -40,8 +40,5 @@ const ClubMembershipSchema: Schema<ClubMembershipData> = new Schema(
     { timestamps: true }
 );
 
-const ClubMembership = mongoose.model<ClubMembershipData>(
-    'ClubMembership',
-    ClubMembershipSchema
-);
+const ClubMembership = mongoose.model<ClubMembershipData>('ClubMembership', ClubMembershipSchema);
 export default ClubMembership;

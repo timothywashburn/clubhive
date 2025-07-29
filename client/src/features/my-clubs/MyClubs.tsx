@@ -1,3 +1,4 @@
+import React, { useState } from 'react';
 import { useClubState, useTabIndicator, useMyClubsData } from './hooks';
 import {
     ClubSelector,
@@ -20,6 +21,10 @@ export function MyClubs() {
 
     const { indicatorStyle, shouldAnimate, setShouldAnimate, tabRefs } = useTabIndicator(activeTab, selectedClub, isPreviewMode);
 
+    const [statsVisibleToAll, setStatsVisibleToAll] = useState(false);
+
+    const showStatsTab = showOfficerView || statsVisibleToAll;
+
     const renderTabContent = () => {
         const contentKey = `${selectedClub?.id}-${activeTab}-${isPreviewMode}`;
 
@@ -30,9 +35,9 @@ export function MyClubs() {
             content = showOfficerView ? <OfficerInfo club={selectedClub} /> : <MemberInfo club={selectedClub} />;
         } else if (activeTab === 'events') {
             content = showOfficerView ? <EventPlanner events={events} /> : <Events events={events} />;
-        } else if (activeTab === 'stats' && showOfficerView) {
+        } else if (activeTab === 'stats' && (showOfficerView || showStatsTab)) {
             content = <Stats club={selectedClub} />;
-        } else if (activeTab === 'stats' && isPreviewMode) {
+        } else if (activeTab === 'stats') {
             setActiveTab('info');
             content = showOfficerView ? <OfficerInfo club={selectedClub} /> : <MemberInfo club={selectedClub} />;
         } else if (activeTab === 'membership') {
@@ -65,6 +70,17 @@ export function MyClubs() {
                                         onPreviewToggle={() => setIsPreviewMode(!isPreviewMode)}
                                     />
 
+                                    {isOfficer && (
+                                        <div className="flex justify-end mb-4">
+                                            <button
+                                                onClick={() => setStatsVisibleToAll(!statsVisibleToAll)}
+                                                className="px-2 py-1 text-sm bg-primary text-white rounded"
+                                            >
+                                                {statsVisibleToAll ? 'Hide Stats from Users' : 'Make Stats Visible to Everyone'}
+                                            </button>
+                                        </div>
+                                    )}
+
                                     <TabNavigation
                                         showOfficerView={showOfficerView}
                                         activeTab={activeTab}
@@ -73,6 +89,7 @@ export function MyClubs() {
                                         shouldAnimate={shouldAnimate}
                                         tabRefs={tabRefs}
                                         setShouldAnimate={setShouldAnimate}
+                                        showStatsTab={showStatsTab}
                                     />
                                 </div>
 

@@ -11,6 +11,7 @@ interface TabNavigationProps {
         [key: string]: HTMLButtonElement | null;
     }>;
     setShouldAnimate: (animate: boolean) => void;
+    showStatsTab: boolean;
 }
 
 export function TabNavigation({
@@ -21,13 +22,20 @@ export function TabNavigation({
     shouldAnimate,
     tabRefs,
     setShouldAnimate,
+    showStatsTab = false,
 }: TabNavigationProps) {
-    const getMemberTabs = (): TabItem[] => [
-        { key: 'membership', label: 'My Membership', icon: User },
-        { key: 'info', label: 'Info', icon: Users },
-        { key: 'events', label: 'Events', icon: Calendar },
-    ];
+    const getMemberTabs = (): TabItem[] => {
+        const tabs: TabItem[] = [
+            { key: 'membership', label: 'My Membership', icon: User },
+            { key: 'info', label: 'Info', icon: Users },
+            { key: 'events', label: 'Events', icon: Calendar },
+        ];
+        if (showStatsTab) {
+            tabs.push({ key: 'stats', label: 'Stats', icon: BarChart3 });
+        }
 
+        return tabs;
+    };
     const getOfficerTabs = (): TabItem[] => [
         { key: 'membership', label: 'My Membership', icon: User },
         { key: 'info', label: 'Edit Info', icon: Users },
@@ -56,9 +64,7 @@ export function TabNavigation({
                                         onTabChange(tab.key);
                                     }}
                                     className={`flex items-center py-3 px-1 font-medium text-sm transition-colors cursor-pointer relative ${
-                                        activeTab === tab.key
-                                            ? 'text-primary'
-                                            : 'text-on-surface-variant hover:text-on-surface'
+                                        activeTab === tab.key ? 'text-primary' : 'text-on-surface-variant hover:text-on-surface'
                                     }`}
                                 >
                                     <Icon className="w-4 h-4 mr-2" />
@@ -83,9 +89,7 @@ export function TabNavigation({
                                         onTabChange(tab.key);
                                     }}
                                     className={`flex items-center py-3 px-1 font-medium text-sm transition-colors cursor-pointer relative ${
-                                        activeTab === tab.key
-                                            ? 'text-primary'
-                                            : 'text-on-surface-variant hover:text-on-surface'
+                                        activeTab === tab.key ? 'text-primary' : 'text-on-surface-variant hover:text-on-surface'
                                     }`}
                                 >
                                     <Icon className="w-4 h-4 mr-2" />
