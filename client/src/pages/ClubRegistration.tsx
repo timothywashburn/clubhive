@@ -1,12 +1,12 @@
 import { useTagsData } from '../hooks/fetchTags';
 import React, { useState } from 'react';
 import { TagSelectionPopup } from '../features/find-clubs/components/TagsSelectionPopup';
-import { useTagSelection } from '../features/find-clubs/hooks/useTagSelection';
+import type { TagData } from '@clubhive/shared';
 import { getTagColor } from '../features/find-clubs/utils/TagColors';
 
 export function ClubRegistration() {
     const { tags } = useTagsData();
-    const { selectedTags, toggleTagById } = useTagSelection();
+    const [selectedTags, setSelectedTags] = useState<TagData[]>([]);
 
     const inputClass =
         'mt-1 block w-full rounded-md text-on-primary-container border border-outline-variant bg-surface px-3 py-2 shadow-sm ' +
@@ -174,12 +174,7 @@ export function ClubRegistration() {
                             {/* Tags */}
                             <div className="mt-5">
                                 <label className="block text-sm font-medium text-on-background">Tags</label>
-                                <TagSelectionPopup
-                                    tags={tags}
-                                    selectedTags={selectedTags}
-                                    toggleTag={tagId => toggleTagById(tagId, tags)}
-                                    inline
-                                />
+                                <TagSelectionPopup tags={tags} selectedTags={selectedTags} setSelectedTags={setSelectedTags} inline />
                                 <div className="mt-2 flex flex-wrap gap-2">
                                     {selectedTags.map(tag => (
                                         <span key={tag._id} className={`px-2 py-1 rounded-full text-xs ${getTagColor(tag._id)}`}>

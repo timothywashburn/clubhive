@@ -1,15 +1,16 @@
 import { getTagColor } from '../utils/TagColors';
-import type { Tag } from '../../../hooks/fetchTags';
+import type { TagData } from '@clubhive/shared';
 
 type TagSelectionPopupProps = {
-    tags: Tag[];
-    selectedTags: Tag[];
-    toggleTag: (tagId: string) => void;
+    tags: TagData[];
+    selectedTags: TagData[];
+    // toggleTag: (tagId: string) => void;
+    setSelectedTags: (tags: TagData[]) => void;
     inline?: boolean;
 };
 
 // This is the component that displays the scrollable tag selection popup
-export function TagSelectionPopup({ tags, selectedTags, toggleTag, inline }: TagSelectionPopupProps) {
+export function TagSelectionPopup({ tags, selectedTags, setSelectedTags, inline }: TagSelectionPopupProps) {
     return (
         <div
             className={`${inline ? 'relative mt-2' : 'absolute mt-2'} z-20 w-64 bg-surface border border-outline-variant rounded-lg shadow-lg p-4`}
@@ -22,7 +23,13 @@ export function TagSelectionPopup({ tags, selectedTags, toggleTag, inline }: Tag
                         <button
                             type="button"
                             key={tag._id}
-                            onClick={() => toggleTag(tag._id)}
+                            onClick={() => {
+                                if (isSelected) {
+                                    setSelectedTags(selectedTags.filter(selectedTag => selectedTag._id !== tag._id));
+                                } else {
+                                    setSelectedTags([...selectedTags, tag]);
+                                }
+                            }}
                             className={`px-3 py-1 rounded-full text-sm border transition ${
                                 isSelected
                                     ? `${getTagColor(tag._id)} font-semibold border-primary`

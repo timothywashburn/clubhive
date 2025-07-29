@@ -1,11 +1,11 @@
 import React from 'react';
-import type { Tag } from '../../../hooks/fetchTags';
+import type { TagData } from '@clubhive/shared';
 import { getTagColor } from '../utils/TagColors';
 type ClubCardProps = {
     name: string;
     tagline: string;
     id: string;
-    tags?: Tag[];
+    tags?: TagData[];
     createdAt: string;
     isSelected: boolean;
     onClick: () => void;

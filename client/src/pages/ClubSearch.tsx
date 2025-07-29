@@ -1,20 +1,20 @@
 import { useState } from 'react';
 import { Link } from 'react-router';
 import { useClubData } from '../hooks/fetchClubs';
-import { ClubData } from '@clubhive/shared';
+import type { ClubData } from '@clubhive/shared';
+import type { TagData } from '@clubhive/shared';
 import { useTagsData } from '../hooks/fetchTags';
 import ClubCardSmall from '../features/find-clubs/components/ClubCardSmall';
 import FilterTagsButton from '../features/find-clubs/components/FilterTagsButton';
 import { getTagColor } from '../features/find-clubs/utils/TagColors';
 import SocialLinks from '../features/find-clubs/components/SocialLinks';
-import { useTagSelection } from '../features/find-clubs/hooks/useTagSelection';
 
 export function Clubs() {
     const [searchTerm, setSearchTerm] = useState('');
     const [selectedClub, setSelectedClub] = useState<ClubData | null>(null);
+    const [selectedTags, setSelectedTags] = useState<TagData[]>([]);
     const { clubs, isLoading, error } = useClubData();
     const { tags } = useTagsData();
-    const { selectedTags, toggleTagById, clearTags, setSelectedTags } = useTagSelection();
 
     if (isLoading) return <p className="p-4 text-on-surface-variant">Loading clubs...</p>;
     if (error) return <p className="p-4 text-red-500">Error: {error}</p>;
