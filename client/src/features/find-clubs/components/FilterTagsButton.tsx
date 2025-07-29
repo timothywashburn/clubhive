@@ -1,18 +1,28 @@
 import { useState, useRef, useEffect } from 'react';
 import type { Tag } from '../../../hooks/fetchTags';
 import { TagSelectionPopup } from './TagsSelectionPopup';
-import { useTagSelection } from '../hooks/useTagSelection';
 
 type Props = {
     tags: Tag[];
+    selectedTags: Tag[];
+    setSelectedTags: (tags: Tag[]) => void;
 };
 
 // this is the button that opens up the tag selection popup (TagSelectionPopup)
-export default function FilterTagsButton({ tags }: Props) {
+export default function FilterTagsButton({ tags, selectedTags, setSelectedTags }: Props) {
     const [open, setOpen] = useState(false);
     const popoverRef = useRef<HTMLDivElement | null>(null);
 
-    const { selectedTags, toggleTagById } = useTagSelection();
+    function toggleTagById(tagId: string) {
+        const tag = tags.find(t => t._id === tagId);
+        if (!tag) return;
+        const exists = selectedTags.some(t => t._id === tagId);
+        if (exists) {
+            setSelectedTags(selectedTags.filter(t => t._id !== tagId));
+        } else {
+            setSelectedTags([...selectedTags, tag]);
+        }
+    }
 
     // Close the popover when clicking outside
     useEffect(() => {
@@ -34,7 +44,7 @@ export default function FilterTagsButton({ tags }: Props) {
                 Filter
             </button>
 
-            {open && <TagSelectionPopup tags={tags} selectedTags={selectedTags} toggleTag={tagId => toggleTagById(tagId, tags)} />}
+            {open && <TagSelectionPopup tags={tags} selectedTags={selectedTags} toggleTag={toggleTagById} />}
         </div>
     );
 }

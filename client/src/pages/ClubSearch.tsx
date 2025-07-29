@@ -8,13 +8,14 @@ import ClubCardSmall from '../features/find-clubs/components/ClubCardSmall';
 import FilterTagsButton from '../features/find-clubs/components/FilterTagsButton';
 import { getTagColor } from '../features/find-clubs/utils/TagColors';
 import SocialLinks from '../features/find-clubs/components/SocialLinks';
+import { useTagSelection } from '../features/find-clubs/hooks/useTagSelection';
 
 export function Clubs() {
     const [searchTerm, setSearchTerm] = useState('');
     const [selectedClub, setSelectedClub] = useState<Club | null>(null);
     const { clubs, isLoading, error } = useClubData();
     const { tags } = useTagsData();
-    const [selectedTags, setSelectedTags] = useState<Tag[]>([]);
+    const { selectedTags, toggleTagById, clearTags, setSelectedTags } = useTagSelection();
 
     if (isLoading) return <p className="p-4 text-on-surface-variant">Loading clubs...</p>;
     if (error) return <p className="p-4 text-red-500">Error: {error}</p>;
@@ -28,7 +29,7 @@ export function Clubs() {
                 </div>
 
                 <div className="flex h-10 mb-6">
-                    <FilterTagsButton tags={tags} />
+                    <FilterTagsButton tags={tags} selectedTags={selectedTags} setSelectedTags={setSelectedTags} />
                     <input
                         type="text"
                         placeholder="Search clubs..."
