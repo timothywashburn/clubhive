@@ -1,5 +1,6 @@
 import { useState, useRef, useEffect } from 'react';
-import type { Tag } from '../../hooks/fetchTags';
+import type { Tag } from '../../../hooks/fetchTags';
+import { getTagColor } from '../utils/TagColors';
 
 type Props = {
     tags: Tag[];
@@ -22,10 +23,13 @@ export default function TagFilterPopover({ tags, selectedTags, setSelectedTags }
         return () => document.removeEventListener('mousedown', handleClickOutside);
     }, []);
 
+    // Logic to toggle tag selection (add/remove from selectedTags)
     const toggleTag = (tagId: string) => {
         if (selectedTags.find(tag => tag._id === tagId)) {
+            // Tag already selected → remove it
             setSelectedTags(selectedTags.filter(tag => tag._id !== tagId));
         } else {
+            // Tag not selected → add it
             const newTag = tags.find(tag => tag._id === tagId);
             if (newTag) {
                 setSelectedTags([...selectedTags, newTag]);
@@ -54,8 +58,8 @@ export default function TagFilterPopover({ tags, selectedTags, setSelectedTags }
                                     onClick={() => toggleTag(tag._id)}
                                     className={`px-3 py-1 rounded-full text-sm border transition ${
                                         isSelected
-                                            ? 'bg-primary-container text-primary font-semibold border-primary'
-                                            : 'bg-surface text-on-surface-variant border-outline-variant hover:bg-outline-variant'
+                                            ? `${getTagColor(tag._id)} font-semibold border-primary`
+                                            : `${getTagColor(tag._id)} font-normal border-outline-variant hover:bg-primary-container-hover`
                                     }`}
                                 >
                                     {tag.text}

@@ -5,7 +5,7 @@ import MyPolarChart from './stats/PolarChart.tsx';
 import { useState, useMemo, useEffect } from 'react';
 
 interface StatsProps {
-    club: Club;
+    club: UserClubData;
 }
 
 interface MemberDataPoint {

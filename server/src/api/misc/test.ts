@@ -38,7 +38,7 @@ export const testEndpoint: ApiEndpoint<TestRequest, TestResponse> = {
 
         res.json({
             success: true,
-            data: response,
+            ...response,
         });
     },
 };

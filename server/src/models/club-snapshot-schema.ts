@@ -1,4 +1,4 @@
-import mongoose, { Schema, Document, ObjectId } from 'mongoose';
+import mongoose, { Schema, InferSchemaType, HydratedDocument } from 'mongoose';
 
 export interface ClubSnapshotData {
     clubId: mongoose.Types.ObjectId;
@@ -56,6 +56,11 @@ const ClubSnapshotClubStatsSchema: Schema = new Schema(
 
 const ClubSnapshotSchema: Schema<ClubSnapshotDocument> = new Schema(
     {
+        _id: {
+            type: mongoose.Schema.Types.ObjectId,
+            required: true,
+            auto: true,
+        },
         date: {
             type: Date,
             required: true,
