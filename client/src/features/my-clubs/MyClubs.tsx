@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
 import { useClubState, useTabIndicator, useMyClubsData, useClubEvents } from './hooks';
 import { ClubSelector, ClubHeader, TabNavigation, MemberInfo, OfficerInfo, Events, Stats, Membership, EmptyState, EventAnimationOverlay } from './components';
 import { EventPlanner } from './event-planner';
@@ -118,9 +119,18 @@ export function MyClubs() {
         }
 
         return (
-            <div key={contentKey} className="min-h-0">
-                {content}
-            </div>
+            <AnimatePresence mode="wait">
+                <motion.div 
+                    key={contentKey} 
+                    className="min-h-0"
+                    initial={{ opacity: 0, y: 8 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0, y: -8 }}
+                    transition={{ duration: 0.2, ease: "easeOut" }}
+                >
+                    {content}
+                </motion.div>
+            </AnimatePresence>
         );
     };
 
@@ -152,7 +162,7 @@ export function MyClubs() {
     }
 
     return (
-        <div className="h-full relative">
+        <div className="relative">
             {/* Event Animation Overlay */}
             {eventAnimationData.isAnimating && eventAnimationData.eventElement && eventAnimationData.eventData && (
                 <div className="fixed inset-0 z-50 pointer-events-none">

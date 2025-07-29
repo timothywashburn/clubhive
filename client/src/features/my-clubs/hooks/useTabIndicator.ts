@@ -10,7 +10,7 @@ export const useTabIndicator = (
     const [shouldAnimate, setShouldAnimate] = useState(false);
     const tabRefs = useRef<{ [key: string]: HTMLButtonElement | null }>({});
 
-    useEffect(() => {
+    const updateIndicator = () => {
         const activeTabElement = tabRefs.current[activeTab];
         if (activeTabElement) {
             const navElement = activeTabElement.closest('nav');
@@ -23,6 +23,10 @@ export const useTabIndicator = (
                 });
             }
         }
+    };
+
+    useEffect(() => {
+        updateIndicator();
     }, [activeTab, selectedClub, isPreviewMode]);
 
     useEffect(() => {
