@@ -1,4 +1,5 @@
 import { Eye, Save, X } from 'lucide-react';
+import { motion } from 'framer-motion';
 import { UserClubData, EventData } from '@clubhive/shared';
 import { useMyClubsData } from '../hooks';
 
@@ -40,9 +41,13 @@ export function ClubHeader({
                         {selectedEvent && (
                             <>
                                 <span className="text-on-surface-variant text-xl">→</span>
-                                <div className="club-header-event-target bg-primary text-on-primary px-3 py-2 rounded-lg font-medium text-sm" style={{ opacity: 0 }}>
+                                <motion.div 
+                                    layoutId={`event-${selectedEvent._id}`}
+                                    className="bg-primary text-on-primary px-3 py-2 rounded-lg font-medium text-sm"
+                                    transition={{ duration: 0.6, ease: [0.4, 0, 0.2, 1] }}
+                                >
                                     {selectedEvent.name}
-                                </div>
+                                </motion.div>
                             </>
                         )}
                     </div>

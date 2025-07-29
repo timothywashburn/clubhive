@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { ChevronLeft, ChevronRight, Calendar, List } from 'lucide-react';
+import { motion, AnimatePresence } from 'framer-motion';
 import { EventData } from '@clubhive/shared';
 
 interface CalendarViewProps {
@@ -119,7 +120,15 @@ export function CalendarView({ events, onUpdateEvent, onEditEvent, onViewModeCha
                 </div>
             </div>
 
-            <div className="bg-surface rounded-lg shadow p-6 border border-outline-variant">
+            <motion.div 
+                className="bg-surface rounded-lg shadow p-6 border border-outline-variant"
+                initial={{ y: 20, scale: 0.98 }}
+                animate={{ y: 0, scale: 1 }}
+                transition={{ 
+                    y: { duration: 0.3, delay: 0 },
+                    scale: { duration: 0.3, delay: 0.1 }
+                }}
+            >
                 <div className="grid grid-cols-7 gap-1 mb-2">
                     {['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'].map(day => (
                         <div key={day} className="p-2 text-center text-sm font-medium text-on-surface-variant">
@@ -161,22 +170,25 @@ export function CalendarView({ events, onUpdateEvent, onEditEvent, onViewModeCha
                                 </div>
                                 {day.events.length > 0 && (
                                     <div className="space-y-1 flex-1">
-                                        {day.events.map(event => (
-                                            <button
-                                                key={event._id}
-                                                onClick={e => handleEventClick(event, e)}
-                                                className="w-full text-xs bg-primary bg-opacity-80 text-on-primary px-1 py-0.5 rounded truncate hover:bg-primary transition-colors cursor-pointer"
-                                            >
-                                                {event.name}
-                                            </button>
-                                        ))}
+                                        <AnimatePresence>
+                                            {day.events.map(event => (
+                                                <motion.button
+                                                    key={event._id}
+                                                    layoutId={`event-${event._id}`}
+                                                    onClick={e => handleEventClick(event, e)}
+                                                    className="w-full text-xs bg-primary text-on-primary px-1 py-0.5 rounded truncate cursor-pointer"
+                                                >
+                                                    {event.name}
+                                                </motion.button>
+                                            ))}
+                                        </AnimatePresence>
                                     </div>
                                 )}
                             </div>
                         );
                     })}
                 </div>
-            </div>
+            </motion.div>
         </div>
     );
 }

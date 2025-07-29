@@ -9,12 +9,11 @@ interface EventPlannerProps {
     onUpdateEvent?: (event: EventData) => void;
     selectedClub?: { name: string };
     onEventSelect?: (event: EventData | null, eventElement?: HTMLElement) => void;
+    viewMode?: 'calendar' | 'agenda';
+    onViewModeChange?: (mode: 'calendar' | 'agenda') => void;
 }
 
-type ViewMode = 'calendar' | 'agenda';
-
-export function EventPlanner({ events, onUpdateEvent, selectedClub, onEventSelect }: EventPlannerProps) {
-    const [viewMode, setViewMode] = useState<ViewMode>('calendar');
+export function EventPlanner({ events, onUpdateEvent, selectedClub, onEventSelect, viewMode = 'calendar', onViewModeChange }: EventPlannerProps) {
 
     const handleEventClick = (event: EventData, eventElement?: HTMLElement) => {
         if (onEventSelect) {
@@ -25,9 +24,9 @@ export function EventPlanner({ events, onUpdateEvent, selectedClub, onEventSelec
     return (
         <div>
             {viewMode === 'calendar' ? (
-                <CalendarView events={events} onUpdateEvent={onUpdateEvent} onEditEvent={handleEventClick} onViewModeChange={setViewMode} />
+                <CalendarView events={events} onUpdateEvent={onUpdateEvent} onEditEvent={handleEventClick} onViewModeChange={onViewModeChange} />
             ) : (
-                <AgendaView events={events} onEditEvent={onUpdateEvent} onViewModeChange={setViewMode} />
+                <AgendaView events={events} onEditEvent={handleEventClick} onViewModeChange={onViewModeChange} />
             )}
         </div>
     );

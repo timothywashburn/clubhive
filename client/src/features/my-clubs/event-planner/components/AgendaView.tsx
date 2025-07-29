@@ -1,10 +1,11 @@
 import { EventData } from '@clubhive/shared';
 import { Events } from '../../components/Events';
 import { Calendar, Clock, MapPin, Users, List } from 'lucide-react';
+import { motion, AnimatePresence } from 'framer-motion';
 
 interface AgendaViewProps {
     events: EventData[];
-    onEditEvent?: (event: EventData) => void;
+    onEditEvent?: (event: EventData, eventElement?: HTMLElement) => void;
     onViewModeChange?: (mode: 'calendar' | 'agenda') => void;
 }
 
@@ -20,17 +21,40 @@ function TableHeader() {
     );
 }
 
-function AgendaItemCard({ event, onEditEvent }: { event: EventData; onEditEvent?: (event: EventData) => void }) {
+function AgendaItemCard({ event, onEditEvent }: { event: EventData; onEditEvent?: (event: EventData, eventElement?: HTMLElement) => void }) {
+    const handleClick = (e: React.MouseEvent) => {
+        const eventNameElement = e.currentTarget.querySelector('[data-event-name]') as HTMLElement;
+        onEditEvent?.(event, eventNameElement);
+    };
+
     return (
         <div
             className="hidden md:flex bg-surface border-b border-outline-variant last:border-b-0 hover:bg-surface-variant cursor-pointer transition-colors group"
-            onClick={() => onEditEvent?.(event)}
+            onClick={handleClick}
         >
-            <div className="w-[25%] pr-4 py-3 px-6 flex items-center">
-                <h3 className="text-on-surface text-sm font-semibold group-hover:text-primary transition-colors truncate">{event.name}</h3>
-            </div>
+            <motion.div
+                className="w-[25%] pr-4 py-3 px-6 flex items-center"
+                initial={{ opacity: 0, y: -10 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -10 }}
+                transition={{ duration: 0.2, delay: 0.05 }}
+            >
+                <motion.div 
+                    data-event-name
+                    layoutId={`event-${event._id}`}
+                    className="text-sm bg-primary text-on-primary px-1 py-0.5 rounded cursor-pointer max-w-full"
+                >
+                    <span className="truncate block">{event.name}</span>
+                </motion.div>
+            </motion.div>
 
-            <div className="w-[20%] px-2 py-3 flex items-center">
+            <motion.div 
+                className="w-[20%] px-2 py-3 flex items-center"
+                initial={{ opacity: 0, y: -10 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -10 }}
+                transition={{ duration: 0.2, delay: 0.1 }}
+            >
                 <div className="flex items-center">
                     <Clock className="h-4 w-4 text-on-surface-variant mr-2" />
                     <div className="flex flex-col">
@@ -42,16 +66,28 @@ function AgendaItemCard({ event, onEditEvent }: { event: EventData; onEditEvent?
                         </span>
                     </div>
                 </div>
-            </div>
+            </motion.div>
 
-            <div className="w-[20%] px-2 py-3 flex items-center">
+            <motion.div 
+                className="w-[20%] px-2 py-3 flex items-center"
+                initial={{ opacity: 0, y: -10 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -10 }}
+                transition={{ duration: 0.2, delay: 0.15 }}
+            >
                 <div className="flex items-center">
                     <MapPin className="h-4 w-4 text-on-surface-variant mr-2" />
                     <span className="text-on-surface-variant text-xs truncate">{event.location || 'TBD'}</span>
                 </div>
-            </div>
+            </motion.div>
 
-            <div className="w-[20%] px-2 py-3 flex items-center">
+            <motion.div 
+                className="w-[20%] px-2 py-3 flex items-center"
+                initial={{ opacity: 0, y: -10 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -10 }}
+                transition={{ duration: 0.2, delay: 0.2 }}
+            >
                 <div className="flex flex-wrap gap-1">
                     {event.tags && event.tags.length > 0 ? (
                         <>
@@ -66,14 +102,20 @@ function AgendaItemCard({ event, onEditEvent }: { event: EventData; onEditEvent?
                         <span className="text-on-surface-variant text-xs">—</span>
                     )}
                 </div>
-            </div>
+            </motion.div>
 
-            <div className="w-[15%] px-2 py-3 flex items-center">
+            <motion.div 
+                className="w-[15%] px-2 py-3 flex items-center"
+                initial={{ opacity: 0, y: -10 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -10 }}
+                transition={{ duration: 0.2, delay: 0.25 }}
+            >
                 <div className="flex items-center">
                     <Users className="h-4 w-4 text-on-surface-variant mr-2" />
                     <span className="text-on-surface-variant text-xs">{event.type}</span>
                 </div>
-            </div>
+            </motion.div>
         </div>
     );
 }
@@ -143,21 +185,36 @@ export function AgendaView({ events, onEditEvent, onViewModeChange }: AgendaView
 
             {/* Desktop/Large screen table view */}
             <div className="hidden md:block space-y-6">
-                {sortedMonths.map(month => (
-                    <div key={month}>
-                        <h4 className="text-lg font-semibold text-on-surface mb-3 flex items-center">
+                {sortedMonths.map((month, monthIndex) => (
+                    <motion.div 
+                        key={month}
+                        initial={{ y: 20 }}
+                        animate={{ y: 0 }}
+                        exit={{ y: -20 }}
+                        transition={{ duration: 0.3, delay: monthIndex * 0.1 }}
+                    >
+                        <h4
+                            className="text-lg font-semibold text-on-surface mb-3 flex items-center"
+                        >
                             {month}
                             <span className="ml-2 text-sm font-normal text-on-surface-variant">
                                 ({eventsByMonth[month].length} {eventsByMonth[month].length === 1 ? 'event' : 'events'})
                             </span>
                         </h4>
-                        <div className="bg-surface rounded-lg overflow-hidden border border-outline-variant shadow">
+                        <motion.div 
+                            className="bg-surface rounded-lg overflow-hidden border border-outline-variant shadow"
+                            initial={{ scale: 0.95 }}
+                            animate={{ scale: 1 }}
+                            transition={{ duration: 0.3, delay: monthIndex * 0.1 + 0.1 }}
+                        >
                             <TableHeader />
-                            {eventsByMonth[month].map(event => (
-                                <AgendaItemCard key={event._id} event={event} onEditEvent={onEditEvent} />
-                            ))}
-                        </div>
-                    </div>
+                            <AnimatePresence>
+                                {eventsByMonth[month].map(event => (
+                                    <AgendaItemCard key={event._id} event={event} onEditEvent={onEditEvent} />
+                                ))}
+                            </AnimatePresence>
+                        </motion.div>
+                    </motion.div>
                 ))}
                 {sortedMonths.length === 0 && (
                     <div className="bg-surface rounded-lg shadow p-12 border border-outline-variant">

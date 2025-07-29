@@ -7,4 +7,3 @@ export { Events } from './Events';
 export { Stats } from './Stats';
 export { Membership } from './Membership';
 export { EmptyState } from './EmptyState';
-export { EventAnimationOverlay } from './EventAnimationOverlay';
