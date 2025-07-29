@@ -1,18 +1,16 @@
 import { useState } from 'react';
-import { ChevronLeft, ChevronRight, Edit3 } from 'lucide-react';
+import { ChevronLeft, ChevronRight, Calendar, List } from 'lucide-react';
 import { EventData } from '@clubhive/shared';
-import { EventModal } from './EventModal';
 
 interface CalendarViewProps {
     events: EventData[];
     onUpdateEvent?: (event: EventData) => void;
+    onEditEvent?: (event: EventData) => void;
+    onViewModeChange?: (mode: 'calendar' | 'agenda') => void;
 }
 
-export function CalendarView({ events, onUpdateEvent }: CalendarViewProps) {
+export function CalendarView({ events, onUpdateEvent, onEditEvent, onViewModeChange }: CalendarViewProps) {
     const [currentMonth, setCurrentMonth] = useState(new Date());
-    const [selectedDate, setSelectedDate] = useState<Date>(new Date());
-    const [editingEvent, setEditingEvent] = useState<EventData | null>(null);
-    const [isModalOpen, setIsModalOpen] = useState(false);
 
     const getEventsForDate = (date: Date) => {
         const dateStr = date.toISOString().split('T')[0]; // Convert to YYYY-MM-DD format
@@ -54,42 +52,16 @@ export function CalendarView({ events, onUpdateEvent }: CalendarViewProps) {
         });
     };
 
-    const formatSelectedDate = (date: Date) => {
-        return date.toLocaleDateString('en-US', {
-            weekday: 'long',
-            month: 'long',
-            day: 'numeric',
-            year: 'numeric',
-        });
-    };
-
     const jumpToToday = () => {
         const today = new Date();
         setCurrentMonth(new Date(today.getFullYear(), today.getMonth(), 1));
-        setSelectedDate(today);
     };
 
-    const handleEditEvent = (event: EventData) => {
-        setEditingEvent(event);
-        setIsModalOpen(true);
-    };
-
-    const handleSaveEvent = (updatedEvent: EventData) => {
-        if (onUpdateEvent) {
-            onUpdateEvent(updatedEvent);
+    const handleEventClick = (event: EventData, e: React.MouseEvent) => {
+        e.stopPropagation();
+        if (onEditEvent) {
+            onEditEvent(event);
         }
-        setEditingEvent(null);
-        setIsModalOpen(false);
-    };
-
-    const handleCloseModal = () => {
-        setEditingEvent(null);
-        setIsModalOpen(false);
-    };
-
-    const handleCreateEvent = () => {
-        setEditingEvent(null);
-        setIsModalOpen(true);
     };
 
     const calendarDays = getCalendarDays();
@@ -98,18 +70,24 @@ export function CalendarView({ events, onUpdateEvent }: CalendarViewProps) {
         year: 'numeric',
     });
 
+    // Get events for current month
+    const currentMonthEvents = events.filter(event => {
+        const eventDate = new Date(event.date);
+        return eventDate.getMonth() === currentMonth.getMonth() && eventDate.getFullYear() === currentMonth.getFullYear();
+    });
+
     return (
-        <div className="flex gap-6 items-start">
-            <div className="flex-1">
-                <div className="bg-surface rounded-lg shadow p-6 border border-outline-variant h-[586px]">
-                    <div className="flex items-center mb-6">
+        <div className="w-full space-y-6">
+            <div className="bg-surface rounded-lg shadow p-6 border border-outline-variant">
+                <div className="flex items-center justify-between">
+                    <div className="flex items-center">
                         <button
                             onClick={jumpToToday}
-                            className="px-3 py-1 text-sm bg-primary text-on-primary rounded-md hover:bg-primary/90 cursor-pointer mr-4"
+                            className="px-3 py-1 text-sm bg-primary text-on-primary rounded-md hover:bg-primary hover:opacity-90 cursor-pointer mr-4"
                         >
                             Today
                         </button>
-                        <div className="flex items-center">
+                        <div className="flex items-center mr-4">
                             <button
                                 onClick={() => navigateMonth('prev')}
                                 className="p-2 hover:bg-surface-variant rounded-md cursor-pointer"
@@ -123,137 +101,82 @@ export function CalendarView({ events, onUpdateEvent }: CalendarViewProps) {
                                 <ChevronRight className="h-5 w-5 text-on-surface" />
                             </button>
                         </div>
-                        <h3 className="text-xl font-semibold text-on-surface ml-4">{monthYear}</h3>
+                        <h3 className="text-xl font-semibold text-on-surface mr-3">{monthYear}</h3>
                     </div>
-
-                    <div className="grid grid-cols-7 gap-1 mb-2">
-                        {['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'].map(day => (
-                            <div key={day} className="p-2 text-center text-sm font-medium text-on-surface-variant">
-                                {day}
-                            </div>
-                        ))}
-                    </div>
-
-                    <div className="grid grid-cols-7 gap-0 border border-outline-variant/30 rounded-lg overflow-hidden">
-                        {calendarDays.map((day, index) => {
-                            const isFirstRow = index < 7;
-                            const isLastRow = index >= calendarDays.length - 7;
-                            const isFirstCol = index % 7 === 0;
-                            const isLastCol = index % 7 === 6;
-
-                            let roundingClasses = '';
-                            if (isFirstRow && isFirstCol) roundingClasses = 'rounded-tl-lg';
-                            else if (isFirstRow && isLastCol) roundingClasses = 'rounded-tr-lg';
-                            else if (isLastRow && isFirstCol) roundingClasses = 'rounded-bl-lg';
-                            else if (isLastRow && isLastCol) roundingClasses = 'rounded-br-lg';
-
-                            return (
-                                <button
-                                    key={index}
-                                    onClick={() => {
-                                        if (!day.isCurrentMonth) {
-                                            setCurrentMonth(new Date(day.date.getFullYear(), day.date.getMonth(), 1));
-                                        }
-                                        setSelectedDate(day.date);
-                                    }}
-                                    className={`
-                                        min-h-[80px] p-2 transition-colors cursor-pointer flex flex-col border-r border-b border-outline-variant/30 last:border-r-0 hover:bg-surface-variant ${roundingClasses}
-                                        ${day.isCurrentMonth ? 'text-on-surface' : 'text-on-surface-variant/50'}
-                                        ${selectedDate.toDateString() === day.date.toDateString() ? 'bg-primary/20' : ''}
-                                    `}
-                                >
-                                    <div
-                                        className={`
-                                        text-sm font-medium mb-1 text-center
-                                        ${
-                                            day.isToday
-                                                ? 'bg-primary text-on-primary rounded-full w-6 h-6 flex items-center justify-center mx-auto'
-                                                : ''
-                                        }
-                                    `}
-                                    >
-                                        {day.date.getDate()}
-                                    </div>
-                                    {day.events.length > 0 && (
-                                        <div className="space-y-1">
-                                            {day.events.slice(0, 2).map(event => (
-                                                <div
-                                                    key={event._id}
-                                                    className="text-xs bg-primary/80 text-on-primary px-1 py-0.5 rounded truncate"
-                                                >
-                                                    {event.name}
-                                                </div>
-                                            ))}
-                                            {day.events.length > 2 && (
-                                                <div className="text-xs text-on-surface-variant truncate">
-                                                    +{day.events.length - 2} more
-                                                </div>
-                                            )}
-                                        </div>
-                                    )}
-                                </button>
-                            );
-                        })}
-                    </div>
-                </div>
-            </div>
-
-            <div className="w-80">
-                <div className="bg-surface rounded-lg shadow border border-outline-variant flex flex-col h-[586px]">
-                    <div className="p-6 border-b border-outline-variant">
-                        <h4 className="text-lg font-semibold text-on-surface">{formatSelectedDate(selectedDate)}</h4>
-                    </div>
-                    <div className="flex-1 overflow-y-auto p-6 scrollbar-surface">
-                        {getEventsForDate(selectedDate).length > 0 ? (
-                            <div className="space-y-3">
-                                {getEventsForDate(selectedDate).map(event => (
-                                    <div
-                                        key={event._id}
-                                        onClick={() => handleEditEvent(event)}
-                                        className="border border-outline-variant rounded-md p-3 cursor-pointer hover:bg-surface-variant transition-colors group"
-                                    >
-                                        <div className="flex items-start justify-between">
-                                            <div className="flex-1 min-w-0">
-                                                <h5 className="font-medium text-on-surface mb-1 truncate">{event.name}</h5>
-                                                <p className="text-sm text-on-surface-variant mb-1">
-                                                    {event.startTime} - {event.endTime}
-                                                </p>
-                                                <p className="text-sm text-on-surface-variant truncate">{event.location}</p>
-                                            </div>
-                                            <Edit3 className="h-4 w-4 text-on-surface-variant opacity-0 group-hover:opacity-100 transition-opacity ml-2 flex-shrink-0" />
-                                        </div>
-                                        <div className="mt-2 pt-2 border-t border-outline-variant/50">
-                                            <p className="text-xs text-on-surface-variant text-center">Click to edit event details</p>
-                                        </div>
-                                    </div>
-                                ))}
-                            </div>
-                        ) : (
-                            <p className="text-on-surface-variant">No events scheduled for this day.</p>
-                        )}
-                    </div>
-                    <div className="p-6 border-t border-outline-variant">
+                    <div className="flex bg-surface-variant rounded-md p-1">
+                        <button className="flex items-center gap-2 px-3 py-2 rounded-md text-sm font-medium transition-colors cursor-pointer bg-primary text-on-primary">
+                            <Calendar className="h-4 w-4" />
+                            Calendar
+                        </button>
                         <button
-                            onClick={handleCreateEvent}
-                            className="w-full bg-primary text-on-primary px-4 py-2 rounded-md hover:bg-primary/90 font-medium cursor-pointer transition-colors"
+                            onClick={() => onViewModeChange?.('agenda')}
+                            className="flex items-center gap-2 px-3 py-2 rounded-md text-sm font-medium transition-colors cursor-pointer text-on-surface-variant hover:text-on-surface"
                         >
-                            Create Event for{' '}
-                            {selectedDate.toLocaleDateString('en-US', {
-                                month: 'short',
-                                day: 'numeric',
-                            })}
+                            <List className="h-4 w-4" />
+                            Table
                         </button>
                     </div>
                 </div>
             </div>
 
-            <EventModal
-                event={editingEvent}
-                isOpen={isModalOpen}
-                onClose={handleCloseModal}
-                onSave={handleSaveEvent}
-                selectedDate={selectedDate}
-            />
+            <div className="bg-surface rounded-lg shadow p-6 border border-outline-variant">
+                <div className="grid grid-cols-7 gap-1 mb-2">
+                    {['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'].map(day => (
+                        <div key={day} className="p-2 text-center text-sm font-medium text-on-surface-variant">
+                            {day}
+                        </div>
+                    ))}
+                </div>
+
+                <div className="grid grid-cols-7 gap-0 border border-outline-variant border-opacity-30 rounded-lg overflow-hidden">
+                    {calendarDays.map((day, index) => {
+                        const isFirstRow = index < 7;
+                        const isLastRow = index >= calendarDays.length - 7;
+                        const isFirstCol = index % 7 === 0;
+                        const isLastCol = index % 7 === 6;
+
+                        let roundingClasses = '';
+                        if (isFirstRow && isFirstCol) roundingClasses = 'rounded-tl-lg';
+                        else if (isFirstRow && isLastCol) roundingClasses = 'rounded-tr-lg';
+                        else if (isLastRow && isFirstCol) roundingClasses = 'rounded-bl-lg';
+                        else if (isLastRow && isLastCol) roundingClasses = 'rounded-br-lg';
+
+                        // Calculate dynamic height: base height + extra height for events beyond 2
+                        const baseHeight = 80; // Accommodate 2 events
+                        const extraEventsHeight = Math.max(0, day.events.length - 2) * 20; // 20px per extra event
+                        const cellHeight = baseHeight + extraEventsHeight;
+
+                        const cellClasses = [
+                            'p-2 transition-colors flex flex-col border-r border-b border-outline-variant border-opacity-30 last:border-r-0 hover:bg-surface-variant',
+                            roundingClasses,
+                            day.isCurrentMonth ? 'text-on-surface' : 'text-on-surface-variant opacity-50',
+                        ].join(' ');
+
+                        return (
+                            <div key={index} style={{ minHeight: `${cellHeight}px` }} className={cellClasses}>
+                                <div
+                                    className={`text-sm font-medium mb-1 text-center ${day.isToday ? 'bg-primary text-on-primary rounded-full w-6 h-6 flex items-center justify-center mx-auto' : ''}`}
+                                >
+                                    {day.date.getDate()}
+                                </div>
+                                {day.events.length > 0 && (
+                                    <div className="space-y-1 flex-1">
+                                        {day.events.map(event => (
+                                            <button
+                                                key={event._id}
+                                                onClick={e => handleEventClick(event, e)}
+                                                className="w-full text-xs bg-primary bg-opacity-80 text-on-primary px-1 py-0.5 rounded truncate hover:bg-primary transition-colors cursor-pointer"
+                                            >
+                                                {event.name}
+                                            </button>
+                                        ))}
+                                    </div>
+                                )}
+                            </div>
+                        );
+                    })}
+                </div>
+            </div>
         </div>
     );
 }

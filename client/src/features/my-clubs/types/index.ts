@@ -1,4 +1,13 @@
-export type TabType = 'membership' | 'info' | 'events' | 'planner' | 'stats';
+export type TabType =
+    | 'membership'
+    | 'info'
+    | 'events'
+    | 'planner'
+    | 'stats'
+    | 'event-details'
+    | 'event-location'
+    | 'event-tap'
+    | 'event-funding';
 
 export interface TabItem {
     key: TabType;
