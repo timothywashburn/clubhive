@@ -1,14 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useLocation } from 'react-router';
-import {
-    Code,
-    Mail,
-    GitBranch,
-    Activity,
-    FileText,
-    Shield,
-    ScrollText,
-} from 'lucide-react';
+import { Code, Mail, GitBranch, Activity, FileText, Shield, ScrollText } from 'lucide-react';
 import { DiscordIcon } from '../DiscordIcon';
 import ChangelogModal from './ChangelogModal';
 
@@ -24,8 +16,7 @@ export const Footer: React.FC = () => {
                 const response = await fetch('/api/version');
                 if (response.ok) {
                     const data = await response.json();
-                    if (data.success)
-                        setCurrentVersion(data.data.currentVersion);
+                    if (data.success) setCurrentVersion(data.currentVersion);
                 }
             } catch (error) {
                 console.error('Failed to fetch version:', error);
@@ -37,10 +28,7 @@ export const Footer: React.FC = () => {
 
     return (
         <div style={{ zIndex: 1 }}>
-            <ChangelogModal
-                isOpen={isChangelogOpen}
-                onClose={() => setIsChangelogOpen(false)}
-            />
+            <ChangelogModal isOpen={isChangelogOpen} onClose={() => setIsChangelogOpen(false)} />
             <footer
                 className={`${isAboutPage ? 'bg-black/20 backdrop-blur-md border-t border-white/10' : 'bg-surface border-t border-divider'}`}
             >

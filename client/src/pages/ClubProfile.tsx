@@ -38,7 +38,7 @@ export function ClubProfile() {
                 console.log('Fetch result:', data);
 
                 if (data.success) {
-                    setClub(data.data.club);
+                    setClub(data.club);
                 } else {
                     setError(data.error?.message || 'Unknown error');
                     //for troubleshooting:

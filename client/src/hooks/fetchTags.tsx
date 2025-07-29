@@ -16,7 +16,7 @@ export const useTagsData = () => {
             .then(res => res.json())
             .then(data => {
                 if (data.success) {
-                    setTags(data.data.tags);
+                    setTags(data.tags);
                 } else {
                     setError(data.error?.message || 'Unknown error');
                 }

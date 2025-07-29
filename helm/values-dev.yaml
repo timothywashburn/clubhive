@@ -5,7 +5,7 @@ branch: dev
 namespace: clubhive-dev
 
 mongodb:
+  port: "30018"
   storage:
     size: "2Gi"
     storageClass: "local-path"
-  port: "30018"

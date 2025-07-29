@@ -1,20 +1,12 @@
-import mongoose, { Schema, Document, ObjectId } from 'mongoose';
+import mongoose, { Schema, InferSchemaType, HydratedDocument } from 'mongoose';
 
-export interface ClubSnapshotData extends Document {
-    _id: ObjectId;
-    date: Date;
-    clubs: [
-        {
-            clubId: ObjectId;
-            memberCount: number;
-        },
-    ];
-    createdAt: Date;
-    updatedAt: Date;
-}
-
-const ClubSnapshotSchema: Schema<ClubSnapshotData> = new Schema(
+const schema = new Schema(
     {
+        _id: {
+            type: mongoose.Schema.Types.ObjectId,
+            required: true,
+            auto: true,
+        },
         date: {
             type: Date,
             required: true,
@@ -24,16 +16,20 @@ const ClubSnapshotSchema: Schema<ClubSnapshotData> = new Schema(
                 clubId: {
                     type: mongoose.Schema.Types.ObjectId,
                     ref: 'Club',
+                    required: true,
                 },
-                memberCount: { type: Number },
+                memberCount: {
+                    type: Number,
+                    required: true,
+                },
             },
         ],
     },
     { timestamps: true }
 );
 
-const ClubSnapshot = mongoose.model<ClubSnapshotData>(
-    'ClubSnapshot',
-    ClubSnapshotSchema
-);
+export type ClubSnapshotSchema = InferSchemaType<typeof schema>;
+export type ClubSnapshotDoc = HydratedDocument<InferSchemaType<typeof schema>>;
+
+const ClubSnapshot = mongoose.model('ClubSnapshot', schema);
 export default ClubSnapshot;

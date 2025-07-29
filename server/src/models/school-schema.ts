@@ -1,12 +1,11 @@
-import mongoose, { Document, Schema, ObjectId } from 'mongoose';
+import mongoose, { Schema, InferSchemaType, HydratedDocument } from 'mongoose';
 
-export interface SchoolData extends Document {
-    _id: ObjectId;
-    name: string;
-    location: string;
-}
-
-const SchoolSchema: Schema<SchoolData> = new Schema({
+const schema = new Schema({
+    _id: {
+        type: mongoose.Schema.Types.ObjectId,
+        required: true,
+        auto: true,
+    },
     name: {
         type: String,
         required: true,
@@ -17,5 +16,8 @@ const SchoolSchema: Schema<SchoolData> = new Schema({
     },
 });
 
-const School = mongoose.model<SchoolData>('School', SchoolSchema);
+export type SchoolSchema = InferSchemaType<typeof schema>;
+export type SchoolDoc = HydratedDocument<InferSchemaType<typeof schema>>;
+
+const School = mongoose.model('School', schema);
 export default School;
