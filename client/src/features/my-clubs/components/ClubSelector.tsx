@@ -33,10 +33,10 @@ export function ClubSelector({ clubs, selectedClub, onClubSelect, isMinimized, i
                 </h2>
                 <button
                     onClick={onToggleMinimize}
-                    className="p-1 rounded hover:bg-surface-variant transition-colors flex-shrink-0 text-on-surface"
+                    className="p-1 cursor-pointer rounded hover:bg-surface-variant transition-colors flex-shrink-0 text-on-surface"
                     title={isMinimized ? 'Expand clubs' : 'Minimize clubs'}
                 >
-                    {isMinimized ? <ChevronRight className="w-4 h-4" /> : <ChevronLeft className="w-4 h-4" />}
+                    {isMinimized ? <ChevronRight size={24} /> : <ChevronLeft size={24} />}
                 </button>
             </div>
             <div className="p-2">
@@ -88,10 +88,10 @@ export function ClubSelector({ clubs, selectedClub, onClubSelect, isMinimized, i
                                 >
                                     {clubInitials}
                                     {isMinimized && club.userRole === 'owner' && (
-                                        <Crown className="w-3 h-3 text-warning absolute -top-1 -right-1" />
+                                        <Crown size={16} className="text-warning absolute -top-1.5 -right-1.5" />
                                     )}
                                     {isMinimized && club.userRole === 'officer' && (
-                                        <Shield className="w-3 h-3 text-primary absolute -top-1 -right-1" />
+                                        <Shield size={16} className="text-primary absolute -top-1.5 -right-1.5" />
                                     )}
                                 </div>
                                 <div
@@ -107,8 +107,12 @@ export function ClubSelector({ clubs, selectedClub, onClubSelect, isMinimized, i
                                         showText ? 'opacity-100 w-auto' : 'opacity-0 w-0 overflow-hidden'
                                     }`}
                                 >
-                                    {club.userRole === 'owner' && <Crown className="w-4 h-4 text-warning flex-shrink-0" />}
-                                    {club.userRole === 'officer' && <Shield className="w-4 h-4 text-primary flex-shrink-0" />}
+                                    {club.userRole === 'owner' && (
+                                        <Crown size={24} strokeWidth={2.5} className="text-warning flex-shrink-0" />
+                                    )}
+                                    {club.userRole === 'officer' && (
+                                        <Shield size={24} strokeWidth={2.5} className="text-primary flex-shrink-0" />
+                                    )}
                                 </div>
                             </div>
                         </button>
