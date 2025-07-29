@@ -58,7 +58,7 @@ export const ClubMembershipEndpoint: ApiEndpoint<ClubMembershipReq, ClubMembersh
 
             res.json({
                 success: true,
-                data: { membershipId: newMembership._id.toString() },
+                membershipId: newMembership._id.toString(),
             });
         } catch (error) {
             console.error('Error creating club membership:', error);

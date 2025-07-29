@@ -1,18 +1,4 @@
-import mongoose, { Schema, Document, ObjectId } from 'mongoose';
-
-// mongoose adds an _id property by default for each document
-// it is of type ObjectId
-
-export interface UserData extends Document {
-    _id: ObjectId;
-    name: string;
-    school: ObjectId; // use school_id
-    major: string;
-    educationType: EducationType;
-    year: Year;
-    createdAt: Date;
-    updatedAt: Date;
-}
+import mongoose, { Schema, InferSchemaType, HydratedDocument } from 'mongoose';
 
 export enum EducationType {
     UNDERGRADUATE = 'Undergraduate',
@@ -27,8 +13,13 @@ export enum Year {
     OVER_FOUR = '>4',
 }
 
-const UserSchema: Schema<UserData> = new Schema(
+const schema = new Schema(
     {
+        _id: {
+            type: mongoose.Schema.Types.ObjectId,
+            required: true,
+            auto: true,
+        },
         name: {
             type: String,
             required: true,
@@ -56,5 +47,8 @@ const UserSchema: Schema<UserData> = new Schema(
     { timestamps: true }
 );
 
-const User = mongoose.model<UserData>('User', UserSchema);
+export type UserSchema = InferSchemaType<typeof schema>;
+export type UserDoc = HydratedDocument<InferSchemaType<typeof schema>>;
+
+const User = mongoose.model('User', schema);
 export default User;

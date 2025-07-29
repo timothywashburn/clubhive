@@ -1,17 +1,12 @@
-import mongoose, { Schema, Document, ObjectId } from 'mongoose';
+import mongoose, { Schema, InferSchemaType, HydratedDocument } from 'mongoose';
 
-export interface AnnouncementData extends Document {
-    _id: ObjectId;
-    club: ObjectId; // from Club schema
-    title: string;
-    body: string;
-    pictures: ObjectId[];
-    createdAt: Date;
-    updatedAt: Date;
-}
-
-const AnnouncementSchema: Schema<AnnouncementData> = new Schema(
+const schema = new Schema(
     {
+        _id: {
+            type: mongoose.Schema.Types.ObjectId,
+            required: true,
+            auto: true,
+        },
         club: {
             type: mongoose.Schema.Types.ObjectId,
             ref: 'Club',
@@ -27,14 +22,14 @@ const AnnouncementSchema: Schema<AnnouncementData> = new Schema(
         },
         pictures: {
             type: [mongoose.Schema.Types.ObjectId],
-            ref: 'files', // idk
+            ref: 'Image',
         },
     },
     { timestamps: true }
 );
 
-const Announcement = mongoose.model<AnnouncementData>(
-    'Announcement',
-    AnnouncementSchema
-);
+export type AnnouncementSchema = InferSchemaType<typeof schema>;
+export type AnnouncementDoc = HydratedDocument<InferSchemaType<typeof schema>>;
+
+const Announcement = mongoose.model('Announcement', schema);
 export default Announcement;

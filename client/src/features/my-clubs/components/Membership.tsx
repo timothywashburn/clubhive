@@ -1,9 +1,9 @@
 import { LogOut, Crown, Trash2, Globe, Instagram, Mail } from 'lucide-react';
-import { Club } from '../types';
+import { UserClubData } from '@clubhive/shared';
 import { useMyClubsData } from '../hooks';
 
 interface MembershipProps {
-    club: Club;
+    club: UserClubData;
     isOwner: boolean;
 }
 
@@ -22,22 +22,26 @@ export function Membership({ club, isOwner }: MembershipProps) {
                         <div
                             className="relative w-full max-w-sm aspect-[1.586/1] overflow-hidden rounded-xl p-6 border border-outline"
                             style={{
-                                background: `linear-gradient(135deg, ${club.brandColor}20, ${club.brandColor}40)`,
+                                background: `linear-gradient(135deg, #3b82f620, #3b82f640)`,
                             }}
                         >
                             <div className="absolute top-1/2 left-1/2 w-64 h-64 opacity-8 select-none pointer-events-none transform -translate-x-1/2 -translate-y-1/2">
-                                <img src={club.logoImage} alt="Club logo background" className="w-full h-full object-contain" />
+                                <img
+                                    src={club.clubLogo || '/vgdc-square-logo.png'}
+                                    alt="Club logo background"
+                                    className="w-full h-full object-contain"
+                                />
                             </div>
 
                             <div className="h-full flex flex-col justify-center items-center text-center">
                                 <div className="mb-4">
                                     <h2 className="text-3xl font-bold text-on-surface leading-tight">{club.name}</h2>
                                 </div>
-                                {(club.role === 'owner' || club.role === 'officer') && (
+                                {(club.userRole === 'owner' || club.userRole === 'officer') && (
                                     <>
                                         <div className="w-16 h-px bg-on-surface-variant/30 mb-3"></div>
-                                        <div className="text-lg font-semibold" style={{ color: club.brandColor }}>
-                                            {club.role === 'owner' ? 'Owner' : 'Officer'}
+                                        <div className="text-lg font-semibold" style={{ color: '#3b82f6' }}>
+                                            {club.userRole === 'owner' ? 'Owner' : 'Officer'}
                                         </div>
                                     </>
                                 )}
@@ -57,28 +61,38 @@ export function Membership({ club, isOwner }: MembershipProps) {
 
                                 <div className="flex flex-col justify-between flex-1">
                                     <div className="space-y-2">
-                                        <div className="flex items-center gap-2 text-xs text-on-surface-variant">
-                                            <Globe className="w-3 h-3" />
-                                            <span>vgdc.dev</span>
-                                        </div>
-                                        <div className="flex items-center gap-2 text-xs text-on-surface-variant">
-                                            <Instagram className="w-3 h-3" />
-                                            <span>vgdc.at.ucsd</span>
-                                        </div>
-                                        <div className="flex items-center gap-2 text-xs text-on-surface-variant">
-                                            <Mail className="w-3 h-3" />
-                                            <span>vgdc@ucsd.edu</span>
-                                        </div>
+                                        {club.socials.website && (
+                                            <div className="flex items-center gap-2 text-xs text-on-surface-variant">
+                                                <Globe className="w-3 h-3" />
+                                                <span>{club.socials.website}</span>
+                                            </div>
+                                        )}
+                                        {club.socials.instagram && (
+                                            <div className="flex items-center gap-2 text-xs text-on-surface-variant">
+                                                <Instagram className="w-3 h-3" />
+                                                <span>{club.socials.instagram}</span>
+                                            </div>
+                                        )}
+                                        {club.url && (
+                                            <div className="flex items-center gap-2 text-xs text-on-surface-variant">
+                                                <Mail className="w-3 h-3" />
+                                                <span>{club.url}</span>
+                                            </div>
+                                        )}
                                     </div>
 
                                     <div className="flex justify-end">
                                         <div
                                             className="w-12 h-12 rounded-lg flex items-center justify-center overflow-hidden"
                                             style={{
-                                                backgroundColor: `${club.brandColor}15`,
+                                                backgroundColor: `#3b82f615`,
                                             }}
                                         >
-                                            <img src={club.logoImage} alt={`${club.name} logo`} className="w-8 h-8 object-contain" />
+                                            <img
+                                                src={club.clubLogo || '/vgdc-square-logo.png'}
+                                                alt={`${club.name} logo`}
+                                                className="w-8 h-8 object-contain"
+                                            />
                                         </div>
                                     </div>
                                 </div>
