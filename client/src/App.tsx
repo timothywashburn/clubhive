@@ -55,23 +55,25 @@ export function App() {
                     <StaticHoneycomb />
                 </div>
                 <Navbar isAuthenticated={isAuthenticated} toggleAuth={toggleAuth} />
-                <main className="flex-1 overflow-auto">
-                    <Routes>
-                        <Route path="/" element={<Home />} />
-                        <Route path="/my-clubs" element={<MyClubs />} />
-                        <Route path="/clubs" element={<Clubs />} />
-                        <Route path="/club-profile/:url" element={<ClubProfile />} />
-                        <Route path="/events" element={<Events />} />
-                        <Route path="/events/:id" element={<EventsPage />} />
-                        <Route path="/account" element={<Account />} />
-                        <Route path="/notifications" element={<Notifications />} />
-                        <Route path="/about" element={<About />} />
-                        <Route path="/signin" element={<SignIn />} />
-                        <Route path="/signup" element={<SignUp />} />
-                        <Route path="*" element={<NotFound />} />
-                    </Routes>
+                <main className="flex-1 overflow-auto flex flex-col">
+                    <div className="flex-1">
+                        <Routes>
+                            <Route path="/" element={<Home />} />
+                            <Route path="/my-clubs" element={<MyClubs />} />
+                            <Route path="/clubs" element={<Clubs />} />
+                            <Route path="/club-profile/:url" element={<ClubProfile />} />
+                            <Route path="/events" element={<Events />} />
+                            <Route path="/events/:id" element={<EventsPage />} />
+                            <Route path="/account" element={<Account />} />
+                            <Route path="/notifications" element={<Notifications />} />
+                            <Route path="/about" element={<About />} />
+                            <Route path="/signin" element={<SignIn />} />
+                            <Route path="/signup" element={<SignUp />} />
+                            <Route path="*" element={<NotFound />} />
+                        </Routes>
+                    </div>
+                    <Footer />
                 </main>
-                <Footer />
             </div>
         </BrowserRouter>
     );
