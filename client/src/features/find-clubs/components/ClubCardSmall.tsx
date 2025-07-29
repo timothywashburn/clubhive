@@ -6,7 +6,7 @@ type ClubCardProps = {
     tagline: string;
     id: string;
     tags?: Tag[];
-    createdAt: Date;
+    createdAt: string;
     isSelected: boolean;
     onClick: () => void;
 };
