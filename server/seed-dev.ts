@@ -46,6 +46,13 @@ async function seed() {
         { type: 'club', text: 'Finance & Investing' },
         { type: 'club', text: 'Languages' },
         { type: 'club', text: 'Coding' },
+
+        { type: 'event', text: 'Workshop' },
+        { type: 'event', text: 'Panel' },
+        { type: 'event', text: 'Networking' },
+        { type: 'event', text: 'Hackathon' },
+        { type: 'event', text: 'GBM' },
+        { type: 'event', text: 'Social' },
     ]);
 
     const tagMap = Object.fromEntries(tags.map(t => [t.text, t._id]));
@@ -218,11 +225,21 @@ async function seed() {
     ]);
 
     const wic = await Club.findOne({ name: 'Women in Computing' });
-    if (!wic) {
-        throw new Error('Could not find club: Women in Computing');
+    const compsci = await Club.findOne({ name: 'Computer Science Club' });
+    const hacktrit = await Club.findOne({ name: 'Hack the Triton' });
+    const tritcomm = await Club.findOne({ name: 'Triton Community Club' });
+    const wcent = await Club.findOne({ name: 'Workshop Central' });
+    const startcirc = await Club.findOne({ name: 'Startup Circle' });
+    const tg = await Club.findOne({ name: 'Triton Gamers' });
+    const tc = await Club.findOne({ name: 'Triton Creatives' });
+    const didata = await Club.findOne({ name: 'Diversity in Data' });
+    const infoucsd = await Club.findOne({ name: 'InfoSessions @ UCSD' });
+
+    if (!wic || !compsci || !hacktrit || !tritcomm || !wcent || !startcirc || !tg || !tc || !didata || !infoucsd) {
+        throw new Error('Could not find club');
     }
 
-    const events = await Event.insertMany([
+    await Event.insertMany([
         {
             club: wic._id,
             name: 'First GBM!',
@@ -233,7 +250,115 @@ async function seed() {
             startTime: '18:30:00',
             endTime: '20:00:00',
             picture: null,
-            tags: [tagMap['Career'], tagMap['STEM'], tagMap['Social']],
+            tags: [tagMap['GBM']],
+        },
+        {
+            club: compsci._id,
+            name: 'Fall Social!',
+            description: 'Come meet people and learn about opportunities and future events!',
+            type: EventType.ANYONE,
+            location: 'Price Center',
+            date: new Date('2025-11-01'),
+            startTime: '16:30:00',
+            endTime: '18:00:00',
+            picture: null,
+            tags: [tagMap['Social']],
+        },
+        {
+            club: hacktrit._id,
+            name: 'Hack UCSD Kickoff',
+            description: 'Intro to our hackathon series and team formation!',
+            type: EventType.ANYONE,
+            location: 'PC Theater',
+            date: new Date('2025-09-15'),
+            startTime: '17:00:00',
+            endTime: '19:00:00',
+            picture: null,
+            tags: [tagMap['Workshop']],
+        },
+        {
+            club: tritcomm._id,
+            name: 'Community Service Orientation',
+            description: 'Join us to learn how you can serve the local community.',
+            type: EventType.ANYONE,
+            location: 'Geisel Library',
+            date: new Date('2025-09-20'),
+            startTime: '12:00:00',
+            endTime: '13:30:00',
+            picture: null,
+            tags: [tagMap['Panel']],
+        },
+        {
+            club: wcent._id,
+            name: 'Community Service Orientation',
+            description: 'Join us to learn how you can serve the local community.',
+            type: EventType.ANYONE,
+            location: 'Geisel Library',
+            date: new Date('2025-09-20'),
+            startTime: '12:00:00',
+            endTime: '13:30:00',
+            picture: null,
+            tags: [tagMap['Panel']],
+        },
+        {
+            club: startcirc._id,
+            name: 'Community Service Orientation',
+            description: 'Join us to learn how you can serve the local community.',
+            type: EventType.ANYONE,
+            location: 'Geisel Library',
+            date: new Date('2025-09-20'),
+            startTime: '12:00:00',
+            endTime: '13:30:00',
+            picture: null,
+            tags: [tagMap['Panel']],
+        },
+        {
+            club: tg._id,
+            name: 'Community Service Orientation',
+            description: 'Join us to learn how you can serve the local community.',
+            type: EventType.ANYONE,
+            location: 'Geisel Library',
+            date: new Date('2025-09-20'),
+            startTime: '12:00:00',
+            endTime: '13:30:00',
+            picture: null,
+            tags: [tagMap['Panel']],
+        },
+        {
+            club: tc._id,
+            name: 'Community Service Orientation',
+            description: 'Join us to learn how you can serve the local community.',
+            type: EventType.ANYONE,
+            location: 'Geisel Library',
+            date: new Date('2025-09-20'),
+            startTime: '12:00:00',
+            endTime: '13:30:00',
+            picture: null,
+            tags: [tagMap['Panel']],
+        },
+        {
+            club: didata._id,
+            name: 'Community Service Orientation',
+            description: 'Join us to learn how you can serve the local community.',
+            type: EventType.ANYONE,
+            location: 'Geisel Library',
+            date: new Date('2025-09-20'),
+            startTime: '12:00:00',
+            endTime: '13:30:00',
+            picture: null,
+            tags: [tagMap['Panel']],
+        },
+        {
+            club: infoucsd._id,
+            name: 'Community Service Orientation',
+            description: 'Join us to learn how you can serve the local community.',
+            type: EventType.ANYONE,
+            location: 'Geisel Library',
+            date: new Date('2025-09-20'),
+            startTime: '12:00:00',
+            endTime: '13:30:00',
+            picture: null,
+            tags: [tagMap['Panel']],
         },
     ]);
 

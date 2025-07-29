@@ -15,6 +15,8 @@ export function EventsPage() {
     const [share, setShared] = useState(false);
 
     useEffect(() => {
+        if (!id) return;
+
         async function fetchEvent() {
             try {
                 const res = await fetch(`/api/events/${id}`);
@@ -22,9 +24,11 @@ export function EventsPage() {
                     throw new Error('Failed to fetch event');
                 }
                 const data = await res.json();
-                setEvent(data.event);
+                console.log('Fetched events:', data.data);
+                setEvent(data.data); //
             } catch (err) {
                 console.error(err);
+                console.log('eventId from URL:', id);
             } finally {
                 setLoading(false);
             }
@@ -36,7 +40,7 @@ export function EventsPage() {
     if (!event) return <div>Event not found.</div>;
 
     return (
-        <div className="bg-background min-h-screen p-6">
+        <div className="min-h-screen p-6">
             <div className="max-w-4xl mx-auto">
                 {/* back button */}
                 <div className="flex justify-start mb-4">
@@ -64,14 +68,16 @@ export function EventsPage() {
 
                 {/* tags */}
                 <div className="flex flex-wrap gap-2 mb-4">
-                    {event.tags.map(tag => (
-                        <span
-                            key={tag._id}
-                            className="bg-secondary-container text-on-secondary-container px-3 py-1 rounded-full text-sm font-medium"
-                        >
-                            {tag.text}
-                        </span>
-                    ))}
+                    {event.tags?.map((tag, idx) =>
+                        tag ? (
+                            <span
+                                key={tag._id}
+                                className="bg-secondary-container text-on-secondary-container px-3 py-1 rounded-full text-sm font-medium"
+                            >
+                                {tag.text || tag}
+                            </span>
+                        ) : null
+                    )}
                 </div>
 
                 {/* date, location, event type, placeholder boxes */}
@@ -135,9 +141,9 @@ export function EventsPage() {
 
                 {/* Hosted by: */}
                 <div className="bg-surface-variant p-4 rounded-md mb-6">
-                    <h3 className="font-medium text-on-secondary-container mb-2">Hosted by</h3>
-                    <Link to={`/clubs/${event.hostingClub.url}`} className="text-blue-600 hover:underline font-medium">
-                        {event.hostingClub.name}
+                    <h3 className="font-medium text-on-secondary-container mb-2">Hosted by </h3>
+                    <Link to={`/clubs/${event.club.url}`} className="text-blue-600 hover:underline font-medium">
+                        {event.club.name}
                     </Link>
                 </div>
 

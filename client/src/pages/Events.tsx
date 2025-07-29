@@ -16,6 +16,7 @@ export function Events() {
     const [searchTerm, setSearchTerm] = useState('');
     const { tags } = useTagsData();
     const [selectedTags, setSelectedTags] = useState<Tag[]>([]);
+    const [selectedEvent, setSelectedEvent] = useState<Event | null>(null);
     const tagMap = Object.fromEntries(tags.map(t => [t.text, t._id]));
 
     const [events, setEvents] = useState<any[]>([]);
@@ -37,7 +38,7 @@ export function Events() {
 
     const filteredEvents = Array.isArray(events)
         ? events
-              .filter(event => event.title.toLowerCase().includes(searchTerm.toLowerCase()))
+              .filter(event => event.name?.toLowerCase().includes(searchTerm.toLowerCase()))
               .filter(event => selectedTags.length === 0 || selectedTags.every(tag => event.tags?.includes(tag)))
         : [];
 
@@ -75,7 +76,7 @@ export function Events() {
                 </div>
 
                 <div className="space-y-6 mt-6">
-                    {/* Placeholder event cards */}
+                    {/* event cards */}
                     {filteredEvents.map(event => (
                         <div key={event._id} className="bg-surface rounded-lg shadow p-6 border border-outline-variant">
                             <div className="flex items-start justify-between">
@@ -85,18 +86,61 @@ export function Events() {
                                             <span className="text-primary font-bold text-sm">C</span>
                                         </div>
                                         <div>
-                                            <Link to={`/events/${event._id}`} className="text-lg font-medium text-primary hover:underline">
-                                                {event.name || 'Event'}
-                                            </Link>
-
-                                            {/*<h3 className="text-lg font-medium text-on-surface">
-                                                Event {i}
-                                            </h3>*/}
-
+                                            <h2 className="text-lg font-medium text-on-surface">
+                                                <Link to={`/club-profile/${event.club?.url}`} className="text-primary hover:underline mr-1">
+                                                    {event.club?.name}
+                                                </Link>
+                                                <span className="text-primary mr-1">: </span>
+                                                <Link to={`/events/${event._id}`} className="text-primary hover:underline mr-1">
+                                                    {`${event.name}`}
+                                                </Link>
+                                            </h2>
                                             <p className="text-sm text-on-surface-variant">{event.clubName}</p>
                                         </div>
                                     </div>
+
                                     <p className="text-on-surface-variant mb-4">{event.description || 'Join use for an exciting event!'}</p>
+
+                                    {/* event tags */}
+                                    {/** 
+                                        {Array.isArray(event.tags) && event.tags.length > 0 && (
+                                            <div className="flex flex-wrap gap-2 mb-4">
+                                                {event.tags?.filter(Boolean).map(tag => (
+                                                    <span
+                                                        key={tag._id}
+                                                        className={`rounded-full px-3 py-1 text-sx font-semibold ${getTagColor(tag._id)}`}
+                                                    >
+                                                        {tag.text}
+                                                    </span>
+                                                ))}    
+                                            </div>
+                                        )} */}
+
+                                    <div className="flex flex-wrap gap-2 mt-2">
+                                        {event.tags
+                                            ?.filter(tag => tag !== null && typeof tag === 'object')
+                                            .map(tag => (
+                                                <span
+                                                    key={tag.idx}
+                                                    className={`rounded-full px-3 py-1 text-xs font-semibold ${getTagColor(tag._id)}`}
+                                                >
+                                                    {tag.text}
+                                                </span>
+                                            ))}
+                                    </div>
+
+                                    {/**
+                                        <div className="text-sm text-on-surface-variant mb-4 flex flex-wrap gap-2">
+                                            {selectedEvent.tag.map(tag => (
+                                                <span
+                                                    key={tag._id}
+                                                    className={`rounded-full px-3 py-1 text-xs font-semibold ${getTagColor(tag._id)}`}
+                                                >
+                                                    {tag.text}
+                                                </span>
+                                            ))}
+                                        </div>  */}
+
                                     <div className="flex items-center text-sm text-on-surface-variant space-x-4">
                                         <div className="flex items-center">
                                             <svg className="h-4 w-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
