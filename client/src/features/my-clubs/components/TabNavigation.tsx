@@ -51,30 +51,42 @@ export function TabNavigation({
     return (
         <div className="border-b border-outline-variant">
             <nav className="flex justify-between relative overflow-hidden">
-                <div className="flex space-x-8">
-                    {(selectedEvent ? tabs : tabs.filter(tab => tab.key !== 'membership')).map(tab => {
-                        const Icon = tab.icon;
-                        return (
-                            <motion.button
-                                key={tab.key}
-                                ref={(el: HTMLButtonElement | null) => {
-                                    tabRefs.current[tab.key] = el;
-                                }}
-                                onClick={() => {
-                                    setShouldAnimate(true);
-                                    onTabChange(tab.key);
-                                }}
-                                className={`flex items-center py-3 px-1 font-medium text-sm transition-colors cursor-pointer relative ${
-                                    activeTab === tab.key ? 'text-primary' : 'text-on-surface-variant hover:text-on-surface'
-                                }`}
-                                layout
-                            >
-                                <Icon className="w-4 h-4 mr-2" />
-                                {tab.label}
-                            </motion.button>
-                        );
-                    })}
-                </div>
+                <AnimatePresence mode="wait">
+                    <motion.div 
+                        key={selectedEvent ? 'event-tabs' : 'main-tabs'}
+                        className="flex space-x-8"
+                        initial={{ opacity: 0, y: -20 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        exit={{ 
+                            opacity: 0, 
+                            y: 50,
+                            transition: { duration: 0.2, ease: "easeIn" }
+                        }}
+                        transition={{ duration: 0.3, ease: "easeOut" }}
+                    >
+                        {(selectedEvent ? tabs : tabs.filter(tab => tab.key !== 'membership')).map(tab => {
+                            const Icon = tab.icon;
+                            return (
+                                <button
+                                    key={tab.key}
+                                    ref={(el: HTMLButtonElement | null) => {
+                                        tabRefs.current[tab.key] = el;
+                                    }}
+                                    onClick={() => {
+                                        setShouldAnimate(true);
+                                        onTabChange(tab.key);
+                                    }}
+                                    className={`flex items-center py-3 px-1 font-medium text-sm transition-colors cursor-pointer relative ${
+                                        activeTab === tab.key ? 'text-primary' : 'text-on-surface-variant hover:text-on-surface'
+                                    }`}
+                                >
+                                    <Icon className="w-4 h-4 mr-2" />
+                                    {tab.label}
+                                </button>
+                            );
+                        })}
+                    </motion.div>
+                </AnimatePresence>
                 {!selectedEvent && (
                     <div>
                         <AnimatePresence>
