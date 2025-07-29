@@ -8,7 +8,7 @@ interface EventPlannerProps {
     events: EventData[];
     onUpdateEvent?: (event: EventData) => void;
     selectedClub?: { name: string };
-    onEventSelect?: (event: EventData | null) => void;
+    onEventSelect?: (event: EventData | null, eventElement?: HTMLElement) => void;
 }
 
 type ViewMode = 'calendar' | 'agenda';
@@ -16,9 +16,9 @@ type ViewMode = 'calendar' | 'agenda';
 export function EventPlanner({ events, onUpdateEvent, selectedClub, onEventSelect }: EventPlannerProps) {
     const [viewMode, setViewMode] = useState<ViewMode>('calendar');
 
-    const handleEventClick = (event: EventData) => {
+    const handleEventClick = (event: EventData, eventElement?: HTMLElement) => {
         if (onEventSelect) {
-            onEventSelect(event);
+            onEventSelect(event, eventElement);
         }
     };
 

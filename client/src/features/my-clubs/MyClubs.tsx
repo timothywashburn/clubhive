@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { useClubState, useTabIndicator, useMyClubsData, useClubEvents } from './hooks';
-import { ClubSelector, ClubHeader, TabNavigation, MemberInfo, OfficerInfo, Events, Stats, Membership, EmptyState } from './components';
+import { ClubSelector, ClubHeader, TabNavigation, MemberInfo, OfficerInfo, Events, Stats, Membership, EmptyState, EventAnimationOverlay } from './components';
 import { EventPlanner } from './event-planner';
 import { EventDetails, LocationPicker, TAPIntegration, ASFunding } from './event-edit';
 import { EventData } from '@clubhive/shared';
@@ -14,6 +14,12 @@ export function MyClubs() {
     const [selectedEvent, setSelectedEvent] = useState<EventData | null>(null);
     const [isClubSelectorMinimized, setIsClubSelectorMinimized] = useState(false);
     const [isAnimating, setIsAnimating] = useState(false);
+    const [eventAnimationData, setEventAnimationData] = useState<{
+        isAnimating: boolean;
+        eventElement: HTMLElement | null;
+        eventData: EventData | null;
+        sourceRect?: DOMRect;
+    }>({ isAnimating: false, eventElement: null, eventData: null });
 
     const handleToggleMinimize = () => {
         setIsAnimating(true);
@@ -30,12 +36,42 @@ export function MyClubs() {
 
     const { indicatorStyle, shouldAnimate, setShouldAnimate, tabRefs } = useTabIndicator(activeTab, selectedClub, isPreviewMode);
 
-    const handleEventSelect = (event: EventData | null) => {
-        setSelectedEvent(event);
-        if (event) {
+    const handleEventSelect = (event: EventData | null, eventElement?: HTMLElement) => {
+        console.log('handleEventSelect called', { event, eventElement });
+        
+        if (event && eventElement) {
+            console.log('Starting animation with element:', eventElement);
+            
+            // Capture the element's position immediately before any DOM changes
+            const sourceRect = eventElement.getBoundingClientRect();
+            console.log('Captured source rect immediately:', sourceRect);
+            
+            // First set the selected event so the target element exists
+            setSelectedEvent(event);
             setActiveTab('event-details');
+            
+            // Then start animation after a brief delay to ensure DOM is updated
+            setTimeout(() => {
+                setEventAnimationData({
+                    isAnimating: true,
+                    eventElement,
+                    eventData: event,
+                    sourceRect // Pass the captured position
+                });
+                
+                // Clean up animation after it completes
+                setTimeout(() => {
+                    setEventAnimationData({ isAnimating: false, eventElement: null, eventData: null });
+                }, 1100); // Match the total animation + fade duration
+            }, 10);
         } else {
-            setActiveTab('events');
+            console.log('No animation - setting event directly');
+            setSelectedEvent(event);
+            if (event) {
+                setActiveTab('event-details');
+            } else {
+                setActiveTab('events');
+            }
         }
     };
 
@@ -117,6 +153,17 @@ export function MyClubs() {
 
     return (
         <div className="h-full relative">
+            {/* Event Animation Overlay */}
+            {eventAnimationData.isAnimating && eventAnimationData.eventElement && eventAnimationData.eventData && (
+                <div className="fixed inset-0 z-50 pointer-events-none">
+                    <EventAnimationOverlay
+                        eventElement={eventAnimationData.eventElement}
+                        eventData={eventAnimationData.eventData}
+                        targetSelector=".club-header-event-target"
+                        sourceRect={eventAnimationData.sourceRect}
+                    />
+                </div>
+            )}
             <div className="px-4 sm:px-6 lg:px-8 py-8">
                 <div className="flex gap-6">
                     <div className={`flex-shrink-0 transition-all duration-300 ease-in-out ${isClubSelectorMinimized ? 'w-20' : 'w-80'}`}>

@@ -40,7 +40,9 @@ export function ClubHeader({
                         {selectedEvent && (
                             <>
                                 <span className="text-on-surface-variant text-xl">→</span>
-                                <h2 className="text-2xl font-semibold text-on-surface">{selectedEvent.name}</h2>
+                                <div className="club-header-event-target bg-primary text-on-primary px-3 py-2 rounded-lg font-medium text-sm" style={{ opacity: 0 }}>
+                                    {selectedEvent.name}
+                                </div>
                             </>
                         )}
                     </div>

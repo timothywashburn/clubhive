@@ -5,7 +5,7 @@ import { EventData } from '@clubhive/shared';
 interface CalendarViewProps {
     events: EventData[];
     onUpdateEvent?: (event: EventData) => void;
-    onEditEvent?: (event: EventData) => void;
+    onEditEvent?: (event: EventData, eventElement?: HTMLElement) => void;
     onViewModeChange?: (mode: 'calendar' | 'agenda') => void;
 }
 
@@ -60,7 +60,7 @@ export function CalendarView({ events, onUpdateEvent, onEditEvent, onViewModeCha
     const handleEventClick = (event: EventData, e: React.MouseEvent) => {
         e.stopPropagation();
         if (onEditEvent) {
-            onEditEvent(event);
+            onEditEvent(event, e.currentTarget as HTMLElement);
         }
     };
 
