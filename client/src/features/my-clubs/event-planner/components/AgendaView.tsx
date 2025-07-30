@@ -1,5 +1,5 @@
 import { EventData } from '@clubhive/shared';
-import { Events } from '../../components/Events';
+import { Events } from '../../pages/Events.tsx';
 import { Calendar, Clock, MapPin, Users, List } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 
@@ -21,7 +21,13 @@ function TableHeader() {
     );
 }
 
-function AgendaItemCard({ event, onEditEvent }: { event: EventData; onEditEvent?: (event: EventData, eventElement?: HTMLElement) => void }) {
+function AgendaItemCard({
+    event,
+    onEditEvent,
+}: {
+    event: EventData;
+    onEditEvent?: (event: EventData, eventElement?: HTMLElement) => void;
+}) {
     const handleClick = (e: React.MouseEvent) => {
         const eventNameElement = e.currentTarget.querySelector('[data-event-name]') as HTMLElement;
         onEditEvent?.(event, eventNameElement);
@@ -39,7 +45,7 @@ function AgendaItemCard({ event, onEditEvent }: { event: EventData; onEditEvent?
                 exit={{ opacity: 0, y: -10 }}
                 transition={{ duration: 0.2, delay: 0.05 }}
             >
-                <motion.div 
+                <motion.div
                     data-event-name
                     layoutId={`event-${event._id}`}
                     className="text-sm bg-primary text-on-primary px-1 py-0.5 rounded cursor-pointer max-w-full"
@@ -48,7 +54,7 @@ function AgendaItemCard({ event, onEditEvent }: { event: EventData; onEditEvent?
                 </motion.div>
             </motion.div>
 
-            <motion.div 
+            <motion.div
                 className="w-[20%] px-2 py-3 flex items-center"
                 initial={{ opacity: 0, y: -10 }}
                 animate={{ opacity: 1, y: 0 }}
@@ -68,7 +74,7 @@ function AgendaItemCard({ event, onEditEvent }: { event: EventData; onEditEvent?
                 </div>
             </motion.div>
 
-            <motion.div 
+            <motion.div
                 className="w-[20%] px-2 py-3 flex items-center"
                 initial={{ opacity: 0, y: -10 }}
                 animate={{ opacity: 1, y: 0 }}
@@ -81,7 +87,7 @@ function AgendaItemCard({ event, onEditEvent }: { event: EventData; onEditEvent?
                 </div>
             </motion.div>
 
-            <motion.div 
+            <motion.div
                 className="w-[20%] px-2 py-3 flex items-center"
                 initial={{ opacity: 0, y: -10 }}
                 animate={{ opacity: 1, y: 0 }}
@@ -104,7 +110,7 @@ function AgendaItemCard({ event, onEditEvent }: { event: EventData; onEditEvent?
                 </div>
             </motion.div>
 
-            <motion.div 
+            <motion.div
                 className="w-[15%] px-2 py-3 flex items-center"
                 initial={{ opacity: 0, y: -10 }}
                 animate={{ opacity: 1, y: 0 }}
@@ -186,22 +192,20 @@ export function AgendaView({ events, onEditEvent, onViewModeChange }: AgendaView
             {/* Desktop/Large screen table view */}
             <div className="hidden md:block space-y-6">
                 {sortedMonths.map((month, monthIndex) => (
-                    <motion.div 
+                    <motion.div
                         key={month}
                         initial={{ y: 20 }}
                         animate={{ y: 0 }}
                         exit={{ y: -20 }}
                         transition={{ duration: 0.3, delay: monthIndex * 0.1 }}
                     >
-                        <h4
-                            className="text-lg font-semibold text-on-surface mb-3 flex items-center"
-                        >
+                        <h4 className="text-lg font-semibold text-on-surface mb-3 flex items-center">
                             {month}
                             <span className="ml-2 text-sm font-normal text-on-surface-variant">
                                 ({eventsByMonth[month].length} {eventsByMonth[month].length === 1 ? 'event' : 'events'})
                             </span>
                         </h4>
-                        <motion.div 
+                        <motion.div
                             className="bg-surface rounded-lg overflow-hidden border border-outline-variant shadow"
                             initial={{ scale: 0.95 }}
                             animate={{ scale: 1 }}
