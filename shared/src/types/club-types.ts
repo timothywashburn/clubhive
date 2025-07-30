@@ -1,17 +1,7 @@
 import { z } from 'zod';
 import { ClubRole } from './club-membership-types';
-
-export const tagSchema = z.object({
-    _id: z.string(),
-    type: z.enum(['club', 'event']),
-    text: z.string(),
-});
-
-export const schoolSchema = z.object({
-    _id: z.string(),
-    name: z.string(),
-    location: z.string(),
-});
+import { schoolSchema } from './school-types';
+import { tagSchema } from './tag-types';
 
 export const clubSchema = z.object({
     _id: z.string(),
@@ -72,8 +62,6 @@ export const userClubSchema = clubSchema.extend({
     userRole: z.enum(ClubRole),
 });
 
-export type TagData = z.infer<typeof tagSchema>;
-export type SchoolData = z.infer<typeof schoolSchema>;
 export type ClubData = z.infer<typeof clubSchema>;
 export type UserClubData = z.infer<typeof userClubSchema>;
 export type CreateClubRequest = z.infer<typeof createClubRequestSchema>;
