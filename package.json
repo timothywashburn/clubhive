@@ -28,5 +28,8 @@
     "*.{json,md,css,scss}": [
       "prettier --write"
     ]
+  },
+  "dependencies": {
+    "date-fns": "^4.1.0"
   }
 }

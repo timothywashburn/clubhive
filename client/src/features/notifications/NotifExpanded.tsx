@@ -22,6 +22,10 @@ export function NotifExpanded({ notification }: NotifExpandedProps) {
         .toUpperCase()
         .slice(0, 2);
 
+    const day = new Date(notification.date);
+
+    const formatted = `${(day.getMonth() + 1).toString().padStart(2, '0')}-${day.getDate().toString().padStart(2, '0')}-${day.getFullYear()}`;
+
     return (
         <div className="space-y-4">
             <div className="flex items-center justify-between  rounded-lg px-4 py-3 bg-surface border border-outline-variant">
@@ -37,7 +41,7 @@ export function NotifExpanded({ notification }: NotifExpandedProps) {
                         </div>
                     </div>
                 </div>
-                <div className="text-sm text-on-surface-variant whitespace-nowrap">{notification.date}</div>
+                <div className="text-sm text-on-surface-variant whitespace-nowrap">{formatted}</div>
             </div>
 
             <div className="bg-surface rounded-lg p-6 space-y-4 border border-outline-variant">

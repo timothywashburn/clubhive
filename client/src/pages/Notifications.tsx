@@ -14,8 +14,6 @@ export function Notifications() {
             try {
                 const res = await fetch(`/api/notifications/${userId}`);
                 const data = await res.json();
-                // eslint-disable-next-line no-console
-                console.log('Fetched data:', data);
 
                 if (data.success) {
                     setNotifications(data.notifications);

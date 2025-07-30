@@ -47,18 +47,18 @@ export const getNotifications = async (req: Request, res: Response) => {
 
     try {
         const userNotifs = await UserNotification.find({ user: userId });
-        console.log('Found userNotifs:', userNotifs);
 
         const notifications = (
             await Promise.all(
                 userNotifs.map(async entry => {
-                    const notif = await Announcement.findById(entry.notification);
+                    const notif = await Announcement.findById(entry.notification).lean();
                     if (!notif) return null;
 
                     return {
-                        ...notif.toObject(),
+                        ...notif,
                         read: entry.read,
                         userNotifId: entry._id,
+                        date: notif.createdAt,
                     };
                 })
             )
