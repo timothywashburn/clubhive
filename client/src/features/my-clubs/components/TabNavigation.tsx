@@ -52,17 +52,17 @@ export function TabNavigation({
         <div className="border-b border-outline-variant">
             <nav className="flex justify-between relative overflow-hidden">
                 <AnimatePresence mode="wait">
-                    <motion.div 
-                        key={selectedEvent ? 'event-tabs' : 'main-tabs'}
+                    <motion.div
+                        key={selectedEvent ? 'event-tabs' : showOfficerView ? 'officer-tabs' : 'member-tabs'}
                         className="flex space-x-8"
                         initial={{ opacity: 0, y: -20 }}
                         animate={{ opacity: 1, y: 0 }}
-                        exit={{ 
-                            opacity: 0, 
+                        exit={{
+                            opacity: 0,
                             y: 50,
-                            transition: { duration: 0.2, ease: "easeIn" }
+                            transition: { duration: 0.2, ease: 'easeIn' },
                         }}
-                        transition={{ duration: 0.3, ease: "easeOut" }}
+                        transition={{ duration: 0.3, ease: 'easeOut' }}
                     >
                         {(selectedEvent ? tabs : tabs.filter(tab => tab.key !== 'membership')).map(tab => {
                             const Icon = tab.icon;
@@ -109,13 +109,13 @@ export function TabNavigation({
                                             }`}
                                             initial={{ opacity: 0, y: -20, scale: 0.8 }}
                                             animate={{ opacity: 1, y: 0, scale: 1 }}
-                                            exit={{ 
-                                                opacity: 0, 
-                                                y: 50, 
+                                            exit={{
+                                                opacity: 0,
+                                                y: 50,
                                                 scale: 0.8,
-                                                transition: { duration: 0.2, ease: "easeIn" }
+                                                transition: { duration: 0.2, ease: 'easeIn' },
                                             }}
-                                            transition={{ duration: 0.3, ease: "easeOut" }}
+                                            transition={{ duration: 0.3, ease: 'easeOut' }}
                                         >
                                             <Icon className="w-4 h-4 mr-2" />
                                             {tab.label}

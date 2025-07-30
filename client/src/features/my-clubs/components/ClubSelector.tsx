@@ -10,9 +10,18 @@ interface ClubSelectorProps {
     isMinimized: boolean;
     isAnimating: boolean;
     onToggleMinimize: () => void;
+    disabled?: boolean;
 }
 
-export function ClubSelector({ clubs, selectedClub, onClubSelect, isMinimized, isAnimating, onToggleMinimize }: ClubSelectorProps) {
+export function ClubSelector({
+    clubs,
+    selectedClub,
+    onClubSelect,
+    isMinimized,
+    isAnimating,
+    onToggleMinimize,
+    disabled = false,
+}: ClubSelectorProps) {
     const showText = !isMinimized && !isAnimating;
     const { getClubColors } = useMyClubsData();
     const navigate = useNavigate();
@@ -74,13 +83,18 @@ export function ClubSelector({ clubs, selectedClub, onClubSelect, isMinimized, i
                     return (
                         <button
                             key={club._id}
-                            onClick={() => onClubSelect(club)}
-                            className={`w-full px-2.5 py-3 rounded-lg text-left transition-all duration-300 mb-1 group cursor-pointer ${
+                            onClick={() => !disabled && onClubSelect(club)}
+                            className={`w-full px-2.5 py-3 rounded-lg text-left transition-all duration-300 mb-1 group ${
+                                disabled ? 'cursor-not-allowed' : 'cursor-pointer'
+                            } ${disabled && selectedClub?._id !== club._id ? 'opacity-50' : ''} ${
                                 selectedClub?._id === club._id
                                     ? 'bg-primary-container border-l-4 border-primary'
-                                    : 'hover:bg-surface-variant hover:border-l-4 border-primary/50'
+                                    : disabled
+                                      ? ''
+                                      : 'hover:bg-surface-variant hover:border-l-4 border-primary/50'
                             }`}
                             title={isMinimized ? club.name : ''}
+                            disabled={disabled}
                         >
                             <div className={`flex items-center transition-all duration-300 ${isMinimized ? 'justify-center' : ''}`}>
                                 <div

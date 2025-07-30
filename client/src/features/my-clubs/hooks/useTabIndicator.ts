@@ -1,16 +1,13 @@
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef, useCallback } from 'react';
 import { TabType } from '../types';
 
-export const useTabIndicator = (
-    activeTab: TabType,
-    selectedClub: any,
-    isPreviewMode: boolean
-) => {
+export const useTabIndicator = (activeTab: TabType, selectedClub: any, isPreviewMode: boolean) => {
     const [indicatorStyle, setIndicatorStyle] = useState({ left: 0, width: 0 });
     const [shouldAnimate, setShouldAnimate] = useState(false);
     const tabRefs = useRef<{ [key: string]: HTMLButtonElement | null }>({});
+    const prevTabSetRef = useRef<string | null>(null);
 
-    const updateIndicator = () => {
+    const updateIndicator = useCallback(() => {
         const activeTabElement = tabRefs.current[activeTab];
         if (activeTabElement) {
             const navElement = activeTabElement.closest('nav');
@@ -23,11 +20,22 @@ export const useTabIndicator = (
                 });
             }
         }
-    };
+    }, [activeTab]);
 
     useEffect(() => {
-        updateIndicator();
-    }, [activeTab, selectedClub, isPreviewMode]);
+        const currentTabSet = `${selectedClub?._id}-${isPreviewMode}-${activeTab.startsWith('event-') ? 'event' : 'main'}`;
+        const tabSetChanged = prevTabSetRef.current && prevTabSetRef.current !== currentTabSet;
+        prevTabSetRef.current = currentTabSet;
+
+        if (tabSetChanged) {
+            const timer = setTimeout(() => {
+                updateIndicator();
+            }, 225);
+            return () => clearTimeout(timer);
+        } else {
+            updateIndicator();
+        }
+    }, [activeTab, selectedClub, isPreviewMode, updateIndicator]);
 
     useEffect(() => {
         if (selectedClub) {

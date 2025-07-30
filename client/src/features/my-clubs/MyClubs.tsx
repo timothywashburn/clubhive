@@ -62,9 +62,9 @@ export function MyClubs() {
             content = showOfficerView ? <OfficerInfo club={selectedClub} /> : <MemberInfo club={selectedClub} />;
         } else if (activeTab === 'events') {
             content = showOfficerView ? (
-                <EventPlanner 
-                    events={events} 
-                    selectedClub={selectedClub} 
+                <EventPlanner
+                    events={events}
+                    selectedClub={selectedClub}
                     onEventSelect={handleEventSelect}
                     viewMode={eventPlannerViewMode}
                     onViewModeChange={setEventPlannerViewMode}
@@ -91,13 +91,13 @@ export function MyClubs() {
 
         return (
             <AnimatePresence mode="wait">
-                <motion.div 
-                    key={contentKey} 
+                <motion.div
+                    key={contentKey}
                     className="min-h-0"
                     initial={{ opacity: 0, y: 8 }}
                     animate={{ opacity: 1, y: 0 }}
                     exit={{ opacity: 0, y: -8 }}
-                    transition={{ duration: 0.2, ease: "easeOut" }}
+                    transition={{ duration: 0.2, ease: 'easeOut' }}
                 >
                     {content}
                 </motion.div>
@@ -144,6 +144,7 @@ export function MyClubs() {
                             isMinimized={isClubSelectorMinimized}
                             isAnimating={isAnimating}
                             onToggleMinimize={handleToggleMinimize}
+                            disabled={!!selectedEvent}
                         />
                     </div>
 
