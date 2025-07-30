@@ -1,32 +1,22 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { NotificationCard } from '../features/notifications/NotificationCard.tsx';
 import { NotifExpanded } from '../features/notifications/NotifExpanded.tsx';
+import { useNotifs } from '../hooks/fetchNotifs.tsx';
 
 export function Notifications() {
-    const [notifications, setNotifications] = useState([]);
-    const [selected, setSelected] = useState<number | null>(null);
-    const selectedNotification = notifications.find(n => n._id === selected);
+    const [selected, setSelected] = useState<string | null>(null);
 
     const userId = '68827dbf0b88d24e410fcf91';
+    const { notifs, isLoading, error } = useNotifs(userId);
 
-    useEffect(() => {
-        (async () => {
-            try {
-                const res = await fetch(`/api/notifications/${userId}`);
-                const data = await res.json();
+    const selectedNotification = notifs.find(n => n._id === selected);
 
-                if (data.success) {
-                    setNotifications(data.notifications);
-                } else {
-                    // eslint-disable-next-line no-console
-                    console.log('Failed to fetch notifications');
-                }
-            } catch (err) {
-                // eslint-disable-next-line no-console
-                console.log('Error fetching notifications:', err);
-            }
-        })();
-    }, [userId]);
+    if (isLoading) {
+        return <div>Loading...</div>;
+    }
+    if (error) {
+        return <div className="text-red-500">Error: {error}</div>;
+    }
 
     return (
         <div className="h-full relative">
@@ -46,7 +36,7 @@ export function Notifications() {
                         </div>
 
                         <div className="p-2 space-y-2">
-                            {notifications.map(notification => (
+                            {notifs.map(notification => (
                                 <NotificationCard
                                     key={notification._id}
                                     club={notification.club}
