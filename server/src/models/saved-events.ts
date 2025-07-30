@@ -1,20 +1,20 @@
-import mongoose, { Schema, Document, ObjectId } from 'mongoose';
+import mongoose, { Schema, InferSchemaType, HydratedDocument } from 'mongoose';
 
-export interface SavedEventsData extends Document {
-    _id: ObjectId;
-    userId: ObjectId;
-    eventId: ObjectId;
-    savedAt: Date;
-}
-
-const SavedEventsSchema: Schema<SavedEventsData> = new Schema(
+const schema = new Schema(
     {
-        userId: {
+        _id: {
             type: mongoose.Schema.Types.ObjectId,
             required: true,
+            auto: true,
         },
-        eventId: {
+        user: {
             type: mongoose.Schema.Types.ObjectId,
+            ref: 'User',
+            required: true,
+        },
+        event: {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: 'Event',
             required: true,
         },
         savedAt: {
@@ -25,8 +25,8 @@ const SavedEventsSchema: Schema<SavedEventsData> = new Schema(
     { timestamps: true }
 );
 
-const SavedEvents = mongoose.model<SavedEventsData>(
-    'SavedEvents',
-    SavedEventsSchema
-);
+export type SavedEventsSchema = InferSchemaType<typeof schema>;
+export type SavedEventsDoc = HydratedDocument<InferSchemaType<typeof schema>>;
+
+const SavedEvents = mongoose.model('SavedEvents', schema);
 export default SavedEvents;

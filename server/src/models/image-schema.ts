@@ -1,23 +1,19 @@
-import mongoose, { Schema, Document, ObjectId } from 'mongoose';
-// con to this method of storing images: storing large images
-// directly can lead to performance issues and scalability problems over time
-export interface ImageData extends Document {
-    _id: ObjectId;
-    imgData: Buffer;
-    contentType: string; // storing type (eg. .jpeg, .png)
-    expiresAt: Date;
-    createdAt: Date;
-    updatedAt: Date;
-}
+import mongoose, { Schema, InferSchemaType, HydratedDocument } from 'mongoose';
 
-const ImageSchema: Schema<ImageData> = new Schema(
+const schema = new Schema(
     {
+        _id: {
+            type: mongoose.Schema.Types.ObjectId,
+            required: true,
+            auto: true,
+        },
         imgData: {
             type: Buffer,
-            contentType: String,
+            required: true,
         },
         contentType: {
             type: String,
+            required: true,
         },
         expiresAt: {
             type: Date,
@@ -26,5 +22,8 @@ const ImageSchema: Schema<ImageData> = new Schema(
     { timestamps: true }
 );
 
-const Image = mongoose.model<ImageData>('Image', ImageSchema);
+export type ImageSchema = InferSchemaType<typeof schema>;
+export type ImageDoc = HydratedDocument<InferSchemaType<typeof schema>>;
+
+const Image = mongoose.model('Image', schema);
 export default Image;

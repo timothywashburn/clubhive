@@ -8,8 +8,8 @@ export enum AuthType {
 }
 
 export interface ApiRequest<TReq = unknown> extends Request {
-    body: TReq;
     auth?: AuthInfo;
+    body: TReq;
 }
 
 export interface ApiResponse<TRes = unknown> extends Response {
