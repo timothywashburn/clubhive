@@ -1,5 +1,6 @@
 import { Request, Response } from 'express';
 import Announcement from '../models/announcement-schema';
+import Clubs from '../models/club-schema';
 import UserNotification from '@/models/user-notification-schema';
 import ClubMembership from '@/models/club-membership-schema';
 
@@ -54,11 +55,15 @@ export const getNotifications = async (req: Request, res: Response) => {
                     const notif = await Announcement.findById(entry.notification).lean();
                     if (!notif) return null;
 
+                    const club = await Clubs.findById(notif.club, 'name').lean();
+                    const clubName = club?.name ?? 'Unknown Club';
+
                     return {
                         ...notif,
                         read: entry.read,
                         userNotifId: entry._id,
                         date: notif.createdAt,
+                        clubName: clubName,
                     };
                 })
             )

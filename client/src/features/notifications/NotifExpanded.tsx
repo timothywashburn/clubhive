@@ -7,6 +7,7 @@ interface NotifExpandedProps {
         club: string;
         date: string;
         body: string;
+        clubName: string;
     } | null;
 }
 
@@ -15,7 +16,7 @@ export function NotifExpanded({ notification }: NotifExpandedProps) {
         return <div className="text-on-surface-variant text-sm italic pt-12 text-center">Select a notification to view details</div>;
     }
 
-    const initials = notification.club
+    const initials = notification.clubName
         .split(' ')
         .map(word => word[0])
         .join('')
@@ -34,7 +35,7 @@ export function NotifExpanded({ notification }: NotifExpandedProps) {
                         {initials}
                     </div>
                     <div>
-                        <h2 className="text-lg font-medium text-on-surface">{notification.club}</h2>
+                        <h2 className="text-lg font-medium text-on-surface">{notification.clubName}</h2>
                         <div className="flex items-center gap-2 text-on-surface-variant text-sm italic mt-0.5">
                             <BellRing className="w-4 h-4" />
                             {notification.title}

@@ -39,7 +39,7 @@ export function Notifications() {
                             {notifs.map(notification => (
                                 <NotificationCard
                                     key={notification._id}
-                                    club={notification.club}
+                                    club={notification.clubName}
                                     title={notification.title}
                                     date={notification.date}
                                     read={notification.read}
