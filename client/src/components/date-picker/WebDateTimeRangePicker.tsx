@@ -39,7 +39,7 @@ const WebDateTimeRangePicker: React.FC<WebDateTimeRangePickerProps> = ({
             updatedDate.setFullYear(newDate.getFullYear());
             updatedDate.setMonth(newDate.getMonth());
             updatedDate.setDate(newDate.getDate());
-            
+
             // Update both start and end times with the new date
             setSelectedStartTime(prevStartTime => {
                 const updatedStartTime = new Date(prevStartTime);
@@ -69,12 +69,11 @@ const WebDateTimeRangePicker: React.FC<WebDateTimeRangePickerProps> = ({
         setSelectedEndTime(newTime);
     }, []);
 
-
     const handleDone = () => {
         onDateChange(selectedDate);
         onStartTimeChange(selectedStartTime);
         onEndTimeChange(selectedEndTime);
-        
+
         if (onDone) {
             onDone(selectedDate, selectedStartTime, selectedEndTime);
         } else {
@@ -103,7 +102,7 @@ const WebDateTimeRangePicker: React.FC<WebDateTimeRangePickerProps> = ({
         const diffMs = selectedEndTime.getTime() - selectedStartTime.getTime();
         const hours = Math.floor(diffMs / (1000 * 60 * 60));
         const minutes = Math.floor((diffMs % (1000 * 60 * 60)) / (1000 * 60));
-        
+
         if (hours > 0 && minutes > 0) {
             return `${hours}h ${minutes}m`;
         } else if (hours > 0) {
@@ -117,16 +116,12 @@ const WebDateTimeRangePicker: React.FC<WebDateTimeRangePickerProps> = ({
         <div className="bg-surface rounded-lg shadow-lg w-auto max-w-4xl">
             {/* Header */}
             <div className="bg-primary-container p-6 rounded-t-lg">
-                <div className="text-on-primary-container text-center text-lg font-medium mb-2">
-                    {formatDate(selectedDate)}
-                </div>
+                <div className="text-on-primary-container text-center text-lg font-medium mb-2">{formatDate(selectedDate)}</div>
                 <div className="text-on-primary-container text-center">
                     <div className="text-xl font-bold">
                         {formatTime(selectedStartTime)} - {formatTime(selectedEndTime)}
                     </div>
-                    <div className="text-sm opacity-90 mt-1">
-                        Duration: {getDuration()}
-                    </div>
+                    <div className="text-sm opacity-90 mt-1">Duration: {getDuration()}</div>
                 </div>
             </div>
 
@@ -134,35 +129,20 @@ const WebDateTimeRangePicker: React.FC<WebDateTimeRangePickerProps> = ({
             <div className="flex">
                 {/* Date Picker */}
                 <div className="border-r border-outline">
-                    <div className="font-medium text-on-surface-variant px-4 pt-4 pb-2">
-                        Date
-                    </div>
-                    <WebDatePicker
-                        selectedDate={selectedDate}
-                        onDateSelected={handleDateSelected}
-                    />
+                    <div className="font-medium text-on-surface-variant px-4 pt-4 pb-2">Date</div>
+                    <WebDatePicker selectedDate={selectedDate} onDateSelected={handleDateSelected} />
                 </div>
 
                 {/* Time Picker Section */}
                 <div className="flex-1">
                     <div>
-                        <div className="font-medium text-on-surface-variant px-4 pt-3 pb-1">
-                            Start Time
-                        </div>
-                        <WebTimePicker
-                            selectedDate={selectedStartTime}
-                            onTimeSelected={handleStartTimeSelected}
-                        />
+                        <div className="font-medium text-on-surface-variant px-4 pt-3 pb-1">Start Time</div>
+                        <WebTimePicker selectedDate={selectedStartTime} onTimeSelected={handleStartTimeSelected} />
                     </div>
-                    
+
                     <div className="border-t border-outline">
-                        <div className="font-medium text-on-surface-variant px-4 pt-3 pb-1">
-                            End Time
-                        </div>
-                        <WebTimePicker
-                            selectedDate={selectedEndTime}
-                            onTimeSelected={handleEndTimeSelected}
-                        />
+                        <div className="font-medium text-on-surface-variant px-4 pt-3 pb-1">End Time</div>
+                        <WebTimePicker selectedDate={selectedEndTime} onTimeSelected={handleEndTimeSelected} />
                     </div>
                 </div>
             </div>
@@ -176,10 +156,7 @@ const WebDateTimeRangePicker: React.FC<WebDateTimeRangePickerProps> = ({
                     <span className="text-on-surface">Cancel</span>
                 </button>
 
-                <button
-                    onClick={handleDone}
-                    className="bg-primary rounded-lg px-4 py-2 hover:bg-primary/90 cursor-pointer"
-                >
+                <button onClick={handleDone} className="bg-primary rounded-lg px-4 py-2 hover:bg-primary/90 cursor-pointer">
                     <span className="text-on-primary">Done</span>
                 </button>
             </div>
