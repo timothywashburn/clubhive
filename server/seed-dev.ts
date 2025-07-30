@@ -4,7 +4,8 @@ import Club from './src/models/club-schema';
 import School from './src/models/school-schema';
 import Tag from './src/models/tag-schema';
 import Event from './src/models/event-schema';
-import { EventType } from './src/models/event-schema';
+import { EventType } from '../shared/src/types/event-types';
+import Image from './src/models/image-schema';
 
 dotenv.config({ path: '.env' });
 // dotenv.config({ path: '.env.local' });
@@ -240,6 +241,18 @@ async function seed() {
         throw new Error('Could not find club');
     }
 
+    //create placeholder image document with URL and content type
+    const emptyPngBuffer = Buffer.from(
+        '89504e470d0a1a0a0000000d4948445200000001000000010806000000' +
+            '1f15c4890000000a49444154789c6360000002000154a5f26d00000000' +
+            '49454e44ae426082',
+        'hex'
+    );
+    const imgPlaceholder = await Image.create({
+        imgData: emptyPngBuffer,
+        contentType: 'image/png',
+    });
+
     await Event.insertMany([
         {
             club: wic._id,
@@ -250,7 +263,7 @@ async function seed() {
             date: new Date('2025-10-01'),
             startTime: '18:30:00',
             endTime: '20:00:00',
-            picture: null,
+            picture: imgPlaceholder._id,
             tags: [tagMap['GBM']],
         },
         {
@@ -262,7 +275,7 @@ async function seed() {
             date: new Date('2025-11-01'),
             startTime: '16:30:00',
             endTime: '18:00:00',
-            picture: null,
+            picture: imgPlaceholder._id,
             tags: [tagMap['Social']],
         },
         {
@@ -274,7 +287,7 @@ async function seed() {
             date: new Date('2025-09-15'),
             startTime: '17:00:00',
             endTime: '19:00:00',
-            picture: null,
+            picture: imgPlaceholder._id,
             tags: [tagMap['Hackathon'], tagMap['Workshop']],
         },
         {
@@ -286,7 +299,7 @@ async function seed() {
             date: new Date('2025-09-20'),
             startTime: '12:00:00',
             endTime: '13:30:00',
-            picture: null,
+            picture: imgPlaceholder._id,
             tags: [tagMap['Panel']],
         },
         {
@@ -298,7 +311,7 @@ async function seed() {
             date: new Date('2026-01-10'),
             startTime: '12:00:00',
             endTime: '13:30:00',
-            picture: null,
+            picture: imgPlaceholder._id,
             tags: [tagMap['Workshop'], tagMap['Social']],
         },
         {
@@ -310,7 +323,7 @@ async function seed() {
             date: new Date('2025-10-05'),
             startTime: '12:00:00',
             endTime: '13:30:00',
-            picture: null,
+            picture: imgPlaceholder._id,
             tags: [tagMap['Social'], tagMap['GBM']],
         },
     ]);

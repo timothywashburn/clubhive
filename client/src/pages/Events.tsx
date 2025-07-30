@@ -18,9 +18,14 @@ export function Events() {
             try {
                 const res = await fetch('/api/events');
                 const data = await res.json();
+                console.log('Fetch result:', data);
                 if (data.success) {
-                    setEvents(Array.isArray(data.data.events) ? data.data.events : []);
-                    console.log('Fetched events:', data.data);
+                    setEvents(Array.isArray(data.events) ? data.events : []);
+                    console.log('Fetched events full data:', data);
+                    console.log('Fetched events:', data.events);
+                } else {
+                    console.warn('No events array in response');
+                    setEvents([]);
                 }
             } catch (err) {
                 console.error('Error fetching events:', err);
