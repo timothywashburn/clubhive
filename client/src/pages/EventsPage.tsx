@@ -15,8 +15,6 @@ export function EventsPage() {
     const [share, setShared] = useState(false);
 
     useEffect(() => {
-        if (!id) return;
-
         async function fetchEvent() {
             try {
                 const res = await fetch(`/api/events/${id}`);
@@ -25,10 +23,9 @@ export function EventsPage() {
                 }
                 const data = await res.json();
                 console.log('Fetched events:', data.data);
-                setEvent(data.data); //
+                setEvent(data.data);
             } catch (err) {
                 console.error(err);
-                console.log('eventId from URL:', id);
             } finally {
                 setLoading(false);
             }
@@ -68,16 +65,14 @@ export function EventsPage() {
 
                 {/* tags */}
                 <div className="flex flex-wrap gap-2 mb-4">
-                    {event.tags?.map((tag, idx) =>
-                        tag ? (
-                            <span
-                                key={tag._id}
-                                className="bg-secondary-container text-on-secondary-container px-3 py-1 rounded-full text-sm font-medium"
-                            >
-                                {tag.text || tag}
-                            </span>
-                        ) : null
-                    )}
+                    {event.tags?.map(tag => (
+                        <span
+                            key={tag._id}
+                            className="bg-secondary-container text-on-secondary-container px-3 py-1 rounded-full text-sm font-medium"
+                        >
+                            {tag.text}
+                        </span>
+                    ))}
                 </div>
 
                 {/* date, location, event type, placeholder boxes */}

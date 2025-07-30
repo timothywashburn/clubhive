@@ -2,46 +2,22 @@ import { ApiEndpoint, AuthType } from '@/types/api-types';
 import { Request, Response } from 'express';
 import { ErrorCode } from '@clubhive/shared';
 import Event from '@/models/event-schema';
-import EventData from '@/models/event-schema';
+import { EventData } from '@/models/event-schema';
 
 export type EventsResponse = {
-    events: {
-        _id: string;
-        name: string;
-        description: string;
-        date: string;
-        club: {
-            name: string;
-            url: string;
-        };
-        tags: string[];
-    }[];
+    events: EventData[];
 };
 
 export const getEventsEndpoint: ApiEndpoint<null, EventsResponse> = {
     method: 'get',
     path: '/api/events',
     auth: AuthType.NONE,
-
-    handler: async (_req: Request, res: Response) => {
+    handler: async (req, res) => {
         try {
-            const event = await Event.find().populate('club', 'name url').populate('tags', 'name').exec();
-
-            const formattedEvents = event.map(event => ({
-                _id: event._id.toString(),
-                name: event.name,
-                description: event.description,
-                date: event.date,
-                club: {
-                    name: (event.club as any).name,
-                    url: (event.club as any).url,
-                },
-                tags: (event.tags as any[]).map(tag => tag.name),
-            }));
-
+            const event = await Event.find().populate('club', 'name url').populate('tags', 'text').exec();
             res.json({
                 success: true,
-                data: { events: formattedEvents },
+                data: { events: event },
             });
             return;
         } catch (err) {
@@ -63,13 +39,10 @@ export const getEventByIdEndpoint: ApiEndpoint<null, any> = {
     method: 'get',
     path: '/api/events/:id',
     auth: AuthType.NONE,
-
-    handler: async (req: Request, res: Response) => {
+    handler: async (req, res) => {
         const { id } = req.params;
-
         try {
-            const event = await Event.findById(id).populate('club', 'name url').populate('tags', 'name').exec();
-
+            const event = await Event.findById(id).populate('club', 'name url').populate('tags', 'text').exec();
             if (!event) {
                 res.status(404).json({
                     success: false,
@@ -80,23 +53,9 @@ export const getEventByIdEndpoint: ApiEndpoint<null, any> = {
                 });
                 return;
             }
-
             res.json({
                 success: true,
-                data: {
-                    _id: event._id.toString(),
-                    name: event.name,
-                    description: event.description,
-                    date: event.date,
-                    location: event.location,
-                    startTime: event.startTime,
-                    endTime: event.endTime,
-                    club: {
-                        name: (event.club as any).name,
-                        url: (event.club as any).url,
-                    },
-                    tags: (event.tags as any[]).map(tag => tag.name),
-                },
+                data: { event },
             });
             return;
         } catch (err) {

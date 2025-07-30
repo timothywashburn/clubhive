@@ -5,21 +5,14 @@ import type { Tag } from '../hooks/fetchTags';
 import { useTagsData } from '../hooks/fetchTags';
 import { getTagColor } from '../features/find-clubs/utils/TagColors';
 
-/**
- * THIS CLASS IS AI GENERATED AND TEMPORARY
- *
- * This class is a placeholder that bears no resemblance to the real
- * implementation for this page. This code is temporary and can be
- * replaced by the real implementation at any time.
- */
 export function Events() {
     const [searchTerm, setSearchTerm] = useState('');
     const { tags } = useTagsData();
     const [selectedTags, setSelectedTags] = useState<Tag[]>([]);
-    const [selectedEvent, setSelectedEvent] = useState<Event | null>(null);
-    const tagMap = Object.fromEntries(tags.map(t => [t.text, t._id]));
-
+    const [date, setDate] = useState('');
+    const [location, setLocation] = useState('');
     const [events, setEvents] = useState<any[]>([]);
+
     useEffect(() => {
         const fetchEvents = async () => {
             try {
@@ -40,9 +33,18 @@ export function Events() {
         ? events
               .filter(event => event.name?.toLowerCase().includes(searchTerm.toLowerCase()))
               .filter(event => selectedTags.length === 0 || selectedTags.every(tag => event.tags?.includes(tag)))
+              .filter(event => {
+                  if (!date) return true;
+                  const selected = new Date(date);
+                  const eventDate = new Date(event.date);
+                  if (selected.getFullYear() !== eventDate.getFullYear()) return false;
+                  if (date.length <= 4) return true;
+                  if (selected.getMonth() !== eventDate.getMonth()) return false;
+                  if (date.length <= 7) return true;
+                  return selected.getDate() === eventDate.getDate();
+              })
+              .filter(event => location.trim() === '' || event.location?.toLowerCase().includes(location.toLowerCase()))
         : [];
-
-    console.log('Filtered events:', filteredEvents);
 
     return (
         <div className="h-full relative">
@@ -52,6 +54,7 @@ export function Events() {
                     <p className="text-on-surface-variant mt-2">Discover upcoming events from clubs you follow</p>
                 </div>
 
+                {/* search bar */}
                 <div className="flex h-10 mb-6">
                     <TagFilterPopover tags={tags} selectedTags={selectedTags} setSelectedTags={setSelectedTags} />
                     <input
@@ -61,8 +64,20 @@ export function Events() {
                         onChange={e => setSearchTerm(e.target.value)}
                         className="block w-full pl-10 pr-3 py-2 border text-on-surface border-outline-variant rounded-md leading-5 bg-surface placeholder-on-surface-variant focus:outline-none focus:ring-1 focus:ring-primary focus:border-primary"
                     />
+                    <input
+                        type="text"
+                        placeholder="Location"
+                        value={location}
+                        onChange={e => setLocation(e.target.value)}
+                        className="w-full sm:w-auto pl-3 pr-3 py-2 border text-on-surface border-outline-variant rounded-md bg-surface placeholder-on-surface-variant focus:outline-none focus:ring-1 focus:ring-primary"
+                    />
+                    <input
+                        type="date"
+                        value={date}
+                        onChange={e => setDate(e.target.value)}
+                        className="pl-3 pr-3 py-2 border text-on-surface border-outline-variant rounded-md bg-surface focus:outline-none focus:ring-1 focus:ring-primary"
+                    />
                 </div>
-
                 <div className="flex flex-col lg:flex-row gap-3">
                     {selectedTags.map(tag => (
                         <span
@@ -75,6 +90,7 @@ export function Events() {
                     ))}
                 </div>
 
+                <hr className="my-4 border-t border-outline-variant" />
                 <div className="space-y-6 mt-6">
                     {/* event cards */}
                     {filteredEvents.map(event => (
@@ -85,6 +101,7 @@ export function Events() {
                                         <div className="w-10 h-10 bg-primary/10 rounded-full flex items-center justify-center mr-3">
                                             <span className="text-primary font-bold text-sm">C</span>
                                         </div>
+
                                         <div>
                                             <h2 className="text-lg font-medium text-on-surface">
                                                 <Link to={`/club-profile/${event.club?.url}`} className="text-primary hover:underline mr-1">
@@ -99,24 +116,11 @@ export function Events() {
                                         </div>
                                     </div>
 
+                                    {/* event description */}
                                     <p className="text-on-surface-variant mb-4">{event.description || 'Join use for an exciting event!'}</p>
 
                                     {/* event tags */}
-                                    {/** 
-                                        {Array.isArray(event.tags) && event.tags.length > 0 && (
-                                            <div className="flex flex-wrap gap-2 mb-4">
-                                                {event.tags?.filter(Boolean).map(tag => (
-                                                    <span
-                                                        key={tag._id}
-                                                        className={`rounded-full px-3 py-1 text-sx font-semibold ${getTagColor(tag._id)}`}
-                                                    >
-                                                        {tag.text}
-                                                    </span>
-                                                ))}    
-                                            </div>
-                                        )} */}
-
-                                    <div className="flex flex-wrap gap-2 mt-2">
+                                    <div className="text-sm text-on-surface-variant flex flex-wrap gap-2 mt-2 mb-4">
                                         {event.tags
                                             ?.filter(tag => tag !== null && typeof tag === 'object')
                                             .map(tag => (
@@ -129,18 +133,7 @@ export function Events() {
                                             ))}
                                     </div>
 
-                                    {/**
-                                        <div className="text-sm text-on-surface-variant mb-4 flex flex-wrap gap-2">
-                                            {selectedEvent.tag.map(tag => (
-                                                <span
-                                                    key={tag._id}
-                                                    className={`rounded-full px-3 py-1 text-xs font-semibold ${getTagColor(tag._id)}`}
-                                                >
-                                                    {tag.text}
-                                                </span>
-                                            ))}
-                                        </div>  */}
-
+                                    {/* date, time, location */}
                                     <div className="flex items-center text-sm text-on-surface-variant space-x-4">
                                         <div className="flex items-center">
                                             <svg className="h-4 w-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -166,7 +159,7 @@ export function Events() {
                                                     d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"
                                                 />
                                             </svg>
-                                            {event.time || 'TBD'}
+                                            {event.startTime || 'TBD'}
                                         </div>
                                         <div className="flex items-center">
                                             <svg className="h-4 w-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
