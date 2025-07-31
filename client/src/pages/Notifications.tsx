@@ -6,7 +6,7 @@ import { useNotifs } from '../hooks/fetchNotifs.tsx';
 export function Notifications() {
     const [selected, setSelected] = useState<string | null>(null);
 
-    const userId = '68827dbf0b88d24e410fcf91';
+    const userId = '507f1f77bcf86cd799439020';
     const { notifs, isLoading, error } = useNotifs(userId);
 
     const selectedNotification = notifs.find(n => n._id === selected);

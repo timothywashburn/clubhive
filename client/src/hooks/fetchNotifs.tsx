@@ -1,8 +1,8 @@
 import { useState, useEffect } from 'react';
-import { AnnouncementData } from '@clubhive/shared';
+import { NotifDisplayData } from '@clubhive/shared';
 
 export const useNotifs = (userId: string) => {
-    const [notifs, setNotifs] = useState<AnnouncementData[]>([]);
+    const [notifs, setNotifs] = useState<NotifDisplayData[]>([]);
     const [isLoading, setIsLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
 
