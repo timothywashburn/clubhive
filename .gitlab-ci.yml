@@ -52,7 +52,7 @@ docker-build-server:
   stage: build
   image: docker:25.0.5
   services:
-    - docker:25.0.5-dind=
+    - docker:25.0.5-dind
   before_script:
     - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
   script:
@@ -67,7 +67,7 @@ docker-build-client:
   stage: build
   image: docker:25.0.5
   services:
-    - docker:25.0.5-dind=
+    - docker:25.0.5-dind
   before_script:
     - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
   script:
