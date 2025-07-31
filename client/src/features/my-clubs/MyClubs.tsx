@@ -1,7 +1,18 @@
 import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useClubState, useTabIndicator, useMyClubsData, useClubEvents } from './hooks';
-import { ClubSelector, ClubHeader, TabNavigation, MemberInfo, OfficerInfo, Events, Stats, Membership, EmptyState } from './components';
+import {
+    ClubSelector,
+    ClubHeader,
+    TabNavigation,
+    MemberInfo,
+    OfficerInfo,
+    Events,
+    Stats,
+    Membership,
+    EmptyState,
+    RegisterClubButton,
+} from './components';
 import { EventPlanner } from './event-planner';
 import { EventDetails, LocationPicker, TAPIntegration, ASFunding } from './event-editor';
 import { EventData } from '@clubhive/shared';
@@ -146,6 +157,7 @@ export function MyClubs() {
                             onToggleMinimize={handleToggleMinimize}
                             disabled={!!selectedEvent}
                         />
+                        <RegisterClubButton />
                     </div>
 
                     <div className="flex-1 min-w-0">
