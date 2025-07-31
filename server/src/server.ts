@@ -1,10 +1,7 @@
 import express from 'express';
 import cors from 'cors';
 import mongoose from 'mongoose';
-import dotenv from 'dotenv';
 import ApiManager from '@/controllers/api-manager';
-
-dotenv.config();
 
 const app = express();
 const PORT = 3000;

@@ -14,6 +14,15 @@ export enum ErrorCode {
 
     // Resource errors
     NOT_FOUND = 'not_found',
+
+    // EMS API errors
+    MISSING_DATE = 'missing_date',
+    INVALID_DATE = 'invalid_date',
+    EMS_CONFIG_ERROR = 'ems_config_error',
+    EMS_API_ERROR = 'ems_api_error',
+    FETCH_AVAILABILITY_ERROR = 'fetch_availability_error',
+    FETCH_WEEKLY_AVAILABILITY_ERROR = 'fetch_weekly_availability_error',
+    FETCH_MONTHLY_AVAILABILITY_ERROR = 'fetch_monthly_availability_error',
 }
 
 export interface AuthInfo {
