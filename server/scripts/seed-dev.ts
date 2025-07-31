@@ -6,8 +6,7 @@ import Tag from '../src/models/tag-schema';
 import User, { EducationType, Year } from '../src/models/user-schema';
 import ClubMembership from '../src/models/club-membership-schema';
 import Event from '../src/models/event-schema';
-import { EventType } from '@clubhive/shared';
-import { ClubRole } from '@clubhive/shared/src/types/club-membership-types';
+import { EventType, ClubRole } from '@clubhive/shared';
 
 config({ path: '.env' });
 // config({ path: '.env.local' });
