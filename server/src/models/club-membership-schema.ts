@@ -1,13 +1,13 @@
-import mongoose, { Schema, InferSchemaType, HydratedDocument } from 'mongoose';
+import mongoose, { Schema, InferSchemaType, HydratedDocument, ObjectId } from 'mongoose';
 import { ClubRole } from '@clubhive/shared';
 
 // mongoose adds an _id property by default for each document
 // it is of type ObjectId
 
 export interface ClubMembershipData extends Document {
-    _id: mongoose.Schema.Types.ObjectId;
-    userId: mongoose.Schema.Types.ObjectId;
-    clubId: mongoose.Schema.Types.ObjectId;
+    _id: ObjectId;
+    userId: ObjectId;
+    clubId: ObjectId;
     role: ClubRole;
     createdAt: Date;
     updatedAt: Date;
