@@ -1,15 +1,12 @@
 import mongoose from 'mongoose';
-import { config } from 'dotenv';
 import Club from '../src/models/club-schema';
 import School from '../src/models/school-schema';
 import Tag from '../src/models/tag-schema';
 import User, { EducationType, Year } from '../src/models/user-schema';
 import ClubMembership from '../src/models/club-membership-schema';
 import Event from '../src/models/event-schema';
+import { ClubhiveConfigModel } from '../src/models/clubhive-config-schema';
 import { EventType, ClubRole } from '@clubhive/shared';
-
-config({ path: '.env' });
-// config({ path: '.env.local' });
 
 const TEST_USER_ID = new mongoose.Types.ObjectId('507f1f77bcf86cd799439020');
 const UCSD_SCHOOL_ID = new mongoose.Types.ObjectId('507f1f77bcf86cd799439021');
@@ -24,6 +21,7 @@ async function seed() {
     await User.deleteMany({});
     await ClubMembership.deleteMany({});
     await Event.deleteMany({});
+    await ClubhiveConfigModel.deleteMany({});
 
     const [ucsd] = await School.insertMany([{ _id: UCSD_SCHOOL_ID, name: 'UCSD', location: 'San Diego, CA' }]);
 
@@ -464,6 +462,12 @@ async function seed() {
     }
 
     await Event.insertMany(otherClubsEvents);
+
+    // Seed configuration
+    await ClubhiveConfigModel.create({
+        emsApiBaseUrl: process.env.EMS_API_BASE_URL || '',
+        emsApiToken: process.env.EMS_API_TOKEN || '',
+    });
 
     console.log('Seeding complete!');
     mongoose.connection.close();
