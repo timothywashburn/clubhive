@@ -24,7 +24,7 @@ export const createAnnouncement = async (req: Request, res: Response) => {
         const userNotifs = memberships.map(
             membership =>
                 new UserNotification({
-                    user: membership.user,
+                    user: membership.userId,
                     notificationId: result._id,
                     read: false,
                 })

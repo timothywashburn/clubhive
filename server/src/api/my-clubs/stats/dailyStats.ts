@@ -2,7 +2,8 @@ import mongoose from 'mongoose';
 import dotenv from 'dotenv';
 import Club from '../../../models/club-schema';
 import ClubMembership from '../../../models/club-membership-schema';
-import User, { UserData } from '../../../models/user-schema';
+import User from '../../../models/user-schema';
+import type { UserSchema, UserDoc } from '../../../models/user-schema';
 import SavedEvents from '../../../models/saved-events';
 import Event from '../../../models/event-schema';
 import ClubSnapshot, { ClubSnapshotData, ClubSnapshotDocument } from '../../../models/club-snapshot-schema';
@@ -67,7 +68,7 @@ async function generateDailyClubStats() {
                     });
                 }
 
-                const activeMemberships = await ClubMembership.find({ clubId: club._id }).populate<{ userId: UserData }>('userId');
+                const activeMemberships = await ClubMembership.find({ clubId: club._id }).populate<{ userId: UserSchema }>('userId');
                 const majorCount: Record<string, number> = {};
                 for (const member of activeMemberships) {
                     if (member.userId && member.userId.major) {

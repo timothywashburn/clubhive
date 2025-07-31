@@ -1,5 +1,4 @@
-import mongoose, { Schema, InferSchemaType, HydratedDocument, ObjectId } from 'mongoose';
-import { ClubRole } from '@clubhive/shared';
+import mongoose, { Schema, Document, ObjectId } from 'mongoose';
 
 // mongoose adds an _id property by default for each document
 // it is of type ObjectId
@@ -22,24 +21,19 @@ export enum ClubRole {
 
 const ClubMembershipSchema: Schema<ClubMembershipData> = new Schema(
     {
-        _id: {
-            type: mongoose.Schema.Types.ObjectId,
-            required: true,
-            auto: true,
-        },
-        user: {
+        userId: {
             type: mongoose.Schema.Types.ObjectId,
             ref: 'User',
             required: true,
         },
-        club: {
+        clubId: {
             type: mongoose.Schema.Types.ObjectId,
             ref: 'Club',
             required: true,
         },
         role: {
             type: String,
-            enum: Object.values(ClubRole),
+            enum: Object.values(ClubRole), // can be edited as needed
             required: true,
         },
     },
