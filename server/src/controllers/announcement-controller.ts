@@ -15,7 +15,7 @@ export const createAnnouncement = async (req: Request, res: Response) => {
         });
         const result = await newAnnouncement.save();
 
-        const memberships = await ClubMembership.find({ clubId: club });
+        const memberships = await ClubMembership.find({ club: club });
 
         if (!memberships.length) {
             return res.status(404).json({ error: 'No members found for this club' });
@@ -24,7 +24,7 @@ export const createAnnouncement = async (req: Request, res: Response) => {
         const userNotifs = memberships.map(
             membership =>
                 new UserNotification({
-                    userId: membership.userId,
+                    user: membership.user,
                     notificationId: result._id,
                     read: false,
                 })
@@ -51,13 +51,13 @@ export const getNotifications = async (req: Request, res: Response) => {
         const notifications = (
             await Promise.all(
                 userNotifs.map(async entry => {
-                    const notif = await Announcement.findById(entry.notificationId);
+                    const notif = await Announcement.findById(entry.notification);
                     if (!notif) return null;
 
                     return {
                         ...notif.toObject(),
                         read: entry.read,
-                        userNotifId: entry._id,
+                        userNotif: entry._id,
                     };
                 })
             )

@@ -52,9 +52,7 @@ const parseMarkdownChangelog = (content: string): ChangelogVersion[] => {
         const changeMatch = trimmedLine.match(/^-\s+(.+)$/);
         if (changeMatch && currentVersion && currentSection) {
             const validTypes = ['added', 'changed', 'removed', 'fixed', 'misc'];
-            const changeType = validTypes.includes(currentSection)
-                ? (currentSection as any)
-                : 'misc';
+            const changeType = validTypes.includes(currentSection) ? (currentSection as any) : 'misc';
 
             currentVersion.changes.push({
                 type: changeType,
@@ -104,7 +102,7 @@ export const changelogEndpoint: ApiEndpoint<undefined, ChangelogResponse> = {
 
             res.json({
                 success: true,
-                data: response,
+                ...response,
             });
         } catch (error) {
             console.error('Error reading changelog:', error);

@@ -1,17 +1,16 @@
-import mongoose, { Document, Schema, ObjectId } from 'mongoose';
-
-export interface TagData extends Document {
-    _id: ObjectId;
-    type: TagType; // either club or event
-    text: string;
-}
+import mongoose, { Schema, InferSchemaType, HydratedDocument } from 'mongoose';
 
 export enum TagType {
     CLUB = 'club',
     EVENT = 'event',
 }
 
-const TagSchema: Schema<TagData> = new Schema({
+const schema = new Schema({
+    _id: {
+        type: mongoose.Schema.Types.ObjectId,
+        required: true,
+        auto: true,
+    },
     type: {
         type: String,
         enum: Object.values(TagType),
@@ -23,5 +22,8 @@ const TagSchema: Schema<TagData> = new Schema({
     },
 });
 
-const Tag = mongoose.model<TagData>('Tag', TagSchema);
+export type TagSchema = InferSchemaType<typeof schema>;
+export type TagDoc = HydratedDocument<InferSchemaType<typeof schema>>;
+
+const Tag = mongoose.model('Tag', schema);
 export default Tag;
