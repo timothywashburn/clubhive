@@ -1,6 +1,10 @@
+import { useState } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
 import { useClubState, useTabIndicator, useMyClubsData, useClubEvents } from './hooks';
 import { ClubSelector, ClubHeader, TabNavigation, MemberInfo, OfficerInfo, Events, Stats, Membership, EmptyState } from './components';
 import { EventPlanner } from './event-planner';
+import { EventDetails, LocationPicker, TAPIntegration, ASFunding } from './event-editor';
+import { EventData } from '@clubhive/shared';
 
 export function MyClubs() {
     const { clubs, loading, error } = useMyClubsData();
@@ -8,9 +12,45 @@ export function MyClubs() {
     const { selectedClub, setSelectedClub, activeTab, setActiveTab, isPreviewMode, setIsPreviewMode, isOfficer, isOwner, showOfficerView } =
         useClubState();
 
+    const [selectedEvent, setSelectedEvent] = useState<EventData | null>(null);
+    const [isClubSelectorMinimized, setIsClubSelectorMinimized] = useState(false);
+    const [isAnimating, setIsAnimating] = useState(false);
+    const [eventPlannerViewMode, setEventPlannerViewMode] = useState<'calendar' | 'agenda'>('calendar');
+
+    const handleToggleMinimize = () => {
+        setIsAnimating(true);
+        setTimeout(
+            () => {
+                setIsClubSelectorMinimized(!isClubSelectorMinimized);
+                setTimeout(() => setIsAnimating(false), 300);
+            },
+            isClubSelectorMinimized ? 0 : 150
+        );
+    };
+
     const { events, loading: eventsLoading, error: eventsError } = useClubEvents(selectedClub?._id || null);
 
     const { indicatorStyle, shouldAnimate, setShouldAnimate, tabRefs } = useTabIndicator(activeTab, selectedClub, isPreviewMode);
+
+    const handleEventSelect = (event: EventData | null, eventElement?: HTMLElement) => {
+        setSelectedEvent(event);
+        if (event) {
+            setActiveTab('event-details');
+        } else {
+            setActiveTab('events');
+        }
+    };
+
+    const handleEventSave = () => {
+        // TODO: Implement event save logic
+        setSelectedEvent(null);
+        setActiveTab('events');
+    };
+
+    const handleEventCancel = () => {
+        setSelectedEvent(null);
+        setActiveTab('events');
+    };
 
     const renderTabContent = () => {
         const contentKey = `${selectedClub?._id}-${activeTab}-${isPreviewMode}`;
@@ -22,10 +62,24 @@ export function MyClubs() {
             content = showOfficerView ? <OfficerInfo club={selectedClub} /> : <MemberInfo club={selectedClub} />;
         } else if (activeTab === 'events') {
             content = showOfficerView ? (
-                <EventPlanner events={events} />
+                <EventPlanner
+                    events={events}
+                    selectedClub={selectedClub}
+                    onEventSelect={handleEventSelect}
+                    viewMode={eventPlannerViewMode}
+                    onViewModeChange={setEventPlannerViewMode}
+                />
             ) : (
                 <Events events={events} loading={eventsLoading} error={eventsError} />
             );
+        } else if (activeTab === 'event-details' && selectedEvent) {
+            content = <EventDetails event={selectedEvent} onEventChange={setSelectedEvent} />;
+        } else if (activeTab === 'event-location' && selectedEvent) {
+            content = <LocationPicker event={selectedEvent} onEventChange={setSelectedEvent} />;
+        } else if (activeTab === 'event-tap' && selectedEvent) {
+            content = <TAPIntegration event={selectedEvent} onEventChange={setSelectedEvent} />;
+        } else if (activeTab === 'event-funding' && selectedEvent) {
+            content = <ASFunding event={selectedEvent} onEventChange={setSelectedEvent} />;
         } else if (activeTab === 'stats' && showOfficerView) {
             content = <Stats club={selectedClub} />;
         } else if (activeTab === 'stats' && isPreviewMode) {
@@ -36,9 +90,18 @@ export function MyClubs() {
         }
 
         return (
-            <div key={contentKey} className="min-h-0">
-                {content}
-            </div>
+            <AnimatePresence mode="wait">
+                <motion.div
+                    key={contentKey}
+                    className="min-h-0"
+                    initial={{ opacity: 0, y: 8 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0, y: -8 }}
+                    transition={{ duration: 0.2, ease: 'easeOut' }}
+                >
+                    {content}
+                </motion.div>
+            </AnimatePresence>
         );
     };
 
@@ -70,11 +133,19 @@ export function MyClubs() {
     }
 
     return (
-        <div className="h-full relative">
+        <div className="relative">
             <div className="px-4 sm:px-6 lg:px-8 py-8">
                 <div className="flex gap-6">
-                    <div className="w-80 flex-shrink-0">
-                        <ClubSelector clubs={clubs} selectedClub={selectedClub} onClubSelect={setSelectedClub} />
+                    <div className={`flex-shrink-0 transition-all duration-300 ease-in-out ${isClubSelectorMinimized ? 'w-20' : 'w-80'}`}>
+                        <ClubSelector
+                            clubs={clubs}
+                            selectedClub={selectedClub}
+                            onClubSelect={setSelectedClub}
+                            isMinimized={isClubSelectorMinimized}
+                            isAnimating={isAnimating}
+                            onToggleMinimize={handleToggleMinimize}
+                            disabled={!!selectedEvent}
+                        />
                     </div>
 
                     <div className="flex-1 min-w-0">
@@ -86,6 +157,9 @@ export function MyClubs() {
                                         isOfficer={isOfficer}
                                         isPreviewMode={isPreviewMode}
                                         onPreviewToggle={() => setIsPreviewMode(!isPreviewMode)}
+                                        selectedEvent={selectedEvent}
+                                        onEventSave={handleEventSave}
+                                        onEventCancel={handleEventCancel}
                                     />
 
                                     <TabNavigation
@@ -96,6 +170,7 @@ export function MyClubs() {
                                         shouldAnimate={shouldAnimate}
                                         tabRefs={tabRefs}
                                         setShouldAnimate={setShouldAnimate}
+                                        selectedEvent={selectedEvent}
                                     />
                                 </div>
 

@@ -6,8 +6,9 @@ import { useAuth } from './hooks/useAuth';
 import { useTheme } from './hooks/useTheme';
 import { Home } from './pages/Home';
 import { MyClubs } from './features/my-clubs';
-import { Clubs } from './pages/Clubs';
+import { Clubs } from './pages/ClubSearch.tsx';
 import { ClubProfile } from './pages/ClubProfile';
+import { ClubRegistration } from './pages/ClubRegistration.tsx';
 import { Events } from './pages/Events';
 import { EventsPage } from './pages/EventsPage';
 import { Notifications } from './pages/Notifications';
@@ -39,7 +40,7 @@ export function App() {
 
     return (
         <BrowserRouter>
-            <div className="min-h-screen bg-background flex flex-col">
+            <div className="h-screen flex flex-col">
                 <div
                     ref={backgroundRef}
                     className="fixed"
@@ -49,28 +50,32 @@ export function App() {
                         right: '0',
                         height: '150vh',
                         transform: `translateY(${scrollY * -0.05}px)`,
+                        zIndex: -1,
                     }}
                 >
                     <StaticHoneycomb />
                 </div>
                 <Navbar isAuthenticated={isAuthenticated} toggleAuth={toggleAuth} />
-                <main className="flex-grow">
-                    <Routes>
-                        <Route path="/" element={<Home />} />
-                        <Route path="/my-clubs" element={<MyClubs />} />
-                        <Route path="/clubs" element={<Clubs />} />
-                        <Route path="/club-profile/:url" element={<ClubProfile />} />
-                        <Route path="/events" element={<Events />} />
-                        <Route path="/events/:id" element={<EventsPage />} />
-                        <Route path="/account" element={<Account />} />
-                        <Route path="/notifications" element={<Notifications />} />
-                        <Route path="/about" element={<About />} />
-                        <Route path="/signin" element={<SignIn />} />
-                        <Route path="/signup" element={<SignUp />} />
-                        <Route path="*" element={<NotFound />} />
-                    </Routes>
+                <main className="flex-1 overflow-auto flex flex-col">
+                    <div className="flex-1">
+                        <Routes>
+                            <Route path="/" element={<Home />} />
+                            <Route path="/my-clubs" element={<MyClubs />} />
+                            <Route path="/clubs" element={<Clubs />} />
+                            <Route path="/club-profile/:url" element={<ClubProfile />} />
+                            <Route path="/events" element={<Events />} />
+                            <Route path="/events/:id" element={<EventsPage />} />
+                            <Route path="/account" element={<Account />} />
+                            <Route path="/notifications" element={<Notifications />} />
+                            <Route path="/about" element={<About />} />
+                            <Route path="/signin" element={<SignIn />} />
+                            <Route path="/signup" element={<SignUp />} />
+                            <Route path="/register" element={<ClubRegistration />} />
+                            <Route path="*" element={<NotFound />} />
+                        </Routes>
+                    </div>
+                    <Footer />
                 </main>
-                <Footer />
             </div>
         </BrowserRouter>
     );
