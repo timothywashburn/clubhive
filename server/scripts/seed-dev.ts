@@ -5,6 +5,8 @@ import Tag from '../src/models/tag-schema';
 import User, { EducationType, Year } from '../src/models/user-schema';
 import ClubMembership from '../src/models/club-membership-schema';
 import Event from '../src/models/event-schema';
+import Announcement from '../src/models/announcement-schema';
+import UserNotification from '../src/models/user-notification-schema';
 import { ClubhiveConfigModel } from '../src/models/clubhive-config-schema';
 import { EventType, ClubRole } from '@clubhive/shared';
 
@@ -22,6 +24,8 @@ async function seed() {
     await ClubMembership.deleteMany({});
     await Event.deleteMany({});
     await ClubhiveConfigModel.deleteMany({});
+    await Announcement.deleteMany({});
+    await UserNotification.deleteMany({});
 
     const [ucsd] = await School.insertMany([{ _id: UCSD_SCHOOL_ID, name: 'UCSD', location: 'San Diego, CA' }]);
 
@@ -267,6 +271,53 @@ async function seed() {
 
         { user: testUser2._id, club: clubs[2]._id, role: ClubRole.MEMBER },
         { user: testUser2._id, club: clubs[6]._id, role: ClubRole.OWNER },
+    ]);
+
+    const announcements = await Announcement.insertMany([
+        {
+            club: clubs[0]._id,
+            title: 'Meeting Location Changed',
+            body:
+                'The Computer Science Club meeting location has been changed for this week.\n' +
+                '\n' +
+                'New Location: Room 204, Engineering Building\n' +
+                'Date and Time: Thursday at 5:00 PM (same time as usual)\n' +
+                '\n' +
+                "Please make sure to go to the updated room. We'll still have our regular activities, updates on upcoming projects, and time to connect with fellow members. Looking forward to seeing you there.",
+            pictures: [],
+        },
+
+        {
+            club: clubs[1]._id,
+            title: 'New Event Registration',
+            body: 'Registration is open for our new event! Please see discord for more information. We look forward to seeing you there.',
+            pictures: [],
+        },
+
+        {
+            club: clubs[2]._id,
+            title: 'Member applications open now!',
+            body: 'To apply for a position follow the form in discord. Please submit applications in the next week.',
+            pictures: [],
+        },
+    ]);
+
+    await UserNotification.insertMany([
+        {
+            user: TEST_USER_ID,
+            notification: announcements[0]._id,
+            read: false,
+        },
+        {
+            user: TEST_USER_ID,
+            notification: announcements[1]._id,
+            read: true,
+        },
+        {
+            user: TEST_USER_ID,
+            notification: announcements[2]._id,
+            read: false,
+        },
     ]);
 
     // Seed events for Computer Science Club (all events from useMyClubsData)
