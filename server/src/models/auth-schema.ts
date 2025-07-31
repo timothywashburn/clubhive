@@ -5,6 +5,7 @@ export interface AuthData extends Document {
     email: string;
     password: string;
     emailVerified: boolean;
+    userId: ObjectId;
     createdAt: Date;
     updatedAt: Date;
 }
@@ -22,6 +23,11 @@ const AuthSchema: Schema<AuthData> = new Schema(
         emailVerified: {
             type: Boolean,
             default: false,
+            required: true,
+        },
+        userId: {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: 'User',
             required: true,
         },
     },
