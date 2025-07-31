@@ -1,0 +1,130 @@
+import { ErrorCode } from '@clubhive/shared';
+import { ApiEndpoint, AuthType } from '@/types/api-types';
+import bcrypt from 'bcrypt';
+import jwt from 'jsonwebtoken';
+import Auth from '@/models/auth-schema';
+
+interface LoginRequest {
+    email: string;
+    password: string;
+}
+
+interface LoginResponse {
+    accessToken: string;
+    refreshToken: string;
+}
+
+interface RefreshResponse {
+    accessToken: string;
+}
+
+export const loginEndpoint: ApiEndpoint<LoginRequest, LoginResponse> = {
+    path: '/api/user/login',
+    method: 'post',
+    auth: AuthType.AUTHENTICATED,
+    handler: async (req, res) => {
+        const { email, password } = req.body;
+
+        const auth = await Auth.findOne({ email: email });
+        if (!auth) {
+            res.status(409).json({
+                success: false,
+                error: {
+                    message: 'User does not exist',
+                    code: ErrorCode.INVALID_INPUT,
+                },
+            });
+            return;
+        }
+        try {
+            if (await bcrypt.compare(password, auth.password)) {
+                const REFRESH_TOKEN_SECRET = 'temp refresh'; // real token should go in .env
+                const ACCESS_TOKEN_SECRET = 'temp access';
+
+                const accessToken = jwt.sign(auth._id, ACCESS_TOKEN_SECRET, { expiresIn: '15m' });
+                const refreshToken = jwt.sign(auth._id, REFRESH_TOKEN_SECRET, { expiresIn: '7d' });
+                // Store refresh token in HTTP-only cookie
+                res.cookie('refreshToken', refreshToken, {
+                    httpOnly: true, // Prevents XSS attacks
+                    secure: process.env.NODE_ENV === 'development', // HTTPS only in dev; change to production
+                    sameSite: 'strict', // CSRF protection
+                    maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days
+                    path: '/',
+                });
+
+                res.json({
+                    success: true,
+                    data: { accessToken: accessToken, refreshToken: refreshToken },
+                });
+            }
+        } catch (error) {
+            console.error('Error logging in:', error);
+            res.status(500).json({
+                success: false,
+                error: {
+                    message: 'Internal server error',
+                    code: ErrorCode.INTERNAL_SERVER_ERROR,
+                },
+            });
+        }
+    },
+};
+
+export const tokenRefresh: ApiEndpoint<undefined, RefreshResponse> = {
+    path: '/api/user/refreshToken',
+    method: 'post', // creating new access token
+    auth: AuthType.AUTHENTICATED,
+    handler: async (req, res) => {
+        const refreshToken = req.cookies.refreshToken; // gets refreshToken from client side storage
+
+        const REFRESH_TOKEN_SECRET = 'temp refresh'; // real token should go in .env
+        const ACCESS_TOKEN_SECRET = 'temp access';
+
+        if (!refreshToken) {
+            res.status(409).json({
+                success: false,
+                error: {
+                    message: 'Error fetching token',
+                    code: ErrorCode.INVALID_INPUT,
+                },
+            });
+            return;
+        }
+        jwt.verify(refreshToken, REFRESH_TOKEN_SECRET, (error: any, authId: any) => {
+            if (error) {
+                res.status(409).json({
+                    success: false,
+                    error: {
+                        message: 'Error',
+                        code: ErrorCode.INVALID_INPUT,
+                    },
+                });
+                return;
+            }
+            const accessToken = jwt.sign(authId, ACCESS_TOKEN_SECRET, { expiresIn: '15m' });
+            res.json({
+                success: true,
+                data: { accessToken: accessToken },
+            });
+        });
+    },
+};
+
+/* logout for future ref; will implement after i get signup/login working */
+
+/*
+// logout function will delete refreshToken 
+export const logout = async (req: Request, res: Response) => {
+    try {
+        res.clearCookie('refreshToken', {
+            httpOnly: true,
+            secure: process.env.NODE_ENV === 'production',
+            sameSite: 'strict',
+            path: '/'
+        });
+        res.status(201).json("Logged out successfully");
+    } catch (error) {
+        res.status(400).json({ error : "Logout failed "});
+    }
+}
+*/
