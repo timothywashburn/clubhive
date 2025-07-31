@@ -10,7 +10,6 @@ variables:
 services:
   - docker:20.10.16-dind
 
-# Build jobs that run only on merge requests
 build-server:
   stage: test
   image: node:$NODE_VERSION
@@ -49,14 +48,11 @@ build-client:
   rules:
     - if: $CI_PIPELINE_SOURCE == "merge_request_event"
 
-# Docker build jobs that run only on main/dev branches
 docker-build-server:
   stage: build
   image: docker:25.0.5
   services:
-    - docker:25.0.5-dind
-  needs:
-    - test
+    - docker:25.0.5-dind=
   before_script:
     - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
   script:
@@ -71,9 +67,7 @@ docker-build-client:
   stage: build
   image: docker:25.0.5
   services:
-    - docker:25.0.5-dind
-  needs:
-    - test
+    - docker:25.0.5-dind=
   before_script:
     - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
   script:
