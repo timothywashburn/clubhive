@@ -1,14 +1,14 @@
 import { Link } from 'react-router';
 import React, { useState, useEffect } from 'react';
 import TagFilterPopover from '../features/find-clubs/components/FilterTagsButton';
-import type { Tag } from '../hooks/fetchTags';
+import type { TagData } from '@clubhive/shared';
 import { useTagsData } from '../hooks/fetchTags';
 import { getTagColor } from '../features/find-clubs/utils/TagColors';
 
 export function Events() {
     const [searchTerm, setSearchTerm] = useState('');
     const { tags } = useTagsData();
-    const [selectedTags, setSelectedTags] = useState<Tag[]>([]);
+    const [selectedTags, setSelectedTags] = useState<TagData[]>([]);
     const [date, setDate] = useState('');
     const [location, setLocation] = useState('');
     const [events, setEvents] = useState<any[]>([]);

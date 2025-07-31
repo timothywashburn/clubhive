@@ -1,5 +1,10 @@
 import { useParams, useNavigate, Link } from 'react-router';
 import { useState, useEffect } from 'react';
+import { getTagColor } from '../features/find-clubs/utils/TagColors';
+import { useTagsData } from '../hooks/fetchTags';
+import TagFilterPopover from '../features/find-clubs/components/FilterTagsButton';
+import type { TagData } from '@clubhive/shared';
+//import FilterTagsButton from '../features/find-clubs/components/FilterTagsButton';
 
 /**
  * This is the static frontend mockup of what an event would look like,
@@ -13,6 +18,12 @@ export function EventsPage() {
     const navigate = useNavigate();
     const [saved, setSaved] = useState(false);
     const [share, setShared] = useState(false);
+    const { tags } = useTagsData();
+    const [selectedTags, setSelectedTags] = useState<TagData[]>([]);
+
+    const tagObj = event?.tagIds //necessar?? idk
+        ? tags.filter(tag => event.tagIds.includes(tag._id))
+        : [];
 
     useEffect(() => {
         async function fetchEvent() {
@@ -64,15 +75,14 @@ export function EventsPage() {
                 </div>
 
                 {/* tags */}
-                <div className="flex flex-wrap gap-2 mb-4">
-                    {event.tags?.map(tag => (
-                        <span
-                            key={tag._id}
-                            className="bg-secondary-container text-on-secondary-container px-3 py-1 rounded-full text-sm font-medium"
-                        >
-                            {tag.text}
-                        </span>
-                    ))}
+                <div className="text-sm text-on-surface-variant flex flex-wrap gap-2 mt-2 mb-4">
+                    {event.tags
+                        ?.filter(tag => tag !== null && typeof tag === 'object')
+                        .map(tag => (
+                            <span key={tag._id} className={`rounded-full px-3 py-1 text-xs font-semibold ${getTagColor(tag._id)}`}>
+                                {tag.text}
+                            </span>
+                        ))}
                 </div>
 
                 {/* date, location, event type, placeholder boxes */}
