@@ -5,9 +5,9 @@ import { ClubRole } from '@clubhive/shared';
 // it is of type ObjectId
 
 export interface ClubMembershipData extends Document {
-    _id: string;
-    userId: string;
-    clubId: string;
+    _id: mongoose.Schema.Types.ObjectId;
+    userId: mongoose.Schema.Types.ObjectId;
+    clubId: mongoose.Schema.Types.ObjectId;
     role: ClubRole;
     createdAt: Date;
     updatedAt: Date;
