@@ -41,6 +41,6 @@ export interface ApiErrorResponse {
 
 export type ApiResponseBody<TRes = unknown> = ApiSuccessResponse<TRes> | ApiErrorResponse;
 
-export function isSuccess<T>(data: ApiResponseBody<T>): data is ApiSuccessResponse<T> {
+export const isSuccess = <T>(data: ApiResponseBody<T>): data is ApiSuccessResponse<T> => {
     return data.success;
-}
+};
