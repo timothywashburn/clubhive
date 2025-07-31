@@ -52,24 +52,27 @@ export const getNotifications = async (req: Request, res: Response) => {
         const notifications = (
             await Promise.all(
                 userNotifs.map(async entry => {
-                    const notif = await Announcement.findById(entry.notification);
+                    const notif = await Announcement.findById(entry.notification).lean();
                     if (!notif) return null;
 
                     const club = await Clubs.findById(notif.club, 'name').lean();
                     const clubName = club?.name ?? 'Unknown Club';
 
                     return {
-                        ...notif,
+                        _id: notif._id,
+                        title: notif.title,
+                        body: notif.body,
+                        pictures: notif.pictures,
+                        clubName: clubName,
+                        date: notif.createdAt,
                         read: entry.read,
                         userNotifId: entry._id,
-                        date: notif.createdAt,
-                        clubName: clubName,
                     };
                 })
             )
         )
             .filter(notif => notif !== null)
-            .sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
+            .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
 
         res.status(200).json({ success: true, notifications });
     } catch (err) {
