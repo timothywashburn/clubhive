@@ -20,8 +20,19 @@ import { EventData } from '@clubhive/shared';
 export function MyClubs() {
     const { clubs, loading, error } = useMyClubsData();
 
-    const { selectedClub, setSelectedClub, activeTab, setActiveTab, isPreviewMode, setIsPreviewMode, isOfficer, isOwner, showOfficerView } =
-        useClubState();
+    const {
+        selectedClub,
+        setSelectedClub,
+        activeTab,
+        setActiveTab,
+        setActiveTabDirect,
+        isPreviewMode,
+        setIsPreviewMode,
+        isOfficer,
+        isOwner,
+        showOfficerView,
+        returnToEvents,
+    } = useClubState(clubs || []);
 
     const [selectedEvent, setSelectedEvent] = useState<EventData | null>(null);
     const [isClubSelectorMinimized, setIsClubSelectorMinimized] = useState(false);
@@ -48,19 +59,20 @@ export function MyClubs() {
         if (event) {
             setActiveTab('event-details');
         } else {
-            setActiveTab('events');
+            returnToEvents();
         }
     };
 
     const handleEventSave = () => {
         // TODO: Implement event save logic
         setSelectedEvent(null);
-        setActiveTab('events');
+        returnToEvents();
     };
 
     const handleEventCancel = () => {
+        // Close the event editor and go back to event planner
         setSelectedEvent(null);
-        setActiveTab('events');
+        setActiveTabDirect('events'); // Use direct setter to avoid URL navigation cycle
     };
 
     const renderTabContent = () => {
