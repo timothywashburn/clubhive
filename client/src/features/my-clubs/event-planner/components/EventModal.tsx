@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { X, Upload, Tag, Calendar } from 'lucide-react';
-import { EventData, EventType, TagData } from '@clubhive/shared';
+import { EventData, EventType, TagData, TagType } from '@clubhive/shared';
 import { WebDateTimeRangePicker } from '../../../../components/date-picker';
 
 interface EventModalProps {
@@ -73,7 +73,7 @@ export function EventModal({ event, isOpen, onClose, onSave, selectedDate }: Eve
             // Create a temporary tag object for new tags
             const newTag: TagData = {
                 _id: Date.now().toString(),
-                type: 'event',
+                type: TagType.EVENT,
                 text: tagText,
             };
             setFormData(prev => ({

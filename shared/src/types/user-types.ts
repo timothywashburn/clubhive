@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import { schoolSchema } from './club-types';
+import { schoolSchema } from './school-types';
 
 export enum EducationType {
     UNDERGRADUATE = 'Undergraduate',

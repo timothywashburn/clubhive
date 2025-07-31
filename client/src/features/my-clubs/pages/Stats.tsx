@@ -1,8 +1,7 @@
-import { ErrorCode } from '@clubhive/shared/index.ts';
-import { Club } from '../types';
-import MyLineChart from './stats/LineChart.tsx';
-import MyPolarChart from './stats/PolarChart.tsx';
+import { ErrorCode, UserClubData } from '@clubhive/shared/index.ts';
 import { useState, useMemo, useEffect } from 'react';
+import MyLineChart from '../components/stats/LineChart.tsx';
+import MyPolarChart from '../components/stats/PolarChart.tsx';
 
 interface StatsProps {
     club: UserClubData;
@@ -76,7 +75,7 @@ export function Stats({ club }: StatsProps) {
     useEffect(() => {
         const fetchStats = async () => {
             try {
-                const res = await fetch(`/api/club-stats/${club.id}`);
+                const res = await fetch(`/api/club-stats/${club._id}`);
                 if (!res.ok) throw new Error('Failed to fetch');
                 const data = await res.json();
 
@@ -91,7 +90,7 @@ export function Stats({ club }: StatsProps) {
             }
         };
         fetchStats();
-    }, [club.id]);
+    }, [club._id]);
 
     const initialCount = memberCount > 0 ? memberCount : 0;
     const filteredMemberChangesData = useMemo(() => {

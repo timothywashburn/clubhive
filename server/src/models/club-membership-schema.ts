@@ -1,5 +1,5 @@
 import mongoose, { Schema, InferSchemaType, HydratedDocument } from 'mongoose';
-import { ClubRole } from '@clubhive/shared/src/types/club-membership-types';
+import { ClubRole } from '@clubhive/shared';
 
 // mongoose adds an _id property by default for each document
 // it is of type ObjectId

@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import { tagSchema } from './club-types';
+import { tagSchema } from './tag-types';
 
 export enum EventType {
     CLUB_OFFICERS = 'Club Officers',
