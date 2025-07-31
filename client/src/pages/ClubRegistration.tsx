@@ -107,6 +107,9 @@ export function ClubRegistration() {
                                         value={clubSchool}
                                         onChange={e => setClubSchool(e.target.value)}
                                     >
+                                        <option className="text-on-background-variant" value="">
+                                            Select your school
+                                        </option>
                                         <option value="UCSD">UCSD</option>
                                         <option value="UCLA">UCLA</option>
                                         <option value="UCI">UCI</option>
@@ -235,7 +238,7 @@ export function ClubRegistration() {
                             <div className="mt-6">
                                 <button
                                     type="submit"
-                                    className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-on-primary bg-primary hover:bg-on-background-variant focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-on-background"
+                                    className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-on-primary bg-primary hover:cursor-pointer"
                                 >
                                     Register Club
                                 </button>
