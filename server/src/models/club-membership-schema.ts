@@ -1,5 +1,5 @@
 import mongoose, { Schema, InferSchemaType, HydratedDocument } from 'mongoose';
-import { ClubRole } from '@clubhive/shared/src/types/club-membership-types';
+import { ClubRole } from '@clubhive/shared';
 
 const schema = new Schema(
     {
