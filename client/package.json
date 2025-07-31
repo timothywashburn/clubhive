@@ -15,6 +15,7 @@
     "@types/d3": "^7.4.3",
     "d3": "^7.9.0",
     "d3-delaunay": "^6.0.4",
+    "date-fns": "^4.1.0",
     "framer-motion": "^12.23.3",
     "lucide-react": "^0.525.0",
     "react": "^19.1.0",
