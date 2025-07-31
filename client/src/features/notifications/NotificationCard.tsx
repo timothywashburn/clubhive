@@ -1,4 +1,5 @@
 import React from 'react';
+import { formatDistanceToNow } from 'date-fns';
 
 interface NotificationCardProps {
     club: string;
@@ -10,6 +11,8 @@ interface NotificationCardProps {
 }
 
 export function NotificationCard({ club, title, date, read, selected = false, onClick }: NotificationCardProps) {
+    const hrsAgo = formatDistanceToNow(new Date(date), { addSuffix: true });
+
     return (
         <div
             onClick={onClick}
@@ -27,7 +30,7 @@ export function NotificationCard({ club, title, date, read, selected = false, on
                     </div>
                     <div className="pl-4 text-sm font-light italic text-on-surface-variant">{title}</div>
                 </div>
-                <div className="text-sm text-on-surface-variant whitespace-nowrap">{date}</div>
+                <div className="text-sm text-on-surface-variant whitespace-nowrap">{hrsAgo}</div>
             </div>
         </div>
     );

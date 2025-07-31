@@ -1,5 +1,17 @@
 import { motion, AnimatePresence } from 'framer-motion';
 import { useClubState, useTabIndicator, useMyClubsData, useClubEvents } from './hooks';
+import {
+    ClubSelector,
+    ClubHeader,
+    TabNavigation,
+    MemberInfo,
+    OfficerInfo,
+    Events,
+    Stats,
+    Membership,
+    EmptyState,
+    RegisterClubButton,
+} from './components';
 import { EventPlanner } from './event-planner';
 import { EventDetails, LocationPicker, TAPIntegration, ASFunding } from './event-editor';
 import { EventData } from '@clubhive/shared';
@@ -9,8 +21,19 @@ import { ClubSelector, ClubHeader, TabNavigation, MemberInfo, OfficerInfo, Event
 export function MyClubs() {
     const { clubs, loading, error } = useMyClubsData();
 
-    const { selectedClub, setSelectedClub, activeTab, setActiveTab, isPreviewMode, setIsPreviewMode, isOfficer, isOwner, showOfficerView } =
-        useClubState();
+    const {
+        selectedClub,
+        setSelectedClub,
+        activeTab,
+        setActiveTab,
+        setActiveTabDirect,
+        isPreviewMode,
+        setIsPreviewMode,
+        isOfficer,
+        isOwner,
+        showOfficerView,
+        returnToEvents,
+    } = useClubState(clubs || []);
 
     const [selectedEvent, setSelectedEvent] = useState<EventData | null>(null);
     const [isClubSelectorMinimized, setIsClubSelectorMinimized] = useState(false);
@@ -37,19 +60,20 @@ export function MyClubs() {
         if (event) {
             setActiveTab('event-details');
         } else {
-            setActiveTab('events');
+            returnToEvents();
         }
     };
 
     const handleEventSave = () => {
         // TODO: Implement event save logic
         setSelectedEvent(null);
-        setActiveTab('events');
+        returnToEvents();
     };
 
     const handleEventCancel = () => {
+        // Close the event editor and go back to event planner
         setSelectedEvent(null);
-        setActiveTab('events');
+        setActiveTabDirect('events'); // Use direct setter to avoid URL navigation cycle
     };
 
     const [statsVisibleToAll, setStatsVisibleToAll] = useState(false);
@@ -150,6 +174,7 @@ export function MyClubs() {
                             onToggleMinimize={handleToggleMinimize}
                             disabled={!!selectedEvent}
                         />
+                        <RegisterClubButton />
                     </div>
 
                     <div className="flex-1 min-w-0">

@@ -14,7 +14,12 @@ export function TagSelectionPopup({ tags, selectedTags, setSelectedTags, inline 
         <div
             className={`${inline ? 'relative mt-2' : 'absolute mt-2'} z-20 w-64 bg-surface border border-outline-variant rounded-lg shadow-lg p-4`}
         >
-            <p className="font-semibold text-sm text-on-surface-variant mb-2">Select tags:</p>
+            <div className="flex justify-between items-center mb-2">
+                <p className="font-semibold text-sm text-on-surface-variant mb-2">Select tags:</p>
+                <button type="button" onClick={() => setSelectedTags([])} className="text-sm text-primary hover:underline mb-2">
+                    Clear all
+                </button>
+            </div>
             <div className="flex flex-wrap gap-2 max-h-48 overflow-y-auto">
                 {tags.map(tag => {
                     const isSelected = selectedTags.find(selectedTag => selectedTag._id === tag._id);
