@@ -4,7 +4,7 @@
   "version": "0.0.0",
   "type": "module",
   "scripts": {
-    "dev": "vite",
+    "dev": "cd ../shared && npm run build && cd ../client && vite",
     "build": "cd ../shared && npm run build && cd ../client && tsc -b && vite build",
     "preview": "vite preview",
     "prepare": "husky"

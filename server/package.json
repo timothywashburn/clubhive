@@ -5,7 +5,7 @@
   "main": "src/server.ts",
   "scripts": {
     "build": "cd ../shared && npm run build && cd ../server && tsc --build && tsc-alias",
-    "dev": "npx tsx watch src/server.ts",
+    "dev": "cd ../shared && npm run build && cd ../server && npx tsx watch src/server.ts",
     "start": "node dist/server.js"
   },
   "devDependencies": {
