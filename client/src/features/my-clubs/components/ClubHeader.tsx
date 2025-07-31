@@ -1,5 +1,6 @@
-import { Eye } from 'lucide-react';
-import { UserClubData } from '@clubhive/shared';
+import { Eye, Save, X } from 'lucide-react';
+import { motion } from 'framer-motion';
+import { UserClubData, EventData } from '@clubhive/shared';
 import { useMyClubsData } from '../hooks';
 
 interface ClubHeaderProps {
@@ -7,9 +8,20 @@ interface ClubHeaderProps {
     isOfficer: boolean;
     isPreviewMode: boolean;
     onPreviewToggle: () => void;
+    selectedEvent?: EventData | null;
+    onEventSave?: () => void;
+    onEventCancel?: () => void;
 }
 
-export function ClubHeader({ club, isOfficer, isPreviewMode, onPreviewToggle }: ClubHeaderProps) {
+export function ClubHeader({
+    club,
+    isOfficer,
+    isPreviewMode,
+    onPreviewToggle,
+    selectedEvent,
+    onEventSave,
+    onEventCancel,
+}: ClubHeaderProps) {
     const { getClubColors } = useMyClubsData();
 
     return (
@@ -24,18 +36,53 @@ export function ClubHeader({ club, isOfficer, isPreviewMode, onPreviewToggle }: 
                         .slice(0, 2)}
                 </div>
                 <div>
-                    <h2 className="text-2xl font-semibold text-on-surface">{club.name}</h2>
+                    <div className="flex items-center gap-2">
+                        <h2 className="text-2xl font-semibold text-on-surface">{club.name}</h2>
+                        {selectedEvent && (
+                            <>
+                                <span className="text-on-surface-variant text-xl">→</span>
+                                <motion.div
+                                    layoutId={`event-${selectedEvent._id}`}
+                                    className="bg-primary text-on-primary px-3 py-2 rounded-lg font-medium text-sm"
+                                    transition={{ duration: 0.6, ease: [0.4, 0, 0.2, 1] }}
+                                >
+                                    {selectedEvent.name}
+                                </motion.div>
+                            </>
+                        )}
+                    </div>
                     <p className="text-on-surface-variant text-sm italic">{club.tagline}</p>
                 </div>
             </div>
             {isOfficer && (
-                <button
-                    onClick={onPreviewToggle}
-                    className={`flex items-center px-4 py-2 rounded-lg text-sm font-medium transition-colors cursor-pointer bg-primary text-on-primary hover:bg-primary/90`}
-                >
-                    <Eye className="w-4 h-4 mr-2" />
-                    {isPreviewMode ? 'Exit Preview' : 'Preview'}
-                </button>
+                <div className="flex items-center gap-2">
+                    {selectedEvent ? (
+                        <>
+                            <button
+                                onClick={onEventSave}
+                                className="flex items-center px-4 py-2 rounded-lg text-sm font-medium transition-colors cursor-pointer bg-primary text-on-primary hover:bg-primary/90"
+                            >
+                                <Save className="w-4 h-4 mr-2" />
+                                Save
+                            </button>
+                            <button
+                                onClick={onEventCancel}
+                                className="flex items-center px-4 py-2 rounded-lg text-sm font-medium transition-colors cursor-pointer border border-outline-variant text-on-surface hover:bg-surface-variant"
+                            >
+                                <X className="w-4 h-4 mr-2" />
+                                Cancel
+                            </button>
+                        </>
+                    ) : (
+                        <button
+                            onClick={onPreviewToggle}
+                            className={`flex items-center px-4 py-2 rounded-lg text-sm font-medium transition-colors cursor-pointer bg-primary text-on-primary hover:bg-primary/90`}
+                        >
+                            <Eye className="w-4 h-4 mr-2" />
+                            {isPreviewMode ? 'Exit Preview' : 'Preview'}
+                        </button>
+                    )}
+                </div>
             )}
         </div>
     );

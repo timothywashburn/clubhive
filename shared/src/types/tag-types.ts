@@ -7,7 +7,7 @@ export enum TagType {
 
 export const tagSchema = z.object({
     _id: z.string(),
-    type: z.enum([TagType.CLUB, TagType.EVENT]),
+    type: z.enum(TagType),
     text: z.string(),
 });
 

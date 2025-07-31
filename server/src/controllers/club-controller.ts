@@ -2,7 +2,7 @@ import { CreateClubRequest, UpdateClubRequest } from '@clubhive/shared';
 import Club, { ClubDoc } from '../models/club-schema';
 import ClubMembership from '../models/club-membership-schema';
 import { updateDocument } from '@/utils/db-doc-utils';
-import { ClubRole } from '@clubhive/shared/src/types/club-membership-types';
+import { ClubRole } from '@clubhive/shared';
 
 export default class ClubController {
     static async createClub(data: CreateClubRequest): Promise<ClubDoc> {
