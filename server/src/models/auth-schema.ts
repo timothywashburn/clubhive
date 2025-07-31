@@ -1,16 +1,12 @@
-import mongoose, { Document, Schema, ObjectId } from 'mongoose';
+import mongoose, { Schema, InferSchemaType, HydratedDocument } from 'mongoose';
 
-export interface AuthData extends Document {
-    _id: ObjectId;
-    email: string;
-    password: string;
-    emailVerified: boolean;
-    createdAt: Date;
-    updatedAt: Date;
-}
-
-const AuthSchema: Schema<AuthData> = new Schema(
+const schema = new Schema(
     {
+        _id: {
+            type: mongoose.Schema.Types.ObjectId,
+            required: true,
+            auto: true,
+        },
         email: {
             type: String,
             required: true,
@@ -28,5 +24,8 @@ const AuthSchema: Schema<AuthData> = new Schema(
     { timestamps: true }
 );
 
-const Auth = mongoose.model<AuthData>('Auth', AuthSchema);
+export type AuthSchema = InferSchemaType<typeof schema>;
+export type AuthDoc = HydratedDocument<InferSchemaType<typeof schema>>;
+
+const Auth = mongoose.model('Auth', schema);
 export default Auth;

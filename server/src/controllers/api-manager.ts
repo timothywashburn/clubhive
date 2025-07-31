@@ -1,13 +1,23 @@
 import express, { Router, Request, Response, NextFunction, RequestHandler } from 'express';
 import { ApiEndpoint, ApiRequest, ApiResponse, AuthType } from '@/types/api-types';
+import { getClubProfileEndpoint } from '@/api/misc/club-profile-endpoint';
 import { statusEndpoint } from '@/api/misc/status';
 import { testEndpoint } from '@/api/misc/test';
-import { testGetClubsEndpoint } from '@/api/misc/test-club-endpoint';
 import { getTagsEndpoint } from '@/api/misc/tags-endpoint';
 import { changelogEndpoint } from '@/api/misc/changelog';
 import { versionEndpoint } from '@/api/misc/version';
 
+import { createEventEndpoint } from '@/api/events/create-event';
+import { getEventsEndpoint } from '@/api/events/get-events';
+import { updateEventEndpoint } from '@/api/events/update-event';
+import { deleteEventEndpoint } from '@/api/events/delete-event';
+
 import { ErrorCode } from '@clubhive/shared';
+import { createClubEndpoint } from '@/api/clubs/create-club';
+import { deleteClubEndpoint } from '@/api/clubs/delete-club';
+import { getClubsEndpoint } from '@/api/clubs/get-clubs';
+import { updateClubEndpoint } from '@/api/clubs/update-club';
+import { getMyClubsEndpoint } from '@/api/me/clubs';
 
 export default class ApiManager {
     private static instance: ApiManager;
@@ -22,10 +32,27 @@ export default class ApiManager {
     private registerEndpoints() {
         this.addEndpoint(statusEndpoint);
         this.addEndpoint(testEndpoint);
-        this.addEndpoint(testGetClubsEndpoint);
+        // this.addEndpoint(testGetClubsEndpoint);
         this.addEndpoint(getTagsEndpoint);
+        this.addEndpoint(getClubProfileEndpoint);
         this.addEndpoint(changelogEndpoint);
         this.addEndpoint(versionEndpoint);
+
+        // Club endpoints
+        this.addEndpoint(createClubEndpoint);
+        this.addEndpoint(getClubsEndpoint);
+        this.addEndpoint(updateClubEndpoint);
+        this.addEndpoint(deleteClubEndpoint);
+
+        // Event endpoints
+        this.addEndpoint(createEventEndpoint);
+        this.addEndpoint(getEventsEndpoint);
+        this.addEndpoint(updateEventEndpoint);
+        this.addEndpoint(deleteEventEndpoint);
+
+        // Me endpoints
+        this.addEndpoint(getMyClubsEndpoint);
+
         console.log(`registered api endpoints`);
     }
 
@@ -93,8 +120,8 @@ export default class ApiManager {
 
         // TODO: Decode token and set req.auth
         req.auth = {
-            authId: 'temp-auth-id',
-            userId: 'temp-user-id',
+            authId: 'test-auth-id',
+            userId: '507f1f77bcf86cd799439020',
         };
 
         next();

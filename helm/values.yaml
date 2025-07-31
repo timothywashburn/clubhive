@@ -1,7 +1,10 @@
 image:
   registry: registry.gitlab.com/sdsc-rds/summer-internships/rds-interns-su25/team-hexagon/centralized-club-system
-  tag: latest
   pullPolicy: Always
+  server:
+    tag: latest
+  client:
+    tag: latest
 
 imagePullSecrets:
   - name: gitlab-registry
@@ -10,6 +13,7 @@ ingress:
   host: ""
   ingressClassName: traefik
 
+branch: ""
 namespace: ""
 
 mongodb:

@@ -1,27 +1,13 @@
-export interface Club {
-    id: string;
-    name: string;
-    description: string;
-    memberCount: number;
-    role: 'member' | 'officer' | 'owner';
-    tagline: string;
-    location: string;
-    meetingTime: string;
-    logoImage: string;
-    brandColor: string;
-}
-
-export interface Event {
-    id: string;
-    title: string;
-    date: string;
-    time: string;
-    location: string;
-    description: string;
-    attendees: number;
-}
-
-export type TabType = 'membership' | 'info' | 'events' | 'planner' | 'stats';
+export type TabType =
+    | 'membership'
+    | 'info'
+    | 'events'
+    | 'planner'
+    | 'stats'
+    | 'event-details'
+    | 'event-location'
+    | 'event-tap'
+    | 'event-funding';
 
 export interface TabItem {
     key: TabType;
