@@ -1,7 +1,7 @@
 import { z } from 'zod';
-import { ClubRole } from './club-membership-types';
-import { schoolSchema } from './school-types';
-import { tagSchema } from './tag-types';
+import { ClubRole } from './club-membership-types.js';
+import { schoolSchema } from './school-types.js';
+import { tagSchema } from './tag-types.js';
 
 export const clubSchema = z.object({
     _id: z.string(),
