@@ -1,10 +1,9 @@
 export { ClubSelector } from './ClubSelector';
 export { ClubHeader } from './ClubHeader';
 export { TabNavigation } from './TabNavigation';
-export { MemberInfo } from './MemberInfo';
-export { OfficerInfo } from './OfficerInfo';
-export { Events } from './Events';
-export { EventPlanner } from './EventPlanner';
-export { Stats } from './Stats';
-export { Membership } from './Membership';
+export { MemberInfo } from '../pages/MemberInfo.tsx';
+export { OfficerInfo } from '../pages/OfficerInfo.tsx';
+export { Events } from '../pages/Events.tsx';
+export { Stats } from '../pages/Stats.tsx';
+export { Membership } from '../pages/Membership.tsx';
 export { EmptyState } from './EmptyState';

@@ -1,1 +1,1 @@
-export * from './src/types/api-types.js';
+export * from './src/index.js';

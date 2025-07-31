@@ -1,4 +1,5 @@
 stages:
+  - test
   - build
   - deploy-dev
   - deploy-prod
@@ -6,15 +7,66 @@ stages:
 variables:
   DOCKER_DRIVER: overlay2
   DOCKER_TLS_CERTDIR: "/certs"
+  NODE_VERSION: "22"
 
 services:
   - docker:20.10.16-dind
 
+# Build jobs that run only on merge requests
 build-server:
+  stage: build
+  image: node:$NODE_VERSION
+  cache:
+    key: 
+      files:
+        - server/package-lock.json
+        - shared/package-lock.json
+    paths:
+      - server/node_modules/
+      - shared/node_modules/
+  before_script:
+    - cd shared && npm ci
+    - cd ../server && npm ci
+  script:
+    - npm run build
+  artifacts:
+    paths:
+      - server/dist/
+    expire_in: 1 hour
+  rules:
+    - if: $CI_PIPELINE_SOURCE == "merge_request_event"
+
+build-client:
+  stage: build
+  image: node:$NODE_VERSION
+  cache:
+    key:
+      files:
+        - client/package-lock.json
+        - shared/package-lock.json
+    paths:
+      - client/node_modules/
+      - shared/node_modules/
+  before_script:
+    - cd shared && npm ci
+    - cd ../client && npm ci
+  script:
+    - npm run build
+  artifacts:
+    paths:
+      - client/dist/
+    expire_in: 1 hour
+  rules:
+    - if: $CI_PIPELINE_SOURCE == "merge_request_event"
+
+# Docker build jobs that run only on main/dev branches
+docker-build-server:
   stage: build
   image: docker:25.0.5
   services:
     - docker:25.0.5-dind
+  needs:
+    - build-server
   before_script:
     - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
   script:
@@ -25,11 +77,13 @@ build-server:
     - main
     - dev
 
-build-client:
+docker-build-client:
   stage: build
   image: docker:25.0.5
   services:
     - docker:25.0.5-dind
+  needs:
+    - build-client
   before_script:
     - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
   script:

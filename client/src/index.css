@@ -30,6 +30,7 @@
     --color-outline-variant: #e5e7eb;
     --color-divider: #e5e7eb;
     --color-divider-variant: #e5e7eb;
+    --color-discord: #5865f2;
 }
 
 [data-theme='dark'] {
@@ -62,6 +63,13 @@
     --color-outline-variant: #334155;
     --color-divider: #334155;
     --color-divider-variant: #334155;
+}
+.bg-instagram {
+    background: linear-gradient(45deg, #feda75, #d62976, #962fbf);
+}
+
+.bg-globe {
+    background: linear-gradient(45deg, #00c6ff, #0072ff);
 }
 
 /* Scrollbar Styling */
