@@ -18,6 +18,9 @@ import { deleteClubEndpoint } from '@/api/clubs/delete-club';
 import { getClubsEndpoint } from '@/api/clubs/get-clubs';
 import { updateClubEndpoint } from '@/api/clubs/update-club';
 import { getMyClubsEndpoint } from '@/api/me/clubs';
+import { getDailyVenueAvailabilityEndpoint } from '@/api/venues/daily-availability';
+import { getWeeklyVenueAvailabilityEndpoint } from '@/api/venues/weekly-availability';
+import { getMonthlyVenueAvailabilityEndpoint } from '@/api/venues/monthly-availability';
 import { getNotificationsEndpoint } from '@/api/notifications/get-notifications';
 
 export default class ApiManager {
@@ -56,6 +59,11 @@ export default class ApiManager {
 
         // Me endpoints
         this.addEndpoint(getMyClubsEndpoint);
+
+        // Venue endpoints
+        this.addEndpoint(getDailyVenueAvailabilityEndpoint);
+        this.addEndpoint(getWeeklyVenueAvailabilityEndpoint);
+        this.addEndpoint(getMonthlyVenueAvailabilityEndpoint);
 
         console.log(`registered api endpoints`);
     }
