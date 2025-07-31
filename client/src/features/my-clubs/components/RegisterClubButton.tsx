@@ -8,7 +8,7 @@ export function RegisterClubButton() {
                     type="button"
                     className="px-4 py-2 bg-primary text-on-primary font-medium rounded-md hover:bg-primary-hover cursor-pointer transition "
                 >
-                    Register a Club
+                    Register New Club
                 </button>
             </Link>
         </div>
