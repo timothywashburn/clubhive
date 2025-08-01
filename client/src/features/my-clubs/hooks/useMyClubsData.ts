@@ -1,234 +1,36 @@
-import { Club, Event, MembershipData } from '../types';
+import { ApiResponseBody, GetMyClubsResponse, isSuccess, UserClubData } from '@clubhive/shared';
+import { useState, useEffect } from 'react';
+import { MembershipData } from '../types';
 
 export const useMyClubsData = () => {
-    const clubs: Club[] = [
-        {
-            id: '1',
-            name: 'Video Game Development Club',
-            description:
-                "The Computer Science Club is a student-led organization dedicated to fostering curiosity, innovation, and collaboration in the field of computing. Whether you're passionate about software development, cybersecurity, artificial intelligence, or just starting your coding journey, our club provides a supportive environment to learn, build, and grow. We host hands-on workshops, guest speaker events, coding challenges, and collaborative projects that empower members to sharpen their technical skills and make real-world impact. Join us to connect with like-minded peers, explore new technologies, and become part of a vibrant tech-driven community!",
-            memberCount: 85,
-            role: 'owner',
-            tagline: 'Play. Create. Innovate.',
-            location: 'Engineering Building',
-            meetingTime: 'Fridays 3:00 PM',
-            logoImage: '/vgdc-square-logo.png',
-            brandColor: '#3b82f6',
-        },
-        {
-            id: '2',
-            name: 'Photography Society',
-            description: 'Capture moments and improve your photography skills with fellow enthusiasts.',
-            memberCount: 42,
-            role: 'member',
-            tagline: 'Capturing life, one frame at a time',
-            location: 'Student Center',
-            meetingTime: 'Wednesdays 4:00 PM',
-            logoImage: '/vgdc-square-logo.png',
-            brandColor: '#10b981',
-        },
-        {
-            id: '3',
-            name: 'Debate Team',
-            description: 'Sharpen your argumentative skills and compete in intercollegiate debates.',
-            memberCount: 28,
-            role: 'owner',
-            tagline: 'Where words become weapons',
-            location: 'Liberal Arts Building',
-            meetingTime: 'Tuesdays 6:00 PM',
-            logoImage: '/vgdc-square-logo.png',
-            brandColor: '#8b5cf6',
-        },
-        {
-            id: '4',
-            name: 'Gaming Club',
-            description: 'Play games, compete in tournaments, and hang out with fellow gamers.',
-            memberCount: 156,
-            role: 'member',
-            tagline: 'Level up your social game',
-            location: 'Student Center',
-            meetingTime: 'Thursdays 5:00 PM',
-            logoImage: '/vgdc-square-logo.png',
-            brandColor: '#ef4444',
-        },
-        {
-            id: '5',
-            name: 'Robotics Team',
-            description: 'Build robots, compete in competitions, and learn engineering skills.',
-            memberCount: 34,
-            role: 'officer',
-            tagline: 'Building the future, one bot at a time',
-            location: 'Engineering Lab',
-            meetingTime: 'Mondays 4:00 PM',
-            logoImage: '/vgdc-square-logo.png',
-            brandColor: '#eab308',
-        },
-        {
-            id: '6',
-            name: 'Drama Club',
-            description: 'Perform in plays, improve acting skills, and express creativity.',
-            memberCount: 67,
-            role: 'member',
-            tagline: "All the world's a stage",
-            location: 'Theater Building',
-            meetingTime: 'Tuesdays 7:00 PM',
-            logoImage: '/vgdc-square-logo.png',
-            brandColor: '#ec4899',
-        },
-        {
-            id: '7',
-            name: 'Environmental Club',
-            description: 'Promote sustainability and environmental awareness on campus.',
-            memberCount: 91,
-            role: 'member',
-            tagline: 'Think green, act now',
-            location: 'Science Building',
-            meetingTime: 'Wednesdays 3:00 PM',
-            logoImage: '/vgdc-square-logo.png',
-            brandColor: '#6366f1',
-        },
-        {
-            id: '8',
-            name: 'Business Club',
-            description: 'Network with professionals and develop business skills.',
-            memberCount: 123,
-            role: 'officer',
-            tagline: 'Your network is your net worth',
-            location: 'Business Building',
-            meetingTime: 'Fridays 2:00 PM',
-            logoImage: '/vgdc-square-logo.png',
-            brandColor: '#14b8a6',
-        },
-    ];
+    const [clubs, setClubs] = useState<UserClubData[]>([]);
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState<string | null>(null);
 
-    const events: Event[] = [
-        {
-            id: '1',
-            title: 'Club Meeting',
-            date: 'Jun 25, 2025',
-            time: '3:00 PM',
-            location: 'Engineering Building Room 205',
-            description: 'Monthly club meeting before summer break.',
-            attendees: 23,
-        },
-        {
-            id: '2',
-            title: 'Month-End Review',
-            date: 'Jun 30, 2025',
-            time: '4:00 PM',
-            location: 'Conference Room A',
-            description: 'Review June accomplishments and July goals.',
-            attendees: 15,
-        },
-        {
-            id: '3',
-            title: 'Independence Day Prep',
-            date: 'Jul 1, 2025',
-            time: '10:00 AM',
-            location: 'Student Center',
-            description: 'Prepare for July 4th celebration activities.',
-            attendees: 32,
-        },
-        {
-            id: '4',
-            title: 'July Kickoff',
-            date: 'Jul 2, 2025',
-            time: '2:00 PM',
-            location: 'Main Hall',
-            description: 'Start July with team building activities.',
-            attendees: 28,
-        },
-        {
-            id: '5',
-            title: 'Coding Workshop',
-            date: 'Jul 8, 2025',
-            time: '2:00 PM',
-            location: 'Computer Lab',
-            description: 'Introduction to React and modern web development.',
-            attendees: 45,
-        },
-        {
-            id: '6',
-            title: 'Photography Workshop',
-            date: 'Jul 15, 2025',
-            time: '2:00 PM',
-            location: 'Art Building Studio 3',
-            description: 'Learn advanced lighting techniques and composition.',
-            attendees: 18,
-        },
-        {
-            id: '7',
-            title: 'Gaming Tournament',
-            date: 'Jul 15, 2025',
-            time: '7:00 PM',
-            location: 'Game Room',
-            description: 'Weekly esports tournament with prizes.',
-            attendees: 89,
-        },
-        {
-            id: '8',
-            title: 'Hackathon Prep',
-            date: 'Jul 22, 2025',
-            time: '1:00 PM',
-            location: 'Tech Lab',
-            description: 'Prepare for upcoming hackathon event.',
-            attendees: 34,
-        },
-        {
-            id: '9',
-            title: 'Tech Talk',
-            date: 'Jul 22, 2025',
-            time: '4:00 PM',
-            location: 'Auditorium',
-            description: 'Guest speaker on AI and machine learning.',
-            attendees: 67,
-        },
-        {
-            id: '10',
-            title: 'Networking Event',
-            date: 'Jul 22, 2025',
-            time: '6:30 PM',
-            location: 'Business Center',
-            description: 'Connect with industry professionals.',
-            attendees: 52,
-        },
-        {
-            id: '14',
-            title: 'Panel Discussion',
-            date: 'Jul 22, 2025',
-            time: '8:00 PM',
-            location: 'Conference Hall',
-            description: 'Panel on career paths in technology.',
-            attendees: 38,
-        },
-        {
-            id: '11',
-            title: 'Debate Practice',
-            date: 'Jul 25, 2025',
-            time: '3:00 PM',
-            location: 'Debate Hall',
-            description: 'Practice session for upcoming competition.',
-            attendees: 24,
-        },
-        {
-            id: '12',
-            title: 'Summer Fair',
-            date: 'Aug 1, 2025',
-            time: '11:00 AM',
-            location: 'Campus Quad',
-            description: 'Annual summer celebration and fair.',
-            attendees: 156,
-        },
-        {
-            id: '13',
-            title: 'Volunteer Day',
-            date: 'Aug 5, 2025',
-            time: '9:00 AM',
-            location: 'Community Center',
-            description: 'Community service project.',
-            attendees: 41,
-        },
-    ];
+    useEffect(() => {
+        const fetchClubs = async () => {
+            try {
+                const response = await fetch('/api/me/clubs', {
+                    headers: {
+                        Authorization: 'Bearer temp',
+                    },
+                });
+
+                const data: ApiResponseBody<GetMyClubsResponse> = await response.json();
+                if (isSuccess(data)) {
+                    setClubs(data.clubs);
+                } else {
+                    throw new Error(data.error?.message || 'Failed to fetch clubs');
+                }
+            } catch (err) {
+                setError(err instanceof Error ? err.message : 'Unknown error');
+            } finally {
+                setLoading(false);
+            }
+        };
+
+        fetchClubs();
+    }, []);
 
     const getClubColors = (clubId: string): string => {
         const colors = [
@@ -245,7 +47,7 @@ export const useMyClubsData = () => {
         return colors[index];
     };
 
-    const getMembershipData = (club: Club): MembershipData => {
+    const getMembershipData = (club: UserClubData): MembershipData => {
         const joinDates = {
             '1': 'September 15, 2023',
             '2': 'January 10, 2024',
@@ -269,17 +71,18 @@ export const useMyClubsData = () => {
         };
 
         return {
-            joinDate: joinDates[club.id as keyof typeof joinDates] || 'January 1, 2024',
-            eventsAttended: eventsAttended[club.id as keyof typeof eventsAttended] || 0,
-            totalEvents: eventsAttended[club.id as keyof typeof eventsAttended]
-                ? eventsAttended[club.id as keyof typeof eventsAttended] + Math.floor(Math.random() * 5)
+            joinDate: joinDates[club._id as keyof typeof joinDates] || 'January 1, 2024',
+            eventsAttended: eventsAttended[club._id as keyof typeof eventsAttended] || 0,
+            totalEvents: eventsAttended[club._id as keyof typeof eventsAttended]
+                ? eventsAttended[club._id as keyof typeof eventsAttended] + Math.floor(Math.random() * 5)
                 : 5,
         };
     };
 
     return {
         clubs,
-        events,
+        loading,
+        error,
         getClubColors,
         getMembershipData,
     };

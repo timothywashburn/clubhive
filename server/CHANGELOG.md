@@ -8,166 +8,18 @@
 
 ---
 
-## [v0.0.0] - 2025-07-11
+## [v0.0.1] - 2025-07-31
 
 ### Added
 
-- Example of a new feature
-
-### Changed
-
-- Example of a changed feature
-
-### Removed
-
-- Example of a removed feature
-
-### Fixed
-
-- Example of a fixed bug
-
-### Misc
-
-- Example of a miscellaneous change
-
----
-
-## [v0.0.0-alpha] - 2025-07-01
-
-### Added
-
-- Example of a new feature
-
-### Changed
-
-- Example of a changed feature
-
-### Fixed
-
-- Example of a fixed bug
-
-## [v0.0.0-alpha] - 2025-07-01
-
-### Added
-
-- Example of a new feature
-
-### Changed
-
-- Example of a changed feature
-
-### Fixed
-
-- Example of a fixed bug
-
-## [v0.0.0-alpha] - 2025-07-01
-
-### Added
-
-- Example of a new feature
-
-### Changed
-
-- Example of a changed feature
-
-### Fixed
-
-- Example of a fixed bug
-
-## [v0.0.0-alpha] - 2025-07-01
-
-### Added
-
-- Example of a new feature
-
-### Changed
-
-- Example of a changed feature
-
-### Fixed
-
-- Example of a fixed bug
-
-## [v0.0.0-alpha] - 2025-07-01
-
-### Added
-
-- Example of a new feature
-
-### Changed
-
-- Example of a changed feature
-
-### Fixed
-
-- Example of a fixed bug
-
-## [v0.0.0-alpha] - 2025-07-01
-
-### Added
-
-- Example of a new feature
-
-### Changed
-
-- Example of a changed feature
-
-### Fixed
-
-- Example of a fixed bug
-
-## [v0.0.0-alpha] - 2025-07-01
-
-### Added
-
-- Example of a new feature
-
-### Changed
-
-- Example of a changed feature
-
-### Fixed
-
-- Example of a fixed bug
-
-## [v0.0.0-alpha] - 2025-07-01
-
-### Added
-
-- Example of a new feature
-
-### Changed
-
-- Example of a changed feature
-
-### Fixed
-
-- Example of a fixed bug
-
-## [v0.0.0-alpha] - 2025-07-01
-
-### Added
-
-- Example of a new feature
-
-### Changed
-
-- Example of a changed feature
-
-### Fixed
-
-- Example of a fixed bug
-
-## [v0.0.0-alpha] - 2025-07-01
-
-### Added
-
-- Example of a new feature
-
-### Changed
-
-- Example of a changed feature
-
-### Fixed
-
-- Example of a fixed bug
+- Full-stack application with React frontend, Node.js/Express backend, and MongoDB
+- full stack application setup with react, nodejs, mongodb
+- club registration prompt
+- event planner system
+- location picker system
+- notification system
+- static (and animated) honeycomb background
+- light/dark theme toggle
+- club statistics
+- tag system for searching and filtering clubs and events
+- fully automated ci/cd pipeline with gitlab ci, nginx, docker, k3s, helm, argo for stable dev/prod deployment

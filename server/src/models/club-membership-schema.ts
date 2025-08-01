@@ -5,8 +5,8 @@ import mongoose, { Schema, Document, ObjectId } from 'mongoose';
 
 export interface ClubMembershipData extends Document {
     _id: ObjectId;
-    userId: ObjectId;
-    clubId: ObjectId;
+    user: ObjectId;
+    club: ObjectId;
     role: ClubRole;
     createdAt: Date;
     updatedAt: Date;
@@ -21,12 +21,12 @@ export enum ClubRole {
 
 const ClubMembershipSchema: Schema<ClubMembershipData> = new Schema(
     {
-        userId: {
+        user: {
             type: mongoose.Schema.Types.ObjectId,
             ref: 'User',
             required: true,
         },
-        clubId: {
+        club: {
             type: mongoose.Schema.Types.ObjectId,
             ref: 'Club',
             required: true,
@@ -40,8 +40,5 @@ const ClubMembershipSchema: Schema<ClubMembershipData> = new Schema(
     { timestamps: true }
 );
 
-const ClubMembership = mongoose.model<ClubMembershipData>(
-    'ClubMembership',
-    ClubMembershipSchema
-);
+const ClubMembership = mongoose.model<ClubMembershipData>('ClubMembership', ClubMembershipSchema);
 export default ClubMembership;

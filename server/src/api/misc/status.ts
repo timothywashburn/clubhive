@@ -19,7 +19,7 @@ export const statusEndpoint: ApiEndpoint<undefined, StatusResponse> = {
 
         res.json({
             success: true,
-            data: response,
+            ...response,
         });
     },
 };

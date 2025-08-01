@@ -1,39 +1,49 @@
-import mongoose, { Schema, Document, ObjectId } from 'mongoose';
+import mongoose, { Schema, InferSchemaType, HydratedDocument } from 'mongoose';
 
-export interface ClubSnapshotData extends Document {
-    _id: ObjectId;
-    date: Date;
-    clubs: [
-        {
-            clubId: ObjectId;
-            memberCount: number;
-        },
-    ];
-    createdAt: Date;
-    updatedAt: Date;
-}
-
-const ClubSnapshotSchema: Schema<ClubSnapshotData> = new Schema(
+const ClubStatsSchema = new Schema(
     {
-        date: {
-            type: Date,
+        clubId: {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: 'Club',
             required: true,
         },
-        clubs: [
+        memberCount: { type: Number, required: true, default: 0 },
+        newMembersToday: { type: Number, required: true, default: 0 },
+        leavingMembersToday: { type: Number, required: true, default: 0 },
+        eventSavesToday: { type: Number, required: true, default: 0 },
+        majorDistribution: [
             {
-                clubId: {
-                    type: mongoose.Schema.Types.ObjectId,
-                    ref: 'Club',
-                },
-                memberCount: { type: Number },
+                major: { type: String, required: true },
+                count: { type: Number, required: true },
             },
         ],
     },
-    { timestamps: true }
+    { _id: false }
 );
 
-const ClubSnapshot = mongoose.model<ClubSnapshotData>(
-    'ClubSnapshot',
-    ClubSnapshotSchema
+const schema = new Schema(
+    {
+        _id: {
+            type: mongoose.Schema.Types.ObjectId,
+            required: true,
+            auto: true,
+        },
+        date: {
+            type: Date,
+            required: true,
+            unique: true,
+            index: true,
+        },
+        clubs: [ClubStatsSchema],
+    },
+    { timestamps: true, collection: 'club_snapshot' }
 );
+
+export type ClubSnapshotData = InferSchemaType<typeof ClubStatsSchema>;
+export type ClubSnapshotDocument = HydratedDocument<InferSchemaType<typeof schema>>;
+
+export type ClubSnapshotSchema = InferSchemaType<typeof schema>;
+export type ClubSnapshotDoc = HydratedDocument<ClubSnapshotSchema>;
+
+const ClubSnapshot = mongoose.model('ClubSnapshot', schema);
 export default ClubSnapshot;
