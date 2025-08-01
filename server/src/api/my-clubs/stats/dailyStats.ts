@@ -92,7 +92,7 @@ async function generateDailyClubStats() {
 
         await ClubSnapshot.findOneAndUpdate(
             { date: startOfToday },
-            { clubs: clubsStats },
+            { clubs: clubsStats as any },
             { upsert: true, new: true } // again helps avoid multiple snapshots in the same day
         );
 

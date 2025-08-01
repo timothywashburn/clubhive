@@ -16,7 +16,6 @@ import { EventPlanner } from './event-planner';
 import { EventDetails, LocationPicker, TAPIntegration, ASFunding } from './event-editor';
 import { EventData } from '@clubhive/shared';
 import React, { useState } from 'react';
-import { ClubSelector, ClubHeader, TabNavigation, MemberInfo, OfficerInfo, Events, Stats, Membership, EmptyState } from './components';
 
 export function MyClubs() {
     const { clubs, loading, error } = useMyClubsData();
