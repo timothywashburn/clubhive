@@ -1,16 +1,38 @@
-import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useClubState, useTabIndicator, useMyClubsData, useClubEvents } from './hooks';
-import { ClubSelector, ClubHeader, TabNavigation, MemberInfo, OfficerInfo, Events, Stats, Membership, EmptyState } from './components';
+import {
+    ClubSelector,
+    ClubHeader,
+    TabNavigation,
+    MemberInfo,
+    OfficerInfo,
+    Events,
+    Stats,
+    Membership,
+    EmptyState,
+    RegisterClubButton,
+} from './components';
 import { EventPlanner } from './event-planner';
 import { EventDetails, LocationPicker, TAPIntegration, ASFunding } from './event-editor';
 import { EventData } from '@clubhive/shared';
+import React, { useState } from 'react';
 
 export function MyClubs() {
     const { clubs, loading, error } = useMyClubsData();
 
-    const { selectedClub, setSelectedClub, activeTab, setActiveTab, isPreviewMode, setIsPreviewMode, isOfficer, isOwner, showOfficerView } =
-        useClubState();
+    const {
+        selectedClub,
+        setSelectedClub,
+        activeTab,
+        setActiveTab,
+        setActiveTabDirect,
+        isPreviewMode,
+        setIsPreviewMode,
+        isOfficer,
+        isOwner,
+        showOfficerView,
+        returnToEvents,
+    } = useClubState(clubs || []);
 
     const [selectedEvent, setSelectedEvent] = useState<EventData | null>(null);
     const [isClubSelectorMinimized, setIsClubSelectorMinimized] = useState(false);
@@ -37,20 +59,25 @@ export function MyClubs() {
         if (event) {
             setActiveTab('event-details');
         } else {
-            setActiveTab('events');
+            returnToEvents();
         }
     };
 
     const handleEventSave = () => {
         // TODO: Implement event save logic
         setSelectedEvent(null);
-        setActiveTab('events');
+        returnToEvents();
     };
 
     const handleEventCancel = () => {
+        // Close the event editor and go back to event planner
         setSelectedEvent(null);
-        setActiveTab('events');
+        setActiveTabDirect('events'); // Use direct setter to avoid URL navigation cycle
     };
+
+    const [statsVisibleToAll, setStatsVisibleToAll] = useState(false);
+
+    const showStatsTab = showOfficerView || statsVisibleToAll;
 
     const renderTabContent = () => {
         const contentKey = `${selectedClub?._id}-${activeTab}-${isPreviewMode}`;
@@ -80,9 +107,9 @@ export function MyClubs() {
             content = <TAPIntegration event={selectedEvent} onEventChange={setSelectedEvent} />;
         } else if (activeTab === 'event-funding' && selectedEvent) {
             content = <ASFunding event={selectedEvent} onEventChange={setSelectedEvent} />;
-        } else if (activeTab === 'stats' && showOfficerView) {
+        } else if (activeTab === 'stats' && (showOfficerView || showStatsTab)) {
             content = <Stats club={selectedClub} />;
-        } else if (activeTab === 'stats' && isPreviewMode) {
+        } else if (activeTab === 'stats') {
             setActiveTab('info');
             content = showOfficerView ? <OfficerInfo club={selectedClub} /> : <MemberInfo club={selectedClub} />;
         } else if (activeTab === 'membership') {
@@ -146,6 +173,7 @@ export function MyClubs() {
                             onToggleMinimize={handleToggleMinimize}
                             disabled={!!selectedEvent}
                         />
+                        <RegisterClubButton />
                     </div>
 
                     <div className="flex-1 min-w-0">
@@ -162,6 +190,17 @@ export function MyClubs() {
                                         onEventCancel={handleEventCancel}
                                     />
 
+                                    {isOfficer && (
+                                        <div className="flex justify-end mb-4">
+                                            <button
+                                                onClick={() => setStatsVisibleToAll(!statsVisibleToAll)}
+                                                className="px-2 py-1 text-sm bg-primary text-white rounded"
+                                            >
+                                                {statsVisibleToAll ? 'Hide Stats from Users' : 'Make Stats Visible to Everyone'}
+                                            </button>
+                                        </div>
+                                    )}
+
                                     <TabNavigation
                                         showOfficerView={showOfficerView}
                                         activeTab={activeTab}
@@ -171,6 +210,7 @@ export function MyClubs() {
                                         tabRefs={tabRefs}
                                         setShouldAnimate={setShouldAnimate}
                                         selectedEvent={selectedEvent}
+                                        showStatsTab={showStatsTab}
                                     />
                                 </div>
 

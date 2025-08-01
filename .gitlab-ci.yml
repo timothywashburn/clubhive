@@ -1,16 +1,54 @@
 stages:
+  - test
   - build
-  - deploy-dev
-  - deploy-prod
 
 variables:
   DOCKER_DRIVER: overlay2
   DOCKER_TLS_CERTDIR: "/certs"
+  NODE_VERSION: "22"
 
 services:
   - docker:20.10.16-dind
 
 build-server:
+  stage: test
+  image: node:$NODE_VERSION
+  cache:
+    key: 
+      files:
+        - server/package-lock.json
+        - shared/package-lock.json
+    paths:
+      - server/node_modules/
+      - shared/node_modules/
+  before_script:
+    - cd shared && npm ci
+    - cd ../server && npm ci --ignore-scripts
+  script:
+    - npm run build
+  rules:
+    - if: $CI_PIPELINE_SOURCE == "merge_request_event"
+
+build-client:
+  stage: test
+  image: node:$NODE_VERSION
+  cache:
+    key:
+      files:
+        - client/package-lock.json
+        - shared/package-lock.json
+    paths:
+      - client/node_modules/
+      - shared/node_modules/
+  before_script:
+    - cd shared && npm ci
+    - cd ../client && npm ci --ignore-scripts
+  script:
+    - npm run build
+  rules:
+    - if: $CI_PIPELINE_SOURCE == "merge_request_event"
+
+docker-build-server:
   stage: build
   image: docker:25.0.5
   services:
@@ -25,7 +63,7 @@ build-server:
     - main
     - dev
 
-build-client:
+docker-build-client:
   stage: build
   image: docker:25.0.5
   services:

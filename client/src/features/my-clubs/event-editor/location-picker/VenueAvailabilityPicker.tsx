@@ -1,15 +1,21 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import { Calendar, RefreshCw, AlertCircle, MapPin, Grid, List, CalendarDays } from 'lucide-react';
-import { EventData } from '@clubhive/shared';
+import {
+    EventData,
+    ApiResponseBody,
+    isSuccess,
+    GetDailyVenueAvailabilityResponse,
+    GetWeeklyVenueAvailabilityResponse,
+    GetMonthlyVenueAvailabilityResponse,
+    VenueAvailability,
+} from '@clubhive/shared';
 import { VenueCard } from './VenueCard';
 import { VenueFilters } from './VenueFilters';
 import { WeeklyVenueView } from './WeeklyVenueView';
 import { MonthlyVenueView } from './MonthlyVenueView';
-import { VenueAvailability, VenueFilters as VenueFiltersType, AvailabilityResponse, ViewMode } from './types';
+import { VenueFilters as VenueFiltersType, ViewMode } from './types';
 
-// API Configuration
-const API_BASE_URL = 'https://ems.timothyw.dev';
-// const API_BASE_URL = 'http://localhost:3100';
+// API Configuration - now uses clubhive server instead of direct EMS calls
 
 interface VenueAvailabilityPickerProps {
     event: EventData;
@@ -48,13 +54,13 @@ export function VenueAvailabilityPicker({ event, onEventChange }: VenueAvailabil
         setError(null);
 
         try {
-            const response = await fetch(`${API_BASE_URL}/api/availability/daily?date=${date}`);
-            const data: AvailabilityResponse = await response.json();
+            const response = await fetch(`/api/venues/availability/daily?date=${date}`);
+            const data: ApiResponseBody<GetDailyVenueAvailabilityResponse> = await response.json();
 
-            if (data.success) {
-                setVenues(data.data.rooms);
+            if (isSuccess(data)) {
+                setVenues(data.rooms);
             } else {
-                setError('Failed to fetch venue availability');
+                setError(data.error.message || 'Failed to fetch venue availability');
             }
         } catch (err) {
             setError('Unable to connect to venue availability service');
@@ -70,20 +76,17 @@ export function VenueAvailabilityPicker({ event, onEventChange }: VenueAvailabil
         setError(null);
 
         try {
-            const weekDates = Array.from({ length: 7 }, (_, i) => {
-                const date = new Date(startDate);
-                date.setDate(date.getDate() + i);
-                return date;
-            });
+            const startDateStr = startDate.toISOString().split('T')[0];
+            const response = await fetch(`/api/venues/availability/weekly?date=${startDateStr}`);
 
-            const promises = weekDates.map(date =>
-                fetch(`${API_BASE_URL}/api/availability/daily?date=${date.toISOString().split('T')[0]}`).then(res => res.json())
-            );
-
-            const results = await Promise.all(promises);
-            const weeklyData = results.map(data => (data.success ? data.data.rooms : []));
-
-            setWeeklyVenues(weeklyData);
+            const data: ApiResponseBody<GetWeeklyVenueAvailabilityResponse> = await response.json();
+            if (isSuccess(data)) {
+                const weeklyData = data.days.map(day => day.rooms);
+                setWeeklyVenues(weeklyData);
+            } else {
+                setError(data.error.message || 'Failed to fetch weekly availability');
+                return;
+            }
         } catch (err) {
             setError('Unable to connect to venue availability service');
             console.error('Error fetching weekly venue availability:', err);
@@ -98,22 +101,17 @@ export function VenueAvailabilityPicker({ event, onEventChange }: VenueAvailabil
         setError(null);
 
         try {
-            const year = monthDate.getFullYear();
-            const month = monthDate.getMonth();
-            const daysInMonth = new Date(year, month + 1, 0).getDate();
+            const monthDateStr = monthDate.toISOString().split('T')[0];
+            const response = await fetch(`/api/venues/availability/monthly?date=${monthDateStr}`);
 
-            const monthDates = Array.from({ length: daysInMonth }, (_, i) => {
-                return new Date(year, month, i + 1);
-            });
-
-            const promises = monthDates.map(date =>
-                fetch(`${API_BASE_URL}/api/availability/daily?date=${date.toISOString().split('T')[0]}`).then(res => res.json())
-            );
-
-            const results = await Promise.all(promises);
-            const monthlyData = results.map(data => (data.success ? data.data.rooms : []));
-
-            setMonthlyVenues(monthlyData);
+            const data: ApiResponseBody<GetMonthlyVenueAvailabilityResponse> = await response.json();
+            if (isSuccess(data)) {
+                const monthlyData = data.days.map(day => day.rooms);
+                setMonthlyVenues(monthlyData);
+            } else {
+                setError(data.error.message || 'Failed to fetch monthly availability');
+                return;
+            }
         } catch (err) {
             setError('Unable to connect to venue availability service');
             console.error('Error fetching monthly venue availability:', err);

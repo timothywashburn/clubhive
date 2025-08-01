@@ -7,6 +7,7 @@ interface NotifExpandedProps {
         club: string;
         date: string;
         body: string;
+        clubName: string;
     } | null;
 }
 
@@ -15,12 +16,16 @@ export function NotifExpanded({ notification }: NotifExpandedProps) {
         return <div className="text-on-surface-variant text-sm italic pt-12 text-center">Select a notification to view details</div>;
     }
 
-    const initials = notification.club
+    const initials = notification.clubName
         .split(' ')
         .map(word => word[0])
         .join('')
         .toUpperCase()
         .slice(0, 2);
+
+    const day = new Date(notification.date);
+
+    const formatted = `${(day.getMonth() + 1).toString().padStart(2, '0')}-${day.getDate().toString().padStart(2, '0')}-${day.getFullYear()}`;
 
     return (
         <div className="space-y-4">
@@ -30,14 +35,14 @@ export function NotifExpanded({ notification }: NotifExpandedProps) {
                         {initials}
                     </div>
                     <div>
-                        <h2 className="text-lg font-medium text-on-surface">{notification.club}</h2>
+                        <h2 className="text-lg font-medium text-on-surface">{notification.clubName}</h2>
                         <div className="flex items-center gap-2 text-on-surface-variant text-sm italic mt-0.5">
                             <BellRing className="w-4 h-4" />
                             {notification.title}
                         </div>
                     </div>
                 </div>
-                <div className="text-sm text-on-surface-variant whitespace-nowrap">{notification.date}</div>
+                <div className="text-sm text-on-surface-variant whitespace-nowrap">{formatted}</div>
             </div>
 
             <div className="bg-surface rounded-lg p-6 space-y-4 border border-outline-variant">
