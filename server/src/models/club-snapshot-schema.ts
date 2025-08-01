@@ -39,6 +39,9 @@ const schema = new Schema(
     { timestamps: true, collection: 'club_snapshot' }
 );
 
+export type ClubSnapshotData = InferSchemaType<typeof ClubStatsSchema>;
+export type ClubSnapshotDocument = HydratedDocument<InferSchemaType<typeof schema>>;
+
 export type ClubSnapshotSchema = InferSchemaType<typeof schema>;
 export type ClubSnapshotDoc = HydratedDocument<ClubSnapshotSchema>;
 
