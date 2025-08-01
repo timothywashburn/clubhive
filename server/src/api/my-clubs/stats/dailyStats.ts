@@ -83,18 +83,19 @@ async function generateDailyClubStats() {
                     newMembersToday: newMembersToday,
                     leavingMembersToday: leavingMembersToday,
                     eventSavesToday: eventSavesToday,
-                    majorDistribution: majorDistribution,
+                    majorDistribution: majorDistribution as any,
                 });
             } catch (clubError) {
                 console.error(`Error calculating stats for club ${club.name}:`, ErrorCode);
             }
         }
 
-        await ClubSnapshot.findOneAndUpdate(
-            { date: startOfToday },
-            { clubs: clubsStats as any },
-            { upsert: true, new: true } // again helps avoid multiple snapshots in the same day
-        );
+        const snapshotDoc = new ClubSnapshot({
+            date: startOfToday,
+            clubs: clubsStats,
+        });
+
+        await snapshotDoc.save();
 
         // console.log(`Daily club snapshot generated for ${startOfToday.toISOString().split('T')[0]} with enriched data for ${clubsStats.length} clubs.`);
     } catch (mainError) {
