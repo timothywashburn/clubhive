@@ -14,6 +14,7 @@ interface TabNavigationProps {
     }>;
     setShouldAnimate: (animate: boolean) => void;
     selectedEvent?: EventData | null;
+    showStatsTab: boolean;
 }
 
 export function TabNavigation({
@@ -25,13 +26,20 @@ export function TabNavigation({
     tabRefs,
     setShouldAnimate,
     selectedEvent,
+    showStatsTab = false,
 }: TabNavigationProps) {
-    const getMemberTabs = (): TabItem[] => [
-        { key: 'membership', label: 'My Membership', icon: User },
-        { key: 'info', label: 'Info', icon: Users },
-        { key: 'events', label: 'Events', icon: Calendar },
-    ];
+    const getMemberTabs = (): TabItem[] => {
+        const tabs: TabItem[] = [
+            { key: 'membership', label: 'My Membership', icon: User },
+            { key: 'info', label: 'Info', icon: Users },
+            { key: 'events', label: 'Events', icon: Calendar },
+        ];
+        if (showStatsTab) {
+            tabs.push({ key: 'stats', label: 'Stats', icon: BarChart3 });
+        }
 
+        return tabs;
+    };
     const getOfficerTabs = (): TabItem[] => [
         { key: 'membership', label: 'My Membership', icon: User },
         { key: 'info', label: 'Edit Info', icon: Users },

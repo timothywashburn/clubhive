@@ -120,13 +120,13 @@ export function CalendarView({ events, onUpdateEvent, onEditEvent, onViewModeCha
                 </div>
             </div>
 
-            <motion.div 
+            <motion.div
                 className="bg-surface rounded-lg shadow p-6 border border-outline-variant"
                 initial={{ y: 20, scale: 0.98 }}
                 animate={{ y: 0, scale: 1 }}
-                transition={{ 
+                transition={{
                     y: { duration: 0.3, delay: 0 },
-                    scale: { duration: 0.3, delay: 0.1 }
+                    scale: { duration: 0.3, delay: 0.1 },
                 }}
             >
                 <div className="grid grid-cols-7 gap-1 mb-2">

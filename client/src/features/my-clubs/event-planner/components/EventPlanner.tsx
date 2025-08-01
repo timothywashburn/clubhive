@@ -13,8 +13,14 @@ interface EventPlannerProps {
     onViewModeChange?: (mode: 'calendar' | 'agenda') => void;
 }
 
-export function EventPlanner({ events, onUpdateEvent, selectedClub, onEventSelect, viewMode = 'calendar', onViewModeChange }: EventPlannerProps) {
-
+export function EventPlanner({
+    events,
+    onUpdateEvent,
+    selectedClub,
+    onEventSelect,
+    viewMode = 'calendar',
+    onViewModeChange,
+}: EventPlannerProps) {
     const handleEventClick = (event: EventData, eventElement?: HTMLElement) => {
         if (onEventSelect) {
             onEventSelect(event, eventElement);
@@ -24,7 +30,12 @@ export function EventPlanner({ events, onUpdateEvent, selectedClub, onEventSelec
     return (
         <div>
             {viewMode === 'calendar' ? (
-                <CalendarView events={events} onUpdateEvent={onUpdateEvent} onEditEvent={handleEventClick} onViewModeChange={onViewModeChange} />
+                <CalendarView
+                    events={events}
+                    onUpdateEvent={onUpdateEvent}
+                    onEditEvent={handleEventClick}
+                    onViewModeChange={onViewModeChange}
+                />
             ) : (
                 <AgendaView events={events} onEditEvent={handleEventClick} onViewModeChange={onViewModeChange} />
             )}

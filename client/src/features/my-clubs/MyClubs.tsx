@@ -1,4 +1,3 @@
-import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useClubState, useTabIndicator, useMyClubsData, useClubEvents } from './hooks';
 import {
@@ -16,6 +15,7 @@ import {
 import { EventPlanner } from './event-planner';
 import { EventDetails, LocationPicker, TAPIntegration, ASFunding } from './event-editor';
 import { EventData } from '@clubhive/shared';
+import React, { useState } from 'react';
 
 export function MyClubs() {
     const { clubs, loading, error } = useMyClubsData();
@@ -75,6 +75,10 @@ export function MyClubs() {
         setActiveTabDirect('events'); // Use direct setter to avoid URL navigation cycle
     };
 
+    const [statsVisibleToAll, setStatsVisibleToAll] = useState(false);
+
+    const showStatsTab = showOfficerView || statsVisibleToAll;
+
     const renderTabContent = () => {
         const contentKey = `${selectedClub?._id}-${activeTab}-${isPreviewMode}`;
 
@@ -103,9 +107,9 @@ export function MyClubs() {
             content = <TAPIntegration event={selectedEvent} onEventChange={setSelectedEvent} />;
         } else if (activeTab === 'event-funding' && selectedEvent) {
             content = <ASFunding event={selectedEvent} onEventChange={setSelectedEvent} />;
-        } else if (activeTab === 'stats' && showOfficerView) {
+        } else if (activeTab === 'stats' && (showOfficerView || showStatsTab)) {
             content = <Stats club={selectedClub} />;
-        } else if (activeTab === 'stats' && isPreviewMode) {
+        } else if (activeTab === 'stats') {
             setActiveTab('info');
             content = showOfficerView ? <OfficerInfo club={selectedClub} /> : <MemberInfo club={selectedClub} />;
         } else if (activeTab === 'membership') {
@@ -186,6 +190,17 @@ export function MyClubs() {
                                         onEventCancel={handleEventCancel}
                                     />
 
+                                    {isOfficer && (
+                                        <div className="flex justify-end mb-4">
+                                            <button
+                                                onClick={() => setStatsVisibleToAll(!statsVisibleToAll)}
+                                                className="px-2 py-1 text-sm bg-primary text-white rounded"
+                                            >
+                                                {statsVisibleToAll ? 'Hide Stats from Users' : 'Make Stats Visible to Everyone'}
+                                            </button>
+                                        </div>
+                                    )}
+
                                     <TabNavigation
                                         showOfficerView={showOfficerView}
                                         activeTab={activeTab}
@@ -195,6 +210,7 @@ export function MyClubs() {
                                         tabRefs={tabRefs}
                                         setShouldAnimate={setShouldAnimate}
                                         selectedEvent={selectedEvent}
+                                        showStatsTab={showStatsTab}
                                     />
                                 </div>
 

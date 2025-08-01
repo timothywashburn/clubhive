@@ -41,7 +41,7 @@ export function ClubHeader({
                         {selectedEvent && (
                             <>
                                 <span className="text-on-surface-variant text-xl">→</span>
-                                <motion.div 
+                                <motion.div
                                     layoutId={`event-${selectedEvent._id}`}
                                     className="bg-primary text-on-primary px-3 py-2 rounded-lg font-medium text-sm"
                                     transition={{ duration: 0.6, ease: [0.4, 0, 0.2, 1] }}
