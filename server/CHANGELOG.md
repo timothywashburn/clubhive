@@ -12,7 +12,6 @@
 
 ### Added
 
-- Full-stack application with React frontend, Node.js/Express backend, and MongoDB
 - full stack application setup with react, nodejs, mongodb
 - club registration prompt
 - event planner system
