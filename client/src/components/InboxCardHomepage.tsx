@@ -15,9 +15,7 @@ export function InboxCardHomepage({ sender, title, body }: InboxCardProps) {
                         <div className="w-7 h-7 rounded-full bg-green-500 flex items-center justify-center text-xs font-semibold text-white">
                             CS
                         </div>
-                        <span className="text-lg  text-on-surface">
-                            {sender}
-                        </span>
+                        <span className="text-lg  text-on-surface">{sender}</span>
                     </div>
                 </div>
 
@@ -25,14 +23,10 @@ export function InboxCardHomepage({ sender, title, body }: InboxCardProps) {
 
                 <div className="flex justify-between w-full items-start">
                     <h3 className="text-base text-on-surface">{title}</h3>
-                    <div className="text-sm text-on-surface-variant">
-                        4 hrs ago
-                    </div>
+                    <div className="text-sm text-on-surface-variant">4 hrs ago</div>
                 </div>
 
-                <h3 className="text-sm font-light text-on-surface-variant text-left">
-                    {body}
-                </h3>
+                <h3 className="text-sm font-light text-on-surface-variant text-left">{body}</h3>
             </div>
         </div>
     );

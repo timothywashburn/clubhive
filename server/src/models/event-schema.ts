@@ -1,30 +1,12 @@
-import mongoose, { Schema, Document, ObjectId } from 'mongoose';
+import mongoose, { Schema, InferSchemaType, HydratedDocument } from 'mongoose';
+import { EventType } from '@clubhive/shared';
 
-// mongoose adds an _id property by default for each document
-// it is of type ObjectId
-
-export interface EventData extends Document {
-    _id: ObjectId;
-    club: ObjectId;
-    name: string;
-    description: string;
-    type: EventType;
-    location: string;
-    date: string;
-    startTime: string;
-    endTime: string;
-    picture: ObjectId;
-    tags: ObjectId[]; // want to use to choose from a collection of tags rather than write their own tags
-}
-
-export enum EventType {
-    CLUB_OFFICERS = 'Club Officers',
-    CLUB_MEMBERS = 'Club Members',
-    UCSD_STUDENTS = 'UCSD Students',
-    ANYONE = 'Anyone',
-}
-
-const EventSchema: Schema<EventData> = new Schema({
+const schema = new Schema({
+    _id: {
+        type: mongoose.Schema.Types.ObjectId,
+        required: true,
+        auto: true,
+    },
     club: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Club',
@@ -41,6 +23,7 @@ const EventSchema: Schema<EventData> = new Schema({
     type: {
         type: String,
         enum: Object.values(EventType),
+        required: true,
     },
     location: {
         type: String,
@@ -69,5 +52,8 @@ const EventSchema: Schema<EventData> = new Schema({
     },
 });
 
-const Event = mongoose.model<EventData>('Event', EventSchema);
+export type EventSchema = InferSchemaType<typeof schema>;
+export type EventDoc = HydratedDocument<InferSchemaType<typeof schema>>;
+
+const Event = mongoose.model('Event', schema);
 export default Event;

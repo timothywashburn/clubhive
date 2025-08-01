@@ -1,31 +1,12 @@
-import mongoose, { Schema, Document, ObjectId } from 'mongoose';
+import mongoose, { Schema, InferSchemaType, HydratedDocument } from 'mongoose';
 
-// mongoose adds an _id property by default for each document
-// it is of type ObjectId
-
-// for pictures maybe using GridFS -- not sure but in the meantime we can probably hardcode pictures
-
-export interface ClubData extends Document {
-    _id: ObjectId;
-    school: ObjectId;
-    name: string;
-    tagline: string;
-    description: string;
-    url: string;
-    socials: {
-        website: string;
-        discord: string;
-        instagram: string;
-    };
-    clubLogo: ObjectId;
-    pictures: ObjectId[];
-    tags: ObjectId[]; // want to use to choose from a collection of tags rather than write their own tags
-    createdAt: Date;
-    updatedAt: Date;
-}
-
-const ClubSchema: Schema<ClubData> = new Schema(
+const schema = new Schema(
     {
+        _id: {
+            type: mongoose.Schema.Types.ObjectId,
+            required: true,
+            auto: true,
+        },
         school: {
             type: mongoose.Schema.Types.ObjectId,
             ref: 'School',
@@ -58,7 +39,6 @@ const ClubSchema: Schema<ClubData> = new Schema(
         clubLogo: {
             type: mongoose.Schema.Types.ObjectId,
             ref: 'Image',
-            // maybe can have a default picture thats stored in the database
         },
         pictures: {
             type: [mongoose.Schema.Types.ObjectId],
@@ -72,5 +52,8 @@ const ClubSchema: Schema<ClubData> = new Schema(
     { timestamps: true }
 );
 
-const Club = mongoose.model<ClubData>('Club', ClubSchema);
+export type ClubSchema = InferSchemaType<typeof schema>;
+export type ClubDoc = HydratedDocument<InferSchemaType<typeof schema>>;
+
+const Club = mongoose.model('Club', schema);
 export default Club;
