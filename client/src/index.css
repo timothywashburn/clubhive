@@ -1,12 +1,13 @@
+@import url('https://fonts.googleapis.com/css2?family=Nunito:ital,wght@0,200..1000;1,200..1000&display=swap');
 @import 'tailwindcss';
 
 @theme {
-    --color-primary: #ea580c;
-    --color-on-primary: #ffffff;
+    --color-primary: #f3b569;
+    --color-on-primary: #0f172a;
     --color-primary-container: #f3f4f6;
     --color-on-primary-container: #374151;
-    --color-secondary: #f3f4f6;
-    --color-on-secondary: #374151;
+    --color-secondary: #b53324;
+    --color-on-secondary: #f1f5f9;
     --color-secondary-container: #f3f4f6;
     --color-on-secondary-container: #374151;
     --color-success: #00c951;
@@ -34,12 +35,12 @@
 }
 
 [data-theme='dark'] {
-    --color-primary: #f97316;
+    --color-primary: #f3b569;
     --color-on-primary: #0f172a;
     --color-primary-container: #334155;
     --color-on-primary-container: #f1f5f9;
-    --color-secondary: #1e293b;
-    --color-on-secondary: #cbd5e1;
+    --color-secondary: #e86a5c;
+    --color-on-secondary: #0f172a;
     --color-secondary-container: #334155;
     --color-on-secondary-container: #f1f5f9;
     --color-success: #00c951;
@@ -48,10 +49,10 @@
     --color-on-success-container: #05df72;
     --color-warning: #efb100;
     --color-on-warning: #ffffff;
-    --color-error: #690005;
-    --color-on-error: #ffb4ab;
-    --color-error-container: #69000550; /* translucent */
-    --color-on-error-container: #ffdad6;
+    --color-error: #d11d32;
+    --color-on-error: #ffdad6;
+    --color-error-container: #a60d1586; /* translucent */
+    --color-on-error-container: #ffdcd6;
     --color-background: #0f172a;
     --color-on-background: #f1f5f9;
     --color-on-background-variant: #94a3b8;
@@ -112,4 +113,8 @@
 
 .scrollbar-surface::-webkit-scrollbar-thumb:hover {
     background-color: var(--color-outline);
+}
+
+body {
+    font-family: 'Nunito', sans-serif;
 }

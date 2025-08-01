@@ -1,37 +1,22 @@
-import { NotificationCard } from '../features/notifications/NotificationCard.tsx';
 import { useState } from 'react';
+import { NotificationCard } from '../features/notifications/NotificationCard.tsx';
 import { NotifExpanded } from '../features/notifications/NotifExpanded.tsx';
-
-const notifications = [
-    {
-        _id: 1,
-        club: 'Computer Science Club',
-        title: 'Meeting Location Changed',
-        body:
-            'Attention all members: the Computer Science Club meeting location has been changed for this week. New ' +
-            'Location: Room 204, Engineering Building Date and Time: Thursday at 5:00 PM (same time as usual) Please ' +
-            "make sure to go to the updated room. We'll still have our regular activities, updates on upcoming projects, " +
-            'and time to connect with fellow members. Looking forward to seeing you there.',
-        date: '2025-07-15',
-        read: false,
-    },
-    {
-        _id: 2,
-        club: 'Photography Society',
-        title: 'Sign up for new event',
-        body:
-            'Attention all members: the Computer Science Club meeting location has been changed for this week. New ' +
-            'Location: Room 204, Engineering Building Date and Time: Thursday at 5:00 PM (same time as usual) Please ' +
-            "make sure to go to the updated room. We'll still have our regular activities, updates on upcoming projects, " +
-            'and time to connect with fellow members. Looking forward to seeing you there.',
-        date: '2025-07-15',
-        read: false,
-    },
-];
+import { useNotifs } from '../hooks/fetchNotifs.tsx';
 
 export function Notifications() {
-    const [selected, setSelected] = useState<number | null>(null);
-    const selectedNotification = notifications.find(n => n._id === selected);
+    const [selected, setSelected] = useState<string | null>(null);
+
+    const userId = '507f1f77bcf86cd799439020';
+    const { notifs, isLoading, error } = useNotifs(userId);
+
+    const selectedNotification = notifs.find(n => n._id === selected);
+
+    if (isLoading) {
+        return <div>Loading...</div>;
+    }
+    if (error) {
+        return <div className="text-red-500">Error: {error}</div>;
+    }
 
     return (
         <div className="h-full relative">
@@ -49,10 +34,12 @@ export function Notifications() {
                                 <button className="text-sm text-primary hover:text-primary/90">Mark all as read</button>
                             </div>
                         </div>
+
                         <div className="p-2 space-y-2">
-                            {notifications.map(notification => (
+                            {notifs.map(notification => (
                                 <NotificationCard
-                                    club={notification.club}
+                                    key={notification._id}
+                                    club={notification.clubName}
                                     title={notification.title}
                                     date={notification.date}
                                     read={notification.read}
