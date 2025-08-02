@@ -12,3 +12,4 @@ export * from './tag-types.js';
 export * from './user-notification-types.js';
 export * from './user-types.js';
 export * from './venue-types.js';
+export * from './user-notification-types.js';

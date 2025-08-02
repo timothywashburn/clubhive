@@ -11,7 +11,7 @@ export const useNotifs = (userId: string) => {
             .then(res => res.json())
             .then(data => {
                 if (data.success) {
-                    setNotifs(data.notifications);
+                    setNotifs(data.notifications as NotifDisplayData[]);
                 } else {
                     setError(data.error?.message || 'Unknown error');
                 }
@@ -20,5 +20,5 @@ export const useNotifs = (userId: string) => {
             .finally(() => setIsLoading(false));
     }, [userId]);
 
-    return { notifs, isLoading, error };
+    return { notifs, setNotifs, isLoading, error };
 };
