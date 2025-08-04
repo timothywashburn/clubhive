@@ -208,6 +208,7 @@ export function CalendarView({ events, onUpdateEvent, onEditEvent, onCreateEvent
                                             layoutId={`create-event-plus-${day.date.toISOString().split('T')[0]}`}
                                             onClick={e => handleCreateEvent(day.date, e)}
                                             className="opacity-0 group-hover:opacity-100 transition-opacity duration-200 p-1 hover:bg-primary hover:text-on-primary rounded-full absolute right-0 cursor-pointer"
+                                            style={{ opacity: '' }} // stop framer-motion from animating opacity, probably a better way to do this
                                             title="Create event"
                                         >
                                             <Plus className="h-3 w-3" />
