@@ -1,0 +1,11 @@
+[Architecture] @timothywashburn
+.husky/
+helm/
+.gitignore
+.gitlab-ci.yml
+.prettierrc
+.env
+Dockerfile
+eslint.config.js
+package.json
+package-lock.json

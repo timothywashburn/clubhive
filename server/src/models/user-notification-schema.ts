@@ -1,25 +1,21 @@
-import mongoose, { Schema, Document, ObjectId } from 'mongoose';
+import mongoose, { Schema, InferSchemaType, HydratedDocument } from 'mongoose';
 
-export interface UserNotificationData extends Document {
-    _id: ObjectId;
-    userId: ObjectId;
-    notificationId: ObjectId;
-    read: boolean;
-}
-
-const UserNotificationSchema: Schema<UserNotificationData> = new Schema({
-    userId: {
+const schema = new Schema({
+    _id: {
+        type: mongoose.Schema.Types.ObjectId,
+        required: true,
+        auto: true,
+    },
+    user: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'User',
         required: true,
     },
-
-    notificationId: {
+    notification: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Notification',
         required: true,
     },
-
     read: {
         type: Boolean,
         default: false,
@@ -27,5 +23,8 @@ const UserNotificationSchema: Schema<UserNotificationData> = new Schema({
     },
 });
 
-const UserNotification = mongoose.model<UserNotificationData>('UserNotification', UserNotificationSchema);
+export type UserNotificationSchema = InferSchemaType<typeof schema>;
+export type UserNotificationDoc = HydratedDocument<InferSchemaType<typeof schema>>;
+
+const UserNotification = mongoose.model('UserNotification', schema);
 export default UserNotification;
