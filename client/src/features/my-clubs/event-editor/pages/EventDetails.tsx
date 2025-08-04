@@ -1,5 +1,5 @@
 import { EventData, EventType } from '@clubhive/shared';
-import { DangerZone } from '../components';
+import { DeleteDangerZone } from '../../../../components/DangerZone';
 import { WebDateTimeRangePicker } from '../../../../components/date-picker';
 import React, { useState } from 'react';
 
@@ -134,7 +134,14 @@ export function EventDetails({ event, onEventChange, onDelete, isCreateMode = fa
                 </div>
             </div>
 
-            {!isCreateMode && onDelete && <DangerZone event={event} onDelete={onDelete} isDeleteLoading={isDeleteLoading} />}
+            {!isCreateMode && onDelete && (
+                <DeleteDangerZone
+                    itemName={event.name}
+                    itemType="Event"
+                    onDelete={onDelete}
+                    isDeleteLoading={isDeleteLoading}
+                />
+            )}
 
             {/* Date Time Range Picker Modal */}
             {showDateTimePicker && (

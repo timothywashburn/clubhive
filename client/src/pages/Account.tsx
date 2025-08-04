@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { Settings, Mail, Lock, User, Monitor, Moon, Sun, Trash2 } from 'lucide-react';
 import { ThemePreference, useThemeStore } from '../stores/themeStore.ts';
+import { DeleteDangerZone } from '../components/DangerZone';
 
 export function Account() {
     const { preference, setPreference } = useThemeStore();
@@ -16,6 +17,7 @@ export function Account() {
 
     const [majorInput, setMajorInput] = useState('Computer Science');
     const [showMajorDropdown, setShowMajorDropdown] = useState(false);
+    const [deleteLoading, setDeleteLoading] = useState(false);
 
     const majors = [
         'Accounting',
@@ -117,6 +119,22 @@ export function Account() {
                 return '4+ Years';
             default:
                 return year;
+        }
+    };
+
+    const handleDeleteAccount = async () => {
+        setDeleteLoading(true);
+        try {
+            // TODO: Implement actual account deletion API call
+            console.log('Deleting account...');
+            await new Promise(resolve => setTimeout(resolve, 2000)); // Simulate API call
+            // After successful deletion, redirect to login or home
+            alert('Account deleted successfully');
+        } catch (error) {
+            console.error('Error deleting account:', error);
+            alert('Failed to delete account');
+        } finally {
+            setDeleteLoading(false);
         }
     };
 
@@ -354,38 +372,14 @@ export function Account() {
                         </div>
 
                         {/* Danger Zone */}
-                        <div id="danger" className="bg-surface rounded-lg shadow border border-outline-variant">
-                            <div className="px-6 py-4 border-b border-outline-variant">
-                                <h2 className="text-lg font-medium text-on-surface flex items-center gap-2">
-                                    <Trash2 className="w-5 h-5 text-error" />
-                                    Danger Zone
-                                </h2>
-                            </div>
-                            <div className="px-6 py-6">
-                                <div className="rounded-lg p-6 bg-error-container">
-                                    <h4 className="font-medium text-on-error-container mb-2 flex items-center gap-2">
-                                        <Trash2 className="w-4 h-4" />
-                                        Delete Account
-                                    </h4>
-                                    <p className="text-on-error-container text-sm mb-6">
-                                        Permanently delete your account and all associated data. This action cannot be undone. You will lose
-                                        access to all clubs, events, and personal information.
-                                    </p>
-
-                                    <div className="flex items-center justify-between p-4 border border-error-container rounded-lg bg-surface">
-                                        <div>
-                                            <h5 className="font-medium text-error mb-1">Delete My Account</h5>
-                                            <p className="text-on-error-container text-sm">
-                                                This will permanently delete your account and all data associated with it.
-                                            </p>
-                                        </div>
-                                        <button className="flex items-center px-4 py-2 rounded-lg text-sm font-medium bg-error text-on-error hover:bg-error/90 transition-colors cursor-pointer">
-                                            <Trash2 className="w-4 h-4 mr-2" />
-                                            Delete Account
-                                        </button>
-                                    </div>
-                                </div>
-                            </div>
+                        <div id="danger">
+                            <DeleteDangerZone
+                                itemName={formData.name}
+                                itemType="Account"
+                                onDelete={handleDeleteAccount}
+                                isDeleteLoading={deleteLoading}
+                                customDescription="Permanently delete your account and all associated data. This action cannot be undone. You will lose access to all clubs, events, and personal information."
+                            />
                         </div>
                     </div>
                 </div>
