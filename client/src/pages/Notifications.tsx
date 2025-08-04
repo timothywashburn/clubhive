@@ -54,7 +54,18 @@ export function Notifications() {
                         <div className="px-6 py-4 border-b border-outline-variant">
                             <div className="flex items-center justify-between">
                                 <h2 className="text-lg font-medium text-on-surface">Recent Activity</h2>
-                                <button className="text-sm text-primary hover:text-primary/90">Mark all as read</button>
+                                <button
+                                    className="text-sm text-primary hover:text-primary/90"
+                                    onClick={() => {
+                                        notifs.forEach(n => {
+                                            if (!n.read) {
+                                                void markAsRead(n.userNotifId);
+                                            }
+                                        });
+                                    }}
+                                >
+                                    Mark all as read
+                                </button>
                             </div>
                         </div>
 
