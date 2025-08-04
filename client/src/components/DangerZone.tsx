@@ -17,11 +17,11 @@ interface DangerZoneProps {
     headerIcon?: React.ComponentType<{ className?: string }>;
 }
 
-export function DangerZone({ 
-    title = "Danger Zone", 
-    description = "Actions in this section are irreversible. Please be certain.",
+export function DangerZone({
+    title = 'Danger Zone',
+    description = 'Actions in this section are irreversible. Please be certain.',
     actions,
-    headerIcon: HeaderIcon = AlertTriangle
+    headerIcon: HeaderIcon = AlertTriangle,
 }: DangerZoneProps) {
     return (
         <div className="bg-surface rounded-lg shadow border border-error/40 mt-6">
@@ -34,22 +34,23 @@ export function DangerZone({
             <div className="px-6 py-6">
                 <div className="space-y-4">
                     {actions.map((action, index) => (
-                        <div key={index} className="flex items-center justify-between gap-6">
-                            <div className="flex-1 min-w-0">
-                                <h5 className="font-medium text-on-surface mb-1">{action.label}</h5>
-                                <p className="text-sm text-on-surface-variant">
-                                    {action.description || description}
-                                </p>
+                        <React.Fragment key={index}>
+                            <div className="flex items-center justify-between gap-6">
+                                <div className="flex-1 min-w-0">
+                                    <h5 className="font-medium text-on-surface mb-1">{action.label}</h5>
+                                    <p className="text-sm text-on-surface-variant">{action.description || description}</p>
+                                </div>
+                                <button
+                                    onClick={action.onClick}
+                                    disabled={action.isLoading}
+                                    className="flex items-center px-4 py-2 rounded-lg text-sm font-medium transition-colors cursor-pointer bg-error text-on-error hover:bg-error/90 disabled:opacity-50 disabled:cursor-not-allowed whitespace-nowrap"
+                                >
+                                    {action.icon && <action.icon className="w-4 h-4 mr-2" />}
+                                    {action.isLoading ? action.loadingText || 'Loading...' : action.label}
+                                </button>
                             </div>
-                            <button
-                                onClick={action.onClick}
-                                disabled={action.isLoading}
-                                className="flex items-center px-4 py-2 rounded-lg text-sm font-medium transition-colors cursor-pointer bg-error text-on-error hover:bg-error/90 disabled:opacity-50 disabled:cursor-not-allowed whitespace-nowrap"
-                            >
-                                {action.icon && <action.icon className="w-4 h-4 mr-2" />}
-                                {action.isLoading ? (action.loadingText || 'Loading...') : action.label}
-                            </button>
-                        </div>
+                            {index < actions.length - 1 && <div className="border-t border-outline" />}
+                        </React.Fragment>
                     ))}
                 </div>
             </div>
@@ -67,13 +68,13 @@ interface DeleteDangerZoneProps {
     title?: string;
 }
 
-export function DeleteDangerZone({ 
-    itemName, 
-    itemType = "item",
-    onDelete, 
+export function DeleteDangerZone({
+    itemName,
+    itemType = 'item',
+    onDelete,
     isDeleteLoading = false,
     customDescription,
-    title = "Danger Zone"
+    title = 'Danger Zone',
 }: DeleteDangerZoneProps) {
     return (
         <DangerZone
@@ -84,8 +85,8 @@ export function DeleteDangerZone({
                     onClick: onDelete,
                     isLoading: isDeleteLoading,
                     loadingText: 'Deleting...',
-                    icon: Trash2
-                }
+                    icon: Trash2,
+                },
             ]}
             description={customDescription || `Once you delete this ${itemType.toLowerCase()}, there is no going back. Please be certain.`}
         />
