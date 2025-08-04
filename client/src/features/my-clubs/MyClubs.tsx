@@ -14,7 +14,7 @@ import {
 } from './components';
 import { EventPlanner } from './event-planner';
 import { EventDetails, LocationPicker, TAPIntegration, ASFunding } from './event-editor';
-import { EventData } from '@clubhive/shared';
+import { EventData, EventType } from '@clubhive/shared';
 import React, { useState } from 'react';
 
 export function MyClubs() {
@@ -75,6 +75,27 @@ export function MyClubs() {
         setActiveTabDirect('events'); // Use direct setter to avoid URL navigation cycle
     };
 
+    const handleCreateEvent = (selectedDate?: Date, sourceLayoutId?: string) => {
+        // Create a new temporary event with pre-filled date
+        // Use the sourceLayoutId as the event ID to enable layout animation
+        const eventId = sourceLayoutId || 'create-event-button';
+        const newEvent: EventData = {
+            _id: eventId,
+            club: selectedClub?._id || '',
+            name: 'New Event',
+            description: '',
+            date: selectedDate ? selectedDate.toISOString().split('T')[0] : new Date().toISOString().split('T')[0],
+            startTime: '09:00',
+            endTime: '10:00',
+            location: '',
+            type: EventType.UCSD_STUDENTS,
+            tags: [],
+        };
+
+        setSelectedEvent(newEvent);
+        setActiveTab('event-details');
+    };
+
     const [statsVisibleToAll, setStatsVisibleToAll] = useState(false);
 
     const showStatsTab = showOfficerView || statsVisibleToAll;
@@ -93,6 +114,7 @@ export function MyClubs() {
                     events={events}
                     selectedClub={selectedClub}
                     onEventSelect={handleEventSelect}
+                    onCreateEvent={handleCreateEvent}
                     viewMode={eventPlannerViewMode}
                     onViewModeChange={setEventPlannerViewMode}
                 />
