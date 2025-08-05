@@ -13,7 +13,7 @@ import {
     RegisterClubButton,
 } from './components';
 import { EventPlanner } from './event-planner';
-import { EventDetails, LocationPicker, TAPIntegration, ASFunding, DangerZone } from './event-editor';
+import { EventDetails, LocationPicker } from './event-editor';
 import { EventData, EventType } from '@clubhive/shared';
 import { eventService } from '../../services/eventService';
 import React, { useState } from 'react';
@@ -236,10 +236,6 @@ export function MyClubs() {
             );
         } else if (activeTab === 'event-location' && selectedEvent) {
             content = <LocationPicker event={selectedEvent} onEventChange={setSelectedEvent} />;
-        } else if (activeTab === 'event-tap' && selectedEvent) {
-            content = <TAPIntegration event={selectedEvent} onEventChange={setSelectedEvent} />;
-        } else if (activeTab === 'event-funding' && selectedEvent) {
-            content = <ASFunding event={selectedEvent} onEventChange={setSelectedEvent} />;
         } else if (activeTab === 'stats' && (showOfficerView || showStatsTab)) {
             content = <Stats club={selectedClub} />;
         } else if (activeTab === 'stats') {

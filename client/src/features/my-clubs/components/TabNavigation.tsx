@@ -50,8 +50,6 @@ export function TabNavigation({
     const getEventEditTabs = (): TabItem[] => [
         { key: 'event-details', label: 'Details', icon: FileText },
         { key: 'event-location', label: 'Location Picker', icon: MapPin },
-        { key: 'event-tap', label: 'TAP (WIP)', icon: Zap },
-        { key: 'event-funding', label: 'AS Funding (WIP)', icon: DollarSign },
     ];
 
     const tabs = selectedEvent ? getEventEditTabs() : showOfficerView ? getOfficerTabs() : getMemberTabs();
