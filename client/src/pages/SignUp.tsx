@@ -34,10 +34,10 @@ export function SignUp() {
         if (!formData.email) newErrors.email = 'Email is required';
         if (!formData.password) newErrors.password = 'Password is required';
         if (formData.confirmPassword != formData.password) newErrors.confirmPassword = 'Passwords do not match';
-        if (!formData.school) newErrors.clubInstagram = 'School is required';
-        if (!formData.major) newErrors.clubInstagram = 'Major is required';
-        if (!formData.educationType) newErrors.clubInstagram = 'Education Type is required';
-        if (!formData.year) newErrors.clubInstagram = 'Academic Year is required';
+        if (!formData.school) newErrors.school = 'School is required';
+        if (!formData.major) newErrors.major = 'Major is required';
+        if (!formData.educationType) newErrors.educationType = 'Education Type is required';
+        if (!formData.year) newErrors.year = 'Academic Year is required';
 
         if (Object.keys(newErrors).length > 0) {
             setErrors(newErrors);
@@ -47,7 +47,7 @@ export function SignUp() {
         const userData = {
             name: formData.fullName,
             email: formData.email,
-            password: formData.email,
+            password: formData.password,
             school: formData.school,
             major: formData.major,
             educationType: formData.educationType,
