@@ -10,39 +10,6 @@ import Notification from '../src/models/notification-schema';
 import UserNotification from '../src/models/user-notification-schema';
 import { ClubhiveConfigModel } from '../src/models/clubhive-config-schema';
 import { EventType, ClubRole } from '@clubhive/shared';
-// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-// @ts-expect-error
-import bcrypt from 'bcrypt';
-import ClubSnapshot from '../src/models/club-snapshot-schema';
-import dotenv from 'dotenv';
-
-dotenv.config();
-
-interface MemberDataPoint {
-    date: string;
-    newMembers: number;
-    leavingMembers: number;
-}
-
-interface MajorDistribution {
-    major: string;
-    count: number;
-}
-import ClubSnapshot from '../src/models/club-snapshot-schema';
-import dotenv from 'dotenv';
-
-dotenv.config();
-
-interface MemberDataPoint {
-    date: string;
-    newMembers: number;
-    leavingMembers: number;
-}
-
-interface MajorDistribution {
-    major: string;
-    count: number;
-}
 import ClubSnapshot from '../src/models/club-snapshot-schema';
 import dotenv from 'dotenv';
 

@@ -1,19 +1,13 @@
 import { useEffect, useState } from 'react';
-import { useNavigate, useParams, Link } from 'react-router';
+import { useNavigate, useParams } from 'react-router';
 import { clubSchema, ErrorCode } from '@clubhive/shared';
 import Popup from '../features/club-profile/Popup';
 import { handleRegistration } from '../../../server/src/services/joinClubService';
-import { clubSchema, ErrorCode } from '@clubhive/shared';
-import Popup from '../features/club-profile/Popup';
-import { handleRegistration } from '../../../server/src/services/joinClubService';
-import { clubSchema, ErrorCode } from '@clubhive/shared';
-import Popup from '../features/club-profile/Popup';
-import { handleRegistration } from '../../../server/src/services/joinClubService';
-import { getTagColor } from '../features/find-clubs/utils/TagColors';
-import { useToast } from '../hooks/useToast';
-import { clubWithEventsAndCountsSchema } from '@clubhive/shared';
-import { ClubWithEventsData } from '@clubhive/shared/src/types/club-types';
 
+/**
+ * This class is a static view of what the Club Profile page
+ * might look like, may be temporary and changed.
+ */
 export function ClubProfile() {
     const { url } = useParams<{ url: string }>();
     const [club, setClub] = useState(null);
