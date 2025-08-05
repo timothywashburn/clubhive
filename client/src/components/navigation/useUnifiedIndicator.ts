@@ -1,74 +1,62 @@
-import { useState, useEffect, useRef, useCallback } from 'react';
+import { useState, useEffect, useRef } from 'react';
 
 interface UnifiedIndicatorOptions {
     activeKey: string;
     availableKeys: string[];
     navType: 'site' | 'tabs';
-    // For tabs - context switching detection
     contextId?: string;
     isPreviewMode?: boolean;
 }
 
 export const useUnifiedIndicator = ({ activeKey, availableKeys, navType, contextId, isPreviewMode = false }: UnifiedIndicatorOptions) => {
-    const [indicatorStyle, setIndicatorStyle] = useState({ left: 0, width: 0 });
-    const [shouldAnimate, setShouldAnimate] = useState(false);
-    const [shouldAnimatePosition, setShouldAnimatePosition] = useState(false);
     const [isVisible, setIsVisible] = useState(false);
+    const [lastValidActiveKey, setLastValidActiveKey] = useState(activeKey);
+    const [frozenPosition, setFrozenPosition] = useState<{ left: number; width: number } | null>(null);
+    const [isTransitioning, setIsTransitioning] = useState(false);
     const elementRefs = useRef<{ [key: string]: HTMLElement | null }>({});
 
-    // For site nav - track visibility state
-    const wasVisibleRef = useRef(false);
-
-    // For tabs - track context changes
     const prevContextRef = useRef<string | null>(null);
 
-    const updateIndicator = useCallback(() => {
-        const activeElement = elementRefs.current[activeKey];
-        if (activeElement) {
-            const containerSelector = navType === 'site' ? '.nav-container' : 'nav';
-            const container = activeElement.closest(containerSelector);
-            if (container) {
-                const containerRect = container.getBoundingClientRect();
-                const elementRect = activeElement.getBoundingClientRect();
+    useEffect(() => {
+        if (navType === 'site') {
+            const hasActiveItem = availableKeys.includes(activeKey);
 
-                setIndicatorStyle({
-                    left: elementRect.left - containerRect.left,
-                    width: elementRect.width,
-                });
+            if (hasActiveItem) {
+                setLastValidActiveKey(activeKey);
 
-                // Handle visibility for site nav
-                if (navType === 'site') {
-                    if (!wasVisibleRef.current) {
-                        // For fade-in: disable position animation, set position immediately, then fade in
-                        setShouldAnimatePosition(false);
-                        setIsVisible(false);
-                        // Use requestAnimationFrame to ensure position is set before opacity change
-                        requestAnimationFrame(() => {
-                            setIsVisible(true);
-                            // Re-enable position animation after fade-in starts
-                            setTimeout(() => setShouldAnimatePosition(true), 100);
-                            // Only mark as visible AFTER the fade-in starts
-                            wasVisibleRef.current = true;
-                        });
-                    } else {
+                if (!isVisible) {
+                    setIsTransitioning(true);
+                    setFrozenPosition(null);
+                    setTimeout(() => {
                         setIsVisible(true);
-                        setShouldAnimatePosition(true);
-                    }
+                        setIsTransitioning(false);
+                    }, 300); // TODO: this is horrible, need to fix
                 } else {
                     setIsVisible(true);
-                    setShouldAnimatePosition(true);
+                    setFrozenPosition(null);
                 }
-            } else if (navType === 'site') {
+            } else {
+                const element = elementRefs.current[lastValidActiveKey];
+                if (element && !frozenPosition) {
+                    const container = element.closest('.nav-container');
+                    if (container) {
+                        const containerRect = container.getBoundingClientRect();
+                        const elementRect = element.getBoundingClientRect();
+                        setFrozenPosition({
+                            left: elementRect.left - containerRect.left,
+                            width: element.offsetWidth,
+                        });
+                    }
+                }
                 setIsVisible(false);
-                wasVisibleRef.current = false;
             }
-        } else if (navType === 'site') {
-            setIsVisible(false);
-            wasVisibleRef.current = false;
+        } else {
+            setIsVisible(true);
+            setLastValidActiveKey(activeKey);
         }
-    }, [activeKey, navType]);
+    }, [activeKey, availableKeys, navType]);
 
-    // Handle context changes for tabs
+    // Handle context changes for tabs (delay indicator appearance during tab switching)
     useEffect(() => {
         if (navType === 'tabs' && contextId) {
             const currentContext = `${contextId}-${isPreviewMode}-${activeKey.startsWith('event-') ? 'event' : 'main'}`;
@@ -76,47 +64,18 @@ export const useUnifiedIndicator = ({ activeKey, availableKeys, navType, context
             prevContextRef.current = currentContext;
 
             if (contextChanged) {
-                // Delay indicator update when context changes
-                const timer = setTimeout(() => {
-                    updateIndicator();
-                }, 225);
-                return () => clearTimeout(timer);
-            } else {
-                updateIndicator();
-            }
-        } else {
-            updateIndicator();
-        }
-    }, [activeKey, contextId, isPreviewMode, updateIndicator, navType]);
-
-    // Handle active key changes for site nav
-    useEffect(() => {
-        if (navType === 'site') {
-            const hasActiveItem = availableKeys.includes(activeKey);
-            if (hasActiveItem) {
-                updateIndicator();
-            } else {
                 setIsVisible(false);
-                wasVisibleRef.current = false;
+                const timer = setTimeout(() => setIsVisible(true), 225);
+                return () => clearTimeout(timer);
             }
         }
-    }, [activeKey, availableKeys, navType, updateIndicator]);
-
-    // Initialize animation delay
-    useEffect(() => {
-        const timer = setTimeout(() => {
-            setShouldAnimate(true);
-            setShouldAnimatePosition(true);
-        }, 100);
-        return () => clearTimeout(timer);
-    }, [contextId]); // Re-trigger on context changes
+    }, [activeKey, contextId, isPreviewMode, navType]);
 
     return {
-        indicatorStyle,
-        shouldAnimate,
-        shouldAnimatePosition,
-        setShouldAnimate,
         elementRefs,
-        isVisible: navType === 'tabs' ? true : isVisible,
+        isVisible,
+        activeKey: lastValidActiveKey,
+        frozenPosition,
+        isTransitioning,
     };
 };
