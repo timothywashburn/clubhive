@@ -1,18 +1,18 @@
 import { useEffect, useState, useCallback } from 'react';
-import { ClubWithCountsData } from '@clubhive/shared';
+import { UserWithCountsData } from '@clubhive/shared';
 
 const getAuthHeaders = () => ({
     Authorization: 'Bearer temp',
     'Content-Type': 'application/json',
 });
 
-export const useClubData = () => {
-    const [clubs, setClubs] = useState<ClubWithCountsData[]>([]);
+export const useUserData = () => {
+    const [users, setUsers] = useState<UserWithCountsData[]>([]);
     const [isLoading, setIsLoading] = useState(true);
     const [isRefreshing, setIsRefreshing] = useState(false);
     const [error, setError] = useState<string | null>(null);
 
-    const fetchClubs = useCallback(async (isRefresh = false) => {
+    const fetchUsers = useCallback(async (isRefresh = false) => {
         if (isRefresh) {
             setIsRefreshing(true);
         } else {
@@ -21,13 +21,13 @@ export const useClubData = () => {
         setError(null);
 
         try {
-            const response = await fetch('/api/clubs', {
+            const response = await fetch('/api/users', {
                 headers: getAuthHeaders(),
             });
             const data = await response.json();
 
             if (data.success) {
-                setClubs(data.clubs);
+                setUsers(data.users);
             } else {
                 setError(data.error?.message || 'Unknown error');
             }
@@ -40,12 +40,12 @@ export const useClubData = () => {
     }, []);
 
     useEffect(() => {
-        fetchClubs();
-    }, [fetchClubs]);
+        fetchUsers();
+    }, [fetchUsers]);
 
     const refetch = useCallback(() => {
-        fetchClubs(true);
-    }, [fetchClubs]);
+        fetchUsers(true);
+    }, [fetchUsers]);
 
-    return { clubs, isLoading, error, refetch, isRefreshing };
+    return { users, isLoading, error, refetch, isRefreshing };
 };

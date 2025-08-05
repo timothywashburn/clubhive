@@ -27,7 +27,9 @@ async function seed() {
     await Announcement.deleteMany({});
     await UserNotification.deleteMany({});
 
-    const [ucsd] = await School.insertMany([{ _id: UCSD_SCHOOL_ID, name: 'UCSD', location: 'San Diego, CA' }]);
+    const [ucsd] = await School.insertMany([
+        { _id: UCSD_SCHOOL_ID, name: 'University of California, San Diego', location: 'San Diego, CA' },
+    ]);
 
     const tags = await Tag.insertMany([
         { type: 'club', text: 'Technology' },
