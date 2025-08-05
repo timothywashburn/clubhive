@@ -22,6 +22,11 @@ export const clubSchema = z.object({
     updatedAt: z.string(),
 });
 
+export const clubWithCountsSchema = clubSchema.extend({
+    memberCount: z.number(),
+    eventCount: z.number(),
+});
+
 export const createClubRequestSchema = z.object({
     school: z.string(),
     name: z.string(),
@@ -63,6 +68,7 @@ export const userClubSchema = clubSchema.extend({
 });
 
 export type ClubData = z.infer<typeof clubSchema>;
+export type ClubWithCountsData = z.infer<typeof clubWithCountsSchema>;
 export type UserClubData = z.infer<typeof userClubSchema>;
 export type CreateClubRequest = z.infer<typeof createClubRequestSchema>;
 export type UpdateClubRequest = z.infer<typeof updateClubRequestSchema>;
@@ -72,7 +78,7 @@ export interface CreateClubResponse {
 }
 
 export interface GetClubsResponse {
-    clubs: ClubData[];
+    clubs: ClubWithCountsData[];
 }
 
 export interface GetMyClubsResponse {

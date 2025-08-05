@@ -82,10 +82,9 @@ function generateSiteNavigation(props: SiteNavigationConfig, currentPath: string
     ];
 
     const adminNavItems: NavigationItem[] = [
-        { key: 'dashboard', label: 'Dashboard', to: '/admin/dashboard' },
-        { key: 'users', label: 'Users', to: '/admin/users' },
+        { key: 'schools', label: 'Schools', to: '/admin/schools' },
         { key: 'clubs-admin', label: 'Clubs', to: '/admin/clubs' },
-        { key: 'settings', label: 'Settings', to: '/admin/settings' },
+        { key: 'users', label: 'Users', to: '/admin/users' },
     ];
 
     const authNavItems = props.isAuthenticated
@@ -175,7 +174,10 @@ function renderSiteNavigation({
                 <div className="hidden md:flex justify-between items-center h-16 nav-container relative">
                     {/* Left Content */}
                     <div className="flex items-center space-x-12">
-                        <Link to="/" className="text-xl font-bold text-primary hover:text-primary/90">
+                        <Link
+                            to={props.siteNavType === 'admin' ? '/admin/dashboard' : '/'}
+                            className="text-xl font-bold text-primary hover:text-primary/90"
+                        >
                             clubhive
                         </Link>
 
@@ -295,7 +297,10 @@ function renderSiteNavigation({
 
                 {/* Mobile Navigation */}
                 <div className="md:hidden flex justify-between items-center h-16">
-                    <Link to="/" className="text-xl font-bold text-primary hover:text-primary/90">
+                    <Link
+                        to={props.siteNavType === 'admin' ? '/admin/dashboard' : '/'}
+                        className="text-xl font-bold text-primary hover:text-primary/90"
+                    >
                         clubhive
                     </Link>
 
