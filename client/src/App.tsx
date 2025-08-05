@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { BrowserRouter, Routes, Route, Outlet } from 'react-router';
-import { Navbar } from './components/navbar/Navbar.tsx';
+import { BrowserRouter, Routes, Route, useLocation } from 'react-router';
+import { UnifiedNavigation } from './components/navigation';
 import { Footer } from './components/footer/Footer.tsx';
 import { useAuth } from './hooks/useAuth';
 import { useTheme } from './hooks/useTheme';
@@ -20,12 +20,18 @@ import { About } from './features/about/About.tsx';
 import { StaticHoneycomb } from './components/honeycomb';
 import { useThemeStore } from './stores/themeStore.ts';
 
-export function App() {
+function AppContent() {
     const { isAuthenticated, toggleAuth } = useAuth();
     const [scrollY, setScrollY] = useState(0);
     const backgroundRef = useRef<HTMLDivElement>(null);
+    const location = useLocation();
     useTheme();
     const { theme } = useThemeStore();
+    const [siteNavType, setSiteNavType] = useState<'regular' | 'admin'>('regular');
+
+    const toggleSiteNavType = () => {
+        setSiteNavType(prev => (prev === 'regular' ? 'admin' : 'regular'));
+    };
 
     useEffect(() => {
         const handleScroll = () => {
@@ -39,45 +45,58 @@ export function App() {
     if (!theme) return null;
 
     return (
-        <BrowserRouter>
-            <div className="h-screen flex flex-col">
-                <div
-                    ref={backgroundRef}
-                    className="fixed"
-                    style={{
-                        top: 0,
-                        left: '0',
-                        right: '0',
-                        height: '150vh',
-                        transform: `translateY(${scrollY * -0.05}px)`,
-                        zIndex: -1,
-                    }}
-                >
-                    <StaticHoneycomb />
-                </div>
-                <Navbar isAuthenticated={isAuthenticated} toggleAuth={toggleAuth} />
-                <main className="flex-1 overflow-auto flex flex-col">
-                    <div className="flex-1">
-                        <Routes>
-                            <Route path="/" element={<Home />} />
-                            <Route path="/my-clubs" element={<MyClubs />} />
-                            <Route path="/my-clubs/:clubUrl/:tab" element={<MyClubs />} />
-                            <Route path="/clubs" element={<Clubs />} />
-                            <Route path="/club-profile/:url" element={<ClubProfile />} />
-                            <Route path="/events" element={<Events />} />
-                            <Route path="/events/:id" element={<EventsPage />} />
-                            <Route path="/account" element={<Account />} />
-                            <Route path="/notifications" element={<Notifications />} />
-                            <Route path="/about" element={<About />} />
-                            <Route path="/signin" element={<SignIn />} />
-                            <Route path="/signup" element={<SignUp />} />
-                            <Route path="/register" element={<ClubRegistration />} />
-                            <Route path="*" element={<NotFound />} />
-                        </Routes>
-                    </div>
-                    <Footer />
-                </main>
+        <div className="h-screen flex flex-col">
+            <div
+                ref={backgroundRef}
+                className="fixed"
+                style={{
+                    top: 0,
+                    left: '0',
+                    right: '0',
+                    height: '150vh',
+                    transform: `translateY(${scrollY * -0.05}px)`,
+                    zIndex: -1,
+                }}
+            >
+                <StaticHoneycomb />
             </div>
+            <UnifiedNavigation
+                navType="site"
+                siteNavType={siteNavType}
+                isAuthenticated={isAuthenticated}
+                toggleAuth={toggleAuth}
+                toggleSiteNavType={toggleSiteNavType}
+                activeRoute={location.pathname}
+            />
+            <main className="flex-1 overflow-auto flex flex-col">
+                <div className="flex-1">
+                    <Routes>
+                        <Route path="/" element={<Home />} />
+                        <Route path="/my-clubs" element={<MyClubs />} />
+                        <Route path="/my-clubs/:clubUrl/:tab" element={<MyClubs />} />
+                        <Route path="/clubs" element={<Clubs />} />
+                        <Route path="/club-profile/:url" element={<ClubProfile />} />
+                        <Route path="/events" element={<Events />} />
+                        <Route path="/events/:id" element={<EventsPage />} />
+                        <Route path="/account" element={<Account />} />
+                        <Route path="/notifications" element={<Notifications />} />
+                        <Route path="/about" element={<About />} />
+                        <Route path="/signin" element={<SignIn />} />
+                        <Route path="/signup" element={<SignUp />} />
+                        <Route path="/register" element={<ClubRegistration />} />
+                        <Route path="*" element={<NotFound />} />
+                    </Routes>
+                </div>
+                <Footer />
+            </main>
+        </div>
+    );
+}
+
+export function App() {
+    return (
+        <BrowserRouter>
+            <AppContent />
         </BrowserRouter>
     );
 }
