@@ -21,9 +21,10 @@
     "dist/**/*"
   ],
   "dependencies": {
-    "zod": "^4.0.10"
+    "zod": "^4.0.14"
   },
   "devDependencies": {
+    "@types/node": "^24.2.0",
     "typescript": "^5.0.0"
   }
 }
