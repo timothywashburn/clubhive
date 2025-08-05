@@ -1,10 +1,10 @@
-import { useState, useMemo } from 'react';
+import { useMemo, useState } from 'react';
 import { Link, useLocation } from 'react-router';
-import { Menu, X, User, UserX, Users, Calendar, BarChart3, FileText, MapPin, Shield, ShieldOff } from 'lucide-react';
-import { motion, AnimatePresence } from 'framer-motion';
+import { BarChart3, Calendar, FileText, MapPin, Menu, Shield, ShieldOff, User, Users, UserX, X } from 'lucide-react';
+import { AnimatePresence, motion } from 'framer-motion';
 import { NavLink } from '../navbar/NavLink';
 import { useUnifiedIndicator } from './useUnifiedIndicator';
-import { UnifiedNavigationProps, NavigationItem, NavigationStyle, SiteNavigationConfig, TabNavigationConfig, TabType } from './types';
+import { NavigationItem, NavigationStyle, SiteNavigationConfig, TabNavigationConfig, TabType, UnifiedNavigationProps } from './types';
 
 interface Props {
     style?: NavigationStyle;
@@ -31,7 +31,13 @@ export function UnifiedNavigation(props: UnifiedNavigationProps & { style?: Navi
     }, [props, location.pathname]);
 
     // Unified indicator hook
-    const { indicatorStyle, shouldAnimate, shouldAnimatePosition, setShouldAnimate, elementRefs, isVisible } = useUnifiedIndicator({
+    const {
+        elementRefs,
+        isVisible,
+        activeKey: indicatorActiveKey,
+        frozenPosition,
+        isTransitioning,
+    } = useUnifiedIndicator({
         activeKey,
         availableKeys,
         navType: props.navType,
@@ -47,22 +53,21 @@ export function UnifiedNavigation(props: UnifiedNavigationProps & { style?: Navi
             isMenuOpen,
             toggleMenu,
             closeMenu,
-            indicatorStyle,
-            shouldAnimate,
-            shouldAnimatePosition,
-            setShouldAnimate,
             elementRefs,
             isVisible,
+            indicatorActiveKey,
+            frozenPosition,
+            isTransitioning,
             style,
         });
     } else {
         return renderTabNavigation({
             props: props as TabNavigationConfig,
             navigationItems,
-            indicatorStyle,
-            shouldAnimate,
-            setShouldAnimate,
             elementRefs,
+            isVisible,
+            indicatorActiveKey,
+            frozenPosition,
             style,
         });
     }
@@ -151,12 +156,11 @@ function renderSiteNavigation({
     isMenuOpen,
     toggleMenu,
     closeMenu,
-    indicatorStyle,
-    shouldAnimate,
-    shouldAnimatePosition,
-    setShouldAnimate,
     elementRefs,
     isVisible,
+    indicatorActiveKey,
+    frozenPosition,
+    isTransitioning,
     style,
 }: any) {
     const navClasses =
@@ -192,7 +196,6 @@ function renderSiteNavigation({
                                             elementRefs.current[item.to!] = el;
                                         }}
                                         enableActiveState={true}
-                                        setShouldAnimate={setShouldAnimate}
                                         className="py-4 px-2"
                                     >
                                         {item.label}
@@ -236,7 +239,6 @@ function renderSiteNavigation({
                                     elementRefs.current[item.to!] = el;
                                 }}
                                 enableActiveState={true}
-                                setShouldAnimate={setShouldAnimate}
                                 className="py-4 px-2"
                             >
                                 {item.label}
@@ -244,16 +246,49 @@ function renderSiteNavigation({
                         ))}
                     </div>
 
-                    {/* Animated underline indicator */}
-                    <div
-                        className={`absolute bottom-0 h-0.5 bg-primary ${shouldAnimate ? 'transition-all duration-300 ease-in-out' : ''}`}
-                        style={{
-                            left: `${indicatorStyle.left}px`,
-                            width: `${indicatorStyle.width}px`,
-                            opacity: isVisible ? 1 : 0,
-                            transition: shouldAnimatePosition
-                                ? 'left 300ms ease-in-out, width 300ms ease-in-out, opacity 500ms ease-in-out'
-                                : 'opacity 500ms ease-in-out',
+                    {/* Framer Motion indicator */}
+                    <motion.div
+                        layoutId="site-nav-indicator"
+                        className="absolute bottom-0 h-0.5 bg-primary"
+                        animate={(() => {
+                            const element = elementRefs.current[indicatorActiveKey];
+
+                            if (isTransitioning && element) {
+                                const container = element.closest('.nav-container');
+                                const containerRect = container?.getBoundingClientRect();
+                                const elementRect = element.getBoundingClientRect();
+                                return {
+                                    opacity: 0,
+                                    left: containerRect ? elementRect.left - containerRect.left : element.offsetLeft,
+                                    width: element.offsetWidth,
+                                };
+                            }
+
+                            return {
+                                opacity: isVisible ? 1 : 0,
+                                ...(isVisible && element
+                                    ? {
+                                          left: (() => {
+                                              const container = element.closest('.nav-container');
+                                              if (!container) return element.offsetLeft;
+                                              const containerRect = container.getBoundingClientRect();
+                                              const elementRect = element.getBoundingClientRect();
+                                              return elementRect.left - containerRect.left;
+                                          })(),
+                                          width: element.offsetWidth,
+                                      }
+                                    : frozenPosition
+                                      ? {
+                                            left: frozenPosition.left,
+                                            width: frozenPosition.width,
+                                        }
+                                      : {}),
+                            };
+                        })()}
+                        transition={{
+                            opacity: { duration: 0.2 },
+                            left: { duration: 0.3, ease: 'easeInOut' },
+                            width: { duration: 0.3, ease: 'easeInOut' },
                         }}
                     />
                 </div>
@@ -311,7 +346,7 @@ function renderSiteNavigation({
 }
 
 // Tab navigation renderer
-function renderTabNavigation({ props, navigationItems, indicatorStyle, shouldAnimate, setShouldAnimate, elementRefs, style }: any) {
+function renderTabNavigation({ props, navigationItems, elementRefs, isVisible, indicatorActiveKey, style }: any) {
     const contextKey = props.selectedEvent ? 'event-tabs' : props.showOfficerView ? 'officer-tabs' : 'member-tabs';
 
     return (
@@ -339,7 +374,6 @@ function renderTabNavigation({ props, navigationItems, indicatorStyle, shouldAni
                                         elementRefs.current[tab.key] = el;
                                     }}
                                     onClick={() => {
-                                        setShouldAnimate(true);
                                         props.onTabChange(tab.key as TabType);
                                     }}
                                     className={`flex items-center py-3 px-1 font-medium text-sm transition-colors cursor-pointer relative ${
@@ -367,7 +401,6 @@ function renderTabNavigation({ props, navigationItems, indicatorStyle, shouldAni
                                             elementRefs.current[tab.key] = el;
                                         }}
                                         onClick={() => {
-                                            setShouldAnimate(true);
                                             props.onTabChange(tab.key as TabType);
                                         }}
                                         className={`flex items-center py-3 px-1 font-medium text-sm transition-colors cursor-pointer relative ${
@@ -392,12 +425,29 @@ function renderTabNavigation({ props, navigationItems, indicatorStyle, shouldAni
                     </div>
                 )}
 
-                {/* Indicator */}
-                <div
-                    className={`absolute bottom-0 h-0.5 bg-primary ${shouldAnimate ? 'transition-all duration-300 ease-in-out' : ''}`}
-                    style={{
-                        left: `${indicatorStyle.left}px`,
-                        width: `${indicatorStyle.width}px`,
+                {/* Framer Motion indicator */}
+                <motion.div
+                    layoutId="tab-nav-indicator"
+                    className="absolute bottom-0 h-0.5 bg-primary"
+                    animate={{
+                        opacity: isVisible ? 1 : 0,
+                        ...(isVisible && {
+                            left: (() => {
+                                const element = elementRefs.current[indicatorActiveKey];
+                                if (!element) return 0;
+                                const container = element.closest('nav');
+                                if (!container) return element.offsetLeft;
+                                const containerRect = container.getBoundingClientRect();
+                                const elementRect = element.getBoundingClientRect();
+                                return elementRect.left - containerRect.left;
+                            })(),
+                            width: elementRefs.current[indicatorActiveKey]?.offsetWidth || 0,
+                        }),
+                    }}
+                    transition={{
+                        opacity: { duration: 0.2 },
+                        left: { duration: 0.3, ease: 'easeInOut' },
+                        width: { duration: 0.3, ease: 'easeInOut' },
                     }}
                 />
             </nav>
