@@ -28,10 +28,10 @@ export const clubWithCountsSchema = clubSchema.extend({
 });
 
 export const createClubRequestSchema = z.object({
-    school: z.string(),
-    name: z.string(),
-    tagline: z.string(),
-    description: z.string().optional(),
+    school: z.string().min(1, 'School is required'),
+    name: z.string().min(1, 'Club name is required'),
+    tagline: z.string().max(50, 'Tagline must be 50 characters or less').optional(),
+    description: z.string().max(1000, 'Description must be 1000 characters or less').optional(),
     url: z.string().optional(),
     socials: z
         .object({

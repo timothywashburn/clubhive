@@ -1,3 +1,4 @@
+import dotenv from 'dotenv';
 import mongoose from 'mongoose';
 import Club from '../src/models/club-schema';
 import School from '../src/models/school-schema';
@@ -9,6 +10,8 @@ import Announcement from '../src/models/announcement-schema';
 import UserNotification from '../src/models/user-notification-schema';
 import { ClubhiveConfigModel } from '../src/models/clubhive-config-schema';
 import { EventType, ClubRole } from '@clubhive/shared';
+
+dotenv.config();
 
 const TEST_USER_ID = new mongoose.Types.ObjectId('507f1f77bcf86cd799439020');
 const UCSD_SCHOOL_ID = new mongoose.Types.ObjectId('507f1f77bcf86cd799439021');

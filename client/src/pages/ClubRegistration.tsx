@@ -3,6 +3,7 @@ import React, { useState } from 'react';
 import { TagSelectionPopup } from '../features/find-clubs/components/TagsSelectionPopup';
 import type { TagData } from '@clubhive/shared';
 import { getTagColor } from '../features/find-clubs/utils/TagColors';
+import { createClubRequestSchema } from '@clubhive/shared/src/types/club-types';
 
 export function ClubRegistration() {
     const { tags } = useTagsData();
@@ -12,47 +13,57 @@ export function ClubRegistration() {
         'mt-1 block w-full rounded-md text-on-primary-container border border-outline-variant bg-surface px-3 py-2 shadow-sm ' +
         'focus:border-primary focus:ring focus:ring-primary focus:ring-opacity-50 focus:outline-none';
 
-    const [clubName, setClubName] = useState('');
-    const [clubSchool, setClubSchool] = useState('');
-    const [clubTagline, setClubTagline] = useState('');
-    const [clubUrl, setClubUrl] = useState('');
-    const [clubDiscord, setClubDiscord] = useState('');
-    const [clubInstagram, setClubInstagram] = useState('');
-    const [clubWebsite, setClubWebsite] = useState('');
-    const [clubDescription, setClubDescription] = useState('');
+    const [name, setName] = useState('');
+    const [school, setSchool] = useState('');
+    const [tagline, setTagline] = useState('');
+    const [url, setUrl] = useState('');
+    const [discord, setDiscord] = useState('');
+    const [instagram, setInstagram] = useState('');
+    const [website, setWebsite] = useState('');
+    const [description, setDescription] = useState('');
 
     const maxDescriptionLength = 1000;
     const maxTaglineLength = 50;
 
     const [errors, setErrors] = useState<{ [key: string]: string }>({});
-    const newErrors: { [key: string]: string } = {};
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
 
-        if (!clubName) newErrors.clubName = 'Club name is required';
-        if (!clubSchool) newErrors.clubSchool = 'School is required';
-        if (!clubUrl) newErrors.clubUrl = 'URL is required';
-        if (clubDiscord && !clubDiscord.startsWith('https://discord.com/invite'))
-            newErrors.clubDiscord = 'Discord link must start with https://discord.com/invite/';
-        if (clubInstagram && !clubInstagram.startsWith('https://www.instagram.com/'))
-            newErrors.clubInstagram = 'Instagram link must start with https://www.instagram.com/';
+        const clubData = {
+            name: name,
+            school: school,
+            tagline: tagline || undefined,
+            url: url || undefined,
+            socials: {
+                discord: discord || undefined,
+                instagram: instagram || undefined,
+                website: website || undefined,
+            },
+            description: description || undefined,
+            tags: selectedTags.map(tag => tag._id) || undefined,
+            clubLogo: undefined,
+            pictures: undefined,
+        };
 
-        if (Object.keys(newErrors).length > 0) {
+        // Validate using Zod schema
+        const result = createClubRequestSchema.safeParse(clubData);
+
+        if (!result.success) {
+            // Flatten errors
+            const zodErrors = result.error.format();
+            console.log('Full Zod errors:', zodErrors);
+
+            const newErrors: { [key: string]: string } = {};
+
+            if (zodErrors.name?._errors.length) newErrors.name = zodErrors.name._errors[0];
+            if (zodErrors.school?._errors.length) newErrors.school = zodErrors.school._errors[0];
+
             setErrors(newErrors);
             return;
         }
-        const clubData = {
-            name: clubName,
-            school: clubSchool,
-            tagline: clubTagline ? clubTagline : '',
-            url: clubUrl,
-            discord: clubDiscord,
-            instagram: clubInstagram,
-            website: clubWebsite,
-            description: clubDescription ? clubDescription : '',
-            tags: selectedTags.map(tag => tag._id),
-        };
+
+        setErrors({});
 
         try {
             const res = await fetch('/api/clubs', {
@@ -91,11 +102,11 @@ export function ClubRegistration() {
                                     <input
                                         type="text"
                                         id="club-name"
-                                        className={inputClass + ' ' + (errors.clubName ? 'border-red-500' : '')}
-                                        value={clubName}
-                                        onChange={e => setClubName(e.target.value)}
+                                        className={inputClass + ' ' + (errors.name ? 'border-error' : '')}
+                                        value={name}
+                                        onChange={e => setName(e.target.value)}
                                     />
-                                    {errors.clubName && <p className="text-red-500 text-sm mt-1">{errors.clubName}</p>}
+                                    {errors.name && <p className="text-error text-sm mt-1">{errors.name}</p>}
                                 </div>
                                 <div>
                                     <label htmlFor="club-school" className="block text-sm font-medium text-on-background">
@@ -103,20 +114,16 @@ export function ClubRegistration() {
                                     </label>
                                     <select
                                         id="club-school"
-                                        className={inputClass + ' ' + (errors.clubSchool ? 'border-red-500' : '')}
-                                        value={clubSchool}
-                                        onChange={e => setClubSchool(e.target.value)}
+                                        className={inputClass + ' ' + (errors.school ? 'border-error' : '')}
+                                        value={school}
+                                        onChange={e => setSchool(e.target.value)}
                                     >
                                         <option className="text-on-background-variant" value="">
                                             Select your school
                                         </option>
                                         <option value="UCSD">UCSD</option>
-                                        <option value="UCLA">UCLA</option>
-                                        <option value="UCI">UCI</option>
-                                        <option value="UCSB">UCSB</option>
-                                        <option value="UCR">UCR</option>
                                     </select>
-                                    {errors.clubSchool && <p className="text-red-500 text-sm mt-1">{errors.clubSchool}</p>}
+                                    {errors.school && <p className="text-error text-sm mt-1">{errors.school}</p>}
                                 </div>
                                 <div>
                                     <label htmlFor="club-tagline" className="block text-sm font-medium text-on-background">
@@ -126,15 +133,15 @@ export function ClubRegistration() {
                                         type="text"
                                         id="club-tagline"
                                         className={inputClass}
-                                        value={clubTagline}
+                                        value={tagline}
                                         onChange={e => {
                                             if (e.target.value.length <= maxTaglineLength) {
-                                                setClubTagline(e.target.value);
+                                                setTagline(e.target.value);
                                             }
                                         }}
                                     />
                                     <div className="text-right text-sm text-gray-500 mt-1">
-                                        {clubTagline.length} / {maxTaglineLength}
+                                        {tagline.length} / {maxTaglineLength}
                                     </div>
                                 </div>
                                 <div>
@@ -144,11 +151,10 @@ export function ClubRegistration() {
                                     <input
                                         type="text"
                                         id="club-url"
-                                        className={inputClass + ' ' + (errors.clubUrl ? 'border-red-500' : '')}
-                                        value={clubUrl}
-                                        onChange={e => setClubUrl(e.target.value)}
+                                        className={inputClass}
+                                        value={url}
+                                        onChange={e => setUrl(e.target.value)}
                                     />
-                                    {errors.clubUrl && <p className="text-red-500 text-sm mt-1">{errors.clubUrl}</p>}
                                 </div>
                             </div>
 
@@ -162,11 +168,10 @@ export function ClubRegistration() {
                                         placeholder="https://discord.com/invite/..."
                                         type="text"
                                         id="club-discord"
-                                        className={inputClass + ' ' + (errors.clubDiscord ? 'border-red-500' : '')}
-                                        value={clubDiscord}
-                                        onChange={e => setClubDiscord(e.target.value)}
+                                        className={inputClass}
+                                        value={discord}
+                                        onChange={e => setDiscord(e.target.value)}
                                     />
-                                    {errors.clubDiscord && <p className="text-red-500 text-sm mt-1">{errors.clubDiscord}</p>}
                                 </div>
                                 <div>
                                     <label htmlFor="club-instagram" className="block text-sm font-medium text-on-background">
@@ -176,11 +181,10 @@ export function ClubRegistration() {
                                         placeholder="https://www.instagram.com/..."
                                         type="text"
                                         id="club-instagram"
-                                        className={inputClass + ' ' + (errors.clubInstagram ? 'border-red-500' : '')}
-                                        value={clubInstagram}
-                                        onChange={e => setClubInstagram(e.target.value)}
+                                        className={inputClass}
+                                        value={instagram}
+                                        onChange={e => setInstagram(e.target.value)}
                                     />
-                                    {errors.clubInstagram && <p className="text-red-500 text-sm mt-1">{errors.clubInstagram}</p>}
                                 </div>
                                 <div>
                                     <label htmlFor="club-website" className="block text-sm font-medium text-on-background">
@@ -189,11 +193,10 @@ export function ClubRegistration() {
                                     <input
                                         type="text"
                                         id="club-website"
-                                        className={inputClass + ' ' + (errors.clubWebsite ? 'border-red-500' : '')}
-                                        value={clubWebsite}
-                                        onChange={e => setClubWebsite(e.target.value)}
+                                        className={inputClass}
+                                        value={website}
+                                        onChange={e => setWebsite(e.target.value)}
                                     />
-                                    {errors.clubWebsite && <p className="text-red-500 text-sm mt-1">{errors.clubWebsite}</p>}
                                 </div>
                             </div>
 
@@ -206,15 +209,15 @@ export function ClubRegistration() {
                                     id="club-description"
                                     rows={4}
                                     className={inputClass}
-                                    value={clubDescription}
+                                    value={description}
                                     onChange={e => {
                                         if (e.target.value.length <= maxDescriptionLength) {
-                                            setClubDescription(e.target.value);
+                                            setDescription(e.target.value);
                                         }
                                     }}
                                 />
                                 <div className="text-right text-sm text-gray-500 mt-1">
-                                    {clubDescription.length} / {maxDescriptionLength}
+                                    {description.length} / {maxDescriptionLength}
                                 </div>
                             </div>
 
