@@ -483,7 +483,7 @@ async function seed() {
     await Event.insertMany(csClubEvents);
 
     // Add 2 events for each other club in the same date range
-    const otherClubsEvents = [];
+    const otherClubsEvents: any[] = [];
 
     // For each club except the first one (Computer Science Club)
     for (let i = 1; i < clubs.length; i++) {
