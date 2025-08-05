@@ -12,7 +12,7 @@ import { ErrorCode } from '@clubhive/shared';
 dotenv.config();
 
 async function generateDailyClubStats() {
-    // console.log('Starting daily club stats generation for ClubSnapshot...'); IDK if this is needed
+    console.log('Starting daily club stats generation for ClubSnapshot...');
     try {
         const mongoUri = process.env.MONGODB_URI;
         if (!mongoUri) {
@@ -20,7 +20,7 @@ async function generateDailyClubStats() {
         }
         if (mongoose.connection.readyState !== 1) {
             await mongoose.connect(mongoUri);
-            // console.log('MongoDB connected for daily stats job.');
+            console.log('MongoDB connected for daily stats job.');
         }
         const today = new Date();
         const startOfToday = new Date(today.getFullYear(), today.getMonth(), today.getDate());
