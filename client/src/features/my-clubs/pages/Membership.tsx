@@ -1,6 +1,8 @@
 import { LogOut, Crown, Trash2, Globe, Instagram, Mail } from 'lucide-react';
 import { UserClubData } from '@clubhive/shared';
 import { useMyClubsData } from '../hooks';
+import { DangerZone } from '../../../components/DangerZone';
+import { useState } from 'react';
 
 interface MembershipProps {
     club: UserClubData;
@@ -10,6 +12,55 @@ interface MembershipProps {
 export function Membership({ club, isOwner }: MembershipProps) {
     const { getMembershipData } = useMyClubsData();
     const membershipData = getMembershipData(club);
+    
+    const [leaveLoading, setLeaveLoading] = useState(false);
+    const [transferLoading, setTransferLoading] = useState(false);
+    const [disbandLoading, setDisbandLoading] = useState(false);
+
+    const handleLeaveClub = async () => {
+        setLeaveLoading(true);
+        try {
+            // TODO: Implement leave club API call
+            console.log('Leaving club:', club.name);
+            await new Promise(resolve => setTimeout(resolve, 1500));
+            alert('Successfully left the club');
+        } catch (error) {
+            console.error('Error leaving club:', error);
+            alert('Failed to leave club');
+        } finally {
+            setLeaveLoading(false);
+        }
+    };
+
+    const handleTransferOwnership = async () => {
+        setTransferLoading(true);
+        try {
+            // TODO: Implement transfer ownership flow (maybe open a modal to select member)
+            console.log('Transferring ownership of:', club.name);
+            await new Promise(resolve => setTimeout(resolve, 2000));
+            alert('Ownership transfer initiated');
+        } catch (error) {
+            console.error('Error transferring ownership:', error);
+            alert('Failed to transfer ownership');
+        } finally {
+            setTransferLoading(false);
+        }
+    };
+
+    const handleDisbandClub = async () => {
+        setDisbandLoading(true);
+        try {
+            // TODO: Implement disband club API call
+            console.log('Disbanding club:', club.name);
+            await new Promise(resolve => setTimeout(resolve, 2000));
+            alert('Club successfully disbanded');
+        } catch (error) {
+            console.error('Error disbanding club:', error);
+            alert('Failed to disband club');
+        } finally {
+            setDisbandLoading(false);
+        }
+    };
 
     return (
         <div className="space-y-6">
@@ -103,62 +154,40 @@ export function Membership({ club, isOwner }: MembershipProps) {
 
                 <div className="space-y-6 max-w-2xl">
                     <div className="border-t border-outline-variant pt-6">
-                        <div className="rounded-lg p-6 bg-error-container">
-                            <h4 className="font-medium text-on-error-container mb-2 flex items-center gap-2">
-                                <Trash2 className="w-4 h-4" />
-                                Danger Zone
-                            </h4>
-                            <p className="text-on-error-container text-sm mb-6">
-                                These actions are irreversible and will permanently affect your membership.
-                            </p>
-
-                            <div className="space-y-4">
-                                {!isOwner && (
-                                    <div className="flex items-center justify-between p-4 border border-error-container rounded-lg bg-surface">
-                                        <div>
-                                            <h5 className="font-medium text-error mb-1">Leave Club</h5>
-                                            <p className="text-on-error-container text-sm">
-                                                Remove yourself from this club and lose access to all content.
-                                            </p>
-                                        </div>
-                                        <button className="flex items-center px-4 py-2 rounded-lg text-sm font-medium bg-error text-on-error hover:bg-error/90 transition-colors cursor-pointer">
-                                            <LogOut className="w-4 h-4 mr-2" />
-                                            Leave
-                                        </button>
-                                    </div>
-                                )}
-
-                                {isOwner && (
-                                    <>
-                                        <div className="flex items-center justify-between p-4 border border-error-container rounded-lg bg-surface">
-                                            <div>
-                                                <h5 className="font-medium text-on-error-container mb-1">Transfer Ownership</h5>
-                                                <p className="text-on-error-container text-sm">
-                                                    Transfer ownership of this club to another member.
-                                                </p>
-                                            </div>
-                                            <button className="flex items-center px-4 py-2 rounded-lg text-sm font-medium bg-error text-on-error hover:bg-error/90 transition-colors cursor-pointer">
-                                                <Crown className="w-4 h-4 mr-2" />
-                                                Transfer
-                                            </button>
-                                        </div>
-
-                                        <div className="flex items-center justify-between p-4 border border-error-container rounded-lg bg-surface">
-                                            <div>
-                                                <h5 className="font-medium text-on-error-container mb-1">Disband Club</h5>
-                                                <p className="text-on-error-container text-sm">
-                                                    Permanently delete this club and all its data. This cannot be undone.
-                                                </p>
-                                            </div>
-                                            <button className="flex items-center px-4 py-2 rounded-lg text-sm font-medium bg-error text-on-error hover:bg-error/90 transition-colors cursor-pointer">
-                                                <Trash2 className="w-4 h-4 mr-2" />
-                                                Disband
-                                            </button>
-                                        </div>
-                                    </>
-                                )}
-                            </div>
-                        </div>
+                        <DangerZone
+                            title="Danger Zone"
+                            description="These actions are irreversible and will permanently affect your membership."
+                            actions={[
+                                // Non-owner actions
+                                ...(!isOwner ? [{
+                                    label: "Leave Club",
+                                    description: "Remove yourself from this club and lose access to all content.",
+                                    onClick: handleLeaveClub,
+                                    isLoading: leaveLoading,
+                                    loadingText: "Leaving...",
+                                    icon: LogOut
+                                }] : []),
+                                // Owner actions
+                                ...(isOwner ? [
+                                    {
+                                        label: "Transfer Ownership",
+                                        description: "Transfer ownership of this club to another member.",
+                                        onClick: handleTransferOwnership,
+                                        isLoading: transferLoading,
+                                        loadingText: "Processing...",
+                                        icon: Crown
+                                    },
+                                    {
+                                        label: "Disband Club",
+                                        description: "Permanently delete this club and all its data. This cannot be undone.",
+                                        onClick: handleDisbandClub,
+                                        isLoading: disbandLoading,
+                                        loadingText: "Disbanding...",
+                                        icon: Trash2
+                                    }
+                                ] : [])
+                            ]}
+                        />
                     </div>
                 </div>
             </div>
