@@ -1,11 +1,12 @@
 import { EventData } from '@clubhive/shared';
 import { Events } from '../../pages/Events.tsx';
-import { Calendar, Clock, MapPin, Users, List } from 'lucide-react';
+import { Calendar, Clock, MapPin, Users, List, Plus } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 
 interface AgendaViewProps {
     events: EventData[];
     onEditEvent?: (event: EventData, eventElement?: HTMLElement) => void;
+    onCreateEvent?: (selectedDate?: Date, sourceLayoutId?: string) => void;
     onViewModeChange?: (mode: 'calendar' | 'agenda') => void;
 }
 
@@ -126,7 +127,7 @@ function AgendaItemCard({
     );
 }
 
-export function AgendaView({ events, onEditEvent, onViewModeChange }: AgendaViewProps) {
+export function AgendaView({ events, onEditEvent, onCreateEvent, onViewModeChange }: AgendaViewProps) {
     // Group events by month
     const groupEventsByMonth = (events: EventData[]) => {
         const grouped: { [key: string]: EventData[] } = {};
@@ -168,18 +169,30 @@ export function AgendaView({ events, onEditEvent, onViewModeChange }: AgendaView
                             {events.length} {events.length === 1 ? 'event' : 'events'}
                         </span>
                     </div>
-                    <div className="flex bg-surface-variant rounded-md p-1">
-                        <button
-                            onClick={() => onViewModeChange?.('calendar')}
-                            className="flex items-center gap-2 px-3 py-2 rounded-md text-sm font-medium transition-colors cursor-pointer text-on-surface-variant hover:text-on-surface"
-                        >
-                            <Calendar className="h-4 w-4" />
-                            Calendar
-                        </button>
-                        <button className="flex items-center gap-2 px-3 py-2 rounded-md text-sm font-medium transition-colors cursor-pointer bg-primary text-on-primary">
-                            <List className="h-4 w-4" />
-                            Table
-                        </button>
+                    <div className="flex items-center gap-3">
+                        {onCreateEvent && (
+                            <motion.button
+                                layoutId="create-event-button"
+                                onClick={() => onCreateEvent?.(undefined, 'create-event-button')}
+                                className="flex items-center gap-2 px-3 py-2 bg-primary text-on-primary rounded-md hover:bg-primary/90 transition-colors cursor-pointer"
+                            >
+                                <Plus className="h-4 w-4" />
+                                Create Event
+                            </motion.button>
+                        )}
+                        <div className="flex bg-surface-variant rounded-md p-1">
+                            <button
+                                onClick={() => onViewModeChange?.('calendar')}
+                                className="flex items-center gap-2 px-3 py-2 rounded-md text-sm font-medium transition-colors cursor-pointer text-on-surface-variant hover:text-on-surface"
+                            >
+                                <Calendar className="h-4 w-4" />
+                                Calendar
+                            </button>
+                            <button className="flex items-center gap-2 px-3 py-2 rounded-md text-sm font-medium transition-colors cursor-pointer bg-primary text-on-primary">
+                                <List className="h-4 w-4" />
+                                Table
+                            </button>
+                        </div>
                     </div>
                 </div>
             </div>

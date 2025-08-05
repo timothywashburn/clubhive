@@ -9,6 +9,7 @@ interface EventPlannerProps {
     onUpdateEvent?: (event: EventData) => void;
     selectedClub?: { name: string };
     onEventSelect?: (event: EventData | null, eventElement?: HTMLElement) => void;
+    onCreateEvent?: (selectedDate?: Date, sourceLayoutId?: string) => void;
     viewMode?: 'calendar' | 'agenda';
     onViewModeChange?: (mode: 'calendar' | 'agenda') => void;
 }
@@ -18,6 +19,7 @@ export function EventPlanner({
     onUpdateEvent,
     selectedClub,
     onEventSelect,
+    onCreateEvent,
     viewMode = 'calendar',
     onViewModeChange,
 }: EventPlannerProps) {
@@ -34,10 +36,16 @@ export function EventPlanner({
                     events={events}
                     onUpdateEvent={onUpdateEvent}
                     onEditEvent={handleEventClick}
+                    onCreateEvent={onCreateEvent}
                     onViewModeChange={onViewModeChange}
                 />
             ) : (
-                <AgendaView events={events} onEditEvent={handleEventClick} onViewModeChange={onViewModeChange} />
+                <AgendaView
+                    events={events}
+                    onEditEvent={handleEventClick}
+                    onCreateEvent={onCreateEvent}
+                    onViewModeChange={onViewModeChange}
+                />
             )}
         </div>
     );
