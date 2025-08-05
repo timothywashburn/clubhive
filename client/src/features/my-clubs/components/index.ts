@@ -1,6 +1,5 @@
 export { ClubSelector } from './ClubSelector';
 export { ClubHeader } from './ClubHeader';
-export { TabNavigation } from './TabNavigation';
 export { MemberInfo } from '../pages/MemberInfo.tsx';
 export { OfficerInfo } from '../pages/OfficerInfo.tsx';
 export { Events } from '../pages/Events.tsx';
