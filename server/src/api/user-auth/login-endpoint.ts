@@ -54,7 +54,8 @@ export const loginEndpoint: ApiEndpoint<LoginRequest, LoginResponse> = {
 
                 res.json({
                     success: true,
-                    data: { accessToken: accessToken, refreshToken: refreshToken },
+                    accessToken: accessToken,
+                    refreshToken: refreshToken,
                 });
             }
         } catch (error) {
@@ -104,7 +105,7 @@ export const tokenRefresh: ApiEndpoint<undefined, RefreshResponse> = {
             const accessToken = jwt.sign(authId, ACCESS_TOKEN_SECRET, { expiresIn: '15m' });
             res.json({
                 success: true,
-                data: { accessToken: accessToken },
+                accessToken: accessToken,
             });
         });
     },

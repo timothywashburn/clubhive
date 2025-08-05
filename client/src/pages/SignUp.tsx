@@ -14,18 +14,78 @@ export function SignUp() {
         email: '',
         password: '',
         confirmPassword: '',
+        school: '',
+        major: '',
+        educationType: '',
+        year: '',
     });
 
-    const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        setFormData({
-            ...formData,
-            [e.target.name]: e.target.value,
-        });
+    const [errors, setErrors] = useState<{ [key: string]: string }>({});
+    const newErrors: { [key: string]: string } = {};
+
+    const handleChange = (field: string, value: string) => {
+        setFormData(prev => ({ ...prev, [field]: value }));
     };
 
-    const handleSubmit = (e: React.FormEvent) => {
+    const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
-        console.log('Sign up form submitted:', formData);
+
+        if (!formData.fullName) newErrors.fullName = 'Full name is required';
+        if (!formData.email) newErrors.email = 'Email is required';
+        if (!formData.password) newErrors.password = 'Password is required';
+        if (formData.confirmPassword != formData.password) newErrors.confirmPassword = 'Passwords do not match';
+        if (!formData.school) newErrors.clubInstagram = 'School is required';
+        if (!formData.major) newErrors.clubInstagram = 'Major is required';
+        if (!formData.educationType) newErrors.clubInstagram = 'Education Type is required';
+        if (!formData.year) newErrors.clubInstagram = 'Academic Year is required';
+
+        if (Object.keys(newErrors).length > 0) {
+            setErrors(newErrors);
+            return;
+        }
+
+        const userData = {
+            name: formData.fullName,
+            email: formData.email,
+            password: formData.email,
+            school: formData.school,
+            major: formData.major,
+            educationType: formData.educationType,
+            year: formData.year,
+        };
+
+        try {
+            const res = await fetch('/api/user/create-account', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(userData),
+            });
+            const result = await res.json();
+            if (result.success) {
+                console.log('Account created successfully:', result.user);
+            }
+        } catch (error) {
+            console.error('Error creating account:', error);
+        }
+    };
+
+    const getYearLabel = (year: string) => {
+        switch (year) {
+            case 'first':
+                return '1st Year';
+            case 'second':
+                return '2nd Year';
+            case 'third':
+                return '3rd Year';
+            case 'fourth':
+                return '4th Year';
+            case 'more-than-4':
+                return '4+ Years';
+            default:
+                return year;
+        }
     };
 
     return (
@@ -53,7 +113,7 @@ export function SignUp() {
                                     type="text"
                                     required
                                     value={formData.fullName}
-                                    onChange={handleChange}
+                                    onChange={e => handleChange('fullName', e.target.value)}
                                     className="mt-1 block w-full px-3 py-2 border border-outline-variant rounded-md shadow-sm bg-surface text-on-surface placeholder-on-surface-variant focus:outline-none focus:ring-primary focus:border-primary"
                                 />
                             </div>
@@ -68,7 +128,7 @@ export function SignUp() {
                                     type="email"
                                     required
                                     value={formData.email}
-                                    onChange={handleChange}
+                                    onChange={e => handleChange('email', e.target.value)}
                                     className="mt-1 block w-full px-3 py-2 border border-outline-variant rounded-md shadow-sm bg-surface text-on-surface placeholder-on-surface-variant focus:outline-none focus:ring-primary focus:border-primary"
                                 />
                             </div>
@@ -83,7 +143,7 @@ export function SignUp() {
                                     type="password"
                                     required
                                     value={formData.password}
-                                    onChange={handleChange}
+                                    onChange={e => handleChange('password', e.target.value)}
                                     className="mt-1 block w-full px-3 py-2 border border-outline-variant rounded-md shadow-sm bg-surface text-on-surface placeholder-on-surface-variant focus:outline-none focus:ring-primary focus:border-primary"
                                 />
                             </div>
@@ -98,9 +158,79 @@ export function SignUp() {
                                     type="password"
                                     required
                                     value={formData.confirmPassword}
-                                    onChange={handleChange}
+                                    onChange={e => handleChange('confirmPassword', e.target.value)}
                                     className="mt-1 block w-full px-3 py-2 border border-outline-variant rounded-md shadow-sm bg-surface text-on-surface placeholder-on-surface-variant focus:outline-none focus:ring-primary focus:border-primary"
                                 />
+                            </div>
+
+                            <div>
+                                <label htmlFor="school" className="block text-sm font-medium text-on-surface">
+                                    School
+                                </label>
+                                <input
+                                    id="school"
+                                    name="school"
+                                    type="school"
+                                    required
+                                    value={formData.school}
+                                    onChange={e => handleChange('school', e.target.value)}
+                                    className="mt-1 block w-full px-3 py-2 border border-outline-variant rounded-md shadow-sm bg-surface text-on-surface placeholder-on-surface-variant focus:outline-none focus:ring-primary focus:border-primary"
+                                />
+                            </div>
+
+                            <div>
+                                <label htmlFor="major" className="block text-sm font-medium text-on-surface">
+                                    Major
+                                </label>
+                                <input
+                                    id="major"
+                                    name="major"
+                                    type="major"
+                                    required
+                                    value={formData.major}
+                                    onChange={e => handleChange('major', e.target.value)}
+                                    className="mt-1 block w-full px-3 py-2 border border-outline-variant rounded-md shadow-sm bg-surface text-on-surface placeholder-on-surface-variant focus:outline-none focus:ring-primary focus:border-primary"
+                                />
+                            </div>
+
+                            <div>
+                                <label htmlFor="educationType" className="block text-sm font-medium text-on-surface">
+                                    Education Type
+                                </label>
+                                <select
+                                    id="educationType"
+                                    name="educationType"
+                                    //type="educationType"
+                                    required
+                                    value={formData.educationType}
+                                    onChange={e => handleChange('educationType', e.target.value)}
+                                    className="mt-1 block w-full px-3 py-2 border border-outline-variant rounded-md shadow-sm bg-surface text-on-surface placeholder-on-surface-variant focus:outline-none focus:ring-primary focus:border-primary"
+                                >
+                                    <option value="undergraduate">Undergraduate</option>
+                                    <option value="graduate">Graduate</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div className="md:col-span-2">
+                            <label className="block text-sm font-medium text-on-surface mb-2">Academic Year</label>
+                            <div className="inline-flex bg-surface-variant rounded-lg p-1 border border-outline-variant flex-wrap gap-1">
+                                {['first', 'second', 'third', 'fourth', 'more-than-4'].map(yearOption => (
+                                    <button
+                                        key={yearOption}
+                                        onClick={() => handleChange('year', yearOption)}
+                                        className={`
+                                                        px-4 py-2 rounded-md text-sm font-medium transition-all duration-200
+                                                        ${
+                                                            formData.year === yearOption
+                                                                ? 'bg-primary text-on-primary shadow-sm'
+                                                                : 'text-on-surface-variant hover:text-on-surface hover:bg-surface'
+                                                        }
+                                                    `}
+                                    >
+                                        {getYearLabel(yearOption)}
+                                    </button>
+                                ))}
                             </div>
                         </div>
 

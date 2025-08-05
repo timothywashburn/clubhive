@@ -60,7 +60,7 @@ export const createAccountEndpoint: ApiEndpoint<CreateAccountRequest, CreateAcco
 
             res.json({
                 success: true,
-                data: { authId: result._id.toString() },
+                authId: result._id.toString(),
             });
         } catch (error) {
             console.error('Error creating new user:', error);
