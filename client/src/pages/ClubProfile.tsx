@@ -6,6 +6,9 @@ import { handleRegistration } from '../../../server/src/services/joinClubService
 import { clubSchema, ErrorCode } from '@clubhive/shared';
 import Popup from '../features/club-profile/Popup';
 import { handleRegistration } from '../../../server/src/services/joinClubService';
+import { clubSchema, ErrorCode } from '@clubhive/shared';
+import Popup from '../features/club-profile/Popup';
+import { handleRegistration } from '../../../server/src/services/joinClubService';
 import { getTagColor } from '../features/find-clubs/utils/TagColors';
 import { useToast } from '../hooks/useToast';
 import { clubWithEventsAndCountsSchema } from '@clubhive/shared';
