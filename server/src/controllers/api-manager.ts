@@ -16,7 +16,15 @@ import { ErrorCode } from '@clubhive/shared';
 import { createClubEndpoint } from '@/api/clubs/create-club';
 import { deleteClubEndpoint } from '@/api/clubs/delete-club';
 import { getClubsEndpoint } from '@/api/clubs/get-clubs';
+import { getClubEndpoint } from '@/api/clubs/get-club';
 import { updateClubEndpoint } from '@/api/clubs/update-club';
+import { getUsersEndpoint } from '@/api/users/get-users';
+import { getUserEndpoint } from '@/api/users/get-user';
+import { getSchoolsEndpoint } from '@/api/schools/get-schools';
+import { getSchoolEndpoint } from '@/api/schools/get-school';
+import { createSchoolEndpoint } from '@/api/schools/create-school';
+import { updateSchoolEndpoint } from '@/api/schools/update-school';
+import { deleteSchoolEndpoint } from '@/api/schools/delete-school';
 import { getMyClubsEndpoint } from '@/api/me/clubs';
 import { getDailyVenueAvailabilityEndpoint } from '@/api/venues/daily-availability';
 import { getWeeklyVenueAvailabilityEndpoint } from '@/api/venues/weekly-availability';
@@ -45,8 +53,20 @@ export default class ApiManager {
         // Club endpoints
         this.addEndpoint(createClubEndpoint);
         this.addEndpoint(getClubsEndpoint);
+        this.addEndpoint(getClubEndpoint);
         this.addEndpoint(updateClubEndpoint);
         this.addEndpoint(deleteClubEndpoint);
+
+        // User endpoints
+        this.addEndpoint(getUsersEndpoint);
+        this.addEndpoint(getUserEndpoint);
+
+        // School endpoints
+        this.addEndpoint(createSchoolEndpoint);
+        this.addEndpoint(getSchoolsEndpoint);
+        this.addEndpoint(getSchoolEndpoint);
+        this.addEndpoint(updateSchoolEndpoint);
+        this.addEndpoint(deleteSchoolEndpoint);
 
         // Event endpoints
         this.addEndpoint(createEventEndpoint);

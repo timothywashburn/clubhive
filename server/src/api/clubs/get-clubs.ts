@@ -1,4 +1,4 @@
-import { GetClubsResponse, clubSchema } from '@clubhive/shared';
+import { GetClubsResponse, clubWithCountsSchema } from '@clubhive/shared';
 import { ApiEndpoint, AuthType } from '@/types/api-types';
 import ClubController from '@/controllers/club-controller';
 import { serializeRecursive } from '@/utils/db-doc-utils';
@@ -13,7 +13,7 @@ export const getClubsEndpoint: ApiEndpoint<undefined, GetClubsResponse> = {
 
             res.json({
                 success: true,
-                clubs: clubs.map(club => clubSchema.parse(serializeRecursive(club))),
+                clubs: clubs.map(club => clubWithCountsSchema.parse(serializeRecursive(club))),
             });
         } catch (error) {
             console.error('Error fetching clubs:', error);

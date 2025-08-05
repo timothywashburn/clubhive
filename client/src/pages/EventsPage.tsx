@@ -33,7 +33,7 @@ export function EventsPage() {
                     throw new Error('Failed to fetch event');
                 }
                 const data = await res.json();
-                console.log('Fetched events:', data.data);
+                // console.log('Fetched events:', data.data);
                 setEvent(data.data);
             } catch (err) {
                 console.error(err);

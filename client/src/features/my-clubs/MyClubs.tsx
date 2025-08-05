@@ -1,17 +1,7 @@
 import { motion, AnimatePresence } from 'framer-motion';
-import { useClubState, useTabIndicator, useMyClubsData, useClubEvents } from './hooks';
-import {
-    ClubSelector,
-    ClubHeader,
-    TabNavigation,
-    MemberInfo,
-    OfficerInfo,
-    Events,
-    Stats,
-    Membership,
-    EmptyState,
-    RegisterClubButton,
-} from './components';
+import { useClubState, useMyClubsData, useClubEvents } from './hooks';
+import { ClubSelector, ClubHeader, MemberInfo, OfficerInfo, Events, Stats, Membership, EmptyState, RegisterClubButton } from './components';
+import { UnifiedNavigation } from '../../components/navigation';
 import { EventPlanner } from './event-planner';
 import { EventDetails, LocationPicker } from './event-editor';
 import { EventData, EventType } from '@clubhive/shared';
@@ -57,8 +47,6 @@ export function MyClubs() {
     };
 
     const { events, loading: eventsLoading, error: eventsError, refetch: refetchEvents } = useClubEvents(selectedClub?._id || null);
-
-    const { indicatorStyle, shouldAnimate, setShouldAnimate, tabRefs } = useTabIndicator(activeTab, selectedClub, isPreviewMode);
 
     const handleEventSelect = (event: EventData | null, eventElement?: HTMLElement) => {
         setSelectedEvent(event);
@@ -332,16 +320,15 @@ export function MyClubs() {
                                         </div>
                                     )}
 
-                                    <TabNavigation
+                                    <UnifiedNavigation
+                                        navType="tabs"
                                         showOfficerView={showOfficerView}
                                         activeTab={activeTab}
                                         onTabChange={setActiveTab}
-                                        indicatorStyle={indicatorStyle}
-                                        shouldAnimate={shouldAnimate}
-                                        tabRefs={tabRefs}
-                                        setShouldAnimate={setShouldAnimate}
                                         selectedEvent={selectedEvent}
                                         showStatsTab={showStatsTab}
+                                        contextId={selectedClub?._id}
+                                        isPreviewMode={isPreviewMode}
                                     />
                                 </div>
 
