@@ -30,6 +30,7 @@ import { getDailyVenueAvailabilityEndpoint } from '@/api/venues/daily-availabili
 import { getWeeklyVenueAvailabilityEndpoint } from '@/api/venues/weekly-availability';
 import { getMonthlyVenueAvailabilityEndpoint } from '@/api/venues/monthly-availability';
 import { getNotificationsEndpoint } from '@/api/notifications/get-notifications';
+import { markReadEndpoint } from '@/api/notifications/mark-read';
 
 export default class ApiManager {
     private static instance: ApiManager;
@@ -76,6 +77,7 @@ export default class ApiManager {
 
         // Notifications endpoints
         this.addEndpoint(getNotificationsEndpoint);
+        this.addEndpoint(markReadEndpoint);
 
         // Me endpoints
         this.addEndpoint(getMyClubsEndpoint);
