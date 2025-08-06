@@ -25,7 +25,7 @@ export function NotificationCard({ club, title, date, read, selected = false, on
             <div className="flex justify-between items-start">
                 <div>
                     <div className="flex items-center gap-2">
-                        <div className={`w-2 h-2 rounded-full ${read ? 'bg-outline-variant' : 'bg-orange-500'}`} />
+                        <div className={`w-2 h-2 rounded-full ${read ? 'bg-outline-variant' : 'bg-primary'}`} />
                         <div className="font-normal text-med capitalize">{club}</div>
                     </div>
                     <div className="pl-4 text-sm font-light italic text-on-surface-variant">{title}</div>

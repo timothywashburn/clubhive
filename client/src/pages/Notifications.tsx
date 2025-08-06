@@ -7,7 +7,30 @@ export function Notifications() {
     const [selected, setSelected] = useState<string | null>(null);
 
     const userId = '507f1f77bcf86cd799439020';
-    const { notifs, isLoading, error } = useNotifs(userId);
+    const { notifs, setNotifs, isLoading, error } = useNotifs(userId);
+
+    const markAsRead = async (userNotifId: string) => {
+        try {
+            const res = await fetch(`/api/notifications/mark-read`, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ notificationId: userNotifId }),
+            });
+
+            const data = await res.json();
+            if (data.success) {
+                setNotifs(prev => prev.map(n => (n.userNotifId === userNotifId ? { ...n, read: true } : n)));
+            } else {
+                // eslint-disable-next-line no-console
+                console.error('Failed to mark notification as read:', data.error);
+            }
+        } catch (err) {
+            // eslint-disable-next-line no-console
+            console.error('Failed to mark notification as read:', err);
+        }
+    };
 
     const selectedNotification = notifs.find(n => n._id === selected);
 
@@ -31,7 +54,18 @@ export function Notifications() {
                         <div className="px-6 py-4 border-b border-outline-variant">
                             <div className="flex items-center justify-between">
                                 <h2 className="text-lg font-medium text-on-surface">Recent Activity</h2>
-                                <button className="text-sm text-primary hover:text-primary/90">Mark all as read</button>
+                                <button
+                                    className="text-sm text-primary hover:text-primary/90"
+                                    onClick={() => {
+                                        notifs.forEach(n => {
+                                            if (!n.read) {
+                                                void markAsRead(n.userNotifId);
+                                            }
+                                        });
+                                    }}
+                                >
+                                    Mark all as read
+                                </button>
                             </div>
                         </div>
 
@@ -44,7 +78,12 @@ export function Notifications() {
                                     date={notification.date}
                                     read={notification.read}
                                     selected={selected === notification._id}
-                                    onClick={() => setSelected(notification._id)}
+                                    onClick={() => {
+                                        setSelected(notification._id);
+                                        if (!notification.read) {
+                                            void markAsRead(notification.userNotifId);
+                                        }
+                                    }}
                                 />
                             ))}
                         </div>
