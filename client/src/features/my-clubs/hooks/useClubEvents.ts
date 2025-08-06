@@ -6,7 +6,7 @@ export const useClubEvents = (clubId: string | null) => {
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState<string | null>(null);
 
-    useEffect(() => {
+    const fetchEvents = async () => {
         if (!clubId) {
             setEvents([]);
             setLoading(false);
@@ -14,33 +14,33 @@ export const useClubEvents = (clubId: string | null) => {
             return;
         }
 
-        const fetchEvents = async () => {
-            setLoading(true);
-            setError(null);
+        setLoading(true);
+        setError(null);
 
-            try {
-                const response = await fetch(`/api/events?clubId=${clubId}`, {
-                    headers: {
-                        Authorization: 'Bearer temp',
-                    },
-                });
+        try {
+            const response = await fetch(`/api/events?clubId=${clubId}`, {
+                headers: {
+                    Authorization: 'Bearer temp',
+                },
+            });
 
-                const data: ApiResponseBody<GetEventsResponse> = await response.json();
+            const data: ApiResponseBody<GetEventsResponse> = await response.json();
 
-                if (isSuccess(data)) {
-                    setEvents(data.events);
-                } else {
-                    throw new Error(data.error?.message || 'Failed to fetch events');
-                }
-            } catch (err) {
-                setError(err instanceof Error ? err.message : 'Unknown error');
-            } finally {
-                setLoading(false);
+            if (isSuccess(data)) {
+                setEvents(data.events);
+            } else {
+                throw new Error(data.error?.message || 'Failed to fetch events');
             }
-        };
+        } catch (err) {
+            setError(err instanceof Error ? err.message : 'Unknown error');
+        } finally {
+            setLoading(false);
+        }
+    };
 
+    useEffect(() => {
         fetchEvents();
     }, [clubId]);
 
-    return { events, loading, error };
+    return { events, loading, error, refetch: fetchEvents };
 };

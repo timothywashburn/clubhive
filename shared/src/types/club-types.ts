@@ -22,17 +22,39 @@ export const clubSchema = z.object({
     updatedAt: z.string(),
 });
 
+export const clubWithCountsSchema = clubSchema.extend({
+    memberCount: z.number(),
+    eventCount: z.number(),
+});
+
 export const createClubRequestSchema = z.object({
-    school: z.string(),
-    name: z.string(),
-    tagline: z.string(),
-    description: z.string().optional(),
-    url: z.string().optional(),
+    school: z.string().min(1, 'School is required'),
+    name: z.string().min(1, 'Club name is required'),
+    tagline: z.string().max(50, 'Tagline must be 50 characters or less').optional(),
+    description: z.string().max(1000, 'Description must be 1000 characters or less').optional(),
+    url: z
+        .string()
+        .regex(/^[a-zA-Z0-9_-]+$/, 'URL can only contain letters, numbers, hyphens, and underscores')
+        .max(50, 'URL must be 50 characters or less')
+        .transform(s => (s ? `https://clubhive.timothyw.dev/club-profile/${s}` : undefined))
+        .optional(),
     socials: z
         .object({
-            website: z.string().optional(),
-            discord: z.string().optional(),
-            instagram: z.string().optional(),
+            website: z
+                .string()
+                .regex(/^[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}(\/[a-zA-Z0-9._~:/?#[\]@!$&'()*+,;=-]*)?$/, 'Invalid website URL format')
+                .transform(s => (s ? `https://${s}` : undefined))
+                .optional(),
+            discord: z
+                .string()
+                .regex(/^[a-zA-Z0-9_-]+$/, 'Discord invite can only contain letters, numbers, hyphens, and underscores')
+                .transform(s => (s ? `https://discord.com/invite/${s}` : undefined))
+                .optional(),
+            instagram: z
+                .string()
+                .regex(/^[a-zA-Z0-9_.]+$/, 'Instagram username can only contain letters, numbers, periods, and underscores')
+                .transform(s => (s ? `https://www.instagram.com/${s}` : undefined))
+                .optional(),
         })
         .optional(),
     clubLogo: z.string().optional(),
@@ -63,6 +85,7 @@ export const userClubSchema = clubSchema.extend({
 });
 
 export type ClubData = z.infer<typeof clubSchema>;
+export type ClubWithCountsData = z.infer<typeof clubWithCountsSchema>;
 export type UserClubData = z.infer<typeof userClubSchema>;
 export type CreateClubRequest = z.infer<typeof createClubRequestSchema>;
 export type UpdateClubRequest = z.infer<typeof updateClubRequestSchema>;
@@ -72,7 +95,7 @@ export interface CreateClubResponse {
 }
 
 export interface GetClubsResponse {
-    clubs: ClubData[];
+    clubs: ClubWithCountsData[];
 }
 
 export interface GetMyClubsResponse {

@@ -1,3 +1,4 @@
+import dotenv from 'dotenv';
 import mongoose from 'mongoose';
 import Club from '../src/models/club-schema';
 import School from '../src/models/school-schema';
@@ -9,6 +10,8 @@ import Announcement from '../src/models/announcement-schema';
 import UserNotification from '../src/models/user-notification-schema';
 import { ClubhiveConfigModel } from '../src/models/clubhive-config-schema';
 import { EventType, ClubRole } from '@clubhive/shared';
+
+dotenv.config();
 
 const TEST_USER_ID = new mongoose.Types.ObjectId('507f1f77bcf86cd799439020');
 const UCSD_SCHOOL_ID = new mongoose.Types.ObjectId('507f1f77bcf86cd799439021');
@@ -27,7 +30,9 @@ async function seed() {
     await Announcement.deleteMany({});
     await UserNotification.deleteMany({});
 
-    const [ucsd] = await School.insertMany([{ _id: UCSD_SCHOOL_ID, name: 'UCSD', location: 'San Diego, CA' }]);
+    const [ucsd] = await School.insertMany([
+        { _id: UCSD_SCHOOL_ID, name: 'University of California, San Diego', location: 'San Diego, CA' },
+    ]);
 
     const tags = await Tag.insertMany([
         { type: 'club', text: 'Technology' },
@@ -481,7 +486,7 @@ async function seed() {
     await Event.insertMany(csClubEvents);
 
     // Add 2 events for each other club in the same date range
-    const otherClubsEvents = [];
+    const otherClubsEvents: any[] = [];
 
     // For each club except the first one (Computer Science Club)
     for (let i = 1; i < clubs.length; i++) {

@@ -1,5 +1,5 @@
-import { useState } from 'react';
-import { ChevronLeft, ChevronRight, Calendar, List } from 'lucide-react';
+import { useState, useEffect } from 'react';
+import { ChevronLeft, ChevronRight, Calendar, List, Plus } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { EventData } from '@clubhive/shared';
 
@@ -7,10 +7,11 @@ interface CalendarViewProps {
     events: EventData[];
     onUpdateEvent?: (event: EventData) => void;
     onEditEvent?: (event: EventData, eventElement?: HTMLElement) => void;
+    onCreateEvent?: (selectedDate?: Date, sourceLayoutId?: string) => void;
     onViewModeChange?: (mode: 'calendar' | 'agenda') => void;
 }
 
-export function CalendarView({ events, onUpdateEvent, onEditEvent, onViewModeChange }: CalendarViewProps) {
+export function CalendarView({ events, onUpdateEvent, onEditEvent, onCreateEvent, onViewModeChange }: CalendarViewProps) {
     const [currentMonth, setCurrentMonth] = useState(new Date());
 
     const getEventsForDate = (date: Date) => {
@@ -65,6 +66,20 @@ export function CalendarView({ events, onUpdateEvent, onEditEvent, onViewModeCha
         }
     };
 
+    const handleCreateEvent = (date: Date, e: React.MouseEvent) => {
+        e.stopPropagation();
+        if (onCreateEvent) {
+            const sourceLayoutId = `create-event-plus-${date.toISOString().split('T')[0]}`;
+            onCreateEvent(date, sourceLayoutId);
+        }
+    };
+
+    const handleCreateEventFromButton = () => {
+        if (onCreateEvent) {
+            onCreateEvent(undefined, 'create-event-button');
+        }
+    };
+
     const calendarDays = getCalendarDays();
     const monthYear = currentMonth.toLocaleDateString('en-US', {
         month: 'long',
@@ -104,18 +119,30 @@ export function CalendarView({ events, onUpdateEvent, onEditEvent, onViewModeCha
                         </div>
                         <h3 className="text-xl font-semibold text-on-surface mr-3">{monthYear}</h3>
                     </div>
-                    <div className="flex bg-surface-variant rounded-md p-1">
-                        <button className="flex items-center gap-2 px-3 py-2 rounded-md text-sm font-medium transition-colors cursor-pointer bg-primary text-on-primary">
-                            <Calendar className="h-4 w-4" />
-                            Calendar
-                        </button>
-                        <button
-                            onClick={() => onViewModeChange?.('agenda')}
-                            className="flex items-center gap-2 px-3 py-2 rounded-md text-sm font-medium transition-colors cursor-pointer text-on-surface-variant hover:text-on-surface"
-                        >
-                            <List className="h-4 w-4" />
-                            Table
-                        </button>
+                    <div className="flex items-center gap-3">
+                        {onCreateEvent && (
+                            <motion.button
+                                layoutId="create-event-button"
+                                onClick={handleCreateEventFromButton}
+                                className="flex items-center gap-2 px-3 py-2 bg-primary text-on-primary rounded-md hover:bg-primary/90 transition-colors cursor-pointer"
+                            >
+                                <Plus className="h-4 w-4" />
+                                Create Event
+                            </motion.button>
+                        )}
+                        <div className="flex bg-surface-variant rounded-md p-1">
+                            <button className="flex items-center gap-2 px-3 py-2 rounded-md text-sm font-medium transition-colors cursor-pointer bg-primary text-on-primary">
+                                <Calendar className="h-4 w-4" />
+                                Calendar
+                            </button>
+                            <button
+                                onClick={() => onViewModeChange?.('agenda')}
+                                className="flex items-center gap-2 px-3 py-2 rounded-md text-sm font-medium transition-colors cursor-pointer text-on-surface-variant hover:text-on-surface"
+                            >
+                                <List className="h-4 w-4" />
+                                Table
+                            </button>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -137,7 +164,10 @@ export function CalendarView({ events, onUpdateEvent, onEditEvent, onViewModeCha
                     ))}
                 </div>
 
-                <div className="grid grid-cols-7 gap-0 border border-outline-variant border-opacity-30 rounded-lg overflow-hidden">
+                <div
+                    key={`calendar-${currentMonth.getMonth()}-${currentMonth.getFullYear()}`}
+                    className="grid grid-cols-7 gap-0 border border-outline-variant border-opacity-30 rounded-lg overflow-hidden"
+                >
                     {calendarDays.map((day, index) => {
                         const isFirstRow = index < 7;
                         const isLastRow = index >= calendarDays.length - 7;
@@ -156,17 +186,34 @@ export function CalendarView({ events, onUpdateEvent, onEditEvent, onViewModeCha
                         const cellHeight = baseHeight + extraEventsHeight;
 
                         const cellClasses = [
-                            'p-2 transition-colors flex flex-col border-r border-b border-outline-variant border-opacity-30 last:border-r-0 hover:bg-surface-variant',
+                            'p-2 transition-colors flex flex-col border-r border-b border-outline-variant border-opacity-30 last:border-r-0 hover:bg-surface-variant relative group',
                             roundingClasses,
                             day.isCurrentMonth ? 'text-on-surface' : 'text-on-surface-variant opacity-50',
                         ].join(' ');
 
                         return (
-                            <div key={index} style={{ minHeight: `${cellHeight}px` }} className={cellClasses}>
-                                <div
-                                    className={`text-sm font-medium mb-1 text-center ${day.isToday ? 'bg-primary text-on-primary rounded-full w-6 h-6 flex items-center justify-center mx-auto' : ''}`}
-                                >
-                                    {day.date.getDate()}
+                            <div
+                                key={`${index}-${currentMonth.getMonth()}-${currentMonth.getFullYear()}`}
+                                style={{ minHeight: `${cellHeight}px` }}
+                                className={cellClasses}
+                            >
+                                <div className="flex items-center justify-center mb-1 relative">
+                                    <div
+                                        className={`text-sm font-medium text-center ${day.isToday ? 'bg-primary text-on-primary rounded-full w-6 h-6 flex items-center justify-center' : ''}`}
+                                    >
+                                        {day.date.getDate()}
+                                    </div>
+                                    {day.isCurrentMonth && (
+                                        <motion.button
+                                            layoutId={`create-event-plus-${day.date.toISOString().split('T')[0]}`}
+                                            onClick={e => handleCreateEvent(day.date, e)}
+                                            className="opacity-0 group-hover:opacity-100 transition-opacity duration-200 p-1 hover:bg-primary hover:text-on-primary rounded-full absolute right-0 cursor-pointer"
+                                            style={{ opacity: '' }} // stop framer-motion from animating opacity, probably a better way to do this
+                                            title="Create event"
+                                        >
+                                            <Plus className="h-3 w-3" />
+                                        </motion.button>
+                                    )}
                                 </div>
                                 {day.events.length > 0 && (
                                     <div className="space-y-1 flex-1">

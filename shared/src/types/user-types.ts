@@ -25,4 +25,17 @@ export const userSchema = z.object({
     updatedAt: z.string(),
 });
 
+export const userWithCountsSchema = userSchema.extend({
+    clubsCount: z.number(),
+});
+
 export type UserData = z.infer<typeof userSchema>;
+export type UserWithCountsData = z.infer<typeof userWithCountsSchema>;
+
+export interface GetUsersResponse {
+    users: UserWithCountsData[];
+}
+
+export interface GetUserResponse {
+    user: UserWithCountsData;
+}
