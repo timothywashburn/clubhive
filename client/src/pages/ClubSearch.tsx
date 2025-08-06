@@ -3,7 +3,7 @@ import { Link } from 'react-router';
 import { useClubData } from '../hooks/fetchClubs';
 import type { ClubData } from '@clubhive/shared';
 import type { TagData } from '@clubhive/shared';
-import { useTagsData } from '../hooks/fetchTags';
+import { useClubTagsData } from '../hooks/fetchClubTags';
 import ClubCardSmall from '../features/find-clubs/components/ClubCardSmall';
 import FilterTagsButton from '../features/find-clubs/components/FilterTagsButton';
 import { getTagColor } from '../features/find-clubs/utils/TagColors';
@@ -14,7 +14,7 @@ export function Clubs() {
     const [selectedClub, setSelectedClub] = useState<ClubData | null>(null);
     const [selectedTags, setSelectedTags] = useState<TagData[]>([]);
     const { clubs, isLoading, error } = useClubData();
-    const { tags } = useTagsData();
+    const { tags } = useClubTagsData();
 
     if (isLoading) return <p className="p-4 text-on-surface-variant">Loading clubs...</p>;
     if (error) return <p className="p-4 text-red-500">Error: {error}</p>;

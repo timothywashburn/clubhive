@@ -8,6 +8,7 @@ import { changelogEndpoint } from '@/api/misc/changelog';
 import { versionEndpoint } from '@/api/misc/version';
 
 import { createEventEndpoint } from '@/api/events/create-event';
+import { getEventByIdEndpoint } from '@/api/events/get-event-page';
 import { getEventsEndpoint } from '@/api/events/get-events';
 import { updateEventEndpoint } from '@/api/events/update-event';
 import { deleteEventEndpoint } from '@/api/events/delete-event';
@@ -77,6 +78,7 @@ export default class ApiManager {
 
         // Event endpoints
         this.addEndpoint(createEventEndpoint);
+        this.addEndpoint(getEventByIdEndpoint);
         this.addEndpoint(getEventsEndpoint);
         this.addEndpoint(updateEventEndpoint);
         this.addEndpoint(deleteEventEndpoint);

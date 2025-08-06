@@ -2,16 +2,18 @@ import { Link } from 'react-router';
 import React, { useState, useEffect } from 'react';
 import TagFilterPopover from '../features/find-clubs/components/FilterTagsButton';
 import type { TagData } from '@clubhive/shared';
-import { useTagsData } from '../hooks/fetchTags';
+import { useEventTagsData } from '../hooks/fetchEventTags';
 import { getTagColor } from '../features/find-clubs/utils/TagColors';
 
 export function Events() {
     const [searchTerm, setSearchTerm] = useState('');
-    const { tags } = useTagsData();
+    const { tags } = useEventTagsData();
     const [selectedTags, setSelectedTags] = useState<TagData[]>([]);
     const [date, setDate] = useState('');
     const [location, setLocation] = useState('');
     const [events, setEvents] = useState<any[]>([]);
+    const [afterTime, setAfterTime] = useState('');
+    const [beforeTime, setBeforeTime] = useState('');
 
     useEffect(() => {
         const fetchEvents = async () => {
@@ -42,13 +44,24 @@ export function Events() {
                   if (!date) return true;
                   const selected = new Date(date);
                   const eventDate = new Date(event.date);
-                  if (selected.getFullYear() !== eventDate.getFullYear()) return false;
-                  if (date.length <= 4) return true;
-                  if (selected.getMonth() !== eventDate.getMonth()) return false;
-                  if (date.length <= 7) return true;
-                  return selected.getDate() === eventDate.getDate();
+                  return (
+                      (!date || selected.getFullYear() === eventDate.getFullYear()) &&
+                      (date.length <= 4 || selected.getMonth() === eventDate.getMonth()) &&
+                      (date.length <= 7 || selected.getDate() === eventDate.getDate())
+                  );
               })
               .filter(event => location.trim() === '' || event.location?.toLowerCase().includes(location.toLowerCase()))
+              .filter(event => {
+                  if (!afterTime && !beforeTime) return true;
+                  const eventTime = new Date(event.date + 'T' + (event.startTime || '00:00')).getTime();
+                  const afterTimestamp = afterTime ? new Date('1970-01-01T' + afterTime).getTime() : null;
+                  const beforeTimestamp = beforeTime ? new Date('1970-01-01T' + beforeTime).getTime() : null;
+
+                  if (afterTimestamp && eventTime < afterTimestamp) return false;
+                  if (beforeTimestamp && eventTime > beforeTimestamp) return false;
+
+                  return true;
+              })
         : [];
 
     return (
@@ -67,20 +80,36 @@ export function Events() {
                         placeholder="Search events..."
                         value={searchTerm}
                         onChange={e => setSearchTerm(e.target.value)}
-                        className="block w-full pl-10 pr-3 py-2 border text-on-surface border-outline-variant rounded-md leading-5 bg-surface placeholder-on-surface-variant focus:outline-none focus:ring-1 focus:ring-primary focus:border-primary"
+                        className="block w-full pl-10 pr-3 py-2 border text-on-surface border-outline-variant rounded-l-none leading-5 bg-surface placeholder-on-surface-variant focus:outline-none focus:border-primary focus:ring-1"
                     />
                     <input
                         type="text"
                         placeholder="Location"
                         value={location}
                         onChange={e => setLocation(e.target.value)}
-                        className="w-full sm:w-auto pl-3 pr-3 py-2 border text-on-surface border-outline-variant rounded-md bg-surface placeholder-on-surface-variant focus:outline-none focus:ring-1 focus:ring-primary"
+                        className="w-full sm:w-auto pl-3 pr-3 py-2 border text-on-surface border-outline-variant bg-surface placeholder-on-surface-variant focus:outline-none focus:ring-primary focus:ring-1 focus:z-10"
                     />
                     <input
                         type="date"
                         value={date}
                         onChange={e => setDate(e.target.value)}
-                        className="pl-3 pr-3 py-2 border text-on-surface border-outline-variant rounded-md bg-surface focus:outline-none focus:ring-1 focus:ring-primary"
+                        className="pl-3 pr-3 py-2 border text-on-surface border-outline-variant bg-surface focus:outline-none  focus:ring-primary focus:ring-1 focus:z-10"
+                    />
+                    <input
+                        type="time"
+                        value={afterTime}
+                        onChange={e => setAfterTime(e.target.value)}
+                        className="pl-3 pr-3 py-2 border text-on-surface border-outline-variant bg-surface focus:outline-none focus:ring-primary focus:ring-1 focus:z-10"
+                        step="60"
+                        inputMode="numeric"
+                    />
+                    <input
+                        type="time"
+                        value={beforeTime}
+                        onChange={e => setBeforeTime(e.target.value)}
+                        className="pl-3 pr-3 py-2 border text-on-surface border-outline-variant rounded-md rounded-l-none bg-surface focus:outline-none focus:ring-primary focus:ring-1 focus:z-10"
+                        step="60"
+                        inputMode="numeric"
                     />
                 </div>
                 <div className="flex flex-col lg:flex-row gap-3">
@@ -94,7 +123,6 @@ export function Events() {
                         </span>
                     ))}
                 </div>
-
                 <hr className="my-4 border-t border-outline-variant" />
                 <div className="space-y-6 mt-6">
                     {/* event cards */}
@@ -109,15 +137,20 @@ export function Events() {
 
                                         <div>
                                             <h2 className="text-lg font-medium text-on-surface">
-                                                <Link to={`/club-profile/${event.club?.url}`} className="text-primary hover:underline mr-1">
-                                                    {event.club?.name}
-                                                </Link>
-                                                <span className="text-primary mr-1">: </span>
-                                                <Link to={`/events/${event._id}`} className="text-primary hover:underline mr-1">
+                                                <Link
+                                                    to={`/events/${event._id}`}
+                                                    className="text-secondary hover:text-primary hover:underline mr-1"
+                                                >
                                                     {`${event.name}`}
                                                 </Link>
+                                                <span className="text-secondary mr-1"> - </span>
+                                                <Link
+                                                    to={`/club-profile/${event.club?.url}`}
+                                                    className="text-secondary hover:text-primary hover:underline mr-1"
+                                                >
+                                                    {event.club?.name}
+                                                </Link>
                                             </h2>
-                                            <p className="text-sm text-on-surface-variant">{event.clubName}</p>
                                         </div>
                                     </div>
 
