@@ -6,7 +6,7 @@ interface RefreshResponse {
     accessToken: string;
 }
 
-export const tokenRefresh: ApiEndpoint<undefined, RefreshResponse> = {
+export const tokenRefreshEndpoint: ApiEndpoint<undefined, RefreshResponse> = {
     path: '/api/user/refreshToken',
     method: 'post', // creating new access token
     auth: AuthType.AUTHENTICATED,
