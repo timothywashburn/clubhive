@@ -20,6 +20,8 @@ import { getClubEndpoint } from '@/api/clubs/get-club';
 import { updateClubEndpoint } from '@/api/clubs/update-club';
 import { getUsersEndpoint } from '@/api/users/get-users';
 import { getUserEndpoint } from '@/api/users/get-user';
+import { createAccountEndpoint } from '@/api/user-auth/create-account-endpoint';
+import { loginEndpoint } from '@/api/user-auth/login-endpoint';
 import { getSchoolsEndpoint } from '@/api/schools/get-schools';
 import { getSchoolEndpoint } from '@/api/schools/get-school';
 import { createSchoolEndpoint } from '@/api/schools/create-school';
@@ -61,6 +63,8 @@ export default class ApiManager {
         // User endpoints
         this.addEndpoint(getUsersEndpoint);
         this.addEndpoint(getUserEndpoint);
+        this.addEndpoint(createAccountEndpoint);
+        this.addEndpoint(loginEndpoint);
 
         // School endpoints
         this.addEndpoint(createSchoolEndpoint);
