@@ -1,9 +1,69 @@
 import { Link } from 'react-router';
-import React, { useState, useEffect } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import TagFilterPopover from '../features/find-clubs/components/FilterTagsButton';
 import type { TagData } from '@clubhive/shared';
 import { useEventTagsData } from '../hooks/fetchEventTags';
 import { getTagColor } from '../features/find-clubs/utils/TagColors';
+
+function TimeFilter({
+    afterTime,
+    beforeTime,
+    setAfterTime,
+    setBeforeTime,
+}: {
+    afterTime: string;
+    beforeTime: string;
+    setAfterTime: (value: string) => void;
+    setBeforeTime: (value: string) => void;
+}) {
+    const [open, setOpen] = useState(false);
+    const popoverRef = useRef<HTMLDivElement>(null);
+
+    // Close dropdown when clicking outside
+    useEffect(() => {
+        function handleClickOutside(event: MouseEvent) {
+            if (popoverRef.current && !popoverRef.current.contains(event.target as Node)) {
+                setOpen(false);
+            }
+        }
+        document.addEventListener('mousedown', handleClickOutside);
+        return () => document.removeEventListener('mousedown', handleClickOutside);
+    }, []);
+    return (
+        <div className="relative" ref={popoverRef}>
+            <button
+                onClick={() => setOpen(prev => !prev)}
+                className="px-3 py-2 border border-outline-variant bg-surface text-on-surface rounded-md rounded-l-none focus:outline-none focus:ring-primary focus:ring-1 h-10"
+            >
+                Time
+            </button>
+            {open && (
+                <div className="absolute z-50 mt-2 bg-surface border border-outline-variant rounded-md shadow-lg p-3 space-y-2">
+                    <label className="block text-sm text-on-surface">
+                        After:
+                        <input
+                            type="time"
+                            value={afterTime}
+                            onChange={e => setAfterTime(e.target.value)}
+                            className="mt-1 block w-full border text-on-surface border-outline-variant rounded-md bg-surface focus:outline-none focus:ring-primary focus:ring-1"
+                            step="60"
+                        />
+                    </label>
+                    <label className="block text-sm text-on-surface">
+                        Before:
+                        <input
+                            type="time"
+                            value={beforeTime}
+                            onChange={e => setBeforeTime(e.target.value)}
+                            className="mt-1 block w-full border text-on-surface border-outline-variant rounded-md bg-surface focus:outline-none focus:ring-primary focus:ring-1"
+                            step="60"
+                        />
+                    </label>
+                </div>
+            )}
+        </div>
+    );
+}
 
 export function Events() {
     const [searchTerm, setSearchTerm] = useState('');
@@ -87,31 +147,17 @@ export function Events() {
                         placeholder="Location"
                         value={location}
                         onChange={e => setLocation(e.target.value)}
-                        className="w-full sm:w-auto pl-3 pr-3 py-2 border text-on-surface border-outline-variant bg-surface placeholder-on-surface-variant focus:outline-none focus:ring-primary focus:ring-1 focus:z-10"
+                        className="w-45 pl-3 pr-3 py-2 border text-on-surface border-outline-variant bg-surface placeholder-on-surface-variant focus:outline-none focus:ring-primary focus:ring-1 focus:z-10"
                     />
                     <input
                         type="date"
                         value={date}
                         onChange={e => setDate(e.target.value)}
-                        className="pl-3 pr-3 py-2 border text-on-surface border-outline-variant bg-surface focus:outline-none  focus:ring-primary focus:ring-1 focus:z-10"
+                        className="pl-3 pr-3 py-2 border border-outline-variant border-r-0 rounded-none bg-surface text-on-surface focus:outline-none focus:ring-primary focus:ring-1 focus:z-10"
                     />
-                    <input
-                        type="time"
-                        value={afterTime}
-                        onChange={e => setAfterTime(e.target.value)}
-                        className="pl-3 pr-3 py-2 border text-on-surface border-outline-variant bg-surface focus:outline-none focus:ring-primary focus:ring-1 focus:z-10"
-                        step="60"
-                        inputMode="numeric"
-                    />
-                    <input
-                        type="time"
-                        value={beforeTime}
-                        onChange={e => setBeforeTime(e.target.value)}
-                        className="pl-3 pr-3 py-2 border text-on-surface border-outline-variant rounded-md rounded-l-none bg-surface focus:outline-none focus:ring-primary focus:ring-1 focus:z-10"
-                        step="60"
-                        inputMode="numeric"
-                    />
+                    <TimeFilter afterTime={afterTime} beforeTime={beforeTime} setAfterTime={setAfterTime} setBeforeTime={setBeforeTime} />
                 </div>
+
                 <div className="flex flex-col lg:flex-row gap-3">
                     {selectedTags.map(tag => (
                         <span

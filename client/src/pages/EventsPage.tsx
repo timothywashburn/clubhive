@@ -17,6 +17,16 @@ export function EventsPage() {
 
     const [selectedTags, setSelectedTags] = useState<TagData[]>([]);
 
+    const copyToClipboard = async () => {
+        const url = `${window.location.origin}/events/${event._id}`;
+        try {
+            await navigator.clipboard.writeText(url);
+            alert('Link copied to clipboard!');
+        } catch (err) {
+            console.error('Failed to copy: ', err);
+        }
+    };
+
     const tagObj = event?.tagIds //necessary?? idk
         ? tags.filter(tag => event.tagIds.includes(tag._id))
         : [];
@@ -134,7 +144,12 @@ export function EventsPage() {
                                 <div className="bg-surface rounded-xl p-6 w-[90%] max-w-sm shadow-lg relative">
                                     <h2 className="text-lg font-semibold text-on-surface mb-4">Share This Event</h2>
                                     <div className="space-y-2 text-on-surface-variant">
-                                        <p>🔗 Copy Link</p>
+                                        <button
+                                            onClick={copyToClipboard}
+                                            className="text-left w-full hover:text-primary transition-colors hover:underline"
+                                        >
+                                            🔗 Copy Link
+                                        </button>
                                         <p>📧 Share via Email</p>
                                         <p>🐦 Share on Twitter</p>
                                         <p>📘 Share on Facebook</p>
