@@ -10,8 +10,10 @@ export function ClubRegistration() {
     const [selectedTags, setSelectedTags] = useState<TagData[]>([]);
 
     const inputClass =
-        'mt-1 block w-full rounded-md text-on-primary-container border border-outline-variant bg-surface px-3 py-2 shadow-sm ' +
+        'mt-1 block w-full rounded-md text-on-primary-container border bg-surface px-3 py-2 shadow-sm ' +
         'focus:border-primary focus:ring focus:ring-primary focus:ring-opacity-50 focus:outline-none';
+    const prefixClass =
+        'mt-1 inline-flex items-center px-3 py-2 text-sm text-on-primary-container bg-surface-variant border border-outline-variant rounded-l-md';
 
     const [name, setName] = useState('');
     const [school, setSchool] = useState('');
@@ -34,11 +36,11 @@ export function ClubRegistration() {
             name: name,
             school: school,
             tagline: tagline || undefined,
-            url: url || undefined,
+            url: url ? 'https://clubhive.timothyw.dev/club-profile/${url}' : undefined,
             socials: {
-                discord: discord || undefined,
-                instagram: instagram || undefined,
-                website: website || undefined,
+                discord: discord ? 'https://discord.com/invite/${discord}' : undefined,
+                instagram: instagram ? 'https://www.instagram.com/${instagram}' : undefined,
+                website: website ? `https://${website}` : undefined,
             },
             description: description || undefined,
             tags: selectedTags.map(tag => tag._id) || undefined,
@@ -58,6 +60,14 @@ export function ClubRegistration() {
 
             if (zodErrors.name?._errors.length) newErrors.name = zodErrors.name._errors[0];
             if (zodErrors.school?._errors.length) newErrors.school = zodErrors.school._errors[0];
+            if (zodErrors.url?._errors.length) newErrors.url = zodErrors.url._errors[0];
+            if (zodErrors.tagline?._errors.length) newErrors.tagline = zodErrors.tagline._errors[0];
+            if (zodErrors.description?._errors.length) newErrors.description = zodErrors.description._errors[0];
+
+            // Handle nested socials errors
+            if (zodErrors.socials?.discord?._errors.length) newErrors.discord = zodErrors.socials.discord._errors[0];
+            if (zodErrors.socials?.instagram?._errors.length) newErrors.instagram = zodErrors.socials.instagram._errors[0];
+            if (zodErrors.socials?.website?._errors.length) newErrors.website = zodErrors.socials.website._errors[0];
 
             setErrors(newErrors);
             return;
@@ -93,16 +103,16 @@ export function ClubRegistration() {
                             <h2 className="text-xl font-semibold text-on-background mb-4">Club Information</h2>
                             <hr className="my-4 border-t border-outline-variant" />
 
-                            {/* Club Details */}
+                            {/* Name and School */}
                             <div className="grid grid-cols-2 gap-6">
                                 <div>
                                     <label htmlFor="club-name" className="block text-sm font-medium text-on-background">
-                                        Club Name
+                                        Club Name <span className="text-error">*</span>
                                     </label>
                                     <input
                                         type="text"
                                         id="club-name"
-                                        className={inputClass + ' ' + (errors.name ? 'border-error' : '')}
+                                        className={inputClass + ' ' + (errors.name ? 'border-error' : 'border-outline-variant')}
                                         value={name}
                                         onChange={e => setName(e.target.value)}
                                     />
@@ -110,11 +120,11 @@ export function ClubRegistration() {
                                 </div>
                                 <div>
                                     <label htmlFor="club-school" className="block text-sm font-medium text-on-background">
-                                        School
+                                        School <span className="text-error">*</span>
                                     </label>
                                     <select
                                         id="club-school"
-                                        className={inputClass + ' ' + (errors.school ? 'border-error' : '')}
+                                        className={inputClass + ' ' + (errors.school ? 'border-error' : 'border-outline-variant')}
                                         value={school}
                                         onChange={e => setSchool(e.target.value)}
                                     >
@@ -125,90 +135,128 @@ export function ClubRegistration() {
                                     </select>
                                     {errors.school && <p className="text-error text-sm mt-1">{errors.school}</p>}
                                 </div>
-                                <div>
-                                    <label htmlFor="club-tagline" className="block text-sm font-medium text-on-background">
-                                        Tagline
-                                    </label>
+                            </div>
+
+                            {/* URL */}
+                            <div className="mt-5">
+                                <label htmlFor="club-url" className="block text-sm font-medium text-on-background">
+                                    Profile Page URL
+                                </label>
+                                <div className="flex">
+                                    <span className={prefixClass + ' whitespace-nowrap'}>https://clubhive.timothyw.dev/club-profile/</span>
                                     <input
-                                        type="text"
-                                        id="club-tagline"
-                                        className={inputClass}
-                                        value={tagline}
-                                        onChange={e => {
-                                            if (e.target.value.length <= maxTaglineLength) {
-                                                setTagline(e.target.value);
-                                            }
-                                        }}
-                                    />
-                                    <div className="text-right text-sm text-gray-500 mt-1">
-                                        {tagline.length} / {maxTaglineLength}
-                                    </div>
-                                </div>
-                                <div>
-                                    <label htmlFor="club-url" className="block text-sm font-medium text-on-background">
-                                        Profile Page URL
-                                    </label>
-                                    <input
+                                        placeholder="your-club-profile-url"
                                         type="text"
                                         id="club-url"
-                                        className={inputClass}
+                                        className={
+                                            inputClass +
+                                            ' rounded-none rounded-r-md ' +
+                                            (errors.url ? 'border-error' : 'border-outline-variant')
+                                        }
                                         value={url}
                                         onChange={e => setUrl(e.target.value)}
                                     />
                                 </div>
+                                {errors.url && <p className="text-error text-sm mt-1">{errors.url}</p>}
                             </div>
 
                             {/* Social Links */}
-                            <div className="mt-5 grid grid-cols-3 gap-6">
+                            <div className="mt-5 grid grid-row-3 gap-6">
                                 <div>
                                     <label htmlFor="club-discord" className="block text-sm font-medium text-on-background">
                                         Discord Invite Link
                                     </label>
-                                    <input
-                                        placeholder="https://discord.com/invite/..."
-                                        type="text"
-                                        id="club-discord"
-                                        className={inputClass}
-                                        value={discord}
-                                        onChange={e => setDiscord(e.target.value)}
-                                    />
+                                    <div className="flex">
+                                        <span className={prefixClass}>https://discord.com/invite/</span>
+                                        <input
+                                            placeholder="your-club-invite"
+                                            type="text"
+                                            id="club-discord"
+                                            className={
+                                                inputClass +
+                                                ' rounded-none rounded-r-md ' +
+                                                (errors.discord ? 'border-error' : 'border-outline-variant')
+                                            }
+                                            value={discord}
+                                            onChange={e => setDiscord(e.target.value)}
+                                        />
+                                    </div>
+                                    {errors.discord && <p className="text-error text-sm mt-1">{errors.discord}</p>}
                                 </div>
                                 <div>
                                     <label htmlFor="club-instagram" className="block text-sm font-medium text-on-background">
                                         Instagram Profile Link
                                     </label>
-                                    <input
-                                        placeholder="https://www.instagram.com/..."
-                                        type="text"
-                                        id="club-instagram"
-                                        className={inputClass}
-                                        value={instagram}
-                                        onChange={e => setInstagram(e.target.value)}
-                                    />
+                                    <div className="flex">
+                                        <span className={prefixClass}>https://www.instagram.com/</span>
+                                        <input
+                                            placeholder="your-club-account"
+                                            type="text"
+                                            id="club-instagram"
+                                            className={
+                                                inputClass +
+                                                ' rounded-none rounded-r-md ' +
+                                                (errors.instagram ? 'border-error' : 'border-outline-variant')
+                                            }
+                                            value={instagram}
+                                            onChange={e => setInstagram(e.target.value)}
+                                        />
+                                    </div>
+                                    {errors.instagram && <p className="text-error text-sm mt-1">{errors.instagram}</p>}
                                 </div>
                                 <div>
                                     <label htmlFor="club-website" className="block text-sm font-medium text-on-background">
                                         Website Link
                                     </label>
-                                    <input
-                                        type="text"
-                                        id="club-website"
-                                        className={inputClass}
-                                        value={website}
-                                        onChange={e => setWebsite(e.target.value)}
-                                    />
+                                    <div className="flex">
+                                        <span className={prefixClass}>https://</span>
+                                        <input
+                                            placeholder="your-club-website"
+                                            type="text"
+                                            id="club-website"
+                                            className={
+                                                inputClass +
+                                                ' rounded-none rounded-r-md ' +
+                                                (errors.website ? 'border-error' : 'border-outline-variant')
+                                            }
+                                            value={website}
+                                            onChange={e => setWebsite(e.target.value)}
+                                        />
+                                    </div>
+                                    {errors.website && <p className="text-error text-sm mt-1">{errors.website}</p>}
+                                </div>
+                            </div>
+
+                            {/* Tagline */}
+                            <div className="mt-5">
+                                <label htmlFor="club-tagline" className="block text-sm font-medium text-on-background">
+                                    Tagline
+                                </label>
+                                <input
+                                    type="text"
+                                    id="club-tagline"
+                                    className={inputClass + ' border-outline-variant'}
+                                    value={tagline}
+                                    onChange={e => {
+                                        if (e.target.value.length <= maxTaglineLength) {
+                                            setTagline(e.target.value);
+                                        }
+                                    }}
+                                />
+                                <div className="text-right text-sm text-gray-500 mt-1">
+                                    {tagline.length} / {maxTaglineLength}
                                 </div>
                             </div>
 
                             {/* Description */}
-                            <div className="mt-5">
+                            <div>
                                 <label htmlFor="club-description" className="block text-sm font-medium text-on-background">
                                     Description
                                 </label>
                                 <textarea
                                     id="club-description"
                                     rows={4}
-                                    className={inputClass}
+                                    className={inputClass + ' border-outline-variant'}
                                     value={description}
                                     onChange={e => {
                                         if (e.target.value.length <= maxDescriptionLength) {
