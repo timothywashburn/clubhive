@@ -36,18 +36,18 @@ export function ClubRegistration() {
             name: name,
             school: school,
             tagline: tagline || undefined,
-            url: url ? 'https://clubhive.timothyw.dev/club-profile/${url}' : undefined,
+            url: url || undefined,
             socials: {
-                discord: discord ? 'https://discord.com/invite/${discord}' : undefined,
-                instagram: instagram ? 'https://www.instagram.com/${instagram}' : undefined,
-                website: website ? `https://${website}` : undefined,
+                discord: discord || undefined,
+                instagram: instagram || undefined,
+                website: website || undefined,
             },
             description: description || undefined,
             tags: selectedTags.map(tag => tag._id) || undefined,
             clubLogo: undefined,
             pictures: undefined,
         };
-
+        console.log(discord);
         // Validate using Zod schema
         const result = createClubRequestSchema.safeParse(clubData);
 
