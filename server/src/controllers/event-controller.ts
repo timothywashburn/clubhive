@@ -25,12 +25,16 @@ export default class EventController {
 
     // TODO: should have a parameter to decide if unpublished events should be returned
     static async getAllEvents(): Promise<EventDoc[]> {
-        return await Event.find({}).populate('tags').exec();
+        return await Event.find({}).populate('tags').populate('club', '_id name url').exec();
     }
 
     // TODO: should have a parameter to decide if unpublished events should be returned
     static async getEventsByClub(clubId: string): Promise<EventDoc[]> {
-        return await Event.find({ club: clubId }).populate('tags').exec();
+        return await Event.find({ club: clubId }).populate('tags').populate('club', '_id name url').exec();
+    }
+
+    static async getEventById(eventId: string): Promise<EventDoc | null> {
+        return await Event.findById(eventId).populate('club', '_id name url').populate('picture').populate('tags').exec();
     }
 
     static async updateEvent(id: string, updates: UpdateEventRequest): Promise<EventDoc> {
