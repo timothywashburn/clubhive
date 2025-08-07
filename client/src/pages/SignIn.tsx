@@ -9,21 +9,37 @@ import { Link } from 'react-router';
  * replaced by the real implementation at any time.
  */
 export function SignIn() {
-    const [formData, setFormData] = useState({
-        email: '',
-        password: '',
-    });
+    const [email, setEmail] = useState('');
+    const [password, setPassword] = useState('');
 
-    const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        setFormData({
-            ...formData,
-            [e.target.name]: e.target.value,
-        });
-    };
+    const [errors, setErrors] = useState<{ [key: string]: string }>({});
+    const newErrors: { [key: string]: string } = {};
 
-    const handleSubmit = (e: React.FormEvent) => {
+    const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
-        console.log('Sign in form submitted:', formData);
+
+        const userData = {
+            email: email,
+            password: password,
+        };
+
+        try {
+            const res = await fetch('/api/user/login', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(userData),
+            });
+            const result = await res.json();
+            if (result.success) {
+                console.log('Logged in successfully:', result.user);
+            } else {
+                console.log('Incorrect login credentials');
+            }
+        } catch (error) {
+            console.error('Error logging in:', error);
+        }
     };
 
     return (
@@ -50,8 +66,8 @@ export function SignIn() {
                                     name="email"
                                     type="email"
                                     required
-                                    value={formData.email}
-                                    onChange={handleChange}
+                                    value={email}
+                                    onChange={e => setEmail(e.target.value)}
                                     className="mt-1 block w-full px-3 py-2 border border-outline-variant rounded-md shadow-sm bg-surface text-on-surface placeholder-on-surface-variant focus:outline-none focus:ring-primary focus:border-primary"
                                 />
                             </div>
@@ -65,8 +81,8 @@ export function SignIn() {
                                     name="password"
                                     type="password"
                                     required
-                                    value={formData.password}
-                                    onChange={handleChange}
+                                    value={password}
+                                    onChange={e => setPassword(e.target.value)}
                                     className="mt-1 block w-full px-3 py-2 border border-outline-variant rounded-md shadow-sm bg-surface text-on-surface placeholder-on-surface-variant focus:outline-none focus:ring-primary focus:border-primary"
                                 />
                             </div>
