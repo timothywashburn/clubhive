@@ -28,7 +28,7 @@ export function SendNotification() {
                             </div>
                         </div>
 
-                        <div className="p-2 space-y-2">
+                        <div className="p-4 space-y-2">
                             {scheduled.map((item, index) => (
                                 <div
                                     key={index}
@@ -46,7 +46,70 @@ export function SendNotification() {
                         </div>
                     </div>
 
-                    <div className="flex-1 min-w-0"></div>
+                    <div className="flex-1 min-w-0">
+                        <form className="bg-surface rounded-lg shadow border border-outline-variant p-6">
+                            <div className="pb-4 border-b border-outline-variant mb-6">
+                                <h2 className="text-lg font-medium text-on-surface">Create New Notification</h2>
+                            </div>
+
+                            <div className="flex gap-4">
+                                <div className="flex-1">
+                                    <label htmlFor="club" className="block text-sm font-medium text-on-surface mb-1">
+                                        Club
+                                    </label>
+                                    <select
+                                        id="club"
+                                        name="club"
+                                        className="w-full rounded-md border border-outline-variant bg-surface p-2 text-on-surface"
+                                    >
+                                        <option value="">Select a club</option>
+                                        <option value="cs">Computer Science Club</option>
+                                        <option value="photo">Photography Society</option>
+                                        <option value="music">Music Club</option>
+                                    </select>
+                                </div>
+
+                                <div className="flex-1">
+                                    <label htmlFor="title" className="block text-sm font-medium text-on-surface mb-1">
+                                        Title
+                                    </label>
+                                    <input
+                                        type="text"
+                                        id="title"
+                                        name="title"
+                                        placeholder="Enter title"
+                                        className="w-full rounded-md border border-outline-variant bg-surface p-2 text-on-surface"
+                                    />
+                                </div>
+                            </div>
+
+                            <div className="mt-4 mb-6">
+                                <label htmlFor="message" className="block text-sm font-medium text-on-surface mb-2">
+                                    Message Body
+                                </label>
+                                <textarea
+                                    id="message"
+                                    name="message"
+                                    rows={6}
+                                    className="w-full rounded-md border border-outline-variant bg-surface text-on-surface px-4 py-3 shadow-sm focus:outline-none focus:ring-2 focus:ring-primary"
+                                />
+                                <div className="mb-6 mt-4">
+                                    <label className="block text-sm font-medium text-on-surface mb-2">Add Photos</label>
+                                    <div className="w-full h-32 rounded-md border border-dashed border-outline-variant bg-surface-variant flex items-center justify-center text-on-surface-variant text-sm italic">
+                                        Photo upload area
+                                    </div>
+                                </div>
+                            </div>
+                            <div className="flex justify-end">
+                                <button
+                                    type="submit"
+                                    className="bg-primary text-on-primary px-6 py-2 rounded-md font-medium shadow-sm hover:bg-primary/90 transition"
+                                >
+                                    Send Notification
+                                </button>
+                            </div>
+                        </form>
+                    </div>
                 </div>
             </div>
         </div>
