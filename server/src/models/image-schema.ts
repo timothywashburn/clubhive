@@ -2,28 +2,35 @@ import mongoose, { Schema, InferSchemaType, HydratedDocument } from 'mongoose';
 
 const schema = new Schema(
     {
-        _id: {
-            type: mongoose.Schema.Types.ObjectId,
-            required: true,
-            auto: true,
+        url: {
+            type: String,
+            required: true, // Cloudinary URL
         },
-        imgData: {
-            type: Buffer,
-            required: true,
-        },
-        contentType: {
+        public_id: {
             type: String,
             required: true,
         },
-        expiresAt: {
-            type: Date,
+        uploadedBy: {
+            type: Schema.Types.ObjectId,
+            ref: 'User',
+            required: true,
+        },
+        club: {
+            type: Schema.Types.ObjectId,
+            ref: 'Club',
+            required: true,
+        },
+        type: {
+            type: String,
+            enum: ['profile', 'gallery'],
+            required: true,
         },
     },
     { timestamps: true }
 );
 
 export type ImageSchema = InferSchemaType<typeof schema>;
-export type ImageDoc = HydratedDocument<InferSchemaType<typeof schema>>;
+export type ImageDoc = HydratedDocument<ImageSchema>;
 
-const Image = mongoose.model('Image', schema);
-export default Image;
+const CloudinaryImage = mongoose.model('CloudinaryImage', schema);
+export default CloudinaryImage;
