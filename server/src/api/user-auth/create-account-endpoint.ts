@@ -21,7 +21,7 @@ interface CreateAccountResponse {
 export const createAccountEndpoint: ApiEndpoint<CreateAccountRequest, CreateAccountResponse> = {
     path: '/api/user/create-account',
     method: 'post',
-    auth: AuthType.AUTHENTICATED,
+    auth: AuthType.NONE, // change to AuthType.AUTHENTICATED later
     handler: async (req, res) => {
         const { name, school, major, educationType, year, email, password } = req.body;
 
