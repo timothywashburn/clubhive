@@ -9,35 +9,33 @@ import { Link } from 'react-router';
  * replaced by the real implementation at any time.
  */
 export function SignUp() {
-    const [formData, setFormData] = useState({
-        fullName: '',
-        email: '',
-        password: '',
-        confirmPassword: '',
-        school: '',
-        major: '',
-        educationType: '',
-        year: '',
-    });
+    const [fullName, setFullName] = useState('');
+    const [email, setEmail] = useState('');
+    const [password, setPassword] = useState('');
+    const [confirmPassword, setConfirmPassword] = useState('');
+    const [school, setSchool] = useState('');
+    const [major, setMajor] = useState('');
+    const [educationType, setEducationType] = useState('');
+    const [year, setYear] = useState('');
+
+    const inputClass =
+        'mt-1 block w-full rounded-md text-on-primary-container border border-outline-variant bg-surface px-3 py-2 shadow-sm ' +
+        'focus:border-primary focus:ring focus:ring-primary focus:ring-opacity-50 focus:outline-none';
 
     const [errors, setErrors] = useState<{ [key: string]: string }>({});
     const newErrors: { [key: string]: string } = {};
 
-    const handleChange = (field: string, value: string) => {
-        setFormData(prev => ({ ...prev, [field]: value }));
-    };
-
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
 
-        if (!formData.fullName) newErrors.fullName = 'Full name is required';
-        if (!formData.email) newErrors.email = 'Email is required';
-        if (!formData.password) newErrors.password = 'Password is required';
-        if (formData.confirmPassword != formData.password) newErrors.confirmPassword = 'Passwords do not match';
-        if (!formData.school) newErrors.school = 'School is required';
-        if (!formData.major) newErrors.major = 'Major is required';
-        if (!formData.educationType) newErrors.educationType = 'Education Type is required';
-        if (!formData.year) newErrors.year = 'Academic Year is required';
+        if (!fullName) newErrors.fullName = 'Full name is required';
+        if (!email) newErrors.email = 'Email is required';
+        if (!password) newErrors.password = 'Password is required';
+        if (confirmPassword != password) newErrors.confirmPassword = 'Passwords do not match';
+        if (!school) newErrors.school = 'School is required';
+        if (!major) newErrors.major = 'Major is required';
+        if (!educationType) newErrors.educationType = 'Education Type is required';
+        if (!year) newErrors.year = 'Academic Year is required';
 
         if (Object.keys(newErrors).length > 0) {
             setErrors(newErrors);
@@ -45,13 +43,13 @@ export function SignUp() {
         }
 
         const userData = {
-            name: formData.fullName,
-            email: formData.email,
-            password: formData.password,
-            school: formData.school,
-            major: formData.major,
-            educationType: formData.educationType,
-            year: formData.year,
+            name: fullName,
+            email: email,
+            password: password,
+            school: school,
+            major: major,
+            educationType: educationType,
+            year: year,
         };
 
         try {
@@ -73,16 +71,16 @@ export function SignUp() {
 
     const getYearLabel = (year: string) => {
         switch (year) {
-            case 'first':
+            case '1':
                 return '1st Year';
-            case 'second':
+            case '2':
                 return '2nd Year';
-            case 'third':
+            case '3':
                 return '3rd Year';
-            case 'fourth':
+            case '4':
                 return '4th Year';
-            case 'more-than-4':
-                return '4+ Years';
+            case '>4':
+                return '4+ Year';
             default:
                 return year;
         }
@@ -112,10 +110,11 @@ export function SignUp() {
                                     name="fullName"
                                     type="text"
                                     required
-                                    value={formData.fullName}
-                                    onChange={e => handleChange('fullName', e.target.value)}
-                                    className="mt-1 block w-full px-3 py-2 border border-outline-variant rounded-md shadow-sm bg-surface text-on-surface placeholder-on-surface-variant focus:outline-none focus:ring-primary focus:border-primary"
+                                    value={fullName}
+                                    onChange={e => setFullName(e.target.value)}
+                                    className={inputClass + ' ' + (errors.fullName ? 'border-red-500' : '')}
                                 />
+                                {errors.fullName && <p className="text-red-500 text-sm mt-1">{errors.fullName}</p>}
                             </div>
 
                             <div>
@@ -127,10 +126,11 @@ export function SignUp() {
                                     name="email"
                                     type="email"
                                     required
-                                    value={formData.email}
-                                    onChange={e => handleChange('email', e.target.value)}
-                                    className="mt-1 block w-full px-3 py-2 border border-outline-variant rounded-md shadow-sm bg-surface text-on-surface placeholder-on-surface-variant focus:outline-none focus:ring-primary focus:border-primary"
+                                    value={email}
+                                    onChange={e => setEmail(e.target.value)}
+                                    className={inputClass + ' ' + (errors.email ? 'border-red-500' : '')}
                                 />
+                                {errors.email && <p className="text-red-500 text-sm mt-1">{errors.email}</p>}
                             </div>
 
                             <div>
@@ -142,10 +142,11 @@ export function SignUp() {
                                     name="password"
                                     type="password"
                                     required
-                                    value={formData.password}
-                                    onChange={e => handleChange('password', e.target.value)}
+                                    value={password}
+                                    onChange={e => setPassword(e.target.value)}
                                     className="mt-1 block w-full px-3 py-2 border border-outline-variant rounded-md shadow-sm bg-surface text-on-surface placeholder-on-surface-variant focus:outline-none focus:ring-primary focus:border-primary"
                                 />
+                                {errors.password && <p className="text-red-500 text-sm mt-1">{errors.password}</p>}
                             </div>
 
                             <div>
@@ -157,10 +158,11 @@ export function SignUp() {
                                     name="confirmPassword"
                                     type="password"
                                     required
-                                    value={formData.confirmPassword}
-                                    onChange={e => handleChange('confirmPassword', e.target.value)}
+                                    value={confirmPassword}
+                                    onChange={e => setConfirmPassword(e.target.value)}
                                     className="mt-1 block w-full px-3 py-2 border border-outline-variant rounded-md shadow-sm bg-surface text-on-surface placeholder-on-surface-variant focus:outline-none focus:ring-primary focus:border-primary"
                                 />
+                                {errors.confirmPassword && <p className="text-red-500 text-sm mt-1">{newErrors.confirmPassword}</p>}
                             </div>
 
                             <div>
@@ -170,12 +172,13 @@ export function SignUp() {
                                 <input
                                     id="school"
                                     name="school"
-                                    type="school"
+                                    type="text"
                                     required
-                                    value={formData.school}
-                                    onChange={e => handleChange('school', e.target.value)}
+                                    value={school}
+                                    onChange={e => setSchool(e.target.value)}
                                     className="mt-1 block w-full px-3 py-2 border border-outline-variant rounded-md shadow-sm bg-surface text-on-surface placeholder-on-surface-variant focus:outline-none focus:ring-primary focus:border-primary"
                                 />
+                                {errors.school && <p className="text-red-500 text-sm mt-1">{errors.school}</p>}
                             </div>
 
                             <div>
@@ -185,12 +188,13 @@ export function SignUp() {
                                 <input
                                     id="major"
                                     name="major"
-                                    type="major"
+                                    type="text"
                                     required
-                                    value={formData.major}
-                                    onChange={e => handleChange('major', e.target.value)}
+                                    value={major}
+                                    onChange={e => setMajor(e.target.value)}
                                     className="mt-1 block w-full px-3 py-2 border border-outline-variant rounded-md shadow-sm bg-surface text-on-surface placeholder-on-surface-variant focus:outline-none focus:ring-primary focus:border-primary"
                                 />
+                                {errors.major && <p className="text-red-500 text-sm mt-1">{errors.major}</p>}
                             </div>
 
                             <div>
@@ -200,29 +204,33 @@ export function SignUp() {
                                 <select
                                     id="educationType"
                                     name="educationType"
-                                    //type="educationType"
-                                    required
-                                    value={formData.educationType}
-                                    onChange={e => handleChange('educationType', e.target.value)}
+                                    value={educationType}
+                                    onChange={e => setEducationType(e.target.value)}
                                     className="mt-1 block w-full px-3 py-2 border border-outline-variant rounded-md shadow-sm bg-surface text-on-surface placeholder-on-surface-variant focus:outline-none focus:ring-primary focus:border-primary"
                                 >
-                                    <option value="undergraduate">Undergraduate</option>
-                                    <option value="graduate">Graduate</option>
+                                    <option className="text-on-background-variant" value="">
+                                        Select your education type
+                                    </option>
+                                    <option value="Undergraduate">Undergraduate</option>
+                                    <option value="Graduate">Graduate</option>
                                 </select>
+                                {errors.educationType && <p className="text-red-500 text-sm mt-1">{errors.educationType}</p>}
                             </div>
                         </div>
 
                         <div className="md:col-span-2">
                             <label className="block text-sm font-medium text-on-surface mb-2">Academic Year</label>
                             <div className="inline-flex bg-surface-variant rounded-lg p-1 border border-outline-variant flex-wrap gap-1">
-                                {['first', 'second', 'third', 'fourth', 'more-than-4'].map(yearOption => (
+                                {['1', '2', '3', '4', '>4'].map(yearOption => (
                                     <button
+                                        type="button"
                                         key={yearOption}
-                                        onClick={() => handleChange('year', yearOption)}
+                                        value={year}
+                                        onClick={() => setYear(yearOption)}
                                         className={`
                                                         px-4 py-2 rounded-md text-sm font-medium transition-all duration-200
                                                         ${
-                                                            formData.year === yearOption
+                                                            year === yearOption
                                                                 ? 'bg-primary text-on-primary shadow-sm'
                                                                 : 'text-on-surface-variant hover:text-on-surface hover:bg-surface'
                                                         }
@@ -231,6 +239,7 @@ export function SignUp() {
                                         {getYearLabel(yearOption)}
                                     </button>
                                 ))}
+                                {errors.year && <p className="text-red-500 text-sm mt-1">{errors.year}</p>}
                             </div>
                         </div>
 

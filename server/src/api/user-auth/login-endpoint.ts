@@ -17,7 +17,7 @@ interface LoginResponse {
 export const loginEndpoint: ApiEndpoint<LoginRequest, LoginResponse> = {
     path: '/api/user/login',
     method: 'post',
-    auth: AuthType.AUTHENTICATED,
+    auth: AuthType.NONE, // change to AuthType.AUTHENTICATED later
     handler: async (req, res) => {
         const { email, password } = req.body;
 
@@ -37,8 +37,8 @@ export const loginEndpoint: ApiEndpoint<LoginRequest, LoginResponse> = {
                 const REFRESH_TOKEN_SECRET = 'temp refresh'; // real token should go in .env
                 const ACCESS_TOKEN_SECRET = 'temp access';
 
-                const accessToken = jwt.sign(auth._id, ACCESS_TOKEN_SECRET, { expiresIn: '15m' });
-                const refreshToken = jwt.sign(auth._id, REFRESH_TOKEN_SECRET, { expiresIn: '7d' });
+                const accessToken = jwt.sign({ authId: auth._id }, ACCESS_TOKEN_SECRET, { expiresIn: '1d' });
+                const refreshToken = jwt.sign({ authId: auth._id }, REFRESH_TOKEN_SECRET, { expiresIn: '7d' });
                 // Store refresh token in HTTP-only cookie
                 res.cookie('refreshToken', refreshToken, {
                     httpOnly: true, // Prevents XSS attacks
