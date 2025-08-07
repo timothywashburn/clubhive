@@ -17,7 +17,7 @@ interface LoginResponse {
 export const loginEndpoint: ApiEndpoint<LoginRequest, LoginResponse> = {
     path: '/api/user/login',
     method: 'post',
-    auth: AuthType.NONE, // change to AuthType.AUTHENTICATED later
+    auth: AuthType.NONE,
     handler: async (req, res) => {
         const { email, password } = req.body;
 
