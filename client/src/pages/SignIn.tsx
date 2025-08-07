@@ -34,6 +34,8 @@ export function SignIn() {
             const result = await res.json();
             if (result.success) {
                 console.log('Logged in successfully:', result.user);
+            } else {
+                console.log('Incorrect login credentials');
             }
         } catch (error) {
             console.error('Error logging in:', error);

@@ -25,6 +25,58 @@ export function SignUp() {
     const [errors, setErrors] = useState<{ [key: string]: string }>({});
     const newErrors: { [key: string]: string } = {};
 
+    const [majorInput, setMajorInput] = useState('');
+    const [showMajorDropdown, setShowMajorDropdown] = useState(false);
+
+    const majors = [
+        'Accounting',
+        'Aerospace Engineering',
+        'Anthropology',
+        'Applied Mathematics',
+        'Architecture',
+        'Art History',
+        'Biology',
+        'Biomedical Engineering',
+        'Business Administration',
+        'Chemical Engineering',
+        'Chemistry',
+        'Civil Engineering',
+        'Computer Engineering',
+        'Computer Science',
+        'Creative Writing',
+        'Criminal Justice',
+        'Data Science',
+        'Economics',
+        'Electrical Engineering',
+        'English Literature',
+        'Environmental Science',
+        'Finance',
+        'Fine Arts',
+        'History',
+        'Information Systems',
+        'International Relations',
+        'Journalism',
+        'Kinesiology',
+        'Liberal Arts',
+        'Marketing',
+        'Mathematics',
+        'Mechanical Engineering',
+        'Music',
+        'Neuroscience',
+        'Nursing',
+        'Philosophy',
+        'Physics',
+        'Political Science',
+        'Psychology',
+        'Public Health',
+        'Sociology',
+        'Software Engineering',
+        'Theater Arts',
+        'Urban Planning',
+    ];
+
+    const filteredMajors = majors.filter(major => major.toLowerCase().includes(majorInput.toLowerCase()));
+
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
 
@@ -169,32 +221,54 @@ export function SignUp() {
                                 <label htmlFor="school" className="block text-sm font-medium text-on-surface">
                                     School
                                 </label>
-                                <input
+                                <select
                                     id="school"
                                     name="school"
-                                    type="text"
-                                    required
                                     value={school}
                                     onChange={e => setSchool(e.target.value)}
                                     className="mt-1 block w-full px-3 py-2 border border-outline-variant rounded-md shadow-sm bg-surface text-on-surface placeholder-on-surface-variant focus:outline-none focus:ring-primary focus:border-primary"
-                                />
+                                >
+                                    <option className="text-on-background-variant" value="">
+                                        Select your school
+                                    </option>
+                                    <option value="507f1f77bcf86cd799439021">UCSD</option> {/* ucsd school id */}
+                                </select>
                                 {errors.school && <p className="text-red-500 text-sm mt-1">{errors.school}</p>}
                             </div>
 
-                            <div>
-                                <label htmlFor="major" className="block text-sm font-medium text-on-surface">
-                                    Major
-                                </label>
+                            <div className="relative">
+                                <label className="block text-sm font-medium text-on-surface mb-2">Major</label>
                                 <input
-                                    id="major"
-                                    name="major"
                                     type="text"
-                                    required
-                                    value={major}
-                                    onChange={e => setMajor(e.target.value)}
-                                    className="mt-1 block w-full px-3 py-2 border border-outline-variant rounded-md shadow-sm bg-surface text-on-surface placeholder-on-surface-variant focus:outline-none focus:ring-primary focus:border-primary"
+                                    value={majorInput}
+                                    onChange={e => {
+                                        setMajorInput(e.target.value);
+                                        setShowMajorDropdown(true);
+                                        setMajor(e.target.value);
+                                    }}
+                                    onFocus={() => setShowMajorDropdown(true)}
+                                    onBlur={() => setTimeout(() => setShowMajorDropdown(false), 200)}
+                                    placeholder="Type to search majors..."
+                                    className="w-full px-3 py-2 border border-outline-variant rounded-md bg-surface text-on-surface placeholder-on-surface-variant focus:outline-none focus:ring-1 focus:ring-primary focus:border-primary"
                                 />
-                                {errors.major && <p className="text-red-500 text-sm mt-1">{errors.major}</p>}
+                                {showMajorDropdown && filteredMajors.length > 0 && (
+                                    <div className="absolute z-10 w-full mt-1 bg-surface border border-outline-variant rounded-md shadow-lg max-h-60 overflow-y-auto">
+                                        {filteredMajors.map(major => (
+                                            <button
+                                                key={major}
+                                                type="button"
+                                                onClick={() => {
+                                                    setMajorInput(major);
+                                                    setMajor(major);
+                                                    setShowMajorDropdown(false);
+                                                }}
+                                                className="w-full text-left px-3 py-2 hover:bg-primary-container text-on-surface hover:text-on-primary-container transition-colors"
+                                            >
+                                                {major}
+                                            </button>
+                                        ))}
+                                    </div>
+                                )}
                             </div>
 
                             <div>

@@ -26,7 +26,7 @@ export const loginEndpoint: ApiEndpoint<LoginRequest, LoginResponse> = {
             res.status(409).json({
                 success: false,
                 error: {
-                    message: 'User does not exist',
+                    message: 'Email is not registered',
                     code: ErrorCode.INVALID_INPUT,
                 },
             });
@@ -53,6 +53,15 @@ export const loginEndpoint: ApiEndpoint<LoginRequest, LoginResponse> = {
                     accessToken: accessToken,
                     refreshToken: refreshToken,
                 });
+            } else {
+                res.status(409).json({
+                    success: false,
+                    error: {
+                        message: 'Incorrect Password',
+                        code: ErrorCode.INVALID_INPUT,
+                    },
+                });
+                return;
             }
         } catch (error) {
             console.error('Error logging in:', error);
