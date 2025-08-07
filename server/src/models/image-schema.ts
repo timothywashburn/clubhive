@@ -6,17 +6,17 @@ const schema = new Schema(
             type: String,
             required: true, // Cloudinary URL
         },
-        public_id: {
-            type: String,
+        _id: {
+            type: mongoose.Schema.Types.ObjectId,
             required: true,
         },
         uploadedBy: {
-            type: Schema.Types.ObjectId,
+            type: mongoose.Schema.Types.ObjectId,
             ref: 'User',
             required: true,
         },
         club: {
-            type: Schema.Types.ObjectId,
+            type: mongoose.Schema.Types.ObjectId,
             ref: 'Club',
             required: true,
         },
