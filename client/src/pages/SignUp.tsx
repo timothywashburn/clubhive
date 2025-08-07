@@ -9,23 +9,133 @@ import { Link } from 'react-router';
  * replaced by the real implementation at any time.
  */
 export function SignUp() {
-    const [formData, setFormData] = useState({
-        fullName: '',
-        email: '',
-        password: '',
-        confirmPassword: '',
-    });
+    const [fullName, setFullName] = useState('');
+    const [email, setEmail] = useState('');
+    const [password, setPassword] = useState('');
+    const [confirmPassword, setConfirmPassword] = useState('');
+    const [school, setSchool] = useState('');
+    const [major, setMajor] = useState('');
+    const [educationType, setEducationType] = useState('');
+    const [year, setYear] = useState('');
 
-    const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        setFormData({
-            ...formData,
-            [e.target.name]: e.target.value,
-        });
+    const inputClass =
+        'mt-1 block w-full rounded-md text-on-primary-container border border-outline-variant bg-surface px-3 py-2 shadow-sm ' +
+        'focus:border-primary focus:ring focus:ring-primary focus:ring-opacity-50 focus:outline-none';
+
+    const [errors, setErrors] = useState<{ [key: string]: string }>({});
+    const newErrors: { [key: string]: string } = {};
+
+    const [majorInput, setMajorInput] = useState('');
+    const [showMajorDropdown, setShowMajorDropdown] = useState(false);
+
+    const majors = [
+        'Accounting',
+        'Aerospace Engineering',
+        'Anthropology',
+        'Applied Mathematics',
+        'Architecture',
+        'Art History',
+        'Biology',
+        'Biomedical Engineering',
+        'Business Administration',
+        'Chemical Engineering',
+        'Chemistry',
+        'Civil Engineering',
+        'Computer Engineering',
+        'Computer Science',
+        'Creative Writing',
+        'Criminal Justice',
+        'Data Science',
+        'Economics',
+        'Electrical Engineering',
+        'English Literature',
+        'Environmental Science',
+        'Finance',
+        'Fine Arts',
+        'History',
+        'Information Systems',
+        'International Relations',
+        'Journalism',
+        'Kinesiology',
+        'Liberal Arts',
+        'Marketing',
+        'Mathematics',
+        'Mechanical Engineering',
+        'Music',
+        'Neuroscience',
+        'Nursing',
+        'Philosophy',
+        'Physics',
+        'Political Science',
+        'Psychology',
+        'Public Health',
+        'Sociology',
+        'Software Engineering',
+        'Theater Arts',
+        'Urban Planning',
+    ];
+
+    const filteredMajors = majors.filter(major => major.toLowerCase().includes(majorInput.toLowerCase()));
+
+    const handleSubmit = async (e: React.FormEvent) => {
+        e.preventDefault();
+
+        if (!fullName) newErrors.fullName = 'Full name is required';
+        if (!email) newErrors.email = 'Email is required';
+        if (!password) newErrors.password = 'Password is required';
+        if (confirmPassword != password) newErrors.confirmPassword = 'Passwords do not match';
+        if (!school) newErrors.school = 'School is required';
+        if (!major) newErrors.major = 'Major is required';
+        if (!educationType) newErrors.educationType = 'Education Type is required';
+        if (!year) newErrors.year = 'Academic Year is required';
+
+        if (Object.keys(newErrors).length > 0) {
+            setErrors(newErrors);
+            return;
+        }
+
+        const userData = {
+            name: fullName,
+            email: email,
+            password: password,
+            school: school,
+            major: major,
+            educationType: educationType,
+            year: year,
+        };
+
+        try {
+            const res = await fetch('/api/user/create-account', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(userData),
+            });
+            const result = await res.json();
+            if (result.success) {
+                console.log('Account created successfully:', result.user);
+            }
+        } catch (error) {
+            console.error('Error creating account:', error);
+        }
     };
 
-    const handleSubmit = (e: React.FormEvent) => {
-        e.preventDefault();
-        console.log('Sign up form submitted:', formData);
+    const getYearLabel = (year: string) => {
+        switch (year) {
+            case '1':
+                return '1st Year';
+            case '2':
+                return '2nd Year';
+            case '3':
+                return '3rd Year';
+            case '4':
+                return '4th Year';
+            case '>4':
+                return '4+ Year';
+            default:
+                return year;
+        }
     };
 
     return (
@@ -52,10 +162,11 @@ export function SignUp() {
                                     name="fullName"
                                     type="text"
                                     required
-                                    value={formData.fullName}
-                                    onChange={handleChange}
-                                    className="mt-1 block w-full px-3 py-2 border border-outline-variant rounded-md shadow-sm bg-surface text-on-surface placeholder-on-surface-variant focus:outline-none focus:ring-primary focus:border-primary"
+                                    value={fullName}
+                                    onChange={e => setFullName(e.target.value)}
+                                    className={inputClass + ' ' + (errors.fullName ? 'border-red-500' : '')}
                                 />
+                                {errors.fullName && <p className="text-red-500 text-sm mt-1">{errors.fullName}</p>}
                             </div>
 
                             <div>
@@ -67,10 +178,11 @@ export function SignUp() {
                                     name="email"
                                     type="email"
                                     required
-                                    value={formData.email}
-                                    onChange={handleChange}
-                                    className="mt-1 block w-full px-3 py-2 border border-outline-variant rounded-md shadow-sm bg-surface text-on-surface placeholder-on-surface-variant focus:outline-none focus:ring-primary focus:border-primary"
+                                    value={email}
+                                    onChange={e => setEmail(e.target.value)}
+                                    className={inputClass + ' ' + (errors.email ? 'border-red-500' : '')}
                                 />
+                                {errors.email && <p className="text-red-500 text-sm mt-1">{errors.email}</p>}
                             </div>
 
                             <div>
@@ -82,10 +194,11 @@ export function SignUp() {
                                     name="password"
                                     type="password"
                                     required
-                                    value={formData.password}
-                                    onChange={handleChange}
+                                    value={password}
+                                    onChange={e => setPassword(e.target.value)}
                                     className="mt-1 block w-full px-3 py-2 border border-outline-variant rounded-md shadow-sm bg-surface text-on-surface placeholder-on-surface-variant focus:outline-none focus:ring-primary focus:border-primary"
                                 />
+                                {errors.password && <p className="text-red-500 text-sm mt-1">{errors.password}</p>}
                             </div>
 
                             <div>
@@ -97,10 +210,110 @@ export function SignUp() {
                                     name="confirmPassword"
                                     type="password"
                                     required
-                                    value={formData.confirmPassword}
-                                    onChange={handleChange}
+                                    value={confirmPassword}
+                                    onChange={e => setConfirmPassword(e.target.value)}
                                     className="mt-1 block w-full px-3 py-2 border border-outline-variant rounded-md shadow-sm bg-surface text-on-surface placeholder-on-surface-variant focus:outline-none focus:ring-primary focus:border-primary"
                                 />
+                                {errors.confirmPassword && <p className="text-red-500 text-sm mt-1">{newErrors.confirmPassword}</p>}
+                            </div>
+
+                            <div>
+                                <label htmlFor="school" className="block text-sm font-medium text-on-surface">
+                                    School
+                                </label>
+                                <select
+                                    id="school"
+                                    name="school"
+                                    value={school}
+                                    onChange={e => setSchool(e.target.value)}
+                                    className="mt-1 block w-full px-3 py-2 border border-outline-variant rounded-md shadow-sm bg-surface text-on-surface placeholder-on-surface-variant focus:outline-none focus:ring-primary focus:border-primary"
+                                >
+                                    <option className="text-on-background-variant" value="">
+                                        Select your school
+                                    </option>
+                                    <option value="507f1f77bcf86cd799439021">UCSD</option> {/* ucsd school id */}
+                                </select>
+                                {errors.school && <p className="text-red-500 text-sm mt-1">{errors.school}</p>}
+                            </div>
+
+                            <div className="relative">
+                                <label className="block text-sm font-medium text-on-surface mb-2">Major</label>
+                                <input
+                                    type="text"
+                                    value={majorInput}
+                                    onChange={e => {
+                                        setMajorInput(e.target.value);
+                                        setShowMajorDropdown(true);
+                                        setMajor(e.target.value);
+                                    }}
+                                    onFocus={() => setShowMajorDropdown(true)}
+                                    onBlur={() => setTimeout(() => setShowMajorDropdown(false), 200)}
+                                    placeholder="Type to search majors..."
+                                    className="w-full px-3 py-2 border border-outline-variant rounded-md bg-surface text-on-surface placeholder-on-surface-variant focus:outline-none focus:ring-1 focus:ring-primary focus:border-primary"
+                                />
+                                {showMajorDropdown && filteredMajors.length > 0 && (
+                                    <div className="absolute z-10 w-full mt-1 bg-surface border border-outline-variant rounded-md shadow-lg max-h-60 overflow-y-auto">
+                                        {filteredMajors.map(major => (
+                                            <button
+                                                key={major}
+                                                type="button"
+                                                onClick={() => {
+                                                    setMajorInput(major);
+                                                    setMajor(major);
+                                                    setShowMajorDropdown(false);
+                                                }}
+                                                className="w-full text-left px-3 py-2 hover:bg-primary-container text-on-surface hover:text-on-primary-container transition-colors"
+                                            >
+                                                {major}
+                                            </button>
+                                        ))}
+                                    </div>
+                                )}
+                            </div>
+
+                            <div>
+                                <label htmlFor="educationType" className="block text-sm font-medium text-on-surface">
+                                    Education Type
+                                </label>
+                                <select
+                                    id="educationType"
+                                    name="educationType"
+                                    value={educationType}
+                                    onChange={e => setEducationType(e.target.value)}
+                                    className="mt-1 block w-full px-3 py-2 border border-outline-variant rounded-md shadow-sm bg-surface text-on-surface placeholder-on-surface-variant focus:outline-none focus:ring-primary focus:border-primary"
+                                >
+                                    <option className="text-on-background-variant" value="">
+                                        Select your education type
+                                    </option>
+                                    <option value="Undergraduate">Undergraduate</option>
+                                    <option value="Graduate">Graduate</option>
+                                </select>
+                                {errors.educationType && <p className="text-red-500 text-sm mt-1">{errors.educationType}</p>}
+                            </div>
+                        </div>
+
+                        <div className="md:col-span-2">
+                            <label className="block text-sm font-medium text-on-surface mb-2">Academic Year</label>
+                            <div className="inline-flex bg-surface-variant rounded-lg p-1 border border-outline-variant flex-wrap gap-1">
+                                {['1', '2', '3', '4', '>4'].map(yearOption => (
+                                    <button
+                                        type="button"
+                                        key={yearOption}
+                                        value={year}
+                                        onClick={() => setYear(yearOption)}
+                                        className={`
+                                                        px-4 py-2 rounded-md text-sm font-medium transition-all duration-200
+                                                        ${
+                                                            year === yearOption
+                                                                ? 'bg-primary text-on-primary shadow-sm'
+                                                                : 'text-on-surface-variant hover:text-on-surface hover:bg-surface'
+                                                        }
+                                                    `}
+                                    >
+                                        {getYearLabel(yearOption)}
+                                    </button>
+                                ))}
+                                {errors.year && <p className="text-red-500 text-sm mt-1">{errors.year}</p>}
                             </div>
                         </div>
 
