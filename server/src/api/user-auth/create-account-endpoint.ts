@@ -3,6 +3,7 @@ import { ApiEndpoint, AuthType } from '@/types/api-types';
 import bcrypt from 'bcrypt';
 import User from '@/models/user-schema';
 import Auth from '@/models/auth-schema';
+import mongoose from 'mongoose';
 
 interface CreateAccountRequest {
     name: string;
@@ -40,10 +41,11 @@ export const createAccountEndpoint: ApiEndpoint<CreateAccountRequest, CreateAcco
 
             // hashing password using bcrypt
             const hashedPassword = await bcrypt.hash(password, 10);
+            const schoolId = new mongoose.Types.ObjectId(school);
 
             const newUser = new User({
                 name: name,
-                school: school,
+                school: schoolId,
                 major: major,
                 educationType: educationType,
                 year: year,
