@@ -30,16 +30,17 @@ export function SendNotification() {
 
                         <div className="p-4 space-y-2">
                             {scheduled.map((item, index) => (
-                                <div
-                                    key={index}
-                                    className="w-full rounded-md border border-outline-variant bg-surface p-4 shadow-sm hover:bg-surface-variant transition"
-                                >
+                                <div key={index} className="w-full rounded-md border border-outline-variant bg-surface p-4 shadow-sm ">
                                     <div className="flex justify-between items-start">
                                         <div>
                                             <div className="text-on-surface font-medium text-base capitalize">{item.club}</div>
                                             <div className="text-sm italic text-on-surface-variant mt-1">{item.title}</div>
                                         </div>
-                                        <div className="text-sm text-on-surface-variant whitespace-nowrap">{item.time}</div>
+
+                                        <div className="text-right">
+                                            <div className="text-sm text-on-surface-variant whitespace-nowrap">{item.time}</div>
+                                            <div className="text-primary italic text-m mt-1 hover:text-primary/90">edit</div>
+                                        </div>
                                     </div>
                                 </div>
                             ))}
