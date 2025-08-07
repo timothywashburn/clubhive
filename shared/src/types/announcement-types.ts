@@ -21,6 +21,7 @@ export const notifDisplaySchema = z.object({
     read: z.boolean(),
     date: z.string(),
     clubName: z.string(),
+    userNotifId: z.string(),
 });
 
 export type AnnouncementData = z.infer<typeof announcementSchema>;
