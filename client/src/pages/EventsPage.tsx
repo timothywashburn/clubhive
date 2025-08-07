@@ -182,7 +182,7 @@ export function EventsPage() {
 
                 {/* requirements to attend event */}
                 {event.requirements && (
-                    <div className="bg-surface-variant p-4 rounded-md mt-6">
+                    <div className="bg-surface-variant p-4 rounded-md mt-6 mb-6">
                         <h3 className="font-medium text-on-secondary-container mb-2">Requirements to Attend:</h3>
                         <p className="text-on-surface-variant text-sm">{event.requirements}</p>
                     </div>
