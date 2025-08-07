@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router';
+import { getTagColor } from '../features/find-clubs/utils/TagColors';
 
 /**
  * This class is a static view of what the Club Profile page
@@ -102,10 +103,7 @@ export function ClubProfile() {
                     {/* club tags */}
                     <div className="flex flex-wrap gap-2 mt-2">
                         {club.tags?.map((tag, index) => (
-                            <span
-                                key={index}
-                                className="bg-secondary-container text-on-secondary-container px-3 py-1 rounded-full text-sm font-medium"
-                            >
+                            <span key={index} className={`rounded-full px-3 py-1 text-xs font-semibold ${getTagColor(tag._id)}`}>
                                 #{tag.text}
                             </span>
                         ))}
