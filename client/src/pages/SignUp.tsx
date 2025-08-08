@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { Link } from 'react-router';
+import { useNavigate } from 'react-router';
 import { useToast } from '../hooks/useToast';
 
 /**
@@ -18,6 +19,8 @@ export function SignUp() {
     const [major, setMajor] = useState('');
     const [educationType, setEducationType] = useState('');
     const [year, setYear] = useState('');
+
+    const navigate = useNavigate();
 
     const inputClass =
         'mt-1 block w-full rounded-md text-on-primary-container border border-outline-variant bg-surface px-3 py-2 shadow-sm ' +
@@ -122,7 +125,9 @@ export function SignUp() {
             educationType: educationType,
             year: year,
         };
-
+        {
+            /* creating account */
+        }
         try {
             const res = await fetch('/api/user/create-account', {
                 method: 'POST',
@@ -138,6 +143,35 @@ export function SignUp() {
         } catch (error) {
             console.error('Error creating account:', error);
             errorToast('Failed to create account. Please try again.');
+        }
+
+        {
+            /* logging in */
+        }
+
+        try {
+            const res = await fetch('/api/user/login', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ email: email, password: password }),
+            });
+            const result = await res.json();
+            if (result.success) {
+                console.log('Logged in successfully:', result.user);
+            }
+        } catch (error) {
+            console.error('Error logging after creating account:', error);
+        }
+
+        {
+            /* redirect to home page */
+        }
+        navigate('/');
+
+        {
+            /* switch navbar */
         }
     };
 
