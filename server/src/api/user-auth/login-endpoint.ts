@@ -3,6 +3,9 @@ import { ApiEndpoint, AuthType } from '@/types/api-types';
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
 import Auth from '@/models/auth-schema';
+import dotenv from 'dotenv';
+
+dotenv.config();
 
 interface LoginRequest {
     email: string;
@@ -34,11 +37,8 @@ export const loginEndpoint: ApiEndpoint<LoginRequest, LoginResponse> = {
         }
         try {
             if (await bcrypt.compare(password, auth.password)) {
-                const REFRESH_TOKEN_SECRET = 'temp refresh'; // real token should go in .env
-                const ACCESS_TOKEN_SECRET = 'temp access';
-
-                const accessToken = jwt.sign({ authId: auth._id }, ACCESS_TOKEN_SECRET, { expiresIn: '1d' });
-                const refreshToken = jwt.sign({ authId: auth._id }, REFRESH_TOKEN_SECRET, { expiresIn: '7d' });
+                const accessToken = jwt.sign({ authId: auth._id }, process.env.ACCESS_TOKEN_SECRET!, { expiresIn: '1d' });
+                const refreshToken = jwt.sign({ authId: auth._id }, process.env.REFRESH_TOKEN_SECRET!, { expiresIn: '7d' });
                 // Store refresh token in HTTP-only cookie
                 res.cookie('refreshToken', refreshToken, {
                     httpOnly: true, // Prevents XSS attacks
