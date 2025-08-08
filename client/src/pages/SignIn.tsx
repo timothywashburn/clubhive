@@ -1,6 +1,8 @@
 import { useState } from 'react';
 import { Link } from 'react-router';
 import { useNavigate } from 'react-router';
+import { useAuth } from '../hooks/useAuth';
+import { UnifiedNavigationProps } from '../components/navigation/types.ts';
 import { useToast } from '../hooks/useToast';
 
 /**
@@ -16,10 +18,24 @@ export function SignIn() {
 
     const { errorToast } = useToast();
 
+    const inputClass =
+        'mt-1 block w-full rounded-md text-on-primary-container border border-outline-variant bg-surface px-3 py-2 shadow-sm ' +
+        'focus:border-primary focus:ring focus:ring-primary focus:ring-opacity-50 focus:outline-none';
+
+    const { isAuthenticated, toggleAuth } = useAuth();
+
     const navigate = useNavigate();
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
+
+        if (!email) newErrors.email = 'Email is required';
+        if (!password) newErrors.password = 'Password is required';
+
+        if (Object.keys(newErrors).length > 0) {
+            setErrors(newErrors);
+            return;
+        }
 
         const userData = {
             email: email,
@@ -42,9 +58,21 @@ export function SignIn() {
                     /* redirect to home page */
                 }
                 navigate('/');
+
+                {
+                    /*props.toggleAuth;*/
+                }
             } else {
-                console.log('Incorrect login credentials');
-                errorToast('Incorrect login credentials');
+                if (res.status === 409) {
+                    console.log('Email is not registered');
+                    errorToast('Email is not registered');
+                    return;
+                }
+                if (res.status === 401) {
+                    console.log('Incorrect password');
+                    errorToast('Incorrect password');
+                    return;
+                }
             }
         } catch (error) {
             console.error('Error logging in:', error);
@@ -75,11 +103,11 @@ export function SignIn() {
                                     id="email"
                                     name="email"
                                     type="email"
-                                    required
                                     value={email}
                                     onChange={e => setEmail(e.target.value)}
-                                    className="mt-1 block w-full px-3 py-2 border border-outline-variant rounded-md shadow-sm bg-surface text-on-surface placeholder-on-surface-variant focus:outline-none focus:ring-primary focus:border-primary"
+                                    className={inputClass + ' ' + (errors.email ? 'border-red-500' : '')}
                                 />
+                                {errors.email && <p className="text-red-500 text-sm mt-1">{errors.email}</p>}
                             </div>
 
                             <div>
@@ -90,11 +118,11 @@ export function SignIn() {
                                     id="password"
                                     name="password"
                                     type="password"
-                                    required
                                     value={password}
                                     onChange={e => setPassword(e.target.value)}
-                                    className="mt-1 block w-full px-3 py-2 border border-outline-variant rounded-md shadow-sm bg-surface text-on-surface placeholder-on-surface-variant focus:outline-none focus:ring-primary focus:border-primary"
+                                    className={inputClass + ' ' + (errors.password ? 'border-red-500' : '')}
                                 />
+                                {errors.password && <p className="text-red-500 text-sm mt-1">{errors.password}</p>}
                             </div>
                         </div>
 
@@ -125,6 +153,7 @@ export function SignIn() {
                             >
                                 Sign in
                             </button>
+                            {errors.submit && <p className="text-red-500 text-sm mt-1">{errors.submit}</p>}
                         </div>
                     </form>
                 </div>

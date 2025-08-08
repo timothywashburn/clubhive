@@ -95,7 +95,7 @@ export function SignUp() {
             errorToast('Password is required');
             return;
         }
-        if (confirmPassword != password) {
+        if (confirmPassword !== password) {
             errorToast('Passwords do not match');
             return;
         }
@@ -139,39 +139,45 @@ export function SignUp() {
             const result = await res.json();
             if (result.success) {
                 console.log('Account created successfully:', result.user);
+
+                try {
+                    const res = await fetch('/api/user/login', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify({ email: email, password: password }),
+                    });
+                    const result = await res.json();
+                    if (result.success) {
+                        console.log('Logged in successfully:', result.user);
+                        {
+                            /* redirect to home page */
+                        }
+                        navigate('/');
+
+                        {
+                            /* switch navbar */
+                        }
+                    }
+                } catch (error) {
+                    console.error('Error logging after creating account:', error);
+                    setErrors(error.message);
+                }
+            } else {
+                if (res.status === 409) {
+                    newErrors.submit = 'Email is already registered';
+                    setErrors(newErrors);
+                    return;
+                }
             }
         } catch (error) {
             console.error('Error creating account:', error);
-            errorToast('Failed to create account. Please try again.');
+            return;
         }
 
         {
             /* logging in */
-        }
-
-        try {
-            const res = await fetch('/api/user/login', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({ email: email, password: password }),
-            });
-            const result = await res.json();
-            if (result.success) {
-                console.log('Logged in successfully:', result.user);
-            }
-        } catch (error) {
-            console.error('Error logging after creating account:', error);
-        }
-
-        {
-            /* redirect to home page */
-        }
-        navigate('/');
-
-        {
-            /* switch navbar */
         }
     };
 
@@ -215,7 +221,6 @@ export function SignUp() {
                                     id="fullName"
                                     name="fullName"
                                     type="text"
-                                    required
                                     value={fullName}
                                     onChange={e => setFullName(e.target.value)}
                                     className={inputClass}
@@ -230,7 +235,6 @@ export function SignUp() {
                                     id="email"
                                     name="email"
                                     type="email"
-                                    required
                                     value={email}
                                     onChange={e => setEmail(e.target.value)}
                                     className={inputClass}
@@ -245,10 +249,9 @@ export function SignUp() {
                                     id="password"
                                     name="password"
                                     type="password"
-                                    required
                                     value={password}
                                     onChange={e => setPassword(e.target.value)}
-                                    className="mt-1 block w-full px-3 py-2 border border-outline-variant rounded-md shadow-sm bg-surface text-on-surface placeholder-on-surface-variant focus:outline-none focus:ring-primary focus:border-primary"
+                                    className={inputClass + ' ' + (errors.password ? 'border-red-500' : '')}
                                 />
                             </div>
 
@@ -260,10 +263,9 @@ export function SignUp() {
                                     id="confirmPassword"
                                     name="confirmPassword"
                                     type="password"
-                                    required
                                     value={confirmPassword}
                                     onChange={e => setConfirmPassword(e.target.value)}
-                                    className="mt-1 block w-full px-3 py-2 border border-outline-variant rounded-md shadow-sm bg-surface text-on-surface placeholder-on-surface-variant focus:outline-none focus:ring-primary focus:border-primary"
+                                    className={inputClass + ' ' + (errors.confirmPassword ? 'border-red-500' : '')}
                                 />
                             </div>
 
@@ -276,7 +278,7 @@ export function SignUp() {
                                     name="school"
                                     value={school}
                                     onChange={e => setSchool(e.target.value)}
-                                    className="mt-1 block w-full px-3 py-2 border border-outline-variant rounded-md shadow-sm bg-surface text-on-surface placeholder-on-surface-variant focus:outline-none focus:ring-primary focus:border-primary"
+                                    className={inputClass + ' ' + (errors.school ? 'border-red-500' : '')}
                                 >
                                     <option className="text-on-background-variant" value="">
                                         Select your school
@@ -298,7 +300,7 @@ export function SignUp() {
                                     onFocus={() => setShowMajorDropdown(true)}
                                     onBlur={() => setTimeout(() => setShowMajorDropdown(false), 200)}
                                     placeholder="Type to search majors..."
-                                    className="w-full px-3 py-2 border border-outline-variant rounded-md bg-surface text-on-surface placeholder-on-surface-variant focus:outline-none focus:ring-1 focus:ring-primary focus:border-primary"
+                                    className={inputClass + ' ' + (errors.major ? 'border-red-500' : '')}
                                 />
                                 {showMajorDropdown && filteredMajors.length > 0 && (
                                     <div className="absolute z-10 w-full mt-1 bg-surface border border-outline-variant rounded-md shadow-lg max-h-60 overflow-y-auto">
@@ -318,6 +320,7 @@ export function SignUp() {
                                         ))}
                                     </div>
                                 )}
+                                {errors.major && <p className="text-red-500 text-sm mt-1">{errors.major}</p>}
                             </div>
 
                             <div>
@@ -329,7 +332,7 @@ export function SignUp() {
                                     name="educationType"
                                     value={educationType}
                                     onChange={e => setEducationType(e.target.value)}
-                                    className="mt-1 block w-full px-3 py-2 border border-outline-variant rounded-md shadow-sm bg-surface text-on-surface placeholder-on-surface-variant focus:outline-none focus:ring-primary focus:border-primary"
+                                    className={inputClass + ' ' + (errors.educationType ? 'border-red-500' : '')}
                                 >
                                     <option className="text-on-background-variant" value="">
                                         Select your education type
@@ -371,6 +374,7 @@ export function SignUp() {
                             >
                                 Create Account
                             </button>
+                            {errors.submit && <p className="text-red-500 text-sm mt-1">{errors.submit}</p>}
                         </div>
                     </form>
                 </div>
