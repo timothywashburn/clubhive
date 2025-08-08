@@ -1,7 +1,8 @@
 import { useEffect, useState } from 'react';
 import { TagData } from '@clubhive/shared';
 
-export const useTagsData = () => {
+// this hook fetches club related tags
+export const useClubTagsData = () => {
     const [tags, setTags] = useState<TagData[]>([]);
     const [isLoading, setIsLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
