@@ -78,7 +78,8 @@ export function EventsPage() {
                                         to={`/club-profile/${event.club.url}`}
                                         className="text-on-surface text-secondary hover:text-primary transition-colors hover:underline"
                                     >
-                                        {event.club.name}
+                                        {/* event.club.name */}
+                                        club name
                                     </Link>
                                 </>
                             )}

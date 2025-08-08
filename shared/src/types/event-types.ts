@@ -8,15 +8,9 @@ export enum EventType {
     ANYONE = 'Anyone',
 }
 
-export const eventClubMiniSchema = z.object({
-    _id: z.string(),
-    name: z.string(),
-    url: z.string(),
-});
-
 export const eventSchema = z.object({
     _id: z.string(),
-    club: eventClubMiniSchema,
+    club: z.string(),
     name: z.string(),
     description: z.string(),
     type: z.enum(EventType),
@@ -29,7 +23,7 @@ export const eventSchema = z.object({
 });
 
 export const createEventRequestSchema = z.object({
-    club: eventClubMiniSchema,
+    club: z.string(),
     name: z.string(),
     description: z.string().optional(),
     type: z.enum(EventType),

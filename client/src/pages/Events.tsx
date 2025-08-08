@@ -194,7 +194,8 @@ export function Events() {
                                                     to={`/club-profile/${event.club?.url}`}
                                                     className="text-secondary hover:text-primary hover:underline mr-1"
                                                 >
-                                                    {event.club?.name}
+                                                    {/* event.club?.name */}
+                                                    club name
                                                 </Link>
                                             </h2>
                                         </div>
