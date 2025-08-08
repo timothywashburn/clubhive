@@ -170,10 +170,13 @@ export function Events() {
                     ))}
                 </div>
                 <hr className="my-4 border-t border-outline-variant" />
-                <div className="space-y-6 mt-6">
+                <div className="space-y-10 mt-6">
                     {/* event cards */}
                     {filteredEvents.map(event => (
-                        <div key={event._id} className="bg-surface rounded-lg shadow p-6 border border-outline-variant">
+                        <div
+                            key={event._id}
+                            className="bg-surface rounded-lg shadow p-4 border border-outline-variant max-w-6xl mx-auto x-full"
+                        >
                             <div className="flex items-start justify-between">
                                 <div className="flex-1">
                                     <div className="flex items-center mb-2">
