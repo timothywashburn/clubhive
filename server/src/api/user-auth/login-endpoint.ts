@@ -54,7 +54,7 @@ export const loginEndpoint: ApiEndpoint<LoginRequest, LoginResponse> = {
                     refreshToken: refreshToken,
                 });
             } else {
-                res.status(409).json({
+                res.status(401).json({
                     success: false,
                     error: {
                         message: 'Incorrect Password',
