@@ -1,4 +1,4 @@
-import { useTagsData } from '../hooks/fetchTags';
+import { useClubTagsData } from '../hooks/fetchClubTags';
 import React, { useState } from 'react';
 import { TagSelectionPopup } from '../features/find-clubs/components/TagsSelectionPopup';
 import type { TagData } from '@clubhive/shared';
@@ -6,7 +6,7 @@ import { getTagColor } from '../features/find-clubs/utils/TagColors';
 import { createClubRequestSchema } from '@clubhive/shared/src/types/club-types';
 
 export function ClubRegistration() {
-    const { tags } = useTagsData();
+    const { tags } = useClubTagsData();
     const [selectedTags, setSelectedTags] = useState<TagData[]>([]);
 
     const inputClass =

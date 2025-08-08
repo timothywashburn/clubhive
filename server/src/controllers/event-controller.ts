@@ -33,6 +33,10 @@ export default class EventController {
         return await Event.find({ club: clubId }).populate('tags').exec();
     }
 
+    static async getEventById(eventId: string): Promise<EventDoc | null> {
+        return await Event.findById(eventId).populate('picture').populate('tags').exec();
+    }
+
     static async updateEvent(id: string, updates: UpdateEventRequest): Promise<EventDoc> {
         const result = await updateDocument(Event, id, updates);
         await result.populate('tags');
