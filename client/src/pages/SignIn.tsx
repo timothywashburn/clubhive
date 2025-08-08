@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { Link } from 'react-router';
+import { useNavigate } from 'react-router';
 import { useToast } from '../hooks/useToast';
 
 /**
@@ -14,6 +15,8 @@ export function SignIn() {
     const [password, setPassword] = useState('');
 
     const { errorToast } = useToast();
+
+    const navigate = useNavigate();
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
@@ -34,6 +37,11 @@ export function SignIn() {
             const result = await res.json();
             if (result.success) {
                 console.log('Logged in successfully:', result.user);
+
+                {
+                    /* redirect to home page */
+                }
+                navigate('/');
             } else {
                 console.log('Incorrect login credentials');
                 errorToast('Incorrect login credentials');
