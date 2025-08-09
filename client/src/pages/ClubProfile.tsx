@@ -123,35 +123,35 @@ export function ClubProfile() {
                 {isOpen && (
                     <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
                         <div className="bg-surface rounded-xl p-6 w-[90%] max-w-md shadow-lg relative">
-                            <p className="text-on-surface-variant">
-                                Website:
+                            <p className="text-on-surface-variant mb-2">
+                                <span>Website: </span>
                                 <a
                                     href={club.socials?.website}
                                     target="_blank"
                                     rel="noopener noreferrer"
-                                    className="text-primary underline"
+                                    className="text-primary underline ml-2"
                                 >
                                     {club.socials?.website}
                                 </a>
                             </p>
-                            <p className="text-on-surface-variant">
-                                Instagram:
+                            <p className="text-on-surface-variant mb-2">
+                                <span>Instagram: </span>
                                 <a
                                     href={club.socials?.instagram}
                                     target="_blank"
                                     rel="noopener noreferrer"
-                                    className="text-primary underline"
+                                    className="text-primary underline ml-2"
                                 >
                                     {club.socials?.instagram}
                                 </a>
                             </p>
-                            <p className="text-on-surface-variant">
-                                Discord:
+                            <p className="text-on-surface-variant mb-2">
+                                <span>Discord: </span>
                                 <a
                                     href={club.socials?.discord}
                                     target="_blank"
                                     rel="noopener noreferrer"
-                                    className="text-primary underline"
+                                    className="text-primary underline ml-2"
                                 >
                                     {club.socials?.discord}
                                 </a>
