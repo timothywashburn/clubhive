@@ -81,6 +81,7 @@ async function seed() {
         { type: 'event', text: 'Review' },
         { type: 'event', text: 'Preparation' },
         { type: 'event', text: 'Photography' },
+        { type: 'event', text: 'Free Food' },
     ]);
 
     const clubTagMap = Object.fromEntries(tags.filter(t => t.type === 'club').map(t => [t.text, t._id]));
