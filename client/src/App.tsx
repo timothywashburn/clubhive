@@ -26,7 +26,7 @@ import { useThemeStore } from './stores/themeStore.ts';
 import { useAuthStore } from './stores/authStore.ts';
 
 function AppContent() {
-    const { isAuthenticated } = useAuthStore();
+    const { checkToken, isAuthenticated } = useAuthStore();
     const [scrollY, setScrollY] = useState(0);
     const backgroundRef = useRef<HTMLDivElement>(null);
     const location = useLocation();
@@ -48,6 +48,8 @@ function AppContent() {
     }, []);
 
     if (!theme) return null;
+
+    checkToken();
 
     return (
         <div className="h-screen flex flex-col">

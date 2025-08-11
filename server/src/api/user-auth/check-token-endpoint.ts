@@ -3,13 +3,13 @@ import { ApiEndpoint, AuthType } from '@/types/api-types';
 import jwt from 'jsonwebtoken';
 
 interface RefreshResponse {
-    accessToken: string;
+    hasToken: boolean;
 }
 
-export const tokenRefreshEndpoint: ApiEndpoint<undefined, RefreshResponse> = {
-    path: '/api/user/refreshToken',
-    method: 'post', // creating new access token
-    auth: AuthType.AUTHENTICATED,
+export const checkTokenhEndpoint: ApiEndpoint<undefined, RefreshResponse> = {
+    path: '/api/user/check-token',
+    method: 'get', // creating new access token
+    auth: AuthType.NONE,
     handler: async (req, res) => {
         const refreshToken = req.cookies.refreshToken; // gets refreshToken from client side storage
 
@@ -34,10 +34,9 @@ export const tokenRefreshEndpoint: ApiEndpoint<undefined, RefreshResponse> = {
                 });
                 return;
             }
-            const accessToken = jwt.sign(authId, process.env.ACCESS_TOKEN_SECRET!, { expiresIn: '15m' });
             res.json({
                 success: true,
-                accessToken: accessToken,
+                hasToken: true,
             });
         });
     },
