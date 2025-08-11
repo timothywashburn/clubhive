@@ -10,7 +10,7 @@ export function SendNotification() {
         {
             club: 'Photography Society',
             title: 'Sign up for new event',
-            time: 'in 2 days',
+            time: '2 days ago',
         },
     ];
 
@@ -26,7 +26,7 @@ export function SendNotification() {
                     <div className="w-1/3 bg-surface rounded-lg shadow border border-outline-variant">
                         <div className="px-6 py-4 border-b border-outline-variant">
                             <div className="flex items-center justify-between">
-                                <h2 className="text-lg font-medium text-on-surface">Scheduled Announcements</h2>
+                                <h2 className="text-lg font-medium text-on-surface">Announcement History</h2>
                             </div>
                         </div>
 
