@@ -1,4 +1,4 @@
-import { DeleteImageResponse } from '@clubhive/shared';
+import { DeleteImageResponse, deleteImageRequestSchema } from '@clubhive/shared';
 import { ApiEndpoint, AuthType } from '@/types/api-types';
 import ImageController from '@/controllers/image-controller';
 import { deleteImageFromCloudinary } from '@/services/imageService';
@@ -11,7 +11,7 @@ export const deleteImageEndpoint: ApiEndpoint<undefined, DeleteImageResponse> = 
         try {
             const { imageId } = req.params;
 
-            // Find the image in database to check if the user has permission
+            // Find the image in database
             const image = await ImageController.getImageById(imageId);
 
             if (!image) {
