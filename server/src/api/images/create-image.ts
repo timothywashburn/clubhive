@@ -57,20 +57,16 @@ export const uploadImageEndpoint: ApiEndpoint<CreateImageRequest, CreateImageRes
                     image: imageSchema.parse(serializeRecursive(newImage)),
                 });
             } catch (error) {
-                console.error('Error uploading image:', error);
                 let message = 'Error uploading image';
-
                 if (error instanceof z.ZodError) {
                     message = error.issues[0].message;
-                } else if (error instanceof Error) {
-                    message = error.message;
-                } else {
-                    message = JSON.stringify(error);
                 }
-
+                console.error('Error uploading image:', error);
                 res.status(400).json({
                     success: false,
-                    error: { message },
+                    error: {
+                        message,
+                    },
                 });
             }
         });
