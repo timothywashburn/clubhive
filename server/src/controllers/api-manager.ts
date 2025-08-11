@@ -23,6 +23,7 @@ import { getUsersEndpoint } from '@/api/users/get-users';
 import { getUserEndpoint } from '@/api/users/get-user';
 import { createAccountEndpoint } from '@/api/user-auth/create-account-endpoint';
 import { loginEndpoint } from '@/api/user-auth/login-endpoint';
+import { checkTokenhEndpoint } from '@/api/user-auth/check-token-endpoint';
 import { tokenRefreshEndpoint } from '@/api/user-auth/token-refresh-endpoint';
 import { getSchoolsEndpoint } from '@/api/schools/get-schools';
 import { getSchoolEndpoint } from '@/api/schools/get-school';
@@ -68,6 +69,7 @@ export default class ApiManager {
         this.addEndpoint(createAccountEndpoint);
         this.addEndpoint(loginEndpoint);
         this.addEndpoint(tokenRefreshEndpoint);
+        this.addEndpoint(checkTokenhEndpoint);
 
         // School endpoints
         this.addEndpoint(createSchoolEndpoint);

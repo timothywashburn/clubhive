@@ -31,6 +31,7 @@ interface AuthStore {
         year: string;
     }) => Promise<void>;
     clearErrors: () => void;
+    checkToken: () => Promise<void>;
 }
 
 export const useAuthStore = create<AuthStore>((set, get) => ({
@@ -180,5 +181,25 @@ export const useAuthStore = create<AuthStore>((set, get) => ({
 
     clearErrors: () => {
         set({ errors: {} });
+    },
+
+    checkToken: async () => {
+        const response = await fetch('/api/user/check-token', {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            credentials: 'include',
+        });
+
+        const result = await response.json();
+
+        if (result.success) {
+            set({
+                isAuthenticated: true,
+                user: null,
+                errors: {},
+            });
+        }
     },
 }));
