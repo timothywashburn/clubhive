@@ -241,3 +241,7 @@ export function OfficerInfo({ club }: OfficerInfoProps) {
         </div>
     );
 }
+
+
+
+
