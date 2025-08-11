@@ -7,7 +7,7 @@ export const postAnnouncementEndpoint: ApiEndpoint<PostAnnouncementRequest, Post
     method: 'post',
     auth: AuthType.NONE,
     handler: async (req, res) => {
-        const { club, title, body, pictures } = req.body || {};
+        const { club, title, body } = req.body || {};
 
         if (!club || !title || !body) {
             res.status(400).json({
