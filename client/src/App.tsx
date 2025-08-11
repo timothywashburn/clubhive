@@ -19,6 +19,7 @@ import { SignUp } from './pages/SignUp';
 import { NotFound } from './pages/NotFound';
 import { Account } from './pages/Account.tsx';
 import { About } from './features/about/About.tsx';
+import { SendNotification } from './pages/SendNotification.tsx';
 import { AdminDashboard, AdminSchools, AdminClubs, AdminUsers } from './pages/admin';
 import { StaticHoneycomb } from './components/honeycomb';
 import { useThemeStore } from './stores/themeStore.ts';
@@ -91,6 +92,7 @@ function AppContent() {
                         <Route path="/admin/schools" element={<AdminSchools />} />
                         <Route path="/admin/clubs" element={<AdminClubs />} />
                         <Route path="/admin/users" element={<AdminUsers />} />
+                        <Route path="/send-notification" element={<SendNotification />} />
                         <Route path="*" element={<NotFound />} />
                     </Routes>
                 </div>
