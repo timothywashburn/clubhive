@@ -5,6 +5,7 @@ import { AnimatePresence, motion } from 'framer-motion';
 import { NavLink } from '../navbar/NavLink';
 import { useUnifiedIndicator } from './useUnifiedIndicator';
 import { NavigationItem, NavigationStyle, SiteNavigationConfig, TabNavigationConfig, TabType, UnifiedNavigationProps } from './types';
+import { useAuthStore } from '../../stores/authStore.ts';
 
 interface Props {
     style?: NavigationStyle;
@@ -13,6 +14,8 @@ interface Props {
 export function UnifiedNavigation(props: UnifiedNavigationProps & { style?: NavigationStyle }) {
     const [isMenuOpen, setIsMenuOpen] = useState(false);
     const location = useLocation();
+
+    const { isAuthenticated } = useAuthStore();
 
     const style = props.style || {};
     const isAboutPage = location.pathname === '/about';
@@ -24,7 +27,7 @@ export function UnifiedNavigation(props: UnifiedNavigationProps & { style?: Navi
     // Generate navigation items based on type
     const { navigationItems, activeKey, availableKeys, contextId } = useMemo(() => {
         if (props.navType === 'site') {
-            return generateSiteNavigation(props as SiteNavigationConfig, location.pathname);
+            return generateSiteNavigation(props as SiteNavigationConfig, location.pathname, isAuthenticated);
         } else {
             return generateTabNavigation(props as TabNavigationConfig);
         }
@@ -74,7 +77,7 @@ export function UnifiedNavigation(props: UnifiedNavigationProps & { style?: Navi
 }
 
 // Site navigation item generation
-function generateSiteNavigation(props: SiteNavigationConfig, currentPath: string) {
+function generateSiteNavigation(props: SiteNavigationConfig, currentPath: string, isAuthenticated: boolean) {
     const mainNavItems: NavigationItem[] = [
         { key: 'my-clubs', label: 'My Clubs', to: '/my-clubs' },
         { key: 'clubs', label: 'Find Clubs', to: '/clubs' },
@@ -87,7 +90,7 @@ function generateSiteNavigation(props: SiteNavigationConfig, currentPath: string
         { key: 'users', label: 'Users', to: '/admin/users' },
     ];
 
-    const authNavItems = props.isAuthenticated
+    const authNavItems = isAuthenticated
         ? [
               { key: 'notifications', label: 'Notifications', to: '/notifications' },
               { key: 'account', label: 'Account', to: '/account' },
@@ -104,7 +107,7 @@ function generateSiteNavigation(props: SiteNavigationConfig, currentPath: string
         navigationItems: { main: currentNavItems, auth: authNavItems, all: allNavItems },
         activeKey: currentPath,
         availableKeys: allNavItems.map(item => item.to!),
-        contextId: `site-${props.siteNavType}-${props.isAuthenticated}`,
+        contextId: `site-${props.siteNavType}-${isAuthenticated}`,
     };
 }
 
@@ -222,17 +225,6 @@ function renderSiteNavigation({
                                 )}
                             </button>
                         )}
-                        <button
-                            onClick={props.toggleAuth}
-                            className="p-2 rounded-md bg-secondary-container hover:bg-primary-container transition-colors cursor-pointer"
-                            title={props.isAuthenticated ? 'Log out' : 'Log in'}
-                        >
-                            {props.isAuthenticated ? (
-                                <User size={20} className="text-primary" />
-                            ) : (
-                                <UserX size={20} className="text-primary" />
-                            )}
-                        </button>
                         {navigationItems.auth.map((item: NavigationItem) => (
                             <NavLink
                                 key={item.key}

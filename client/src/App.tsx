@@ -4,7 +4,7 @@ import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { UnifiedNavigation } from './components/navigation';
 import { Footer } from './components/footer/Footer.tsx';
-import { useAuth } from './hooks/useAuth';
+//import { useAuth } from './hooks/useAuth';
 import { useTheme } from './hooks/useTheme';
 import { Home } from './pages/Home';
 import { MyClubs } from './features/my-clubs';
@@ -23,9 +23,10 @@ import { SendNotification } from './pages/SendNotification.tsx';
 import { AdminDashboard, AdminSchools, AdminClubs, AdminUsers } from './pages/admin';
 import { StaticHoneycomb } from './components/honeycomb';
 import { useThemeStore } from './stores/themeStore.ts';
+import { useAuthStore } from './stores/authStore.ts';
 
 function AppContent() {
-    const { isAuthenticated, toggleAuth } = useAuth();
+    const { isAuthenticated } = useAuthStore();
     const [scrollY, setScrollY] = useState(0);
     const backgroundRef = useRef<HTMLDivElement>(null);
     const location = useLocation();
@@ -68,7 +69,7 @@ function AppContent() {
                 navType="site"
                 siteNavType={siteNavType}
                 isAuthenticated={isAuthenticated}
-                toggleAuth={toggleAuth}
+                //toggleAuth={toggleAuth}
                 toggleSiteNavType={toggleSiteNavType}
                 activeRoute={location.pathname}
             />
