@@ -1,5 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { BrowserRouter, Routes, Route, useLocation } from 'react-router';
+import { ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 import { UnifiedNavigation } from './components/navigation';
 import { Footer } from './components/footer/Footer.tsx';
 import { useAuth } from './hooks/useAuth';
@@ -94,6 +96,18 @@ function AppContent() {
                 </div>
                 <Footer />
             </main>
+            <ToastContainer
+                position="bottom-right"
+                autoClose={5000}
+                hideProgressBar={false}
+                newestOnTop={false}
+                closeOnClick
+                rtl={false}
+                pauseOnFocusLoss
+                draggable
+                pauseOnHover
+                theme={theme === 'dark' ? 'dark' : 'light'}
+            />
         </div>
     );
 }

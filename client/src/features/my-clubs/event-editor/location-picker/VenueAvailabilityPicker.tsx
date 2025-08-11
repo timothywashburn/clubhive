@@ -14,6 +14,7 @@ import { VenueFilters } from './VenueFilters';
 import { WeeklyVenueView } from './WeeklyVenueView';
 import { MonthlyVenueView } from './MonthlyVenueView';
 import { VenueFilters as VenueFiltersType, ViewMode } from './types';
+import { useToast } from '../../../../hooks/useToast';
 
 // API Configuration - now uses clubhive server instead of direct EMS calls
 
@@ -32,6 +33,7 @@ export function VenueAvailabilityPicker({ event, onEventChange }: VenueAvailabil
     const [venues, setVenues] = useState<VenueAvailability[]>([]);
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState<string | null>(null);
+    const { errorToast } = useToast();
 
     const [filters, setFilters] = useState<VenueFiltersType>({
         search: '',
@@ -60,10 +62,14 @@ export function VenueAvailabilityPicker({ event, onEventChange }: VenueAvailabil
             if (isSuccess(data)) {
                 setVenues(data.rooms);
             } else {
-                setError(data.error.message || 'Failed to fetch venue availability');
+                const errorMessage = data.error.message || 'Failed to fetch venue availability';
+                setError(errorMessage);
+                errorToast(errorMessage);
             }
         } catch (err) {
-            setError('Unable to connect to venue availability service');
+            const errorMessage = 'Unable to connect to venue availability service';
+            setError(errorMessage);
+            errorToast(errorMessage);
             console.error('Error fetching venue availability:', err);
         } finally {
             setLoading(false);
@@ -84,11 +90,15 @@ export function VenueAvailabilityPicker({ event, onEventChange }: VenueAvailabil
                 const weeklyData = data.days.map(day => day.rooms);
                 setWeeklyVenues(weeklyData);
             } else {
-                setError(data.error.message || 'Failed to fetch weekly availability');
+                const errorMessage = data.error.message || 'Failed to fetch weekly availability';
+                setError(errorMessage);
+                errorToast(errorMessage);
                 return;
             }
         } catch (err) {
-            setError('Unable to connect to venue availability service');
+            const errorMessage = 'Unable to connect to venue availability service';
+            setError(errorMessage);
+            errorToast(errorMessage);
             console.error('Error fetching weekly venue availability:', err);
         } finally {
             setLoading(false);
@@ -109,11 +119,15 @@ export function VenueAvailabilityPicker({ event, onEventChange }: VenueAvailabil
                 const monthlyData = data.days.map(day => day.rooms);
                 setMonthlyVenues(monthlyData);
             } else {
-                setError(data.error.message || 'Failed to fetch monthly availability');
+                const errorMessage = data.error.message || 'Failed to fetch monthly availability';
+                setError(errorMessage);
+                errorToast(errorMessage);
                 return;
             }
         } catch (err) {
-            setError('Unable to connect to venue availability service');
+            const errorMessage = 'Unable to connect to venue availability service';
+            setError(errorMessage);
+            errorToast(errorMessage);
             console.error('Error fetching monthly venue availability:', err);
         } finally {
             setLoading(false);

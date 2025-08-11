@@ -4,6 +4,7 @@ import { TagSelectionPopup } from '../features/find-clubs/components/TagsSelecti
 import type { TagData } from '@clubhive/shared';
 import { getTagColor } from '../features/find-clubs/utils/TagColors';
 import { createClubRequestSchema } from '@clubhive/shared/src/types/club-types';
+import { useToast } from '../hooks/useToast';
 
 export function ClubRegistration() {
     const { tags } = useClubTagsData();
@@ -27,7 +28,7 @@ export function ClubRegistration() {
     const maxDescriptionLength = 1000;
     const maxTaglineLength = 50;
 
-    const [errors, setErrors] = useState<{ [key: string]: string }>({});
+    const { errorToast } = useToast();
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
@@ -52,28 +53,23 @@ export function ClubRegistration() {
         const result = createClubRequestSchema.safeParse(clubData);
 
         if (!result.success) {
-            // Flatten errors
+            // Flatten errors and show as toasts
             const zodErrors = result.error.format();
             console.log('Full Zod errors:', zodErrors);
 
-            const newErrors: { [key: string]: string } = {};
-
-            if (zodErrors.name?._errors.length) newErrors.name = zodErrors.name._errors[0];
-            if (zodErrors.school?._errors.length) newErrors.school = zodErrors.school._errors[0];
-            if (zodErrors.url?._errors.length) newErrors.url = zodErrors.url._errors[0];
-            if (zodErrors.tagline?._errors.length) newErrors.tagline = zodErrors.tagline._errors[0];
-            if (zodErrors.description?._errors.length) newErrors.description = zodErrors.description._errors[0];
+            if (zodErrors.name?._errors.length) errorToast(zodErrors.name._errors[0]);
+            if (zodErrors.school?._errors.length) errorToast(zodErrors.school._errors[0]);
+            if (zodErrors.url?._errors.length) errorToast(zodErrors.url._errors[0]);
+            if (zodErrors.tagline?._errors.length) errorToast(zodErrors.tagline._errors[0]);
+            if (zodErrors.description?._errors.length) errorToast(zodErrors.description._errors[0]);
 
             // Handle nested socials errors
-            if (zodErrors.socials?.discord?._errors.length) newErrors.discord = zodErrors.socials.discord._errors[0];
-            if (zodErrors.socials?.instagram?._errors.length) newErrors.instagram = zodErrors.socials.instagram._errors[0];
-            if (zodErrors.socials?.website?._errors.length) newErrors.website = zodErrors.socials.website._errors[0];
+            if (zodErrors.socials?.discord?._errors.length) errorToast(zodErrors.socials.discord._errors[0]);
+            if (zodErrors.socials?.instagram?._errors.length) errorToast(zodErrors.socials.instagram._errors[0]);
+            if (zodErrors.socials?.website?._errors.length) errorToast(zodErrors.socials.website._errors[0]);
 
-            setErrors(newErrors);
             return;
         }
-
-        setErrors({});
 
         try {
             const res = await fetch('/api/clubs', {
@@ -89,6 +85,7 @@ export function ClubRegistration() {
             }
         } catch (error) {
             console.error('Error registering club:', error);
+            errorToast('Failed to register club. Please try again.');
         }
     };
 
@@ -112,11 +109,10 @@ export function ClubRegistration() {
                                     <input
                                         type="text"
                                         id="club-name"
-                                        className={inputClass + ' ' + (errors.name ? 'border-error' : 'border-outline-variant')}
+                                        className={inputClass + ' border-outline-variant'}
                                         value={name}
                                         onChange={e => setName(e.target.value)}
                                     />
-                                    {errors.name && <p className="text-error text-sm mt-1">{errors.name}</p>}
                                 </div>
                                 <div>
                                     <label htmlFor="club-school" className="block text-sm font-medium text-on-background">
@@ -124,7 +120,7 @@ export function ClubRegistration() {
                                     </label>
                                     <select
                                         id="club-school"
-                                        className={inputClass + ' ' + (errors.school ? 'border-error' : 'border-outline-variant')}
+                                        className={inputClass + ' border-outline-variant'}
                                         value={school}
                                         onChange={e => setSchool(e.target.value)}
                                     >
@@ -133,7 +129,6 @@ export function ClubRegistration() {
                                         </option>
                                         <option value="UCSD">UCSD</option>
                                     </select>
-                                    {errors.school && <p className="text-error text-sm mt-1">{errors.school}</p>}
                                 </div>
                             </div>
 
@@ -148,16 +143,11 @@ export function ClubRegistration() {
                                         placeholder="your-club-profile-url"
                                         type="text"
                                         id="club-url"
-                                        className={
-                                            inputClass +
-                                            ' rounded-none rounded-r-md ' +
-                                            (errors.url ? 'border-error' : 'border-outline-variant')
-                                        }
+                                        className={inputClass + ' rounded-none rounded-r-md border-outline-variant'}
                                         value={url}
                                         onChange={e => setUrl(e.target.value)}
                                     />
                                 </div>
-                                {errors.url && <p className="text-error text-sm mt-1">{errors.url}</p>}
                             </div>
 
                             {/* Social Links */}
@@ -172,16 +162,11 @@ export function ClubRegistration() {
                                             placeholder="your-club-invite"
                                             type="text"
                                             id="club-discord"
-                                            className={
-                                                inputClass +
-                                                ' rounded-none rounded-r-md ' +
-                                                (errors.discord ? 'border-error' : 'border-outline-variant')
-                                            }
+                                            className={inputClass + ' rounded-none rounded-r-md border-outline-variant'}
                                             value={discord}
                                             onChange={e => setDiscord(e.target.value)}
                                         />
                                     </div>
-                                    {errors.discord && <p className="text-error text-sm mt-1">{errors.discord}</p>}
                                 </div>
                                 <div>
                                     <label htmlFor="club-instagram" className="block text-sm font-medium text-on-background">
@@ -193,16 +178,11 @@ export function ClubRegistration() {
                                             placeholder="your-club-account"
                                             type="text"
                                             id="club-instagram"
-                                            className={
-                                                inputClass +
-                                                ' rounded-none rounded-r-md ' +
-                                                (errors.instagram ? 'border-error' : 'border-outline-variant')
-                                            }
+                                            className={inputClass + ' rounded-none rounded-r-md border-outline-variant'}
                                             value={instagram}
                                             onChange={e => setInstagram(e.target.value)}
                                         />
                                     </div>
-                                    {errors.instagram && <p className="text-error text-sm mt-1">{errors.instagram}</p>}
                                 </div>
                                 <div>
                                     <label htmlFor="club-website" className="block text-sm font-medium text-on-background">
@@ -214,16 +194,11 @@ export function ClubRegistration() {
                                             placeholder="your-club-website"
                                             type="text"
                                             id="club-website"
-                                            className={
-                                                inputClass +
-                                                ' rounded-none rounded-r-md ' +
-                                                (errors.website ? 'border-error' : 'border-outline-variant')
-                                            }
+                                            className={inputClass + ' rounded-none rounded-r-md border-outline-variant'}
                                             value={website}
                                             onChange={e => setWebsite(e.target.value)}
                                         />
                                     </div>
-                                    {errors.website && <p className="text-error text-sm mt-1">{errors.website}</p>}
                                 </div>
                             </div>
 

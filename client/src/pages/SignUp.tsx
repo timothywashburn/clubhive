@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { Link } from 'react-router';
+import { useToast } from '../hooks/useToast';
 
 /**
  * THIS CLASS IS AI GENERATED AND TEMPORARY
@@ -21,9 +22,6 @@ export function SignUp() {
     const inputClass =
         'mt-1 block w-full rounded-md text-on-primary-container border border-outline-variant bg-surface px-3 py-2 shadow-sm ' +
         'focus:border-primary focus:ring focus:ring-primary focus:ring-opacity-50 focus:outline-none';
-
-    const [errors, setErrors] = useState<{ [key: string]: string }>({});
-    const newErrors: { [key: string]: string } = {};
 
     const [majorInput, setMajorInput] = useState('');
     const [showMajorDropdown, setShowMajorDropdown] = useState(false);
@@ -77,20 +75,41 @@ export function SignUp() {
 
     const filteredMajors = majors.filter(major => major.toLowerCase().includes(majorInput.toLowerCase()));
 
+    const { errorToast } = useToast();
+
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
 
-        if (!fullName) newErrors.fullName = 'Full name is required';
-        if (!email) newErrors.email = 'Email is required';
-        if (!password) newErrors.password = 'Password is required';
-        if (confirmPassword != password) newErrors.confirmPassword = 'Passwords do not match';
-        if (!school) newErrors.school = 'School is required';
-        if (!major) newErrors.major = 'Major is required';
-        if (!educationType) newErrors.educationType = 'Education Type is required';
-        if (!year) newErrors.year = 'Academic Year is required';
-
-        if (Object.keys(newErrors).length > 0) {
-            setErrors(newErrors);
+        if (!fullName) {
+            errorToast('Full name is required');
+            return;
+        }
+        if (!email) {
+            errorToast('Email is required');
+            return;
+        }
+        if (!password) {
+            errorToast('Password is required');
+            return;
+        }
+        if (confirmPassword != password) {
+            errorToast('Passwords do not match');
+            return;
+        }
+        if (!school) {
+            errorToast('School is required');
+            return;
+        }
+        if (!major) {
+            errorToast('Major is required');
+            return;
+        }
+        if (!educationType) {
+            errorToast('Education Type is required');
+            return;
+        }
+        if (!year) {
+            errorToast('Academic Year is required');
             return;
         }
 
@@ -118,6 +137,7 @@ export function SignUp() {
             }
         } catch (error) {
             console.error('Error creating account:', error);
+            errorToast('Failed to create account. Please try again.');
         }
     };
 
@@ -164,9 +184,8 @@ export function SignUp() {
                                     required
                                     value={fullName}
                                     onChange={e => setFullName(e.target.value)}
-                                    className={inputClass + ' ' + (errors.fullName ? 'border-red-500' : '')}
+                                    className={inputClass}
                                 />
-                                {errors.fullName && <p className="text-red-500 text-sm mt-1">{errors.fullName}</p>}
                             </div>
 
                             <div>
@@ -180,9 +199,8 @@ export function SignUp() {
                                     required
                                     value={email}
                                     onChange={e => setEmail(e.target.value)}
-                                    className={inputClass + ' ' + (errors.email ? 'border-red-500' : '')}
+                                    className={inputClass}
                                 />
-                                {errors.email && <p className="text-red-500 text-sm mt-1">{errors.email}</p>}
                             </div>
 
                             <div>
@@ -198,7 +216,6 @@ export function SignUp() {
                                     onChange={e => setPassword(e.target.value)}
                                     className="mt-1 block w-full px-3 py-2 border border-outline-variant rounded-md shadow-sm bg-surface text-on-surface placeholder-on-surface-variant focus:outline-none focus:ring-primary focus:border-primary"
                                 />
-                                {errors.password && <p className="text-red-500 text-sm mt-1">{errors.password}</p>}
                             </div>
 
                             <div>
@@ -214,7 +231,6 @@ export function SignUp() {
                                     onChange={e => setConfirmPassword(e.target.value)}
                                     className="mt-1 block w-full px-3 py-2 border border-outline-variant rounded-md shadow-sm bg-surface text-on-surface placeholder-on-surface-variant focus:outline-none focus:ring-primary focus:border-primary"
                                 />
-                                {errors.confirmPassword && <p className="text-red-500 text-sm mt-1">{newErrors.confirmPassword}</p>}
                             </div>
 
                             <div>
@@ -233,7 +249,6 @@ export function SignUp() {
                                     </option>
                                     <option value="507f1f77bcf86cd799439021">UCSD</option> {/* ucsd school id */}
                                 </select>
-                                {errors.school && <p className="text-red-500 text-sm mt-1">{errors.school}</p>}
                             </div>
 
                             <div className="relative">
@@ -288,7 +303,6 @@ export function SignUp() {
                                     <option value="Undergraduate">Undergraduate</option>
                                     <option value="Graduate">Graduate</option>
                                 </select>
-                                {errors.educationType && <p className="text-red-500 text-sm mt-1">{errors.educationType}</p>}
                             </div>
                         </div>
 
@@ -313,7 +327,6 @@ export function SignUp() {
                                         {getYearLabel(yearOption)}
                                     </button>
                                 ))}
-                                {errors.year && <p className="text-red-500 text-sm mt-1">{errors.year}</p>}
                             </div>
                         </div>
 

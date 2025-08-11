@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router';
 import { getTagColor } from '../features/find-clubs/utils/TagColors';
+import { useToast } from '../hooks/useToast';
 
 /**
  * This class is a static view of what the Club Profile page
@@ -9,7 +10,7 @@ import { getTagColor } from '../features/find-clubs/utils/TagColors';
 export function ClubProfile() {
     const { url } = useParams<{ url: string }>();
     const [club, setClub] = useState(null);
-    const [error, setError] = useState('');
+    const { errorToast } = useToast();
 
     const events = [
         //TODO: replace with real data!
@@ -41,14 +42,13 @@ export function ClubProfile() {
                 if (data.success) {
                     setClub(data.club);
                 } else {
-                    setError(data.error?.message || 'Unknown error');
-                    //for troubleshooting:
-                    console.error('Failed to load club:', data.error?.message);
+                    const errorMessage = data.error?.message || 'Unknown error';
+                    errorToast(`Failed to load club: ${errorMessage}`);
+                    console.error('Failed to load club:', errorMessage);
                 }
             })
             .catch(err => {
-                setError(err.message);
-                //for troubleshooting
+                errorToast(`Failed to load club: ${err.message}`);
                 console.error('Network error:', err);
             })
 
