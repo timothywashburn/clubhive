@@ -1,6 +1,7 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Link } from 'react-router';
 import { useNavigate } from 'react-router';
+import { useAuthStore } from '../stores/authStore';
 import { useToast } from '../hooks/useToast';
 
 /**
@@ -25,6 +26,18 @@ export function SignUp() {
     const inputClass =
         'mt-1 block w-full rounded-md text-on-primary-container border border-outline-variant bg-surface px-3 py-2 shadow-sm ' +
         'focus:border-primary focus:ring focus:ring-primary focus:ring-opacity-50 focus:outline-none';
+
+    const { isAuthenticated, errors, createAccount, clearErrors } = useAuthStore();
+
+    useEffect(() => {
+        if (isAuthenticated) {
+            navigate('/');
+        }
+    }, [isAuthenticated, navigate]);
+
+    useEffect(() => {
+        clearErrors();
+    }, [clearErrors]);
 
     const [majorInput, setMajorInput] = useState('');
     const [showMajorDropdown, setShowMajorDropdown] = useState(false);
@@ -83,40 +96,13 @@ export function SignUp() {
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
 
-        if (!fullName) {
-            errorToast('Full name is required');
-            return;
-        }
-        if (!email) {
-            errorToast('Email is required');
-            return;
-        }
-        if (!password) {
-            errorToast('Password is required');
-            return;
-        }
         if (confirmPassword !== password) {
-            errorToast('Passwords do not match');
-            return;
-        }
-        if (!school) {
-            errorToast('School is required');
-            return;
-        }
-        if (!major) {
-            errorToast('Major is required');
-            return;
-        }
-        if (!educationType) {
-            errorToast('Education Type is required');
-            return;
-        }
-        if (!year) {
-            errorToast('Academic Year is required');
+            clearErrors();
+            useAuthStore.setState({ errors: { confirmPassword: 'Passwords do not match' } });
             return;
         }
 
-        const userData = {
+        await createAccount({
             name: fullName,
             email: email,
             password: password,
@@ -124,61 +110,7 @@ export function SignUp() {
             major: major,
             educationType: educationType,
             year: year,
-        };
-        {
-            /* creating account */
-        }
-        try {
-            const res = await fetch('/api/user/create-account', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify(userData),
-            });
-            const result = await res.json();
-            if (result.success) {
-                console.log('Account created successfully:', result.user);
-
-                try {
-                    const res = await fetch('/api/user/login', {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json',
-                        },
-                        body: JSON.stringify({ email: email, password: password }),
-                    });
-                    const result = await res.json();
-                    if (result.success) {
-                        console.log('Logged in successfully:', result.user);
-                        {
-                            /* redirect to home page */
-                        }
-                        navigate('/');
-
-                        {
-                            /* switch navbar */
-                        }
-                    }
-                } catch (error) {
-                    console.error('Error logging after creating account:', error);
-                    setErrors(error.message);
-                }
-            } else {
-                if (res.status === 409) {
-                    newErrors.submit = 'Email is already registered';
-                    setErrors(newErrors);
-                    return;
-                }
-            }
-        } catch (error) {
-            console.error('Error creating account:', error);
-            return;
-        }
-
-        {
-            /* logging in */
-        }
+        });
     };
 
     const getYearLabel = (year: string) => {
@@ -370,8 +302,9 @@ export function SignUp() {
                         <div>
                             <button
                                 type="submit"
-                                className="group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-on-primary bg-primary hover:bg-primary/90 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary"
+                                className="group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-on-primary bg-primary hover:bg-primary/90 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary disabled:opacity-50 disabled:cursor-not-allowed"
                             >
+                                {' '}
                                 Create Account
                             </button>
                             {errors.submit && <p className="text-red-500 text-sm mt-1">{errors.submit}</p>}
