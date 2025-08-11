@@ -20,11 +20,6 @@ const schema = new Schema(
             ref: 'Club',
             required: true,
         },
-        type: {
-            type: String,
-            enum: ['profile', 'gallery'],
-            required: true,
-        },
     },
     { timestamps: true }
 );
@@ -32,5 +27,5 @@ const schema = new Schema(
 export type ImageSchema = InferSchemaType<typeof schema>;
 export type ImageDoc = HydratedDocument<ImageSchema>;
 
-const CloudinaryImage = mongoose.model('CloudinaryImage', schema);
-export default CloudinaryImage;
+const Image = mongoose.model('Image', schema);
+export default Image;

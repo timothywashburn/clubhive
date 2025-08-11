@@ -3,7 +3,7 @@ import ImageController from '@/controllers/image-controller';
 import { ApiEndpoint, AuthType } from '@/types/api-types';
 import { serializeRecursive } from '@/utils/db-doc-utils';
 
-export const getImageEndpoint: ApiEndpoint<undefined, GetImageResponse> = {
+export const getImagesEndpoint: ApiEndpoint<undefined, GetImageResponse> = {
     path: 'api/images/:id',
     method: 'get',
     auth: AuthType.NONE,
