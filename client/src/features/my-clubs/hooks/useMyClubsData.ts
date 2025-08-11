@@ -1,11 +1,13 @@
 import { ApiResponseBody, GetMyClubsResponse, isSuccess, UserClubData } from '@clubhive/shared';
 import { useState, useEffect } from 'react';
 import { MembershipData } from '../types';
+import { useToast } from '../../../hooks/useToast';
 
 export const useMyClubsData = () => {
     const [clubs, setClubs] = useState<UserClubData[]>([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
+    const { errorToast } = useToast();
 
     useEffect(() => {
         const fetchClubs = async () => {
@@ -23,7 +25,9 @@ export const useMyClubsData = () => {
                     throw new Error(data.error?.message || 'Failed to fetch clubs');
                 }
             } catch (err) {
-                setError(err instanceof Error ? err.message : 'Unknown error');
+                const errorMessage = err instanceof Error ? err.message : 'Unknown error';
+                setError(errorMessage);
+                errorToast(`Failed to fetch my clubs: ${errorMessage}`);
             } finally {
                 setLoading(false);
             }

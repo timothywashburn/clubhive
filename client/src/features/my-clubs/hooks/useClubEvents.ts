@@ -1,10 +1,12 @@
 import { useState, useEffect } from 'react';
 import { ApiErrorResponse, ApiResponseBody, EventData, GetEventsResponse, isSuccess } from '@clubhive/shared';
+import { useToast } from '../../../hooks/useToast';
 
 export const useClubEvents = (clubId: string | null) => {
     const [events, setEvents] = useState<EventData[]>([]);
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState<string | null>(null);
+    const { errorToast } = useToast();
 
     const fetchEvents = async () => {
         if (!clubId) {
@@ -32,7 +34,9 @@ export const useClubEvents = (clubId: string | null) => {
                 throw new Error(data.error?.message || 'Failed to fetch events');
             }
         } catch (err) {
-            setError(err instanceof Error ? err.message : 'Unknown error');
+            const errorMessage = err instanceof Error ? err.message : 'Unknown error';
+            setError(errorMessage);
+            errorToast(`Failed to fetch events: ${errorMessage}`);
         } finally {
             setLoading(false);
         }

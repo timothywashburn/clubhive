@@ -1,5 +1,6 @@
 import { useEffect, useState, useCallback } from 'react';
 import { UserWithCountsData } from '@clubhive/shared';
+import { useToast } from './useToast';
 
 const getAuthHeaders = () => ({
     Authorization: 'Bearer temp',
@@ -11,6 +12,7 @@ export const useUserData = () => {
     const [isLoading, setIsLoading] = useState(true);
     const [isRefreshing, setIsRefreshing] = useState(false);
     const [error, setError] = useState<string | null>(null);
+    const { errorToast } = useToast();
 
     const fetchUsers = useCallback(async (isRefresh = false) => {
         if (isRefresh) {
@@ -29,10 +31,14 @@ export const useUserData = () => {
             if (data.success) {
                 setUsers(data.users);
             } else {
-                setError(data.error?.message || 'Unknown error');
+                const errorMessage = data.error?.message || 'Unknown error';
+                setError(errorMessage);
+                errorToast(`Failed to load users: ${errorMessage}`);
             }
         } catch (err) {
-            setError(err instanceof Error ? err.message : 'Unknown error');
+            const errorMessage = err instanceof Error ? err.message : 'Unknown error';
+            setError(errorMessage);
+            errorToast(`Failed to load users: ${errorMessage}`);
         } finally {
             setIsLoading(false);
             setIsRefreshing(false);

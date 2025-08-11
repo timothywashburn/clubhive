@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { Link } from 'react-router';
+import { useToast } from '../hooks/useToast';
 
 /**
  * THIS CLASS IS AI GENERATED AND TEMPORARY
@@ -12,8 +13,7 @@ export function SignIn() {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
 
-    const [errors, setErrors] = useState<{ [key: string]: string }>({});
-    const newErrors: { [key: string]: string } = {};
+    const { errorToast } = useToast();
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
@@ -36,9 +36,11 @@ export function SignIn() {
                 console.log('Logged in successfully:', result.user);
             } else {
                 console.log('Incorrect login credentials');
+                errorToast('Incorrect login credentials');
             }
         } catch (error) {
             console.error('Error logging in:', error);
+            errorToast('Failed to sign in. Please try again.');
         }
     };
 
