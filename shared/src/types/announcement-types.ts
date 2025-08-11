@@ -24,6 +24,20 @@ export const notifDisplaySchema = z.object({
     userNotifId: z.string(),
 });
 
+export const postAnnouncementRequestSchema = z.object({
+    club: z.string(),
+    title: z.string(),
+    body: z.string(),
+    pictures: z.array(z.string()),
+});
+
+export const postAnnouncementResponseSchema = z.object({
+    success: z.boolean(),
+});
+
 export type AnnouncementData = z.infer<typeof announcementSchema>;
+
+export type PostAnnouncementRequest = z.infer<typeof postAnnouncementRequestSchema>;
+export type PostAnnouncementResponse = z.infer<typeof postAnnouncementResponseSchema>;
 
 export type NotifDisplayData = z.infer<typeof notifDisplaySchema>;
