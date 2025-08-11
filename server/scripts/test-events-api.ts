@@ -26,6 +26,7 @@ async function testEventsAPI() {
                 club: '507f1f77bcf86cd799439022',
                 name: 'Test Event',
                 description: 'This is a test event',
+                requirements: 'None',
                 type: EventType.ANYONE,
                 location: 'Test Location',
                 date: '2025-08-01',
