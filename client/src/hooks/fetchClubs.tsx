@@ -2,9 +2,11 @@ import { useEffect, useState, useCallback } from 'react';
 import { ClubWithCountsData } from '@clubhive/shared';
 import { useToast } from './useToast';
 
-const getAuthHeaders = () => ({
-    Authorization: 'Bearer temp',
-    'Content-Type': 'application/json',
+const getRequestOptions = () => ({
+    credentials: 'include' as RequestCredentials,
+    headers: {
+        'Content-Type': 'application/json',
+    },
 });
 
 export const useClubData = () => {
@@ -23,9 +25,7 @@ export const useClubData = () => {
         setError(null);
 
         try {
-            const response = await fetch('/api/clubs', {
-                headers: getAuthHeaders(),
-            });
+            const response = await fetch('/api/clubs', getRequestOptions());
             const data = await response.json();
 
             if (data.success) {

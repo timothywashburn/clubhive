@@ -17,7 +17,7 @@ export interface SiteNavigationConfig {
     navType: 'site';
     siteNavType: SiteNavType;
     isAuthenticated: boolean;
-    toggleAuth: () => void;
+    //toggleAuth: () => void;
     toggleSiteNavType?: () => void;
     activeRoute: string;
 }

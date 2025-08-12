@@ -56,7 +56,9 @@ export function VenueAvailabilityPicker({ event, onEventChange }: VenueAvailabil
         setError(null);
 
         try {
-            const response = await fetch(`/api/venues/availability/daily?date=${date}`);
+            const response = await fetch(`/api/venues/availability/daily?date=${date}`, {
+                credentials: 'include',
+            });
             const data: ApiResponseBody<GetDailyVenueAvailabilityResponse> = await response.json();
 
             if (isSuccess(data)) {
@@ -83,7 +85,9 @@ export function VenueAvailabilityPicker({ event, onEventChange }: VenueAvailabil
 
         try {
             const startDateStr = startDate.toISOString().split('T')[0];
-            const response = await fetch(`/api/venues/availability/weekly?date=${startDateStr}`);
+            const response = await fetch(`/api/venues/availability/weekly?date=${startDateStr}`, {
+                credentials: 'include',
+            });
 
             const data: ApiResponseBody<GetWeeklyVenueAvailabilityResponse> = await response.json();
             if (isSuccess(data)) {
@@ -112,7 +116,9 @@ export function VenueAvailabilityPicker({ event, onEventChange }: VenueAvailabil
 
         try {
             const monthDateStr = monthDate.toISOString().split('T')[0];
-            const response = await fetch(`/api/venues/availability/monthly?date=${monthDateStr}`);
+            const response = await fetch(`/api/venues/availability/monthly?date=${monthDateStr}`, {
+                credentials: 'include',
+            });
 
             const data: ApiResponseBody<GetMonthlyVenueAvailabilityResponse> = await response.json();
             if (isSuccess(data)) {
