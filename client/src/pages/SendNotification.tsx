@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { useState } from 'react';
 
 export function SendNotification() {
@@ -21,6 +21,33 @@ export function SendNotification() {
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [errorMsg, setErrorMsg] = useState<string | null>(null);
     const [successMsg, setSuccessMsg] = useState<string | null>(null);
+
+    const [myOfficerClubs, setMyOfficerClubs] = useState([]);
+    const [loadingClubs, setLoadingClubs] = useState(false);
+
+    useEffect(() => {
+        const loadClubs = async () => {
+            setLoadingClubs(true);
+            try {
+                const res = await fetch('/api/me/clubs');
+                const payload = await res.json();
+
+                if (!res.ok || payload?.success === false) {
+                    throw new Error(payload?.error?.message || 'Failed to load clubs');
+                }
+
+                // get officers/exec/owner
+                const eligible = (payload.clubs || []).filter(c => c.userRole !== 'member');
+                setMyOfficerClubs(eligible);
+            } catch (e) {
+                setErrorMsg(e.message || 'Failed to load clubs');
+            } finally {
+                setLoadingClubs(false);
+            }
+        };
+
+        loadClubs();
+    }, []);
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
@@ -134,9 +161,18 @@ export function SendNotification() {
                                         onChange={e => setClub(e.target.value)}
                                         className="w-full rounded-md border border-outline-variant bg-surface p-2 text-on-surface"
                                     >
-                                        <option value="">Select a club</option>
-                                        <option value="507f1f77bcf86cd799439022">Computer Science Club</option>
-                                        <option value="688c596bca3e5de39cdeb6f9">Women in Computing</option>
+                                        <option value="">
+                                            {' '}
+                                            {loadingClubs ? 'Loading…' : myOfficerClubs.length ? 'Select a club' : 'No eligible clubs'}{' '}
+                                        </option>
+
+                                        {myOfficerClubs.map((c, i) => {
+                                            return (
+                                                <option key={c._id} value={c._id}>
+                                                    {c.name}
+                                                </option>
+                                            );
+                                        })}
                                     </select>
                                 </div>
 
