@@ -116,7 +116,7 @@ export function OfficerInfo({ club }: OfficerInfoProps) {
                         <label className="block text-sm font-medium mb-1">Membership Requirements</label>
                         <input type="text" className="w-full p-2 border rounded" placeholder="None" />
                     </div>
-                    {!club.clubLogo && (
+                    {/* {!club.clubLogo && (
                         <div>
                             <label className="block text-sm font-medium mb-1">Club Logo</label>
                             <input
@@ -135,7 +135,7 @@ export function OfficerInfo({ club }: OfficerInfoProps) {
                                 defaultValue={club.pictures}
                             />
                         </div>
-                    )}
+                    )} */}
                 </div>
             </div>
             <div className="flex gap-4 mt-6">
