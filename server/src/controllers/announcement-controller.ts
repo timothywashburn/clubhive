@@ -26,7 +26,7 @@ export const createAnnouncement = async (req: Request, res: Response) => {
             membership =>
                 new UserNotification({
                     user: membership.user,
-                    notificationId: result._id,
+                    notification: result._id,
                     read: false,
                 })
         );
