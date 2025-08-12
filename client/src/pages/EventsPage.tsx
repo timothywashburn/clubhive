@@ -18,7 +18,7 @@ export function EventsPage() {
     const [selectedTags, setSelectedTags] = useState<TagData[]>([]);
 
     const copyToClipboard = async () => {
-        const url = `${window.location.origin}/events/${event._id}`;
+        const url = `${window.location.origin}/events/${event.event._id}`;
         try {
             await navigator.clipboard.writeText(url);
             alert('Link copied to clipboard!');
@@ -28,7 +28,7 @@ export function EventsPage() {
     };
 
     const tagObj = event?.tagIds //necessary?? idk
-        ? tags.filter(tag => event.tagIds.includes(tag._id))
+        ? tags.filter(tag => event.event.tagIds.includes(tag._id))
         : [];
 
     useEffect(() => {
@@ -70,16 +70,15 @@ export function EventsPage() {
                     <div className="flex justify-between items-center">
                         {/* event title */}
                         <h1 className="text-4xl font-bold text-on-surface mb-4">
-                            {event.name}
-                            {event.club && (
+                            {event.event.name}
+                            {event.event.club && (
                                 <>
                                     {' - '}
                                     <Link
                                         to={`/club-profile/${event.club.url}`}
                                         className="text-on-surface text-secondary hover:text-primary transition-colors hover:underline"
                                     >
-                                        {/* event.club.name */}
-                                        club name
+                                        {event.club.name}
                                     </Link>
                                 </>
                             )}
@@ -88,8 +87,8 @@ export function EventsPage() {
 
                     {/* flyer/thumbnail placeholder */}
                     <div className="w-full h-64 bg-outline-variant rounded-md flex items-center justify-center text-on-surface-variant mb-8">
-                        {event.flyerUrl ? (
-                            <img src={event.flyerUrl} alt="Event Flyer" className="h-full object-contain" />
+                        {event.event.flyerUrl ? (
+                            <img src={event.event.flyerUrl} alt="Event Flyer" className="h-full object-contain" />
                         ) : (
                             'Event flyer/thumbnail'
                         )}
@@ -97,7 +96,7 @@ export function EventsPage() {
 
                     {/* tags */}
                     <div className="text-sm text-on-surface-variant flex flex-wrap gap-2 mt-2 mb-4">
-                        {event.tags
+                        {event.event.tags
                             ?.filter(tag => tag !== null && typeof tag === 'object')
                             .map(tag => (
                                 <span key={tag._id} className={`rounded-full px-3 py-1 text-xs font-semibold ${getTagColor(tag._id)}`}>
@@ -110,12 +109,14 @@ export function EventsPage() {
                     <div className="flex flex-wrap gap-4 items-center justify-between mb-4 mt-8">
                         <div className="flex gap-4 flex-wrap">
                             <span className="bg-surface-variant text-on-surface-variant px-3 py-1 rounded-md text-sm">
-                                📅 {new Date(event.date).toLocaleDateString()} - {event.startTime}
+                                📅 {new Date(event.event.date).toLocaleDateString()} - {event.event.startTime}
                             </span>
                             <span className="bg-surface-variant text-on-surface-variant px-3 py-1 rounded-md text-sm">
-                                📍 {event.location}
+                                📍 {event.event.location}
                             </span>
-                            <span className="bg-surface-variant text-on-surface-variant px-3 py-1 rounded-md text-sm">🎉 {event.type}</span>
+                            <span className="bg-surface-variant text-on-surface-variant px-3 py-1 rounded-md text-sm">
+                                🎉 {event.event.type}
+                            </span>
                         </div>
 
                         {/* share, save buttons */}
@@ -191,7 +192,7 @@ export function EventsPage() {
                     {/* about event description box */}
                     <div className="bg-surface-variant p-4 rounded-md">
                         <h3 className="font-medium text-on-secondary-container mb-2">About Event:</h3>
-                        <p className="text-on-surface-variant text-sm">{event.description}</p>
+                        <p className="text-on-surface-variant text-sm">{event.event.description}</p>
                     </div>
                 </div>
             </div>

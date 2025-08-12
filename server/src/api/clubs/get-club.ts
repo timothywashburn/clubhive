@@ -1,7 +1,9 @@
 import { GetClubResponse, clubSchema } from '@clubhive/shared';
 import { ApiEndpoint, AuthType } from '@/types/api-types';
 import Club from '@/models/club-schema';
+import Event from '@/models/event-schema';
 import { serializeRecursive } from '@/utils/db-doc-utils';
+import { clubWithEventsAndCountsSchema } from '@clubhive/shared/src/types';
 
 export const getClubEndpoint: ApiEndpoint<undefined, GetClubResponse> = {
     path: '/api/clubs/:id',
@@ -23,9 +25,23 @@ export const getClubEndpoint: ApiEndpoint<undefined, GetClubResponse> = {
                 return;
             }
 
+            //fetch upcoming events
+            const now = new Date();
+            const events = await Event.find({
+                club: id,
+                startTime: { $gte: now }, //only upcoming events
+            })
+                .populate('tags')
+                .sort({ startTime: 1 })
+                .limit(20) //limit amount of events to send at once
+                .exec();
+
             res.json({
                 success: true,
-                club: clubSchema.parse(serializeRecursive(club)),
+                club: clubWithEventsAndCountsSchema.parse({
+                    ...serializeRecursive(club),
+                    events: serializeRecursive(events) ?? [],
+                }),
             });
         } catch (error) {
             console.error('Error fetching club:', error);
