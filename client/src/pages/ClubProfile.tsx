@@ -1,5 +1,8 @@
 import { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router';
+import { clubSchema, ErrorCode } from '@clubhive/shared';
+import Popup from '../features/club-profile/Popup';
+import { handleRegistration } from '../../../server/src/services/joinClubService';
 
 /**
  * This class is a static view of what the Club Profile page
@@ -9,6 +12,7 @@ export function ClubProfile() {
     const { url } = useParams<{ url: string }>();
     const [club, setClub] = useState(null);
     const [error, setError] = useState('');
+    const [isPopupOpen, setIsPopupOpen] = useState(false);
 
     const events = [
         //TODO: replace with real data!
@@ -57,6 +61,31 @@ export function ClubProfile() {
     if (loading) return <div className="text-yellow-600 p-4">Loading club...</div>;
     if (!club) return <div className="text-red 500 p-4">Club not found.</div>;
 
+    // Membership Regsitration
+
+    const openPopup = () => setIsPopupOpen(true);
+    const closePopup = () => setIsPopupOpen(false);
+
+    const handleConfirmRegistration = async () => {
+        try {
+            // if (!club?._id) {
+            //     alert('Club ID is missing.');
+            //     return;
+            // }
+            const response = await handleRegistration('507f1f77bcf86cd799439023');
+            if (response.success) {
+                alert('Successfully registered for the club!');
+            } else {
+                alert('Registration failed: ' + response.error?.message || 'Unknown error');
+            }
+        } catch (error) {
+            alert('Something went wrong during registration.');
+            console.error('Registration error:', error);
+        } finally {
+            closePopup();
+        }
+    };
+
     return (
         <div className="h-full relative">
             <div className="max-w-5xl mx-auto p-6">
@@ -71,7 +100,23 @@ export function ClubProfile() {
 
                 {/* Join Club button*/}
                 <div className="flex justify-end mb-5">
-                    <button className="bg-primary text-on-primary px-4 py-2 rounded-full hover:bg-primary/90 font-medium">Join Club</button>
+                    <button
+                        onClick={openPopup}
+                        className="bg-primary text-on-primary px-4 py-2 rounded-full hover:bg-primary/90 font-medium"
+                    >
+                        Join Club
+                    </button>
+                    <Popup isPopupOpen={isPopupOpen} onClose={closePopup}>
+                        <h2 className="ml-24 text-xl font-bold mb-4">Almost there!</h2>
+                        <button
+                            type="button"
+                            onClick={handleConfirmRegistration}
+                            // onClick={closePopup}
+                            className="ml-19 px-4 py-2 bg-primary text-white rounded hover:bg-green-600"
+                        >
+                            Confirm registration
+                        </button>
+                    </Popup>
                 </div>
 
                 {/* Club Profile header*/}
