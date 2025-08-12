@@ -9,6 +9,7 @@ const schema = new Schema(
         _id: {
             type: mongoose.Schema.Types.ObjectId,
             required: true,
+            auto: true,
         },
         uploadedBy: {
             type: mongoose.Schema.Types.ObjectId,
