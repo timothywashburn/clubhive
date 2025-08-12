@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { useNavigate, useParams } from 'react-router';
+import { useNavigate, useParams, Link } from 'react-router';
 import { getTagColor } from '../features/find-clubs/utils/TagColors';
 import { useToast } from '../hooks/useToast';
 import { clubWithEventsAndCountsSchema } from '@clubhive/shared';
@@ -13,7 +13,6 @@ export function ClubProfile() {
     const { url } = useParams<{ url: string }>();
     const [club, setClub] = useState<ClubWithEventsData | null>(null);
     const { errorToast } = useToast();
-
 
     const navigate = useNavigate();
     const [isOpen, setIsOpen] = useState(false);
@@ -30,6 +29,7 @@ export function ClubProfile() {
                 if (data.success) {
                     const parsed = clubWithEventsAndCountsSchema.parse(data.club);
                     setClub(parsed);
+                    console.log('Upcoming events response:', data);
                 } else {
                     const errorMessage = data.error?.message || 'Unknown error';
                     errorToast(`Failed to load club: ${errorMessage}`);
@@ -177,9 +177,13 @@ export function ClubProfile() {
                         <div className="flex space-x-4">
                             {club.events.map(event => (
                                 <div key={event._id} className="min-w-[300px] p-4 border rounded-lg shadow-sm bg-surface">
-                                    <h3 className="font-semibold text-on-surface">{event.name}</h3>
+                                    <h3 className="font-semibold text-on-surface">
+                                        <Link to={`/events/${event._id}`} className="text-primary hover:underline">
+                                            {event.name}
+                                        </Link>
+                                    </h3>
                                     <p className="text-sm text-on-surface-variant">
-                                        {new Date(event.startTime || event.date).toLocaleString()}
+                                        📅 {event.date} ⏰ {event.startTime}
                                     </p>
                                     <p className="mt-2 text-on-surface-variant">{event.description}</p>
                                 </div>
