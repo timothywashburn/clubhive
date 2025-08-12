@@ -3,12 +3,16 @@ import Club from '../src/models/club-schema';
 import School from '../src/models/school-schema';
 import Tag from '../src/models/tag-schema';
 import User, { EducationType, Year } from '../src/models/user-schema';
+import Auth from '../src/models/auth-schema';
 import ClubMembership from '../src/models/club-membership-schema';
 import Event from '../src/models/event-schema';
 import Announcement from '../src/models/announcement-schema';
 import UserNotification from '../src/models/user-notification-schema';
 import { ClubhiveConfigModel } from '../src/models/clubhive-config-schema';
 import { EventType, ClubRole } from '@clubhive/shared';
+// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+// @ts-expect-error
+import bcrypt from 'bcrypt';
 
 const TEST_USER_ID = new mongoose.Types.ObjectId('507f1f77bcf86cd799439020');
 const UCSD_SCHOOL_ID = new mongoose.Types.ObjectId('507f1f77bcf86cd799439021');
@@ -21,6 +25,7 @@ async function seed() {
     await Tag.deleteMany({});
     await Club.deleteMany({});
     await User.deleteMany({});
+    await Auth.deleteMany({});
     await ClubMembership.deleteMany({});
     await Event.deleteMany({});
     await ClubhiveConfigModel.deleteMany({});
@@ -96,6 +101,16 @@ async function seed() {
             major: 'Data Science',
             educationType: EducationType.GRADUATE,
             year: Year.FIRST,
+        },
+    ]);
+
+    const hashedPassword = await bcrypt.hash('test', 10);
+    await Auth.insertMany([
+        {
+            email: 'test@test.com',
+            password: hashedPassword,
+            emailVerified: true,
+            userId: testUser._id,
         },
     ]);
 
