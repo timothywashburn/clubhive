@@ -9,7 +9,9 @@ export const useNotifs = (userId: string) => {
     const { errorToast } = useToast();
 
     useEffect(() => {
-        fetch(`/api/notifications/${userId}`)
+        fetch(`/api/notifications/${userId}`, {
+            credentials: 'include',
+        })
             .then(res => res.json())
             .then(data => {
                 if (data.success) {

@@ -1,8 +1,8 @@
 import { ErrorCode } from '@clubhive/shared';
 import { ApiEndpoint, AuthType } from '@/types/api-types';
 import bcrypt from 'bcrypt';
-import jwt from 'jsonwebtoken';
 import Auth from '@/models/auth-schema';
+import AuthManager from '@/managers/auth-manager';
 import dotenv from 'dotenv';
 
 dotenv.config();
@@ -37,16 +37,9 @@ export const loginEndpoint: ApiEndpoint<LoginRequest, LoginResponse> = {
         }
         try {
             if (await bcrypt.compare(password, auth.password)) {
-                const accessToken = jwt.sign({ authId: auth._id }, process.env.ACCESS_TOKEN_SECRET!, { expiresIn: '1d' });
-                const refreshToken = jwt.sign({ authId: auth._id }, process.env.REFRESH_TOKEN_SECRET!, { expiresIn: '7d' });
-                // Store refresh token in HTTP-only cookie
-                res.cookie('refreshToken', refreshToken, {
-                    httpOnly: true, // Prevents XSS attacks
-                    secure: process.env.NODE_ENV === 'development', // HTTPS only in dev; change to production
-                    sameSite: 'strict', // CSRF protection
-                    maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days
-                    path: '/',
-                });
+                const { accessToken, refreshToken } = AuthManager.generateTokenPair(auth._id.toString(), auth.userId.toString());
+
+                AuthManager.setRefreshTokenCookie(res, refreshToken);
 
                 res.json({
                     success: true,
