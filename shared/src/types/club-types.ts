@@ -2,6 +2,7 @@ import { z } from 'zod';
 import { ClubRole } from './club-membership-types.js';
 import { schoolSchema } from './school-types.js';
 import { tagSchema } from './tag-types.js';
+import { eventSchema } from './event-types.js';
 
 export const clubSchema = z.object({
     _id: z.string(),
@@ -25,6 +26,12 @@ export const clubSchema = z.object({
 export const clubWithCountsSchema = clubSchema.extend({
     memberCount: z.number(),
     eventCount: z.number(),
+});
+
+export const clubWithEventsAndCountsSchema = clubSchema.extend({
+    events: z.array(eventSchema).default([]),
+    memberCount: z.number().default(0),
+    eventCount: z.number().default(0),
 });
 
 export const createClubRequestSchema = z.object({
@@ -85,6 +92,7 @@ export const userClubSchema = clubSchema.extend({
 
 export type ClubData = z.infer<typeof clubSchema>;
 export type ClubWithCountsData = z.infer<typeof clubWithCountsSchema>;
+export type ClubWithEventsData = z.infer<typeof clubWithEventsAndCountsSchema>;
 export type UserClubData = z.infer<typeof userClubSchema>;
 export type CreateClubRequest = z.infer<typeof createClubRequestSchema>;
 export type UpdateClubRequest = z.infer<typeof updateClubRequestSchema>;
@@ -102,7 +110,7 @@ export interface GetMyClubsResponse {
 }
 
 export interface GetClubResponse {
-    club: ClubData;
+    club: ClubWithEventsData;
 }
 
 export interface UpdateClubResponse {
