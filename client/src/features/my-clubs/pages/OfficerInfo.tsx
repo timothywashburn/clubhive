@@ -100,96 +100,46 @@ export function OfficerInfo({ club }: OfficerInfoProps) {
             <div className="grid grid-cols-2 gap-6">
                 <div className="bg-white p-4 rounded shadow space-y-4">
                     <h2 className="text-lg font-bold">Edit / Delete</h2>
+        <div className="min-h-screen bg-gray-100 p-6">
+            <div className="grid grid-cols-2 gap-6">
+                <div className="bg-white p-4 rounded shadow space-y-4">
+                    <h2 className="text-lg font-bold">Edit / Delete</h2>
                     <div>
                         <label className="block text-sm font-medium mb-1">Name</label>
-                        <input
-                            type="text"
-                            className="w-full p-2 border rounded"
-                            name="name"
-                            value={formData.name}
-                            onChange={handleChange}
-                        />
+                        <input type="text" className="w-full p-2 border rounded" defaultValue={club.name} />
                     </div>
                     <div>
                         <label className="block text-sm font-medium mb-1">Tagline</label>
-                        <input
-                            type="text"
-                            className="w-full p-2 border rounded"
-                            name="tagline"
-                            value={formData.tagline}
-                            onChange={handleChange}
-                        />
+                        <input type="text" className="w-full p-2 border rounded" defaultValue={club.tagline} />
                     </div>
-                    {formData.description && (
+                    {club.description && (
                         <div>
                             <label className="block text-sm font-medium mb-1">Description</label>
-                            <textarea
-                                className="w-full p-2 border rounded"
-                                rows={4}
-                                name="description"
-                                value={formData.description}
-                                onChange={handleChange}
-                            />
+                            <textarea className="w-full p-2 border rounded" rows={4} defaultValue={club.description} />
                         </div>
                     )}
-                    {formData.url && (
+                    {club.url && (
                         <div>
                             <label className="block text-sm font-medium mb-1">Url</label>
-                            <input
-                                type="text"
-                                className="w-full p-2 border rounded"
-                                name="url"
-                                value={formData.url}
-                                onChange={handleChange}
-                            />
+                            <input type="text" className="w-full p-2 border rounded" defaultValue={club.url} />
                         </div>
                     )}
-                    {formData.socials.website && (
+                    {club.socials.website && (
                         <div>
                             <label className="block text-sm font-medium mb-1">Website</label>
-                            <input
-                                type="text"
-                                className="w-full p-2 border rounded"
-                                name="socials.website"
-                                value={formData.socials.website}
-                                onChange={handleChange}
-                            />
+                            <input type="text" className="w-full p-2 border rounded" defaultValue={club.socials.website} />
                         </div>
                     )}
-                    {formData.socials.discord && (
+                    {club.socials.discord && (
                         <div>
                             <label className="block text-sm font-medium mb-1">Discord</label>
-                            <input
-                                type="text"
-                                className="w-full p-2 border rounded"
-                                name="socials.discord"
-                                value={formData.socials.discord}
-                                onChange={handleChange}
-                            />
+                            <input type="text" className="w-full p-2 border rounded" defaultValue={club.socials.discord} />
                         </div>
                     )}
-                    {formData.socials.instagram && (
+                    {club.socials.instagram && (
                         <div>
                             <label className="block text-sm font-medium mb-1">Instagram</label>
-                            <input
-                                type="text"
-                                className="w-full p-2 border rounded"
-                                name="socials.instagram"
-                                value={formData.socials.instagram}
-                                onChange={handleChange}
-                            />
-                        </div>
-                    )}
-                    {/* {club.clubLogo && (
-                        <div>
-                            <label className="block text-sm font-medium mb-1">Club Logo</label>
-                            <input type="mongoose.Schema.types.ObjectId" className="w-full p-2 border rounded" defaultValue={club.clubLogo} />
-                        </div>
-                    )}
-                    {/* {club.clubLogo && (
-                        <div>
-                            <label className="block text-sm font-medium mb-1">Club Logo</label>
-                            <input type="mongoose.Schema.types.ObjectId" className="w-full p-2 border rounded" defaultValue={club.clubLogo} />
+                            <input type="text" className="w-full p-2 border rounded" defaultValue={club.socials.instagram} />
                         </div>
                     )}
                     {/* {club.clubLogo && (
@@ -209,222 +159,22 @@ export function OfficerInfo({ club }: OfficerInfoProps) {
                         <div className="flex flex-wrap gap-2 mb-3">
                             {formData.tags.map((tag, index) => (
                                 <span
-                                    key={tag._id}
+                                    key={index}
                                     className="inline-flex items-center px-3 py-1 rounded-full text-sm bg-blue-100 text-blue-800"
                                 >
                                     {tag.text}
-                                    <button onClick={() => handleDeleteTag(tag._id)} className="ml-2 text-red-500 hover:text-red-700">
-                                        ×
-                                    </button>
+                                    <button className="ml-2 text-red-500 hover:text-red-700">×</button>
                                 </span>
                             ))}
                         </div>
                     </div>
                 </div>
+
                 <div className="bg-white p-4 rounded shadow space-y-4">
                     <h2 className="text-lg font-bold">Add New</h2>
                     <div>
                         <label className="block text-sm font-medium mb-1">Tags</label>
-                        <input
-                            type="text"
-                            className="w-full p-2 border rounded"
-                            placeholder="Add new tag and press Enter"
-                            value={newTag}
-                            onChange={handleTagChange}
-                            onKeyDown={handleAddTag}
-                        />
-                    </div>
-                    {!formData.description && (
-                        <div>
-                            <label className="block text-sm font-medium mb-1">Description</label>
-                            <textarea
-                                className="w-full p-2 border rounded"
-                                rows={4}
-                                name="description"
-                                value={formData.description || ''}
-                                onChange={handleChange}
-                            />
-                        </div>
-                    )}
-                    {!formData.url && (
-                        <div>
-                            <label className="block text-sm font-medium mb-1">Url</label>
-                            <input
-                                type="text"
-                                className="w-full p-2 border rounded"
-                                name="url"
-                                value={formData.url || ''}
-                                onChange={handleChange}
-                            />
-                        </div>
-                    )}
-                    {!formData.socials.website && (
-                        <div>
-                            <label className="block text-sm font-medium mb-1">Website</label>
-                            <input
-                                type="text"
-                                className="w-full p-2 border rounded"
-                                name="socials.website"
-                                value={formData.socials.website || ''}
-                                onChange={handleChange}
-                            />
-                        </div>
-                    )}
-                    {!formData.socials.discord && (
-                        <div>
-                            <label className="block text-sm font-medium mb-1">Discord</label>
-                            <input
-                                type="text"
-                                className="w-full p-2 border rounded"
-                                name="socials.discord"
-                                value={formData.socials.discord || ''}
-                                onChange={handleChange}
-                            />
-                        </div>
-                    )}
-                    {!formData.socials.instagram && (
-                        <div>
-                            <label className="block text-sm font-medium mb-1">Instagram</label>
-                            <input
-                                type="text"
-                                className="w-full p-2 border rounded"
-                                name="socials.instagram"
-                                value={formData.socials.instagram || ''}
-                                onChange={handleChange}
-                            />
-                        </div>
-                    )}
-                    <div>
-                        <label className="block text-sm font-medium mb-1">Membership Requirements</label>
-                        <input type="text" className="w-full p-2 border rounded" placeholder="None" />
-                    </div>
-                    {!formData.description && (
-                        <div>
-                            <label className="block text-sm font-medium mb-1">Description</label>
-                            <textarea
-                                className="w-full p-2 border rounded"
-                                rows={4}
-                                name="description"
-                                value={formData.description || ''}
-                                onChange={handleChange}
-                            />
-                        </div>
-                    )}
-                    {!formData.url && (
-                        <div>
-                            <label className="block text-sm font-medium mb-1">Url</label>
-                            <input
-                                type="text"
-                                className="w-full p-2 border rounded"
-                                name="url"
-                                value={formData.url || ''}
-                                onChange={handleChange}
-                            />
-                        </div>
-                    )}
-                    {!formData.socials.website && (
-                        <div>
-                            <label className="block text-sm font-medium mb-1">Website</label>
-                            <input
-                                type="text"
-                                className="w-full p-2 border rounded"
-                                name="socials.website"
-                                value={formData.socials.website || ''}
-                                onChange={handleChange}
-                            />
-                        </div>
-                    )}
-                    {!formData.socials.discord && (
-                        <div>
-                            <label className="block text-sm font-medium mb-1">Discord</label>
-                            <input
-                                type="text"
-                                className="w-full p-2 border rounded"
-                                name="socials.discord"
-                                value={formData.socials.discord || ''}
-                                onChange={handleChange}
-                            />
-                        </div>
-                    )}
-                    {!formData.socials.instagram && (
-                        <div>
-                            <label className="block text-sm font-medium mb-1">Instagram</label>
-                            <input
-                                type="text"
-                                className="w-full p-2 border rounded"
-                                name="socials.instagram"
-                                value={formData.socials.instagram || ''}
-                                onChange={handleChange}
-                            />
-                        </div>
-                    )}
-                    <div>
-                        <label className="block text-sm font-medium mb-1">Membership Requirements</label>
-                        <input type="text" className="w-full p-2 border rounded" placeholder="None" />
-                    </div>
-                    {!formData.description && (
-                        <div>
-                            <label className="block text-sm font-medium mb-1">Description</label>
-                            <textarea
-                                className="w-full p-2 border rounded"
-                                rows={4}
-                                name="description"
-                                value={formData.description || ''}
-                                onChange={handleChange}
-                            />
-                        </div>
-                    )}
-                    {!formData.url && (
-                        <div>
-                            <label className="block text-sm font-medium mb-1">Url</label>
-                            <input
-                                type="text"
-                                className="w-full p-2 border rounded"
-                                name="url"
-                                value={formData.url || ''}
-                                onChange={handleChange}
-                            />
-                        </div>
-                    )}
-                    {!formData.socials.website && (
-                        <div>
-                            <label className="block text-sm font-medium mb-1">Website</label>
-                            <input
-                                type="text"
-                                className="w-full p-2 border rounded"
-                                name="socials.website"
-                                value={formData.socials.website || ''}
-                                onChange={handleChange}
-                            />
-                        </div>
-                    )}
-                    {!formData.socials.discord && (
-                        <div>
-                            <label className="block text-sm font-medium mb-1">Discord</label>
-                            <input
-                                type="text"
-                                className="w-full p-2 border rounded"
-                                name="socials.discord"
-                                value={formData.socials.discord || ''}
-                                onChange={handleChange}
-                            />
-                        </div>
-                    )}
-                    {!formData.socials.instagram && (
-                        <div>
-                            <label className="block text-sm font-medium mb-1">Instagram</label>
-                            <input
-                                type="text"
-                                className="w-full p-2 border rounded"
-                                name="socials.instagram"
-                                value={formData.socials.instagram || ''}
-                                onChange={handleChange}
-                            />
-                        </div>
-                    )}
-                    <div>
-                        <label className="block text-sm font-medium mb-1">Membership Requirements</label>
-                        <input type="text" className="w-full p-2 border rounded" placeholder="None" />
+                        <input type="text" className="w-full p-2 border rounded" placeholder="Add new tag and press Enter" />
                     </div>
                     {!club.description && (
                         <div>
@@ -483,13 +233,8 @@ export function OfficerInfo({ club }: OfficerInfoProps) {
                 </div>
             </div>
             <div className="flex gap-4 mt-6">
-                <button onClick={handleSaveChanges} className="bg-primary text-white px-6 py-2 rounded hover:bg-green-600">
-                    Save Changes
-                </button>
-                <button
-                    onClick={handleDiscardChanges}
-                    className="bg-secondary text-white px-6 py-2 rounded hover:bg-red-500 flex items-center gap-2"
-                >
+                <button className="bg-primary text-white px-6 py-2 rounded hover:bg-green-600">Save Changes</button>
+                <button className="bg-secondary text-white px-6 py-2 rounded hover:bg-red-500 flex items-center gap-2">
                     Discard Changes
                 </button>
             </div>
