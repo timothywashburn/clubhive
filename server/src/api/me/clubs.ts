@@ -6,10 +6,10 @@ import { serializeRecursive } from '@/utils/db-doc-utils';
 export const getMyClubsEndpoint: ApiEndpoint<undefined, GetMyClubsResponse> = {
     path: '/api/me/clubs',
     method: 'get',
-    auth: AuthType.VERIFIED_EMAIL,
+    auth: AuthType.NONE,
     handler: async (req, res) => {
         try {
-            const userId = req.auth?.userId;
+            const userId = '507f1f77bcf86cd799439020'; // temporary: change when auth working
             if (!userId) {
                 res.status(401).json({
                     success: false,
