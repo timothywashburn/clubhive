@@ -2,6 +2,8 @@ import { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router';
 import { getTagColor } from '../features/find-clubs/utils/TagColors';
 import { useToast } from '../hooks/useToast';
+import { clubWithEventsAndCountsSchema } from '@clubhive/shared';
+import { ClubWithEventsData } from '@clubhive/shared/src/types/club-types';
 
 /**
  * This class is a static view of what the Club Profile page
@@ -9,28 +11,14 @@ import { useToast } from '../hooks/useToast';
  */
 export function ClubProfile() {
     const { url } = useParams<{ url: string }>();
-    const [club, setClub] = useState(null);
+    const [club, setClub] = useState<ClubWithEventsData | null>(null);
     const { errorToast } = useToast();
 
-    const events = [
-        //TODO: replace with real data!
-        {
-            title: 'Our first GBM of the quarter!',
-            details: 'Every Thursday at 6PM, Red Shoe Room',
-        },
-        {
-            title: 'Event',
-            details: 'Friday at 5PM, Student Center',
-        },
-        {
-            title: 'Event',
-            details: 'Next Tuesday, 7PM, TEC Cafe',
-        },
-    ];
 
     const navigate = useNavigate();
     const [isOpen, setIsOpen] = useState(false);
     const [loading, setLoading] = useState(true);
+    const [events, setEvents] = useState([]);
 
     useEffect(() => {
         if (!url) return;
@@ -40,7 +28,8 @@ export function ClubProfile() {
                 console.log('Fetch result:', data);
 
                 if (data.success) {
-                    setClub(data.club);
+                    const parsed = clubWithEventsAndCountsSchema.parse(data.club);
+                    setClub(parsed);
                 } else {
                     const errorMessage = data.error?.message || 'Unknown error';
                     errorToast(`Failed to load club: ${errorMessage}`);
@@ -80,12 +69,8 @@ export function ClubProfile() {
                     {/* logo circle , replace with {club.clubLogo.url} later */}
                     <div className="w-1/3 flex items-center justify-center">
                         <div className="w-30 h-30 rounded-full bg-outline-variant flex items-center justify-center overflow-hidden">
-                            {club.clubLogo?.url ? (
-                                <img
-                                    src={club.clubLogo.url}
-                                    alt={`${club.name} logo`}
-                                    className="w-full h-full object-cover object-center"
-                                />
+                            {club.clubLogo ? (
+                                <img src={club.clubLogo} alt={`${club.name} logo`} className="w-full h-full object-cover object-center" />
                             ) : (
                                 <span className="text-on-surface-variant text-sm text-center">No Logo</span>
                             )}
@@ -182,7 +167,30 @@ export function ClubProfile() {
                 </div>
 
                 {/* events */}
-                <h2 className="mt-10 text-2xl font-semibold text-on-surface mb-4">Upcoming Events: </h2>
+                <h2 className="mt-10 text-2xl font-semibold text-on-surface mb-4">
+                    Upcoming Events ({club.eventCount ?? club.events.length} total)
+                </h2>
+
+                {/* Scrollable horizontal events */}
+                {club.events && club.events.length > 0 ? (
+                    <div className="overflow-x-auto">
+                        <div className="flex space-x-4">
+                            {club.events.map(event => (
+                                <div key={event._id} className="min-w-[300px] p-4 border rounded-lg shadow-sm bg-surface">
+                                    <h3 className="font-semibold text-on-surface">{event.name}</h3>
+                                    <p className="text-sm text-on-surface-variant">
+                                        {new Date(event.startTime || event.date).toLocaleString()}
+                                    </p>
+                                    <p className="mt-2 text-on-surface-variant">{event.description}</p>
+                                </div>
+                            ))}
+                        </div>
+                    </div>
+                ) : (
+                    <p className="text-on-surface-variant">Check back for events soon!</p>
+                )}
+
+                {/* 
                 <div className="space-y-4">
                     <div className="space-y-4">
                         {events.map((event, index) => (
@@ -192,7 +200,8 @@ export function ClubProfile() {
                             </div>
                         ))}
                     </div>
-                </div>
+                </div> 
+                 */}
 
                 {/* announcements */}
                 <div className="mt-10">
