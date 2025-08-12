@@ -1,4 +1,5 @@
 import React from 'react';
+import { useState } from 'react';
 
 export function SendNotification() {
     const scheduled = [
@@ -13,6 +14,54 @@ export function SendNotification() {
             time: '2 days ago',
         },
     ];
+
+    const [club, setClub] = useState('');
+    const [title, setTitle] = useState('');
+    const [message, setMessage] = useState('');
+    const [isSubmitting, setIsSubmitting] = useState(false);
+    const [errorMsg, setErrorMsg] = useState<string | null>(null);
+    const [successMsg, setSuccessMsg] = useState<string | null>(null);
+
+    const handleSubmit = async (e: React.FormEvent) => {
+        e.preventDefault();
+
+        setErrorMsg(null);
+        setSuccessMsg(null);
+
+        if (!club || !title || !message) {
+            setErrorMsg('Please fill Club, Title, and Message.');
+            return;
+        }
+
+        setIsSubmitting(true);
+
+        try {
+            const res = await fetch('/api/announcements', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    club: club,
+                    title: title,
+                    body: message,
+                }),
+            });
+
+            const json = await res.json();
+            if (!res.ok || json?.success === false) {
+                throw new Error(json?.error?.message || 'Failed to create announcement');
+            }
+            setSuccessMsg('Notification sent successfully.');
+            setClub('');
+            setTitle('');
+            setMessage('');
+        } catch (err) {
+            setErrorMsg(err.message);
+        } finally {
+            setIsSubmitting(false);
+        }
+    };
 
     return (
         <div className="h-full relative">
@@ -68,7 +117,7 @@ export function SendNotification() {
                     </div>
 
                     <div className="flex-1 min-w-0">
-                        <form className="bg-surface rounded-lg shadow border border-outline-variant p-6">
+                        <form className="bg-surface rounded-lg shadow border border-outline-variant p-6" onSubmit={handleSubmit}>
                             <div className="pb-4 border-b border-outline-variant mb-6">
                                 <h2 className="text-lg font-medium text-on-surface">Create New Notification</h2>
                             </div>
@@ -81,12 +130,13 @@ export function SendNotification() {
                                     <select
                                         id="club"
                                         name="club"
+                                        value={club}
+                                        onChange={e => setClub(e.target.value)}
                                         className="w-full rounded-md border border-outline-variant bg-surface p-2 text-on-surface"
                                     >
                                         <option value="">Select a club</option>
-                                        <option value="cs">Computer Science Club</option>
-                                        <option value="photo">Photography Society</option>
-                                        <option value="music">Music Club</option>
+                                        <option value="507f1f77bcf86cd799439022">Computer Science Club</option>
+                                        <option value="688c596bca3e5de39cdeb6f9">Women in Computing</option>
                                     </select>
                                 </div>
 
@@ -98,6 +148,8 @@ export function SendNotification() {
                                         type="text"
                                         id="title"
                                         name="title"
+                                        value={title}
+                                        onChange={e => setTitle(e.target.value)}
                                         placeholder="Enter title"
                                         className="w-full rounded-md border border-outline-variant bg-surface p-2 text-on-surface"
                                     />
@@ -112,6 +164,8 @@ export function SendNotification() {
                                     id="message"
                                     name="message"
                                     rows={6}
+                                    value={message}
+                                    onChange={e => setMessage(e.target.value)}
                                     className="w-full rounded-md border border-outline-variant bg-surface text-on-surface px-4 py-3 shadow-sm focus:outline-none focus:ring-2 focus:ring-primary"
                                 />
                                 <div className="mb-6 mt-4">
@@ -121,12 +175,17 @@ export function SendNotification() {
                                     </div>
                                 </div>
                             </div>
+
+                            {errorMsg && <p className="text-sm text-red-500 mb-2">{errorMsg}</p>}
+                            {successMsg && <p className="text-sm text-green-600 mb-2">{successMsg}</p>}
+
                             <div className="flex justify-end">
                                 <button
                                     type="submit"
+                                    disabled={isSubmitting}
                                     className="bg-primary text-on-primary px-6 py-2 rounded-md font-medium shadow-sm hover:bg-primary/90 transition"
                                 >
-                                    Send Notification
+                                    {isSubmitting ? 'Sending…' : 'Send Notification'}
                                 </button>
                             </div>
                         </form>
