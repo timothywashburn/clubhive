@@ -1,13 +1,14 @@
 import { ApiEndpoint, ApiRequest, ApiResponse, AuthType } from '@/types/api-types';
 import Club from '@/models/club-schema';
+import Event from '@/models/event-schema';
 import '@/models/school-schema';
 import '@/models/image-schema';
 import '@/models/tag-schema';
-import { ClubData, ErrorCode } from '@clubhive/shared';
+import { ClubData, clubWithEventsAndCountsSchema, ErrorCode } from '@clubhive/shared';
 import { serializeRecursive } from '@/utils/db-doc-utils';
 
 type GetClubRequest = { url: string };
-type GetClubResponse = { club: ClubData };
+type GetClubResponse = { club: ReturnType<typeof clubWithEventsAndCountsSchema.parse> };
 
 export const getClubProfileEndpoint: ApiEndpoint<GetClubRequest, GetClubResponse> = {
     method: 'get',
@@ -30,9 +31,24 @@ export const getClubProfileEndpoint: ApiEndpoint<GetClubRequest, GetClubResponse
                 });
                 return;
             }
+
+            const now = new Date();
+            const events = await Event.find({
+                club: club._id,
+                startTime: { $gte: now },
+            })
+                .populate('tags')
+                .sort({ startTime: 1 })
+                .limit(20)
+                .exec();
+
             res.json({
                 success: true,
-                club: serializeRecursive(club),
+                club: clubWithEventsAndCountsSchema.parse({
+                    ...serializeRecursive(club),
+                    events: serializeRecursive(events) ?? [],
+                    eventCount: events.length,
+                }),
             });
         } catch (err) {
             const message = err instanceof Error ? err.message : 'Unkown error';
