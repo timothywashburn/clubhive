@@ -21,9 +21,7 @@ export const useClubEvents = (clubId: string | null) => {
 
         try {
             const response = await fetch(`/api/events?clubId=${clubId}`, {
-                headers: {
-                    Authorization: 'Bearer temp',
-                },
+                credentials: 'include',
             });
 
             const data: ApiResponseBody<GetEventsResponse> = await response.json();

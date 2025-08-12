@@ -17,11 +17,12 @@ interface ApiError {
 }
 
 class EventService {
-    private getAuthHeaders(): HeadersInit {
-        // TODO: Replace with proper JWT token once auth is implemented
+    private getRequestOptions(): RequestInit {
         return {
-            Authorization: 'Bearer temp',
-            'Content-Type': 'application/json',
+            credentials: 'include',
+            headers: {
+                'Content-Type': 'application/json',
+            },
         };
     }
 
@@ -29,7 +30,7 @@ class EventService {
         try {
             const response = await fetch(`${API_BASE_URL}/events`, {
                 method: 'POST',
-                headers: this.getAuthHeaders(),
+                ...this.getRequestOptions(),
                 body: JSON.stringify(eventData),
             });
 
@@ -52,7 +53,7 @@ class EventService {
         try {
             const response = await fetch(`${API_BASE_URL}/events/${eventId}`, {
                 method: 'PUT',
-                headers: this.getAuthHeaders(),
+                ...this.getRequestOptions(),
                 body: JSON.stringify(eventData),
             });
 
@@ -75,7 +76,7 @@ class EventService {
         try {
             const response = await fetch(`${API_BASE_URL}/events/${eventId}`, {
                 method: 'DELETE',
-                headers: this.getAuthHeaders(),
+                ...this.getRequestOptions(),
             });
 
             const data: ApiResponseBody<DeleteEventResponse> = await response.json();

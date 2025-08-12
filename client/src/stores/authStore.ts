@@ -41,17 +41,17 @@ export const useAuthStore = create<AuthStore>((set, get) => ({
 
     initializeAuth: async () => {
         try {
-            const response = await fetch('/api/user/me', {
+            const response = await fetch('/api/user/check-token', {
                 method: 'GET',
                 credentials: 'include',
             });
 
             if (response.ok) {
                 const result = await response.json();
-                if (result.success && result.user) {
+                if (result.success) {
                     set({
                         isAuthenticated: true,
-                        user: result.user,
+                        user: null, // User data can be fetched separately when needed
                         errors: {},
                     });
                     return;

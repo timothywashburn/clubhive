@@ -1,5 +1,6 @@
 import express from 'express';
 import cors from 'cors';
+import cookieParser from 'cookie-parser';
 import mongoose from 'mongoose';
 import ApiManager from '@/controllers/api-manager';
 
@@ -8,6 +9,7 @@ const PORT = 3000;
 
 app.use(cors());
 app.use(express.json());
+app.use(cookieParser());
 
 const testSchema = new mongoose.Schema({
     message: String,
