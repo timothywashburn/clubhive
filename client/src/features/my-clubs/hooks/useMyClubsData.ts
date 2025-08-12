@@ -13,9 +13,7 @@ export const useMyClubsData = () => {
         const fetchClubs = async () => {
             try {
                 const response = await fetch('/api/me/clubs', {
-                    headers: {
-                        Authorization: 'Bearer temp',
-                    },
+                    credentials: 'include',
                 });
 
                 const data: ApiResponseBody<GetMyClubsResponse> = await response.json();

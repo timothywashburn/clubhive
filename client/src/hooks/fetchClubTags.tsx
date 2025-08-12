@@ -10,7 +10,9 @@ export const useClubTagsData = () => {
     const { errorToast } = useToast();
 
     useEffect(() => {
-        fetch('/api/tags')
+        fetch('/api/tags', {
+            credentials: 'include',
+        })
             .then(res => res.json())
             .then(data => {
                 if (data.success) {
