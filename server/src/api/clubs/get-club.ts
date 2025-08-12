@@ -36,6 +36,8 @@ export const getClubEndpoint: ApiEndpoint<undefined, GetClubResponse> = {
                 .limit(20) //limit amount of events to send at once
                 .exec();
 
+            console.log('Fetched upcoming events:', events);
+
             res.json({
                 success: true,
                 club: clubWithEventsAndCountsSchema.parse({
