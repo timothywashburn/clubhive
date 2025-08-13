@@ -9,7 +9,7 @@ export const getMyClubsEndpoint: ApiEndpoint<undefined, GetMyClubsResponse> = {
     auth: AuthType.VERIFIED_EMAIL,
     handler: async (req, res) => {
         try {
-            const userId = req.auth?.userId;
+            const userId = req.auth?.userId; // temporary: change when auth working
             if (!userId) {
                 res.status(401).json({
                     success: false,

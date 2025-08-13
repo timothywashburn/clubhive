@@ -2,14 +2,14 @@ import { useState, useEffect } from 'react';
 import { NotifDisplayData } from '@clubhive/shared';
 import { useToast } from './useToast';
 
-export const useNotifs = (userId: string) => {
+export const useNotifs = () => {
     const [notifs, setNotifs] = useState<NotifDisplayData[]>([]);
     const [isLoading, setIsLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
     const { errorToast } = useToast();
 
     useEffect(() => {
-        fetch(`/api/notifications/${userId}`, {
+        fetch(`/api/notifications`, {
             credentials: 'include',
         })
             .then(res => res.json())
@@ -27,7 +27,7 @@ export const useNotifs = (userId: string) => {
                 errorToast(`Failed to load notifications: ${err.message}`);
             })
             .finally(() => setIsLoading(false));
-    }, [userId]);
+    }, []);
 
     return { notifs, setNotifs, isLoading, error };
 };
