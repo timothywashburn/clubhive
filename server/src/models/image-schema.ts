@@ -11,6 +11,11 @@ const schema = new Schema(
             required: true,
             auto: true,
         },
+        public_id: {
+            // Cloudinary public ID
+            type: String,
+            required: true,
+        },
         uploadedBy: {
             type: mongoose.Schema.Types.ObjectId,
             ref: 'User',
