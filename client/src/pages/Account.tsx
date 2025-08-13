@@ -1,10 +1,14 @@
 import { useState } from 'react';
-import { Settings, Mail, Lock, User, Monitor, Moon, Sun, Trash2 } from 'lucide-react';
+import { Settings, Mail, Lock, User, Monitor, Moon, Sun, Trash2, LogOut } from 'lucide-react';
+import { useNavigate } from 'react-router';
 import { ThemePreference, useThemeStore } from '../stores/themeStore.ts';
+import { useAuthStore } from '../stores/authStore.ts';
 import { DeleteDangerZone } from '../components/DangerZone';
 
 export function Account() {
     const { preference, setPreference } = useThemeStore();
+    const { signOut } = useAuthStore();
+    const navigate = useNavigate();
 
     const [formData, setFormData] = useState({
         name: 'John Doe',
@@ -127,8 +131,7 @@ export function Account() {
         try {
             // TODO: Implement actual account deletion API call
             console.log('Deleting account...');
-            await new Promise(resolve => setTimeout(resolve, 2000)); // Simulate API call
-            // After successful deletion, redirect to login or home
+            await new Promise(resolve => setTimeout(resolve, 2000));
             alert('Account deleted successfully');
         } catch (error) {
             console.error('Error deleting account:', error);
@@ -138,15 +141,31 @@ export function Account() {
         }
     };
 
+    const handleSignOut = async () => {
+        await signOut();
+        navigate('/signin');
+    };
+
     return (
         <div className="h-full relative">
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
                 <div className="mb-8">
-                    <h1 className="text-3xl font-bold text-on-surface flex items-center gap-3">
-                        <Settings className="w-8 h-8" />
-                        Account Settings
-                    </h1>
-                    <p className="text-on-surface-variant mt-2">Manage your account preferences and personal information</p>
+                    <div className="flex items-center justify-between">
+                        <div>
+                            <h1 className="text-3xl font-bold text-on-surface flex items-center gap-3">
+                                <Settings className="w-8 h-8" />
+                                Account Settings
+                            </h1>
+                            <p className="text-on-surface-variant mt-2">Manage your account preferences and personal information</p>
+                        </div>
+                        <button
+                            onClick={handleSignOut}
+                            className="flex items-center gap-2 px-4 py-2 rounded-md text-sm font-medium bg-error text-on-error hover:bg-error/90 transition-colors cursor-pointer"
+                        >
+                            <LogOut className="w-4 h-4" />
+                            Sign Out
+                        </button>
+                    </div>
                 </div>
 
                 <div className="flex gap-8">
@@ -158,7 +177,7 @@ export function Account() {
                                     <button
                                         key={item.id}
                                         onClick={() => scrollToSection(item.id)}
-                                        className="w-full flex items-center gap-3 px-3 py-2 rounded-md text-sm font-medium transition-colors text-left text-on-surface-variant hover:text-on-surface hover:bg-surface-variant"
+                                        className="w-full flex items-center gap-3 px-3 py-2 rounded-md text-sm font-medium transition-colors text-left text-on-surface-variant hover:text-on-surface hover:bg-surface-variant cursor-pointer"
                                     >
                                         {item.icon}
                                         {item.label}
@@ -255,7 +274,7 @@ export function Account() {
                                                     key={yearOption}
                                                     onClick={() => handleInputChange('year', yearOption)}
                                                     className={`
-                                                        px-4 py-2 rounded-md text-sm font-medium transition-all duration-200
+                                                        px-4 py-2 rounded-md text-sm font-medium transition-all duration-200 cursor-pointer
                                                         ${
                                                             formData.year === yearOption
                                                                 ? 'bg-primary text-on-primary shadow-sm'
@@ -271,7 +290,7 @@ export function Account() {
                                 </div>
 
                                 <div className="mt-6 flex justify-end">
-                                    <button className="bg-primary text-on-primary px-4 py-2 rounded-md hover:bg-primary/90 font-medium">
+                                    <button className="bg-primary text-on-primary px-4 py-2 rounded-md hover:bg-primary/90 font-medium cursor-pointer">
                                         Save Changes
                                     </button>
                                 </div>
@@ -317,7 +336,7 @@ export function Account() {
                                                 key={option.value}
                                                 onClick={() => setPreference(option.value as ThemePreference)}
                                                 className={`
-                                                    flex items-center gap-2 px-4 py-2 rounded-md text-sm font-medium transition-all duration-200
+                                                    flex items-center gap-2 px-4 py-2 rounded-md text-sm font-medium transition-all duration-200 cursor-pointer
                                                     ${
                                                         preference === option.value || (!preference && option.value === 'system')
                                                             ? 'bg-primary text-on-primary shadow-sm'
@@ -351,7 +370,7 @@ export function Account() {
                                             <p className="text-sm text-on-surface-variant">{formData.email}</p>
                                         </div>
                                     </div>
-                                    <button className="px-4 py-2 rounded-md text-sm font-medium bg-secondary text-on-secondary hover:bg-secondary/90 transition-colors">
+                                    <button className="px-4 py-2 rounded-md text-sm font-medium bg-secondary text-on-secondary hover:bg-secondary/90 transition-colors cursor-pointer">
                                         Change
                                     </button>
                                 </div>
@@ -364,7 +383,7 @@ export function Account() {
                                             <p className="text-sm text-on-surface-variant">Last changed 3 months ago</p>
                                         </div>
                                     </div>
-                                    <button className="px-4 py-2 rounded-md text-sm font-medium bg-secondary text-on-secondary hover:bg-secondary/90 transition-colors">
+                                    <button className="px-4 py-2 rounded-md text-sm font-medium bg-secondary text-on-secondary hover:bg-secondary/90 transition-colors cursor-pointer">
                                         Change
                                     </button>
                                 </div>
