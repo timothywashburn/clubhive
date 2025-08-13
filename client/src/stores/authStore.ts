@@ -30,6 +30,7 @@ interface AuthStore {
         educationType: string;
         year: string;
     }) => Promise<void>;
+    signOut: () => Promise<void>;
     clearErrors: () => void;
     checkToken: () => Promise<void>;
 }
@@ -78,7 +79,7 @@ export const useAuthStore = create<AuthStore>((set, get) => ({
         }
 
         try {
-            const response = await fetch('/api/user/login', {
+            const response = await fetch('/api/user/sign-in', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -164,7 +165,7 @@ export const useAuthStore = create<AuthStore>((set, get) => ({
 
     signOut: async () => {
         try {
-            await fetch('/api/user/logout', {
+            await fetch('/api/user/sign-out', {
                 method: 'POST',
                 credentials: 'include',
             });

@@ -7,18 +7,18 @@ import dotenv from 'dotenv';
 
 dotenv.config();
 
-interface LoginRequest {
+interface SignInRequest {
     email: string;
     password: string;
 }
 
-interface LoginResponse {
+interface SignInResponse {
     accessToken: string;
     refreshToken: string;
 }
 
-export const loginEndpoint: ApiEndpoint<LoginRequest, LoginResponse> = {
-    path: '/api/user/login',
+export const signInEndpoint: ApiEndpoint<SignInRequest, SignInResponse> = {
+    path: '/api/user/sign-in',
     method: 'post',
     auth: AuthType.NONE,
     handler: async (req, res) => {
@@ -68,22 +68,3 @@ export const loginEndpoint: ApiEndpoint<LoginRequest, LoginResponse> = {
         }
     },
 };
-
-/* logout for future ref; will implement after i get signup/login working */
-
-/*
-// logout function will delete refreshToken 
-export const logout = async (req: Request, res: Response) => {
-    try {
-        res.clearCookie('refreshToken', {
-            httpOnly: true,
-            secure: process.env.NODE_ENV === 'production',
-            sameSite: 'strict',
-            path: '/'
-        });
-        res.status(201).json("Logged out successfully");
-    } catch (error) {
-        res.status(400).json({ error : "Logout failed "});
-    }
-}
-*/
