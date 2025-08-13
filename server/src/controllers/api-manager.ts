@@ -38,6 +38,10 @@ import { getMonthlyVenueAvailabilityEndpoint } from '@/api/venues/monthly-availa
 import { getNotificationsEndpoint } from '@/api/notifications/get-notifications';
 import { markReadEndpoint } from '@/api/notifications/mark-read';
 
+import { uploadImageEndpoint } from '@/api/images/create-image';
+import { deleteImageEndpoint } from '@/api/images/delete-image';
+import { getImageEndpoint } from '@/api/images/get-image';
+
 export default class ApiManager {
     private static instance: ApiManager;
     private readonly router: Router;
@@ -97,6 +101,11 @@ export default class ApiManager {
         this.addEndpoint(getDailyVenueAvailabilityEndpoint);
         this.addEndpoint(getWeeklyVenueAvailabilityEndpoint);
         this.addEndpoint(getMonthlyVenueAvailabilityEndpoint);
+
+        // Images endpoints
+        this.addEndpoint(getImageEndpoint);
+        this.addEndpoint(uploadImageEndpoint);
+        this.addEndpoint(deleteImageEndpoint);
 
         console.log(`registered api endpoints`);
     }
