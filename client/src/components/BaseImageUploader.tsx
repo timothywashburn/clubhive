@@ -146,11 +146,11 @@ export function BaseImageUploader({ clubId, maxImages, maxFileSizeKB, onSuccess,
                 onChange={handleFileChange}
                 disabled={uploading || hasUploaded}
                 className="block w-full text-sm text-on-background-variant
-                   file:mr-4 file:py-2 file:px-4
-                   file:rounded-md file:border-0
-                   file:text-sm file:font-semibold
-                   file:bg-primary file:text-on-primary
-                   disabled:opacity-50 disabled:cursor-not-allowed"
+              file:mr-4 file:py-2 file:px-4
+              file:rounded-md file:border-0
+              file:text-sm file:font-semibold
+              file:bg-primary file:text-on-primary
+              disabled:opacity-50 disabled:cursor-not-allowed"
             />
 
             {/* Upload Button - only show when files are selected and nothing uploaded yet */}
@@ -159,8 +159,8 @@ export function BaseImageUploader({ clubId, maxImages, maxFileSizeKB, onSuccess,
                     onClick={handleUpload}
                     disabled={uploading}
                     className="text-sm px-4 py-2 rounded-md font-semibold
-                     bg-primary text-on-primary hover:cursor-pointer
-                     disabled:opacity-50 disabled:cursor-not-allowed"
+              bg-primary text-on-primary hover:cursor-pointer
+              disabled:opacity-50 disabled:cursor-not-allowed"
                 >
                     {uploading ? 'Uploading...' : `Upload ${selectedFiles.length} image${selectedFiles.length > 1 ? 's' : ''}`}
                 </button>
