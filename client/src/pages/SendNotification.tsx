@@ -3,19 +3,6 @@ import { useState } from 'react';
 import { formatDistanceToNow } from 'date-fns';
 
 export function SendNotification() {
-    const scheduled = [
-        {
-            club: 'Computer Science Club',
-            title: 'Meeting Location Changed',
-            time: 'in 1 day',
-        },
-        {
-            club: 'Photography Society',
-            title: 'Sign up for new event',
-            time: '2 days ago',
-        },
-    ];
-
     const [club, setClub] = useState('');
     const [title, setTitle] = useState('');
     const [message, setMessage] = useState('');
@@ -41,7 +28,7 @@ export function SendNotification() {
                 const data = await res.json();
 
                 if (!res.ok || data.success === false) {
-                    throw new Error(data?.error?.message);
+                    setErrorMsg(data?.error?.message);
                 }
 
                 setHistoryItems(data.notifications || []);
@@ -51,7 +38,7 @@ export function SendNotification() {
                 setLoadingHistory(false);
             }
         };
-        loadClubHistory();
+        void loadClubHistory();
     }, []);
 
     useEffect(() => {
@@ -65,7 +52,7 @@ export function SendNotification() {
                 const payload = await res.json();
 
                 if (!res.ok || payload?.success === false) {
-                    throw new Error(payload?.error?.message || 'Failed to load clubs');
+                    setErrorMsg(payload?.error?.message || 'Failed to load clubs');
                 }
 
                 // get officers/exec/owner
@@ -78,7 +65,7 @@ export function SendNotification() {
             }
         };
 
-        loadClubs();
+        void loadClubs();
     }, []);
 
     const handleSubmit = async (e: React.FormEvent) => {
@@ -109,7 +96,7 @@ export function SendNotification() {
 
             const json = await res.json();
             if (!res.ok || json?.success === false) {
-                throw new Error(json?.error?.message || 'Failed to create announcement');
+                setErrorMsg(json?.error?.message);
             }
             setSuccessMsg('Notification sent successfully.');
             setClub('');
