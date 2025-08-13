@@ -1,4 +1,4 @@
-import { DeleteImageResponse, deleteImageRequestSchema } from '@clubhive/shared';
+import { DeleteImageResponse } from '@clubhive/shared';
 import { ApiEndpoint, AuthType } from '@/types/api-types';
 import ImageController from '@/controllers/image-controller';
 import { deleteImageFromCloudinary } from '@/services/imageService';
@@ -35,13 +35,8 @@ export const deleteImageEndpoint: ApiEndpoint<undefined, DeleteImageResponse> = 
                 });
             }
 
-            // Extract public_id from Cloudinary URL
-            const urlParts = image.url.split('/');
-            const fileWithExtension = urlParts[urlParts.length - 1];
-            const public_id = `clubhive/${fileWithExtension.split('.')[0]}`;
-
             // Delete from Cloudinary
-            await deleteImageFromCloudinary(public_id);
+            await deleteImageFromCloudinary(image.public_id);
 
             // Delete from database
             await ImageController.deleteImage(imageId);
@@ -51,7 +46,6 @@ export const deleteImageEndpoint: ApiEndpoint<undefined, DeleteImageResponse> = 
                 deleted: true,
             });
         } catch (error) {
-            console.error('Error deleting image:', error);
             res.status(500).json({
                 success: false,
                 error: {
