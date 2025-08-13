@@ -2,12 +2,14 @@ import { useState } from 'react';
 import { NotificationCard } from '../features/notifications/NotificationCard.tsx';
 import { NotifExpanded } from '../features/notifications/NotifExpanded.tsx';
 import { useNotifs } from '../hooks/fetchNotifs.tsx';
+import { useNavigate } from 'react-router';
 
 export function Notifications() {
+    const navigate = useNavigate();
+
     const [selected, setSelected] = useState<string | null>(null);
 
-    const userId = '507f1f77bcf86cd799439020';
-    const { notifs, setNotifs, isLoading, error } = useNotifs(userId);
+    const { notifs, setNotifs, isLoading, error } = useNotifs();
 
     const markAsRead = async (userNotifId: string) => {
         try {
@@ -86,6 +88,14 @@ export function Notifications() {
                                     }}
                                 />
                             ))}
+                        </div>
+                        <div className="p-4  ">
+                            <button
+                                onClick={() => navigate('/send-notification')}
+                                className="bg-primary text-on-primary px-4 py-2 w-full rounded-md font-medium shadow-sm hover:bg-primary/90 transition"
+                            >
+                                Send Notification
+                            </button>
                         </div>
                     </div>
 
