@@ -22,6 +22,8 @@ export function SendNotification() {
     const [errorMsg, setErrorMsg] = useState<string | null>(null);
     const [successMsg, setSuccessMsg] = useState<string | null>(null);
 
+    const [selected, setSelected] = useState<string | null>(null);
+
     const [myOfficerClubs, setMyOfficerClubs] = useState([]);
     const [loadingClubs, setLoadingClubs] = useState(false);
 
@@ -29,7 +31,10 @@ export function SendNotification() {
         const loadClubs = async () => {
             setLoadingClubs(true);
             try {
-                const res = await fetch('/api/me/clubs');
+                const res = await fetch('/api/me/clubs', {
+                    method: 'GET',
+                    credentials: 'include',
+                });
                 const payload = await res.json();
 
                 if (!res.ok || payload?.success === false) {
@@ -231,4 +236,3 @@ export function SendNotification() {
         </div>
     );
 }
-
