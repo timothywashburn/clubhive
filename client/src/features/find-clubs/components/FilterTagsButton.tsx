@@ -1,6 +1,6 @@
 import { useState, useRef, useEffect } from 'react';
 import type { TagData } from '@clubhive/shared';
-import { TagSelectionPopup } from './TagsSelectionPopup';
+import { TagSelectionPopup } from '../../../features/find-clubs/components/TagsSelectionPopup';
 
 type Props = {
     tags: TagData[];
