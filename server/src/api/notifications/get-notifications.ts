@@ -2,11 +2,11 @@ import { ApiEndpoint, AuthType } from '@/types/api-types';
 import { getNotifications } from '@/controllers/announcement-controller';
 
 export const getNotificationsEndpoint: ApiEndpoint<undefined, any> = {
-    path: '/api/notifications/:userId',
+    path: '/api/notifications',
     method: 'get',
-    auth: AuthType.NONE,
+    auth: AuthType.VERIFIED_EMAIL,
     handler: async (req, res) => {
-        const userId = req.params.userId;
+        const userId = req.auth?.userId;
 
         if (!userId) {
             res.status(400).json({
