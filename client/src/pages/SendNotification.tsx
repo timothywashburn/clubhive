@@ -1,5 +1,6 @@
 import React, { useEffect } from 'react';
 import { useState } from 'react';
+import { formatDistanceToNow } from 'date-fns';
 
 export function SendNotification() {
     const scheduled = [
@@ -22,10 +23,36 @@ export function SendNotification() {
     const [errorMsg, setErrorMsg] = useState<string | null>(null);
     const [successMsg, setSuccessMsg] = useState<string | null>(null);
 
-    const [selected, setSelected] = useState<string | null>(null);
+    const [clubHistory, setClubHistory] = useState('');
+    const [historyItems, setHistoryItems] = useState([]);
+    const [loadingHistory, setLoadingHistory] = useState(false);
 
     const [myOfficerClubs, setMyOfficerClubs] = useState([]);
     const [loadingClubs, setLoadingClubs] = useState(false);
+
+    useEffect(() => {
+        const loadClubHistory = async () => {
+            setLoadingHistory(true);
+            try {
+                const res = await fetch('/api/notifications', {
+                    method: 'GET',
+                    credentials: 'include',
+                });
+                const data = await res.json();
+
+                if (!res.ok || data.success === false) {
+                    throw new Error(data?.error?.message);
+                }
+
+                setHistoryItems(data.notifications || []);
+            } catch (e) {
+                setErrorMsg(e.message || 'Failed to load club history');
+            } finally {
+                setLoadingHistory(false);
+            }
+        };
+        loadClubHistory();
+    }, []);
 
     useEffect(() => {
         const loadClubs = async () => {
@@ -108,43 +135,69 @@ export function SendNotification() {
                         <div className="px-6 py-4 border-b border-outline-variant">
                             <div className="flex items-center justify-between">
                                 <h2 className="text-lg font-medium text-on-surface">Announcement History</h2>
+
+                                <select
+                                    className="min-w-48 rounded-md border border-outline-variant bg-surface p-2 text-sm text-on-surface"
+                                    value={clubHistory}
+                                    onChange={e => setClubHistory(e.target.value)}
+                                    disabled={loadingClubs || myOfficerClubs.length === 0}
+                                    title="Filter by club"
+                                >
+                                    <option value="">{loadingClubs ? 'Loading…' : 'All clubs'}</option>
+                                    {myOfficerClubs.map(c => (
+                                        <option key={c._id} value={c._id}>
+                                            {c.name}
+                                        </option>
+                                    ))}
+                                </select>
                             </div>
                         </div>
 
                         <div className="p-4 space-y-2">
-                            {scheduled.map((item, index) => {
-                                const initials = item.club
-                                    .split(' ')
-                                    .map(word => word[0])
-                                    .join('')
-                                    .toUpperCase()
-                                    .slice(0, 2);
+                            {loadingHistory ? (
+                                <div className="text-on-surface-variant text-sm italic">Loading history…</div>
+                            ) : (
+                                (clubHistory ? historyItems.filter(item => String(item.clubId) === clubHistory) : historyItems).map(
+                                    (item, index) => {
+                                        const club = myOfficerClubs.find(c => c._id === String(item.clubId));
+                                        const clubName = club?.name || item.clubName || 'Unknown Club';
+                                        const initials = clubName
+                                            .split(' ')
+                                            .map(w => w[0])
+                                            .join('')
+                                            .toUpperCase()
+                                            .slice(0, 2);
+                                        const time = formatDistanceToNow(new Date(item.date), { addSuffix: true }).replace(/^about\s/, '');
 
-                                return (
-                                    <div
-                                        key={index}
-                                        className="w-full rounded-md border border-outline-variant bg-surface p-4 shadow-sm hover:bg-surface-variant transition"
-                                    >
-                                        <div className="flex items-start gap-4">
-                                            <div className="w-10 h-10 flex-shrink-0 rounded-full bg-primary text-primary-container font-semibold flex items-center justify-center">
-                                                {initials}
-                                            </div>
+                                        return (
+                                            <div
+                                                key={index}
+                                                className="w-full rounded-md border border-outline-variant bg-surface p-4 shadow-sm hover:bg-surface-variant transition"
+                                            >
+                                                <div className="flex items-start gap-4">
+                                                    <div className="w-10 h-10 flex-shrink-0 rounded-full bg-primary text-primary-container font-semibold flex items-center justify-center">
+                                                        {initials}
+                                                    </div>
 
-                                            <div className="flex justify-between w-full">
-                                                <div>
-                                                    <div className="text-on-surface font-medium text-base capitalize">{item.club}</div>
-                                                    <div className="text-sm italic text-on-surface-variant mt-1">{item.title}</div>
+                                                    <div className="flex justify-between w-full">
+                                                        <div>
+                                                            <div className="text-on-surface font-medium text-base capitalize">
+                                                                {item.clubName}
+                                                            </div>
+                                                            <div className="text-sm italic text-on-surface-variant mt-1">{item.title}</div>
+                                                        </div>
+
+                                                        <div className="text-right">
+                                                            <div className="text-sm text-on-surface-variant whitespace-nowrap">{time}</div>
+                                                            <div className="text-primary italic text-xs mt-1">edit</div>
+                                                        </div>
+                                                    </div>
                                                 </div>
-
-                                                <div className="text-right">
-                                                    <div className="text-sm text-on-surface-variant whitespace-nowrap">{item.time}</div>
-                                                    <div className="text-primary italic text-xs mt-1">edit</div>
-                                                </div>
                                             </div>
-                                        </div>
-                                    </div>
-                                );
-                            })}
+                                        );
+                                    }
+                                )
+                            )}
                         </div>
                     </div>
 

@@ -40,7 +40,7 @@ export const createAnnouncement = async (req: Request, res: Response) => {
 };
 
 export const getNotifications = async (req: Request, res: Response) => {
-    const { userId } = req.params;
+    const userId = (req as any).auth?.userId;
 
     if (!userId) {
         return res.status(400).json({ error: 'Missing userId' });
@@ -63,6 +63,7 @@ export const getNotifications = async (req: Request, res: Response) => {
                         title: notif.title,
                         body: notif.body,
                         pictures: notif.pictures,
+                        clubId: String(notif.club),
                         clubName: clubName,
                         date: notif.createdAt,
                         read: entry.read,
