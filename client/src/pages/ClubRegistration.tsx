@@ -1,4 +1,5 @@
 import { useClubTagsData } from '../hooks/fetchClubTags';
+import { useSchoolData } from '../hooks/fetchSchools';
 import React, { useState } from 'react';
 import { TagSelectionPopup } from '../features/find-clubs/components/TagsSelectionPopup';
 import type { TagData } from '@clubhive/shared';
@@ -8,6 +9,7 @@ import { useToast } from '../hooks/useToast';
 
 export function ClubRegistration() {
     const { tags } = useClubTagsData();
+    const { schools } = useSchoolData();
     const [selectedTags, setSelectedTags] = useState<TagData[]>([]);
 
     const inputClass =
@@ -29,6 +31,7 @@ export function ClubRegistration() {
     const maxTaglineLength = 50;
 
     const { errorToast } = useToast();
+    const { successToast } = useToast();
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
@@ -82,6 +85,7 @@ export function ClubRegistration() {
             const result = await res.json();
             if (result.success) {
                 console.log('Club registered successfully:', result.club);
+                successToast('Club registered successfully!');
             }
         } catch (error) {
             console.error('Error registering club:', error);
@@ -124,10 +128,14 @@ export function ClubRegistration() {
                                         value={school}
                                         onChange={e => setSchool(e.target.value)}
                                     >
-                                        <option className="text-on-background-variant" value="">
+                                        <option value="" disabled>
                                             Select your school
                                         </option>
-                                        <option value="UCSD">UCSD</option>
+                                        {schools.map(school => (
+                                            <option key={school._id} value={school._id}>
+                                                {school.name}
+                                            </option>
+                                        ))}
                                     </select>
                                 </div>
                             </div>
