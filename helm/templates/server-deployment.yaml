@@ -29,11 +29,9 @@ spec:
         env:
         - name: NODE_ENV
           value: "production"
-        - name: MONGODB_URI
-          valueFrom:
-            secretKeyRef:
-              name: mongodb-secret
-              key: uri
+        envFrom:
+        - secretRef:
+            name: env-vars
         resources:
           requests:
             memory: "128Mi"
