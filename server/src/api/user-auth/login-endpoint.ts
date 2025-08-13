@@ -1,8 +1,11 @@
 import { ErrorCode } from '@clubhive/shared';
 import { ApiEndpoint, AuthType } from '@/types/api-types';
 import bcrypt from 'bcrypt';
-import jwt from 'jsonwebtoken';
 import Auth from '@/models/auth-schema';
+import AuthManager from '@/managers/auth-manager';
+import dotenv from 'dotenv';
+
+dotenv.config();
 
 interface LoginRequest {
     email: string;
@@ -34,19 +37,9 @@ export const loginEndpoint: ApiEndpoint<LoginRequest, LoginResponse> = {
         }
         try {
             if (await bcrypt.compare(password, auth.password)) {
-                const REFRESH_TOKEN_SECRET = 'temp refresh'; // real token should go in .env
-                const ACCESS_TOKEN_SECRET = 'temp access';
+                const { accessToken, refreshToken } = AuthManager.generateTokenPair(auth._id.toString(), auth.userId.toString());
 
-                const accessToken = jwt.sign({ authId: auth._id }, ACCESS_TOKEN_SECRET, { expiresIn: '1d' });
-                const refreshToken = jwt.sign({ authId: auth._id }, REFRESH_TOKEN_SECRET, { expiresIn: '7d' });
-                // Store refresh token in HTTP-only cookie
-                res.cookie('refreshToken', refreshToken, {
-                    httpOnly: true, // Prevents XSS attacks
-                    secure: process.env.NODE_ENV === 'development', // HTTPS only in dev; change to production
-                    sameSite: 'strict', // CSRF protection
-                    maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days
-                    path: '/',
-                });
+                AuthManager.setRefreshTokenCookie(res, refreshToken);
 
                 res.json({
                     success: true,
@@ -54,7 +47,7 @@ export const loginEndpoint: ApiEndpoint<LoginRequest, LoginResponse> = {
                     refreshToken: refreshToken,
                 });
             } else {
-                res.status(409).json({
+                res.status(401).json({
                     success: false,
                     error: {
                         message: 'Incorrect Password',

@@ -1,5 +1,6 @@
 import express, { Router, Request, Response, NextFunction, RequestHandler } from 'express';
 import { ApiEndpoint, ApiRequest, ApiResponse, AuthType } from '@/types/api-types';
+import AuthManager from '@/managers/auth-manager';
 import { getClubProfileEndpoint } from '@/api/misc/club-profile-endpoint';
 import { statusEndpoint } from '@/api/misc/status';
 import { testEndpoint } from '@/api/misc/test';
@@ -23,6 +24,7 @@ import { getUsersEndpoint } from '@/api/users/get-users';
 import { getUserEndpoint } from '@/api/users/get-user';
 import { createAccountEndpoint } from '@/api/user-auth/create-account-endpoint';
 import { loginEndpoint } from '@/api/user-auth/login-endpoint';
+import { checkTokenhEndpoint } from '@/api/user-auth/check-token-endpoint';
 import { tokenRefreshEndpoint } from '@/api/user-auth/token-refresh-endpoint';
 import { getSchoolsEndpoint } from '@/api/schools/get-schools';
 import { getSchoolEndpoint } from '@/api/schools/get-school';
@@ -72,6 +74,7 @@ export default class ApiManager {
         this.addEndpoint(createAccountEndpoint);
         this.addEndpoint(loginEndpoint);
         this.addEndpoint(tokenRefreshEndpoint);
+        this.addEndpoint(checkTokenhEndpoint);
 
         // School endpoints
         this.addEndpoint(createSchoolEndpoint);
@@ -142,9 +145,9 @@ export default class ApiManager {
     }
 
     private handleAuth: RequestHandler = async (req: ApiRequest, res: ApiResponse, next: NextFunction): Promise<void> => {
-        const authHeader = req.headers.authorization;
+        const refreshToken = req.cookies?.refreshToken;
 
-        if (!authHeader?.startsWith('Bearer ')) {
+        if (!refreshToken) {
             res.status(401).json({
                 success: false,
                 error: {
@@ -155,10 +158,12 @@ export default class ApiManager {
             return;
         }
 
-        const token = authHeader.split(' ')[1];
-
-        // TODO: Implement proper token verification
-        if (!token) {
+        try {
+            const tokenPayload = AuthManager.verifyRefreshToken(refreshToken);
+            req.auth = AuthManager.toAuthInfo(tokenPayload);
+            console.log(req.auth);
+            next();
+        } catch (error) {
             res.status(401).json({
                 success: false,
                 error: {
@@ -168,14 +173,6 @@ export default class ApiManager {
             });
             return;
         }
-
-        // TODO: Decode token and set req.auth
-        req.auth = {
-            authId: 'test-auth-id',
-            userId: '507f1f77bcf86cd799439020',
-        };
-
-        next();
     };
 
     private addEndpoint<TReq, TRes>(endpoint: ApiEndpoint<TReq, TRes>) {

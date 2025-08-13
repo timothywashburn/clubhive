@@ -2,9 +2,11 @@ import { useEffect, useState, useCallback } from 'react';
 import { SchoolWithCountsData } from '@clubhive/shared';
 import { useToast } from './useToast';
 
-const getAuthHeaders = () => ({
-    Authorization: 'Bearer temp',
-    'Content-Type': 'application/json',
+const getRequestOptions = () => ({
+    credentials: 'include' as RequestCredentials,
+    headers: {
+        'Content-Type': 'application/json',
+    },
 });
 
 export const useSchoolData = () => {
@@ -23,9 +25,7 @@ export const useSchoolData = () => {
         setError(null);
 
         try {
-            const response = await fetch('/api/schools', {
-                headers: getAuthHeaders(),
-            });
+            const response = await fetch('/api/schools', getRequestOptions());
             const data = await response.json();
 
             if (data.success) {

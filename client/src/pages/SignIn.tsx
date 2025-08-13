@@ -1,5 +1,9 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Link } from 'react-router';
+import { useNavigate } from 'react-router';
+import { useAuthStore } from '../stores/authStore';
+import { useAuth } from '../hooks/useAuth';
+import { UnifiedNavigationProps } from '../components/navigation/types.ts';
 import { useToast } from '../hooks/useToast';
 
 /**
@@ -15,33 +19,26 @@ export function SignIn() {
 
     const { errorToast } = useToast();
 
+    const inputClass =
+        'mt-1 block w-full rounded-md text-on-primary-container border border-outline-variant bg-surface px-3 py-2 shadow-sm ' +
+        'focus:border-primary focus:ring focus:ring-primary focus:ring-opacity-50 focus:outline-none';
+
+    const { isAuthenticated, errors, signIn, clearErrors } = useAuthStore();
+    const navigate = useNavigate();
+
+    useEffect(() => {
+        if (isAuthenticated) {
+            navigate('/');
+        }
+    }, [isAuthenticated, navigate]);
+
+    useEffect(() => {
+        clearErrors();
+    }, [clearErrors]);
+
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
-
-        const userData = {
-            email: email,
-            password: password,
-        };
-
-        try {
-            const res = await fetch('/api/user/login', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify(userData),
-            });
-            const result = await res.json();
-            if (result.success) {
-                console.log('Logged in successfully:', result.user);
-            } else {
-                console.log('Incorrect login credentials');
-                errorToast('Incorrect login credentials');
-            }
-        } catch (error) {
-            console.error('Error logging in:', error);
-            errorToast('Failed to sign in. Please try again.');
-        }
+        await signIn(email, password);
     };
 
     return (
@@ -67,11 +64,11 @@ export function SignIn() {
                                     id="email"
                                     name="email"
                                     type="email"
-                                    required
                                     value={email}
                                     onChange={e => setEmail(e.target.value)}
-                                    className="mt-1 block w-full px-3 py-2 border border-outline-variant rounded-md shadow-sm bg-surface text-on-surface placeholder-on-surface-variant focus:outline-none focus:ring-primary focus:border-primary"
+                                    className={inputClass + ' ' + (errors.email ? 'border-red-500' : '')}
                                 />
+                                {errors.email && <p className="text-red-500 text-sm mt-1">{errors.email}</p>}
                             </div>
 
                             <div>
@@ -82,11 +79,11 @@ export function SignIn() {
                                     id="password"
                                     name="password"
                                     type="password"
-                                    required
                                     value={password}
                                     onChange={e => setPassword(e.target.value)}
-                                    className="mt-1 block w-full px-3 py-2 border border-outline-variant rounded-md shadow-sm bg-surface text-on-surface placeholder-on-surface-variant focus:outline-none focus:ring-primary focus:border-primary"
+                                    className={inputClass + ' ' + (errors.password ? 'border-red-500' : '')}
                                 />
+                                {errors.password && <p className="text-red-500 text-sm mt-1">{errors.password}</p>}
                             </div>
                         </div>
 
@@ -113,10 +110,11 @@ export function SignIn() {
                         <div>
                             <button
                                 type="submit"
-                                className="group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-on-primary bg-primary hover:bg-primary/90 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary"
+                                className="group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-on-primary bg-primary hover:bg-primary/90 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary disabled:opacity-50 disabled:cursor-not-allowed"
                             >
-                                Sign in
+                                Sign In
                             </button>
+                            {errors.submit && <p className="text-red-500 text-sm mt-1">{errors.submit}</p>}
                         </div>
                     </form>
                 </div>
