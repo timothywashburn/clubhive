@@ -168,7 +168,7 @@ export function ClubProfile() {
 
                 {/* events */}
                 <h2 className="mt-10 text-2xl font-semibold text-on-surface mb-4">
-                    Upcoming Events ({club.eventCount ?? club.events.length} total)
+                    Our Events ({club.eventCount ?? club.events.length} total)
                 </h2>
 
                 {/* Scrollable horizontal events */}
@@ -193,19 +193,6 @@ export function ClubProfile() {
                 ) : (
                     <p className="text-on-surface-variant">Check back for events soon!</p>
                 )}
-
-                {/* 
-                <div className="space-y-4">
-                    <div className="space-y-4">
-                        {events.map((event, index) => (
-                            <div key={index} className="bg-surface rounded-md p-4 border border-outline-variant">
-                                <h3 className="font-medium text-on-surface">{event.title}</h3>
-                                <p className="text-on-surface-variant">{event.details}</p>
-                            </div>
-                        ))}
-                    </div>
-                </div> 
-                 */}
 
                 {/* announcements */}
                 <div className="mt-10">
