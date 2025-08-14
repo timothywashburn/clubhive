@@ -1,7 +1,7 @@
 import { CalendarHeart, Megaphone } from 'lucide-react';
-import { EventCardHomepage } from '../components/EventCardHomepage.tsx';
+import { EventCardHomepage } from '../features/home/components/EventCardHomepage.tsx';
 import { useNavigate } from 'react-router';
-import { InboxCardHomepage } from '../components/InboxCardHomepage.tsx';
+import { InboxCardHomepage } from '../features/home/components/InboxCardHomepage.tsx';
 
 const messages = [
     {
