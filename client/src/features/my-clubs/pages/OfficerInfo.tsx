@@ -1,6 +1,8 @@
 import { UserClubData } from '@clubhive/shared';
 import { useState } from 'react';
 import { saveClubChanges } from '../../../../../server/src/utils/save-changes';
+import { useState } from 'react';
+import { saveClubChanges } from '../../../../../server/src/utils/save-changes';
 
 interface OfficerInfoProps {
     club: UserClubData;
@@ -184,12 +186,6 @@ export function OfficerInfo({ club }: OfficerInfoProps) {
                             <input type="mongoose.Schema.types.ObjectId" className="w-full p-2 border rounded" defaultValue={club.clubLogo} />
                         </div>
                     )}
-                    {club.pictures && (
-                        <div>
-                            <label className="block text-sm font-medium mb-1">Pictures</label>
-                            <input type="mongoose.Schema.types.ObjectId" className="w-full p-2 border rounded" defaultValue={club.pictures} />
-                        </div>
-                    )} */}
                     <div>
                         <label className="block text-sm font-medium mb-1">Current Tags</label>
                         <div className="flex flex-wrap gap-2 mb-3">
@@ -284,60 +280,70 @@ export function OfficerInfo({ club }: OfficerInfoProps) {
                         <label className="block text-sm font-medium mb-1">Membership Requirements</label>
                         <input type="text" className="w-full p-2 border rounded" placeholder="None" />
                     </div>
-                    {!club.description && (
+                    {!formData.description && (
                         <div>
                             <label className="block text-sm font-medium mb-1">Description</label>
-                            <textarea className="w-full p-2 border rounded" rows={4} defaultValue={club.description} />
+                            <textarea
+                                className="w-full p-2 border rounded"
+                                rows={4}
+                                name="description"
+                                value={formData.description || ''}
+                                onChange={handleChange}
+                            />
                         </div>
                     )}
-                    {!club.url && (
+                    {!formData.url && (
                         <div>
                             <label className="block text-sm font-medium mb-1">Url</label>
-                            <input type="text" className="w-full p-2 border rounded" defaultValue={club.url} />
+                            <input
+                                type="text"
+                                className="w-full p-2 border rounded"
+                                name="url"
+                                value={formData.url || ''}
+                                onChange={handleChange}
+                            />
                         </div>
                     )}
-                    {!club.socials.website && (
+                    {!formData.socials.website && (
                         <div>
                             <label className="block text-sm font-medium mb-1">Website</label>
-                            <input type="text" className="w-full p-2 border rounded" defaultValue={club.socials.website} />
+                            <input
+                                type="text"
+                                className="w-full p-2 border rounded"
+                                name="socials.website"
+                                value={formData.socials.website || ''}
+                                onChange={handleChange}
+                            />
                         </div>
                     )}
-                    {!club.socials.discord && (
+                    {!formData.socials.discord && (
                         <div>
                             <label className="block text-sm font-medium mb-1">Discord</label>
-                            <input type="text" className="w-full p-2 border rounded" defaultValue={club.socials.discord} />
+                            <input
+                                type="text"
+                                className="w-full p-2 border rounded"
+                                name="socials.discord"
+                                value={formData.socials.discord || ''}
+                                onChange={handleChange}
+                            />
                         </div>
                     )}
-                    {!club.socials.instagram && (
+                    {!formData.socials.instagram && (
                         <div>
                             <label className="block text-sm font-medium mb-1">Instagram</label>
-                            <input type="text" className="w-full p-2 border rounded" defaultValue={club.socials.instagram} />
+                            <input
+                                type="text"
+                                className="w-full p-2 border rounded"
+                                name="socials.instagram"
+                                value={formData.socials.instagram || ''}
+                                onChange={handleChange}
+                            />
                         </div>
                     )}
                     <div>
                         <label className="block text-sm font-medium mb-1">Membership Requirements</label>
                         <input type="text" className="w-full p-2 border rounded" placeholder="None" />
                     </div>
-                    {/* {!club.clubLogo && (
-                        <div>
-                            <label className="block text-sm font-medium mb-1">Club Logo</label>
-                            <input
-                                type="mongoose.Schema.types.ObjectId"
-                                className="w-full p-2 border rounded"
-                                defaultValue={club.clubLogo}
-                            />
-                        </div>
-                    )}
-                    {!club.pictures && (
-                        <div>
-                            <label className="block text-sm font-medium mb-1">Pictures</label>
-                            <input
-                                type="mongoose.Schema.types.ObjectId"
-                                className="w-full p-2 border rounded"
-                                defaultValue={club.pictures}
-                            />
-                        </div>
-                    )} */}
                 </div>
             </div>
             <div className="flex gap-4 mt-6">
@@ -354,7 +360,3 @@ export function OfficerInfo({ club }: OfficerInfoProps) {
         </div>
     );
 }
-
-
-
-
