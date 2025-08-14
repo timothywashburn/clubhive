@@ -32,15 +32,15 @@ export const getClubProfileEndpoint: ApiEndpoint<GetClubRequest, GetClubResponse
                 return;
             }
 
-            const today = new Date();
-            today.setHours(0, 0, 0, 0);
+            // const today = new Date();
+            // today.setHours(0, 0, 0, 0);
 
             const events = await Event.find({
                 club: club._id,
-                startTime: { $gte: today.toISOString().split('T')[0] },
+                // startTime: { $gte: today.toISOString().split('T')[0] },
             })
                 .populate('tags')
-                .sort({ date: 1 })
+                //.sort({ date: 1 })
                 .limit(20)
                 .exec();
 
