@@ -1,6 +1,6 @@
-import { DiscordIcon } from '../../../components/DiscordIcon';
-import { InstagramIcon } from '../../../components/InstagramIcon';
-import { GlobeIcon } from '../../../components/GlobeIcon';
+import { DiscordIcon } from '../../../components/icons/DiscordIcon.tsx';
+import { InstagramIcon } from '../../../components/icons/InstagramIcon.tsx';
+import { GlobeIcon } from '../../../components/icons/GlobeIcon.tsx';
 
 type SocialLinksProps = {
     discordUrl?: string;

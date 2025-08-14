@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useLocation } from 'react-router';
 import { Code, Mail, GitBranch, Activity, FileText, Shield, ScrollText } from 'lucide-react';
-import { DiscordIcon } from '../DiscordIcon';
+import { DiscordIcon } from '../icons/DiscordIcon.tsx';
 import ChangelogModal from './ChangelogModal';
 
 export const Footer: React.FC = () => {
