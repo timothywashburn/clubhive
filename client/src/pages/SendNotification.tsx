@@ -82,7 +82,7 @@ export function SendNotification() {
         setIsSubmitting(true);
 
         try {
-            const res = await fetch('/api/announcements', {
+            const res = await fetch('/api/notifications', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -114,14 +114,14 @@ export function SendNotification() {
             <div className="w-full py-8">
                 <div className="mb-8 px-4 sm:px-6 lg:px-8">
                     <h1 className="text-3xl font-bold text-on-surface">Send Notifications</h1>
-                    <p className="text-on-surface-variant mt-2">Plan and send announcements to members of your clubs</p>
+                    <p className="text-on-surface-variant mt-2">Plan and send notifications to members of your clubs</p>
                 </div>
 
                 <div className="flex gap-6 px-4 sm:px-6 lg:px-8">
                     <div className="w-1/3 bg-surface rounded-lg shadow border border-outline-variant">
                         <div className="px-6 py-4 border-b border-outline-variant">
                             <div className="flex items-center justify-between">
-                                <h2 className="text-lg font-medium text-on-surface">Announcement History</h2>
+                                <h2 className="text-lg font-medium text-on-surface">Notification History</h2>
 
                                 <select
                                     className="min-w-48 rounded-md border border-outline-variant bg-surface p-2 text-sm text-on-surface"

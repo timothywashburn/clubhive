@@ -28,8 +28,8 @@ const schema = new Schema(
     { timestamps: true }
 );
 
-export type AnnouncementSchema = InferSchemaType<typeof schema>;
-export type AnnouncementDoc = HydratedDocument<InferSchemaType<typeof schema>>;
+export type NotificationSchema = InferSchemaType<typeof schema>;
+export type NotificationDoc = HydratedDocument<InferSchemaType<typeof schema>>;
 
-const Announcement = mongoose.model('Announcement', schema);
-export default Announcement;
+const Notification = mongoose.model('Notification', schema);
+export default Notification;

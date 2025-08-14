@@ -1,4 +1,4 @@
-export * from './announcement-types.js';
+export * from './notification-types.js';
 export * from './api-types.js';
 export * from './auth-types.js';
 export * from './club-membership-types.js';
