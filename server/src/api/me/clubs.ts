@@ -42,3 +42,26 @@ export const getMyClubsEndpoint: ApiEndpoint<undefined, GetMyClubsResponse> = {
         }
     },
 };
+
+export const getClubMembersEndpoint: ApiEndpoint<{ clubId: string }, any> = {
+    path: '/api/clubs/:clubId/members',
+    method: 'get',
+    auth: AuthType.VERIFIED_EMAIL,
+    handler: async (req, res) => {
+        try {
+            const { clubId } = req.params;
+            const members = await ClubController.getClubMembers(clubId);
+
+            res.json({
+                success: true,
+                members: members.map(m => serializeRecursive(m)),
+            });
+        } catch (error) {
+            console.error('Error fetching club members:', error);
+            res.status(500).json({
+                success: false,
+                error: { message: 'Error fetching club members' },
+            });
+        }
+    },
+};

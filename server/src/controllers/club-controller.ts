@@ -1,12 +1,13 @@
 import { CreateClubRequest, UpdateClubRequest } from '@clubhive/shared';
 import Club, { ClubDoc } from '../models/club-schema';
-import ClubMembership from '../models/club-membership-schema';
+import ClubMembership, { ClubMembershipData } from '../models/club-membership-schema';
 import Event from '../models/event-schema';
 import { updateDocument } from '@/utils/db-doc-utils';
 import { ClubRole } from '@clubhive/shared';
 import ClubMembershipController from './club-membership-controller';
 import EventController from './event-controller';
 import NotificationController from './notification-controller';
+import User, { UserDoc } from '../models/user-schema';
 
 export interface ClubWithCounts extends ClubDoc {
     memberCount: number;
@@ -112,6 +113,26 @@ export default class ClubController {
         return memberships.map(membership => ({
             doc: membership.club,
             userRole: membership.role,
+        }));
+    }
+    static async getClubMembers(clubId: string): Promise<{ user: any; role: ClubRole; joinedAt: Date }[]> {
+        const memberships = await ClubMembership.find({ club: clubId })
+            .populate<{ user: UserDoc }>({
+                path: 'user',
+                // model: User,
+                select: '_id name year major', //pick what is needed
+            })
+            .exec();
+
+        console.log(
+            'Members for CS Club:',
+            memberships.map(m => m.user.name)
+        );
+
+        return memberships.map(m => ({
+            user: (m.user as UserDoc).toObject(),
+            role: m.role,
+            joinedAt: (m as any).joinedAt || m.createdAt,
         }));
     }
 }

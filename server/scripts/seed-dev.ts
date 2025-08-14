@@ -305,6 +305,8 @@ async function seed() {
 
         { user: testUser2._id, club: clubs[2]._id, role: ClubRole.MEMBER },
         { user: testUser2._id, club: clubs[6]._id, role: ClubRole.OWNER },
+
+        { user: testUser._id, club: clubs[0]._id, role: ClubRole.OFFICER },
     ]);
 
     const notifications = await Notification.insertMany([
@@ -563,6 +565,61 @@ async function seed() {
     }
 
     await Event.insertMany(otherClubsEvents);
+
+    //
+    const [userA, userB, userC, userD] = await User.insertMany([
+        {
+            name: 'Alice Johnson',
+            school: ucsd._id,
+            major: 'Computer Science',
+            educationType: EducationType.UNDERGRADUATE,
+            year: Year.SECOND,
+        },
+        {
+            name: 'David Lee',
+            school: ucsd._id,
+            major: 'Math and Computer Science',
+            educationType: EducationType.UNDERGRADUATE,
+            year: Year.THIRD,
+        },
+        {
+            name: 'Bob Ross',
+            school: ucsd._id,
+            major: 'Computer Science',
+            educationType: EducationType.UNDERGRADUATE,
+            year: Year.SECOND,
+        },
+        {
+            name: 'Carol Lee',
+            school: ucsd._id,
+            major: 'Data Science',
+            educationType: EducationType.UNDERGRADUATE,
+            year: Year.FOURTH,
+        },
+    ]);
+
+    await Club.updateOne(
+        { _id: CS_CLUB_ID },
+        {
+            $set: {
+                members: [
+                    { user: userA._id, role: ClubRole.OFFICER, joinedAt: new Date() },
+                    { user: userB._id, role: ClubRole.OFFICER, joinedAt: new Date() },
+                    { user: userC._id, role: ClubRole.OFFICER, joinedAt: new Date() },
+                    { user: userD._id, role: ClubRole.MEMBER, joinedAt: new Date() },
+                    { user: testUser._id, role: ClubRole.OWNER, joinedAt: new Date() },
+                ],
+            },
+        }
+    );
+
+    await ClubMembership.insertMany([
+        { user: testUser._id, club: CS_CLUB_ID, role: ClubRole.OWNER },
+        { user: userA._id, club: CS_CLUB_ID, role: ClubRole.OFFICER },
+        { user: userB._id, club: CS_CLUB_ID, role: ClubRole.OFFICER },
+        { user: userC._id, club: CS_CLUB_ID, role: ClubRole.OFFICER },
+        { user: userD._id, club: CS_CLUB_ID, role: ClubRole.MEMBER },
+    ]);
 
     // Seed configuration
     await ClubhiveConfigModel.create({

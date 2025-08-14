@@ -19,7 +19,7 @@ export const useClubState = (clubs: UserClubData[]) => {
     const validMemberTabs: TabType[] = ['membership', 'info', 'events'];
     const validOfficerTabs: TabType[] = ['membership', 'info', 'events', 'stats', 'members'];
     const validEventTabs: TabType[] = ['event-details', 'event-location', 'event-tap', 'event-funding'];
-    const urlTabs: TabType[] = [...validMemberTabs, 'stats']; // Only these tabs appear in URL
+    const urlTabs: TabType[] = [...validMemberTabs, 'stats', 'members']; // Only these tabs appear in URL
 
     // Find club by URL parameter
     useEffect(() => {
