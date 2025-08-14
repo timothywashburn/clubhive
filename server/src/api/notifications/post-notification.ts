@@ -1,9 +1,9 @@
 import { ApiEndpoint, AuthType } from '@/types/api-types';
-import { PostAnnouncementRequest, PostAnnouncementResponse } from '@clubhive/shared/src/types';
-import { createAnnouncement } from '@/controllers/announcement-controller';
+import { PostNotificationRequest, PostNotificationResponse } from '@clubhive/shared/src/types';
+import { createNotification } from '@/controllers/notification-controller';
 
-export const postAnnouncementEndpoint: ApiEndpoint<PostAnnouncementRequest, PostAnnouncementResponse> = {
-    path: '/api/announcements',
+export const postNotificationEndpoint: ApiEndpoint<PostNotificationRequest, PostNotificationResponse> = {
+    path: '/api/notifications',
     method: 'post',
     auth: AuthType.NONE,
     handler: async (req, res) => {
@@ -20,12 +20,12 @@ export const postAnnouncementEndpoint: ApiEndpoint<PostAnnouncementRequest, Post
         }
 
         try {
-            await createAnnouncement(req, res);
+            await createNotification(req, res);
         } catch (err) {
             res.status(500).json({
                 success: false,
                 error: {
-                    message: 'Failed to create announcement.' + err,
+                    message: 'Failed to create notification.' + err,
                 },
             });
         }
