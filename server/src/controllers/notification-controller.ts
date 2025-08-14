@@ -1,20 +1,20 @@
 import { Request, Response } from 'express';
-import Announcement from '../models/announcement-schema';
+import Notification from '../models/notification-schema';
 import Clubs from '../models/club-schema';
 import UserNotification from '@/models/user-notification-schema';
 import ClubMembership from '@/models/club-membership-schema';
 
-export const createAnnouncement = async (req: Request, res: Response) => {
+export const createNotification = async (req: Request, res: Response) => {
     const { club, title, body, pictures } = req.body;
 
     try {
-        const newAnnouncement = new Announcement({
+        const newNotification = new Notification({
             club: club,
             title: title,
             body: body,
             pictures: pictures,
         });
-        const result = await newAnnouncement.save();
+        const result = await newNotification.save();
 
         const memberships = await ClubMembership.find({ club: club });
 
@@ -33,9 +33,9 @@ export const createAnnouncement = async (req: Request, res: Response) => {
 
         await UserNotification.insertMany(userNotifs);
 
-        res.status(201).json({ newAnnouncement: result });
+        res.status(201).json({ newNotification: result });
     } catch (error) {
-        res.status(500).json({ err: 'Error creating announcement', error });
+        res.status(500).json({ err: 'Error creating notification', error });
     }
 };
 
@@ -52,7 +52,7 @@ export const getNotifications = async (req: Request, res: Response) => {
         const notifications = (
             await Promise.all(
                 userNotifs.map(async entry => {
-                    const notif = await Announcement.findById(entry.notification).lean();
+                    const notif = await Notification.findById(entry.notification).lean();
                     if (!notif) return null;
 
                     const club = await Clubs.findById(notif.club, 'name').lean();
