@@ -36,7 +36,6 @@ export const createClubRequestSchema = z.object({
         .string()
         .regex(/^[a-zA-Z0-9_-]+$/, 'URL can only contain letters, numbers, hyphens, and underscores')
         .max(50, 'URL must be 50 characters or less')
-        .transform(s => (s ? `https://clubhive.timothyw.dev/club-profile/${s}` : undefined))
         .optional(),
     socials: z
         .object({

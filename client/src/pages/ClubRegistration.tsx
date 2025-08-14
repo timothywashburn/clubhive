@@ -51,7 +51,6 @@ export function ClubRegistration() {
             clubLogo: undefined,
             pictures: undefined,
         };
-        console.log(discord);
         // Validate using Zod schema
         const result = createClubRequestSchema.safeParse(clubData);
 
