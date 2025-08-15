@@ -11,9 +11,9 @@ export const clubSchema = z.object({
     description: z.string(),
     url: z.string(),
     socials: z.object({
-        website: z.string(),
-        discord: z.string(),
-        instagram: z.string(),
+        website: z.string().optional(),
+        discord: z.string().optional(),
+        instagram: z.string().optional(),
     }),
     clubLogo: z.string().nullable().optional(),
     pictures: z.array(z.string()),
