@@ -176,12 +176,12 @@ function renderSiteNavigation({
                 {/* Desktop Navigation */}
                 <div className="hidden md:flex justify-between items-center h-16 nav-container relative">
                     {/* Left Content */}
-                    <div className="flex items-center space-x-12">
+                    <div className="flex items-center space-x-8">
                         <Link
                             to={props.siteNavType === 'admin' ? '/admin/dashboard' : '/'}
-                            className="text-xl font-bold text-primary hover:text-primary/90"
+                            className="flex items-center text-primary hover:text-primary/90"
                         >
-                            clubhive
+                            <img src="/clubhive.svg" alt="clubhive" className="h-16 w-32 object-cover object-center" />
                         </Link>
 
                         <AnimatePresence mode="wait">
@@ -291,9 +291,9 @@ function renderSiteNavigation({
                 <div className="md:hidden flex justify-between items-center h-16">
                     <Link
                         to={props.siteNavType === 'admin' ? '/admin/dashboard' : '/'}
-                        className="text-xl font-bold text-primary hover:text-primary/90"
+                        className="flex items-center text-primary hover:text-primary/90"
                     >
-                        clubhive
+                        <img src="/clubhive.svg" alt="clubhive" className="h-16 w-32 object-cover object-center" />
                     </Link>
 
                     <button
