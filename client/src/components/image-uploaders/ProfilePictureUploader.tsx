@@ -36,7 +36,7 @@ export function ProfilePictureUploader({ clubId, maxFileSizeKB = 5000, onSuccess
             console.log(`Deleted old profile picture: ${deletedImageId}`);
         },
         onError: (error: string) => {
-            onError(error);
+            onError?.(error);
         },
     });
 
