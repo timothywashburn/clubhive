@@ -4,11 +4,10 @@ import type { ImageData } from '@clubhive/shared';
 import { useUploadImage } from '../../hooks/uploadImageFiles';
 import { useDeleteImage } from '../../hooks/deleteImageFile';
 
-// BaseImageUploader is a generic image uploader component that can be used for various purposes
+// BaseImageUploader is a generic image uploader component that can be wrapped by components like ProfilePictureUploader
 // It handles file selection, preview, upload, and deletion of images
 // It can be customized with props like max file size, multiple uploads, etc.
 // You won't really need to use this directly, but it serves as a foundation for more specific uploaders like ProfilePictureUploader
-// Other components like ProfilePictureUploader will wrap this component
 
 type BaseImageUploaderProps = {
     clubId: string;

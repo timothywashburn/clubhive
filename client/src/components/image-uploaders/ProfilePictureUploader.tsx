@@ -14,8 +14,7 @@ import { useDeleteImage } from '../../hooks/deleteImageFile';
 // <ProfilePictureUploader
 //      clubId={clubId}
 //      maxFileSizeKB={5000} // Optional, defaults to 5000 KB
-//      onSuccess
-//      onError={(error) => console.error('Failed to upload profile picture:', error)}
+//      onSuccess={() => successToast('Updated Profile Picture!')}
 // />
 
 // note: still need to handle aspect ratio and cropping if needed
