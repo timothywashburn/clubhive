@@ -1,8 +1,14 @@
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import { Eye, X } from 'lucide-react';
 import type { ImageData } from '@clubhive/shared';
-import { useUploadImage } from '../hooks/uploadImageFiles';
-import { useDeleteImage } from '../hooks/deleteImageFile';
+import { useUploadImage } from '../../hooks/uploadImageFiles';
+import { useDeleteImage } from '../../hooks/deleteImageFile';
+
+// BaseImageUploader is a generic image uploader component that can be used for various purposes
+// It handles file selection, preview, upload, and deletion of images
+// It can be customized with props like max file size, multiple uploads, etc.
+// You won't really need to use this directly, but it serves as a foundation for more specific uploaders like ProfilePictureUploader
+// Other components like ProfilePictureUploader will wrap this component
 
 type BaseImageUploaderProps = {
     clubId: string;
@@ -19,6 +25,7 @@ export function BaseImageUploader({ clubId, maxImages, maxFileSizeKB, onSuccess,
     const [thumbnails, setThumbnails] = useState<string[]>([]);
     const [uploading, setUploading] = useState(false);
     const [previewImage, setPreviewImage] = useState<string | null>(null);
+    const fileInputRef = useRef<HTMLInputElement>(null);
 
     const { uploadFile } = useUploadImage({
         clubId,
@@ -38,10 +45,7 @@ export function BaseImageUploader({ clubId, maxImages, maxFileSizeKB, onSuccess,
 
     const { deleteImage } = useDeleteImage({
         onSuccess: () => {
-            // Clear everything after successful delete
-            setUploadedImages([]);
-            setSelectedFiles([]);
-            setThumbnails([]);
+            onSuccess(uploadedImages);
         },
         onError: error => onError(error),
     });
@@ -65,6 +69,12 @@ export function BaseImageUploader({ clubId, maxImages, maxFileSizeKB, onSuccess,
         // Create thumbnails for preview
         const newThumbnails = files.map(file => URL.createObjectURL(file));
         setThumbnails(newThumbnails);
+    };
+
+    const handleRemoveSelectedFile = (indexToRemove: number) => {
+        URL.revokeObjectURL(thumbnails[indexToRemove]);
+        setSelectedFiles(prev => prev.filter((_, index) => index !== indexToRemove));
+        setThumbnails(prev => prev.filter((_, index) => index !== indexToRemove));
     };
 
     const handleUpload = async () => {
@@ -92,6 +102,9 @@ export function BaseImageUploader({ clubId, maxImages, maxFileSizeKB, onSuccess,
     const handleDeleteAll = () => {
         // Delete all uploaded images
         uploadedImages.forEach(img => deleteImage(img._id));
+        setUploadedImages([]);
+        setSelectedFiles([]);
+        setThumbnails([]);
     };
 
     const hasUploaded = uploadedImages.length > 0;
@@ -109,10 +122,17 @@ export function BaseImageUploader({ clubId, maxImages, maxFileSizeKB, onSuccess,
                                 <img src={thumb} alt={`Selected ${idx + 1}`} className="w-full h-full object-cover rounded-md border" />
                                 <button
                                     onClick={() => setPreviewImage(thumb)}
-                                    className="absolute top-1 left-1 p-1 bg-white rounded-full hover:bg-gray-100"
+                                    className="hover: cursor-pointer absolute top-1 left-1 p-1 bg-white rounded-full border border-gray-300 hover:bg-gray-100"
                                     title="Preview image"
                                 >
                                     <Eye size={16} />
+                                </button>
+                                <button
+                                    onClick={() => handleRemoveSelectedFile(idx)}
+                                    className="hover: cursor-pointer absolute top-1 right-1 p-1 bg-red-500 text-white rounded-full hover:bg-red-600"
+                                    title="Remove from selection"
+                                >
+                                    <X size={16} />
                                 </button>
                             </div>
                         ))}
@@ -139,19 +159,34 @@ export function BaseImageUploader({ clubId, maxImages, maxFileSizeKB, onSuccess,
             </div>
 
             {/* File Input - disabled after upload */}
-            <input
-                type="file"
-                accept="image/*"
-                multiple
-                onChange={handleFileChange}
-                disabled={uploading || hasUploaded}
-                className="block w-full text-sm text-on-background-variant
-              file:mr-4 file:py-2 file:px-4
-              file:rounded-md file:border-0
-              file:text-sm file:font-semibold
-              file:bg-primary file:text-on-primary
-              disabled:opacity-50 disabled:cursor-not-allowed"
-            />
+            <div className="space-y-2">
+                <div className="flex items-center gap-3">
+                    <input
+                        type="file"
+                        accept="image/*"
+                        multiple
+                        onChange={handleFileChange}
+                        disabled={uploading || hasUploaded}
+                        className="hidden"
+                        ref={fileInputRef}
+                    />
+                    <button
+                        onClick={() => fileInputRef.current?.click()}
+                        disabled={uploading || hasUploaded}
+                        className="px-4 py-2 text-sm font-medium rounded-md
+                        bg-surface border border-outline-variant text-on-surface
+                        hover:bg-surface-variant hover: cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
+                    >
+                        Choose Files
+                    </button>
+                    {hasSelected && (
+                        <span className="text-sm text-on-background-variant">
+                            {selectedFiles.length} file{selectedFiles.length !== 1 ? 's' : ''} selected
+                            {maxImages && ` (max ${maxImages})`}
+                        </span>
+                    )}
+                </div>
+            </div>
 
             {/* Upload Button - only show when files are selected and nothing uploaded yet */}
             {hasSelected && !hasUploaded && (
