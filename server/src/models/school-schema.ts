@@ -14,6 +14,14 @@ const schema = new Schema({
         type: String,
         required: true,
     },
+    emailPattern: {
+        type: String,
+        required: true,
+    },
+    emailError: {
+        type: String,
+        required: true,
+    },
 });
 
 export type SchoolSchema = InferSchemaType<typeof schema>;
