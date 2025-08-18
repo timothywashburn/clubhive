@@ -4,12 +4,12 @@ import { ApiEndpoint, AuthType } from '@/types/api-types';
 import { serializeRecursive } from '@/utils/db-doc-utils';
 
 export const getImageEndpoint: ApiEndpoint<undefined, GetImageResponse> = {
-    path: 'api/images/:id',
+    path: '/api/images/:id',
     method: 'get',
     auth: AuthType.NONE,
     handler: async (req, res) => {
         try {
-            const queryData = getImageRequestSchema.safeParse(req.query);
+            const queryData = getImageRequestSchema.safeParse(req.params);
 
             if (!queryData.success) {
                 res.status(400).json({
