@@ -17,7 +17,9 @@ import { useDeleteImage } from '../../hooks/deleteImageFile';
 //      maxFileSizeKB={5000} // Optional, defaults to 5000 KB
 // />
 
-// important: this component will always replace and delete all old gallery pictures
+// important: this component will always replace and delete all old gallery pictures every time the user uploads new photos,
+// its kind of a makeshift way to handle database clutter
+// basically, it assumes the user wants to manage gallery pictures as a single batch every time
 
 type GalleryPicturesUploaderProps = {
     clubId: string;
