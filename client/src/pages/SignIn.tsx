@@ -88,18 +88,6 @@ export function SignIn() {
                         </div>
 
                         <div className="flex items-center justify-between">
-                            <div className="flex items-center">
-                                <input
-                                    id="remember-me"
-                                    name="remember-me"
-                                    type="checkbox"
-                                    className="h-4 w-4 text-primary focus:ring-primary border-outline-variant rounded"
-                                />
-                                <label htmlFor="remember-me" className="ml-2 block text-sm text-on-surface">
-                                    Remember me
-                                </label>
-                            </div>
-
                             <div className="text-sm">
                                 <a href="#" className="font-medium text-primary hover:text-primary/90">
                                     Forgot your password?
