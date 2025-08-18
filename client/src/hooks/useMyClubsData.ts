@@ -1,7 +1,7 @@
 import { ApiResponseBody, GetMyClubsResponse, isSuccess, UserClubData } from '@clubhive/shared';
 import { useState, useEffect } from 'react';
-import { MembershipData } from '../types';
-import { useToast } from '../../../hooks/useToast';
+import { MembershipData } from '../features/my-clubs/types';
+import { useToast } from './useToast.ts';
 
 export const useMyClubsData = () => {
     const [clubs, setClubs] = useState<UserClubData[]>([]);

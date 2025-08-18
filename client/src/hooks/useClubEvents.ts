@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { ApiErrorResponse, ApiResponseBody, EventData, GetEventsResponse, isSuccess } from '@clubhive/shared';
-import { useToast } from '../../../hooks/useToast';
+import { useToast } from './useToast.ts';
 
 export const useClubEvents = (clubId: string | null) => {
     const [events, setEvents] = useState<EventData[]>([]);

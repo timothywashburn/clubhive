@@ -1,7 +1,7 @@
 import { Eye, Save, X } from 'lucide-react';
 import { motion } from 'framer-motion';
 import { UserClubData, EventData } from '@clubhive/shared';
-import { useMyClubsData } from '../hooks';
+import { useMyClubsData } from '../../../hooks/useMyClubsData.ts';
 
 interface ClubHeaderProps {
     club: UserClubData;

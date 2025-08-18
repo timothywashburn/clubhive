@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router';
 import { UserClubData } from '@clubhive/shared';
-import { TabType } from '../types';
+import { TabType } from '../features/my-clubs/types';
 
 export const useClubState = (clubs: UserClubData[]) => {
     const { clubUrl, tab } = useParams<{ clubUrl: string; tab: string }>();
