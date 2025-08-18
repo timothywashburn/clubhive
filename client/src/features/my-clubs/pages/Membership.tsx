@@ -1,8 +1,8 @@
 import { LogOut, Crown, Trash2, Globe, Instagram, Mail } from 'lucide-react';
 import { UserClubData } from '@clubhive/shared';
-import { useMyClubsData } from '../hooks';
 import { DangerZone } from '../../../components/DangerZone';
 import { useState } from 'react';
+import { useMyClubsData } from '../../../hooks/useMyClubsData.ts';
 
 interface MembershipProps {
     club: UserClubData;
@@ -12,7 +12,7 @@ interface MembershipProps {
 export function Membership({ club, isOwner }: MembershipProps) {
     const { getMembershipData } = useMyClubsData();
     const membershipData = getMembershipData(club);
-    
+
     const [leaveLoading, setLeaveLoading] = useState(false);
     const [transferLoading, setTransferLoading] = useState(false);
     const [disbandLoading, setDisbandLoading] = useState(false);
@@ -159,33 +159,39 @@ export function Membership({ club, isOwner }: MembershipProps) {
                             description="These actions are irreversible and will permanently affect your membership."
                             actions={[
                                 // Non-owner actions
-                                ...(!isOwner ? [{
-                                    label: "Leave Club",
-                                    description: "Remove yourself from this club and lose access to all content.",
-                                    onClick: handleLeaveClub,
-                                    isLoading: leaveLoading,
-                                    loadingText: "Leaving...",
-                                    icon: LogOut
-                                }] : []),
+                                ...(!isOwner
+                                    ? [
+                                          {
+                                              label: 'Leave Club',
+                                              description: 'Remove yourself from this club and lose access to all content.',
+                                              onClick: handleLeaveClub,
+                                              isLoading: leaveLoading,
+                                              loadingText: 'Leaving...',
+                                              icon: LogOut,
+                                          },
+                                      ]
+                                    : []),
                                 // Owner actions
-                                ...(isOwner ? [
-                                    {
-                                        label: "Transfer Ownership",
-                                        description: "Transfer ownership of this club to another member.",
-                                        onClick: handleTransferOwnership,
-                                        isLoading: transferLoading,
-                                        loadingText: "Processing...",
-                                        icon: Crown
-                                    },
-                                    {
-                                        label: "Disband Club",
-                                        description: "Permanently delete this club and all its data. This cannot be undone.",
-                                        onClick: handleDisbandClub,
-                                        isLoading: disbandLoading,
-                                        loadingText: "Disbanding...",
-                                        icon: Trash2
-                                    }
-                                ] : [])
+                                ...(isOwner
+                                    ? [
+                                          {
+                                              label: 'Transfer Ownership',
+                                              description: 'Transfer ownership of this club to another member.',
+                                              onClick: handleTransferOwnership,
+                                              isLoading: transferLoading,
+                                              loadingText: 'Processing...',
+                                              icon: Crown,
+                                          },
+                                          {
+                                              label: 'Disband Club',
+                                              description: 'Permanently delete this club and all its data. This cannot be undone.',
+                                              onClick: handleDisbandClub,
+                                              isLoading: disbandLoading,
+                                              loadingText: 'Disbanding...',
+                                              icon: Trash2,
+                                          },
+                                      ]
+                                    : []),
                             ]}
                         />
                     </div>
