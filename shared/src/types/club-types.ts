@@ -3,6 +3,12 @@ import { ClubRole } from './club-membership-types.js';
 import { schoolSchema } from './school-types.js';
 import { tagSchema } from './tag-types.js';
 
+export enum ClubStatus {
+    ANYONE_CAN_JOIN = 'Anyone can join',
+    REQUEST_TO_JOIN = 'Request to join',
+    CLOSED = 'Closed',
+}
+
 export const clubSchema = z.object({
     _id: z.string(),
     school: schoolSchema,

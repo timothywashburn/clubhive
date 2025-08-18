@@ -20,10 +20,6 @@ const schema = new Schema({
         type: String,
         default: '',
     },
-    requirements: {
-        type: String,
-        default: '',
-    },
     type: {
         type: String,
         enum: Object.values(EventType),
