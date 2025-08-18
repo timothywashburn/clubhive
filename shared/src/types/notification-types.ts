@@ -1,6 +1,6 @@
 import { z } from 'zod';
 
-export const announcementSchema = z.object({
+export const notificationSchema = z.object({
     _id: z.string(),
     club: z.string(),
     title: z.string(),
@@ -24,20 +24,20 @@ export const notifDisplaySchema = z.object({
     userNotifId: z.string(),
 });
 
-export const postAnnouncementRequestSchema = z.object({
+export const postNotificationRequestSchema = z.object({
     club: z.string(),
     title: z.string(),
     body: z.string(),
     pictures: z.array(z.string()),
 });
 
-export const postAnnouncementResponseSchema = z.object({
+export const postNotificationResponseSchema = z.object({
     success: z.boolean(),
 });
 
-export type AnnouncementData = z.infer<typeof announcementSchema>;
+export type NotificationData = z.infer<typeof notificationSchema>;
 
-export type PostAnnouncementRequest = z.infer<typeof postAnnouncementRequestSchema>;
-export type PostAnnouncementResponse = z.infer<typeof postAnnouncementResponseSchema>;
+export type PostNotificationRequest = z.infer<typeof postNotificationRequestSchema>;
+export type PostNotificationResponse = z.infer<typeof postNotificationResponseSchema>;
 
 export type NotifDisplayData = z.infer<typeof notifDisplaySchema>;

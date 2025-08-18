@@ -196,7 +196,7 @@ export function ClubProfile() {
 
                 {/* announcements */}
                 <div className="mt-10">
-                    <h2 className="text-2xl font-semibold text-on-surface mb-4">Announcements</h2>
+                    <h2 className="text-2xl font-semibold text-on-surface mb-4">Notifications</h2>
                     <div className="bg-surface rounded-lg p-6 border border-outline-variant">
                         <ul className="list-disc list-inside space-y-3 text-on-surface-variant">
                             <li>Club applications open until this date!</li>
