@@ -29,12 +29,15 @@ export function useClubMembers(clubId: string | null) {
             .finally(() => setLoading(false));
     }, [clubId]);
 
-    return { members, loading, error };
+    return { members, loading, error, setMembers };
 }
 
 export function Members({ club }: { club: any }) {
-    const { members, loading, error } = useClubMembers(club._id);
+    const { members, loading, error, setMembers } = useClubMembers(club._id);
     const [searchTerm, setSearchTerm] = useState('');
+    const [editingRole, setEditingRole] = useState<string | null>(null);
+    const [tempRole, setTempRole] = useState('');
+    const [updatingRole, setUpdatingRole] = useState<string | null>(null);
 
     if (loading) return <p> Loading members...</p>;
     if (error) return <p>Error: {error}</p>;
@@ -43,10 +46,8 @@ export function Members({ club }: { club: any }) {
     const filteredMembers = members.filter(member => member.name?.toLowerCase().includes(searchTerm.toLowerCase()));
 
     const categorizeMembers = (members: any[]) => {
-        const officers = members.filter(member =>
-            ['president', 'vice president', 'secretary', 'treasurer'].includes(member.role?.toLowerCase())
-        );
-        const execs = members.filter(member => ['executive', 'exec', 'board member', 'director'].includes(member.role?.toLowerCase()));
+        const officers = members.filter(member => ['officer'].includes(member.role?.toLowerCase()));
+        const execs = members.filter(member => ['owner', 'principal member'].includes(member.role?.toLowerCase()));
         const regularMembers = members.filter(
             member => !officers.some(officer => officer._id === member._id) && !execs.some(exec => exec._id === member._id)
         );
@@ -66,10 +67,52 @@ export function Members({ club }: { club: any }) {
                     <div className="space-y-3">
                         {membersList.map((member: any) => (
                             <div key={member._id} className="p-3 bg-surface rounded-lg border border-outline-variant">
-                                <p className="font-medium text-base">{member.name}</p>
-                                <p className="text-xs text-on-surface-variant">{member.year}</p>
-                                <p className="text-xs text-on-surface-variant">{member.major}</p>
-                                <p className="text-xs font-semibold text-primary">{member.role}</p>
+                                <div className="flex justify-between">
+                                    {/* Left side: Name and Role */}
+                                    <div className="flex-1">
+                                        <p className="font-medium text-base text-on-surface">{member.name}</p>
+                                        <p className="text-xs font-semibold text-primary">{member.role}</p>
+
+                                        {editingRole === member._id ? (
+                                            <div className="flex items-center gap-2 mt-1">
+                                                <input
+                                                    type="text"
+                                                    value={tempRole}
+                                                    onChange={e => setTempRole(e.target.value)}
+                                                    className="text-xs px-2 py-1 border border-outline-variant rounded bg-surface text-on-surface focus:outline-none focus:ring-1 focus:ring-primary"
+                                                    autoFocus
+                                                />
+                                                <button
+                                                    onClick={() => handleRoleSave(member._id)}
+                                                    disabled={updatingRole === member._id}
+                                                    className="text-xs px-2 py-1 bg-primary text-on-primary rounded hover:bg-primary-dark disabled:opacity-50"
+                                                >
+                                                    {updatingRole === member._id ? '...' : '✓'}
+                                                </button>
+                                                <button
+                                                    onClick={handleRoleCancel}
+                                                    disabled={updatingRole === member._id}
+                                                    className="text-xs px-2 py-1 bg-error text-on-error rounded hover:bg-error-dark disabled:opacity-50"
+                                                >
+                                                    ✕
+                                                </button>
+                                            </div>
+                                        ) : (
+                                            <button
+                                                onClick={() => handleRoleEdit(member._id, member.role)}
+                                                className="text-xs font-semibold text-primary hover:text-primary-dark hover:underline cursor-pointer text-left"
+                                            >
+                                                {member.role} ✏️
+                                            </button>
+                                        )}
+                                    </div>
+
+                                    {/* Right side: Year and Major */}
+                                    <div className="text-right">
+                                        <p className="text-xs text-on-surface-variant">Year: {member.year}</p>
+                                        <p className="text-xs text-on-surface-variant">Major: {member.major}</p>
+                                    </div>
+                                </div>
                             </div>
                         ))}
                     </div>
@@ -77,6 +120,45 @@ export function Members({ club }: { club: any }) {
             </div>
         </div>
     );
+
+    const handleRoleEdit = (memberId: string, currentRole: string) => {
+        setEditingRole(memberId);
+        setTempRole(currentRole);
+    };
+
+    const handleRoleSave = async (memberId: string) => {
+        setUpdatingRole(memberId);
+        try {
+            const response = await fetch(`/api/clubs/${club._id}/members/${memberId}/role`, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                credentials: 'include',
+                body: JSON.stringify({ role: tempRole }),
+            });
+
+            const data = await response.json();
+
+            if (data.success) {
+                setMembers(prevMembers => prevMembers.map(member => (member._id === memberId ? { ...member, role: tempRole } : member)));
+                setEditingRole(null);
+                setTempRole('');
+            } else {
+                alert('Failed to update role: ' + data.message);
+            }
+        } catch (err) {
+            console.error('Error updating role:', err);
+            alert('Failed to update role');
+        } finally {
+            setUpdatingRole(null);
+        }
+    };
+
+    const handleRoleCancel = () => {
+        setEditingRole(null);
+        setTempRole('');
+    };
 
     return (
         <div className="space-y-6">
@@ -118,8 +200,8 @@ export function Members({ club }: { club: any }) {
 
             {/* Three Column Layout */}
             <div className="flex flex-col lg:flex-row gap-6">
-                {renderMemberColumn('Officers', officers, 'bg-surface-variant')}
                 {renderMemberColumn('Execs', execs, 'bg-surface-variant')}
+                {renderMemberColumn('Officers', officers, 'bg-surface-variant')}
                 {renderMemberColumn('Members', regularMembers, 'bg-surface-variant')}
             </div>
         </div>

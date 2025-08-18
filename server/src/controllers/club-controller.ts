@@ -125,7 +125,7 @@ export default class ClubController {
             .exec();
 
         console.log(
-            'Members for CS Club:',
+            'Members for Club:',
             memberships.map(m => m.user.name)
         );
 
@@ -134,5 +134,14 @@ export default class ClubController {
             role: m.role,
             joinedAt: (m as any).joinedAt || m.createdAt,
         }));
+    }
+    static async updateMemberRole(clubId: string, memberId: string, newRole: ClubRole): Promise<boolean> {
+        try {
+            const result = await ClubMembership.findOneAndUpdate({ club: clubId, user: memberId }, { role: newRole }, { new: true }).exec();
+            return result !== null;
+        } catch (error) {
+            console.error('Error updating member role: ', error);
+            throw error;
+        }
     }
 }
