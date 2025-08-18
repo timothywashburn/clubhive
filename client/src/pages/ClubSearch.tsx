@@ -8,6 +8,7 @@ import ClubCardSmall from '../features/find-clubs/components/ClubCardSmall';
 import FilterTagsButton from '../features/find-clubs/components/FilterTagsButton';
 import { getTagColor } from '../features/find-clubs/utils/TagColors';
 import SocialLinks from '../features/find-clubs/components/SocialLinks';
+import { useImageData } from '../hooks/getImageFile';
 
 export function Clubs() {
     const [searchTerm, setSearchTerm] = useState('');
@@ -15,6 +16,10 @@ export function Clubs() {
     const [selectedTags, setSelectedTags] = useState<TagData[]>([]);
     const { clubs, isLoading, error } = useClubData();
     const { tags } = useClubTagsData();
+
+    // this is how you get the club logo image data for the selected club
+    const { image: clubLogoImage, error: logoError } = useImageData(selectedClub?.clubLogo ?? null);
+    const logoUrl = clubLogoImage?.url && !logoError ? clubLogoImage.url : '/ucsd-logo.png';
 
     if (isLoading) return <p className="p-4 text-on-surface-variant">Loading clubs...</p>;
     if (error) return <p className="p-4 text-red-500">Error: {error}</p>;
@@ -69,6 +74,7 @@ export function Clubs() {
                                     id={club._id}
                                     createdAt={club.createdAt}
                                     isSelected={selectedClub?._id === club._id}
+                                    clubLogo={club.clubLogo}
                                     onClick={() => setSelectedClub(club)}
                                 />
                             ))}
@@ -82,7 +88,11 @@ export function Clubs() {
                                     <div
                                         className={`w-30 h-30 rounded-full flex items-center justify-center text-sm font-semibold bg-primary-container text-primary`}
                                     >
-                                        <img src="/ucsd-logo.png" alt={selectedClub.name} className="w-30 h-30 object-cover rounded-full" />
+                                        <img
+                                            src={logoUrl}
+                                            alt={selectedClub?.name ?? 'Club Logo'}
+                                            className="w-30 h-30 object-cover rounded-full"
+                                        />
                                     </div>
                                     <div className="flex flex-col flex-1 overflow-hidden -mb-6">
                                         <h2 className="text-4xl text-on-surface font-bold mb-2">{selectedClub.name}</h2>
