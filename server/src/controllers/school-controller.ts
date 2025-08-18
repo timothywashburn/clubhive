@@ -14,6 +14,8 @@ export default class SchoolController {
         const newSchool = new School({
             name: data.name,
             location: data.location,
+            emailPattern: data.emailPattern,
+            emailError: data.emailError,
         });
 
         const result = await newSchool.save();
@@ -74,5 +76,17 @@ export default class SchoolController {
     static async deleteSchool(id: string): Promise<boolean> {
         const result = await School.findByIdAndDelete(id).exec();
         return result !== null;
+    }
+
+    static async validateEmail(schoolId: string, email: string): Promise<undefined | { error: string }> {
+        const school = await School.findById(schoolId).exec();
+        if (!school) {
+            return { error: 'Invalid school' };
+        }
+
+        const emailRegex = new RegExp(school.emailPattern);
+        if (!emailRegex.test(email)) {
+            return { error: school.emailError };
+        }
     }
 }

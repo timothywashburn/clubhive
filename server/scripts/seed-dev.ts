@@ -33,7 +33,13 @@ async function seed() {
     await UserNotification.deleteMany({});
 
     const [ucsd] = await School.insertMany([
-        { _id: UCSD_SCHOOL_ID, name: 'University of California, San Diego', location: 'San Diego, CA' },
+        {
+            _id: UCSD_SCHOOL_ID,
+            name: 'University of California, San Diego',
+            location: 'San Diego, CA',
+            emailPattern: '^[a-zA-Z0-9._%+-]+@ucsd\\.edu$',
+            emailError: 'Please use your UCSD email address (example@ucsd.edu)',
+        },
     ]);
 
     const tags = await Tag.insertMany([
