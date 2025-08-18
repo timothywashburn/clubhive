@@ -1,5 +1,4 @@
 import { motion, AnimatePresence } from 'framer-motion';
-import { useClubState, useMyClubsData, useClubEvents } from './hooks';
 import { ClubSelector, ClubHeader, MemberInfo, OfficerInfo, Events, Stats, Membership, EmptyState, RegisterClubButton } from './components';
 import { UnifiedNavigation } from '../../components/navigation';
 import { EventPlanner } from './event-planner';
@@ -7,6 +6,9 @@ import { EventDetails, LocationPicker } from './event-editor';
 import { EventData, EventType } from '@clubhive/shared';
 import { eventService } from '../../services/eventService';
 import React, { useState } from 'react';
+import { useMyClubsData } from '../../hooks/useMyClubsData.ts';
+import { useClubState } from '../../hooks/useClubState.ts';
+import { useClubEvents } from '../../hooks/useClubEvents.ts';
 
 export function MyClubs() {
     const { clubs, loading, error } = useMyClubsData();
