@@ -3,6 +3,7 @@ import { z } from 'zod';
 export const imageSchema = z.object({
     _id: z.string(),
     url: z.string(),
+    public_id: z.string(), // Cloudinary public ID
     uploadedBy: z.string(), // user id
     club: z.string(), // club id
     createdAt: z.string(),

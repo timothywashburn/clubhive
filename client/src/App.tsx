@@ -25,6 +25,8 @@ import { StaticHoneycomb } from './components/honeycomb';
 import { useThemeStore } from './stores/themeStore.ts';
 import { useAuthStore } from './stores/authStore.ts';
 
+import { TestImages } from './pages/TestImages.tsx';
+
 function AppContent() {
     const { initializeAuth, isAuthenticated } = useAuthStore();
     const [scrollY, setScrollY] = useState(0);
@@ -99,6 +101,7 @@ function AppContent() {
                         <Route path="/admin/users" element={<AdminUsers />} />
                         <Route path="/send-notification" element={<SendNotification />} />
                         <Route path="*" element={<NotFound />} />
+                        <Route path="/test-images" element={<TestImages />} />
                     </Routes>
                 </div>
                 <Footer />
