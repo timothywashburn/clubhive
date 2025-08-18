@@ -38,7 +38,8 @@ import { getWeeklyVenueAvailabilityEndpoint } from '@/api/venues/weekly-availabi
 import { getMonthlyVenueAvailabilityEndpoint } from '@/api/venues/monthly-availability';
 import { getNotificationsEndpoint } from '@/api/notifications/get-notifications';
 import { markReadEndpoint } from '@/api/notifications/mark-read';
-import { postAnnouncementEndpoint } from '@/api/notifications/post-announcement';
+import { postNotificationEndpoint } from '@/api/notifications/post-notification';
+
 import { uploadImageEndpoint } from '@/api/images/create-image';
 import { deleteImageEndpoint } from '@/api/images/delete-image';
 import { getImageEndpoint } from '@/api/images/get-image';
@@ -95,7 +96,7 @@ export default class ApiManager {
         // Notifications endpoints
         this.addEndpoint(getNotificationsEndpoint);
         this.addEndpoint(markReadEndpoint);
-        this.addEndpoint(postAnnouncementEndpoint);
+        this.addEndpoint(postNotificationEndpoint);
 
         // Me endpoints
         this.addEndpoint(getMyClubsEndpoint);

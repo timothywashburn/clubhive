@@ -6,7 +6,7 @@ import User, { EducationType, Year } from '../src/models/user-schema';
 import Auth from '../src/models/auth-schema';
 import ClubMembership from '../src/models/club-membership-schema';
 import Event from '../src/models/event-schema';
-import Announcement from '../src/models/announcement-schema';
+import Notification from '../src/models/notification-schema';
 import UserNotification from '../src/models/user-notification-schema';
 import { ClubhiveConfigModel } from '../src/models/clubhive-config-schema';
 import { EventType, ClubRole } from '@clubhive/shared';
@@ -29,7 +29,7 @@ async function seed() {
     await ClubMembership.deleteMany({});
     await Event.deleteMany({});
     await ClubhiveConfigModel.deleteMany({});
-    await Announcement.deleteMany({});
+    await Notification.deleteMany({});
     await UserNotification.deleteMany({});
 
     const [ucsd] = await School.insertMany([
@@ -290,7 +290,7 @@ async function seed() {
         { user: testUser2._id, club: clubs[6]._id, role: ClubRole.OWNER },
     ]);
 
-    const announcements = await Announcement.insertMany([
+    const notifications = await Notification.insertMany([
         {
             club: clubs[0]._id,
             title: 'Meeting Location Changed',
@@ -322,17 +322,17 @@ async function seed() {
     await UserNotification.insertMany([
         {
             user: TEST_USER_ID,
-            notification: announcements[0]._id,
+            notification: notifications[0]._id,
             read: false,
         },
         {
             user: TEST_USER_ID,
-            notification: announcements[1]._id,
+            notification: notifications[1]._id,
             read: true,
         },
         {
             user: TEST_USER_ID,
-            notification: announcements[2]._id,
+            notification: notifications[2]._id,
             read: false,
         },
     ]);
