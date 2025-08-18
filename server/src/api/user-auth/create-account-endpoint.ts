@@ -3,6 +3,7 @@ import { ApiEndpoint, AuthType } from '@/types/api-types';
 import bcrypt from 'bcrypt';
 import User from '@/models/user-schema';
 import Auth from '@/models/auth-schema';
+import SchoolController from '@/controllers/school-controller';
 import mongoose from 'mongoose';
 
 interface CreateAccountRequest {
@@ -33,6 +34,19 @@ export const createAccountEndpoint: ApiEndpoint<CreateAccountRequest, CreateAcco
                     success: false,
                     error: {
                         message: 'User already registered',
+                        code: ErrorCode.INVALID_INPUT,
+                    },
+                });
+                return;
+            }
+
+            // Validate email against school's email pattern
+            const emailValidation = await SchoolController.validateEmail(school, email);
+            if (emailValidation) {
+                res.status(400).json({
+                    success: false,
+                    error: {
+                        message: emailValidation.error,
                         code: ErrorCode.INVALID_INPUT,
                     },
                 });

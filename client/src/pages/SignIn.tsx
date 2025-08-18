@@ -2,17 +2,8 @@ import { useState, useEffect } from 'react';
 import { Link } from 'react-router';
 import { useNavigate } from 'react-router';
 import { useAuthStore } from '../stores/authStore';
-import { useAuth } from '../hooks/useAuth';
-import { UnifiedNavigationProps } from '../components/navigation/types.ts';
 import { useToast } from '../hooks/useToast';
 
-/**
- * THIS CLASS IS AI GENERATED AND TEMPORARY
- *
- * This class is a placeholder that bears no resemblance to the real
- * implementation for this page. This code is temporary and can be
- * replaced by the real implementation at any time.
- */
 export function SignIn() {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
@@ -110,7 +101,7 @@ export function SignIn() {
                         <div>
                             <button
                                 type="submit"
-                                className="group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-on-primary bg-primary hover:bg-primary/90 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary disabled:opacity-50 disabled:cursor-not-allowed"
+                                className="group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-on-primary bg-primary hover:bg-primary/90 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer"
                             >
                                 Sign In
                             </button>
