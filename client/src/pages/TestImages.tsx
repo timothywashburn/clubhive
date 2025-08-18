@@ -1,4 +1,5 @@
 import { ProfilePictureUploader } from '../components/image-uploaders/ProfilePictureUploader';
+import { GalleryPicturesUploader } from '../components/image-uploaders/GalleryPicturesUploader';
 import { useToast } from '../hooks/useToast';
 
 // TestImages component is a simple page to test image uploaders
@@ -17,6 +18,12 @@ export function TestImages() {
                     clubId={clubId}
                     maxFileSizeKB={5000} // Optional, defaults to 5000 KB
                     onSuccess={() => successToast('Updated Profile Picture!')}
+                />
+
+                <GalleryPicturesUploader
+                    clubId={clubId}
+                    maxImages={10} // Optional, defaults to 10
+                    maxFileSizeKB={5000} // Optional, defaults to 5000 KB
                 />
             </div>
         </div>
