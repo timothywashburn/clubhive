@@ -3,7 +3,6 @@ import { CreateImageRequest, CreateImageResponse, createImageRequestSchema, imag
 import ImageController from '@/controllers/image-controller';
 import { ApiEndpoint, AuthType } from '@/types/api-types';
 import { upload } from '@/utils/cloudinary-multer';
-import Image from '@/models/image-schema';
 import { serializeRecursive } from '@/utils/db-doc-utils';
 import { z } from 'zod';
 import multer from 'multer';
@@ -48,6 +47,7 @@ export const uploadImageEndpoint: ApiEndpoint<CreateImageRequest, CreateImageRes
 
                 const newImage = await ImageController.createImage({
                     url: req.file.path, // Cloudinary URL
+                    public_id: req.file.filename, // Cloudinary public ID
                     uploadedBy: req.auth!.userId,
                     club: data.clubId,
                 });
@@ -57,7 +57,6 @@ export const uploadImageEndpoint: ApiEndpoint<CreateImageRequest, CreateImageRes
                     image: imageSchema.parse(serializeRecursive(newImage)),
                 });
             } catch (error) {
-                console.error('Error uploading image:', error);
                 let message = 'Error uploading image';
 
                 if (error instanceof z.ZodError) {
