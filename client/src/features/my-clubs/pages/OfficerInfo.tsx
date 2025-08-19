@@ -1,8 +1,6 @@
 import { UserClubData } from '@clubhive/shared';
 import { useState } from 'react';
 import { saveClubChanges } from '../../../../../server/src/utils/save-changes';
-import { useState } from 'react';
-import { saveClubChanges } from '../../../../../server/src/utils/save-changes';
 
 interface OfficerInfoProps {
     club: UserClubData;
