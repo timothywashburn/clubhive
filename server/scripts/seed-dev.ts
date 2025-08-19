@@ -28,36 +28,6 @@ interface MajorDistribution {
     major: string;
     count: number;
 }
-import ClubSnapshot from '../src/models/club-snapshot-schema';
-import dotenv from 'dotenv';
-
-dotenv.config();
-
-interface MemberDataPoint {
-    date: string;
-    newMembers: number;
-    leavingMembers: number;
-}
-
-interface MajorDistribution {
-    major: string;
-    count: number;
-}
-import ClubSnapshot from '../src/models/club-snapshot-schema';
-import dotenv from 'dotenv';
-
-dotenv.config();
-
-interface MemberDataPoint {
-    date: string;
-    newMembers: number;
-    leavingMembers: number;
-}
-
-interface MajorDistribution {
-    major: string;
-    count: number;
-}
 
 const TEST_USER_ID = new mongoose.Types.ObjectId('507f1f77bcf86cd799439020');
 const UCSD_SCHOOL_ID = new mongoose.Types.ObjectId('507f1f77bcf86cd799439021');
