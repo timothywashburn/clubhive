@@ -126,6 +126,7 @@ function generateTabNavigation(props: TabNavigationConfig) {
         { key: 'info', label: 'Edit Info', icon: Users },
         { key: 'events', label: 'Event Planner', icon: Calendar },
         { key: 'stats', label: 'Stats', icon: BarChart3 },
+        { key: 'members', label: 'Members' },
     ];
 
     const getEventEditTabs = (): NavigationItem[] => [
