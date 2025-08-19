@@ -176,7 +176,7 @@ export function SendNotification() {
 
                                                         <div className="text-right">
                                                             <div className="text-sm text-on-surface-variant whitespace-nowrap">{time}</div>
-                                                            <div className="text-primary italic text-xs mt-1">edit</div>
+                                                            <div className="text-red-500 italic text-xs mt-1">delete</div>
                                                         </div>
                                                     </div>
                                                 </div>
@@ -276,4 +276,3 @@ export function SendNotification() {
         </div>
     );
 }
-
