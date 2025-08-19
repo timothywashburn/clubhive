@@ -1,7 +1,7 @@
 import express, { Router, Request, Response, NextFunction, RequestHandler } from 'express';
 import { ApiEndpoint, ApiRequest, ApiResponse, AuthType } from '@/types/api-types';
 import AuthManager from '@/managers/auth-manager';
-import { getClubProfileEndpoint } from '@/api/misc/club-profile-endpoint';
+import { getClubProfileEndpoint } from '@/api/club-profile/club-profile-endpoint';
 import { statusEndpoint } from '@/api/misc/status';
 import { testEndpoint } from '@/api/misc/test';
 import { getTagsEndpoint } from '@/api/misc/tags-endpoint';
