@@ -1,33 +1,14 @@
 import { useEffect, useState } from 'react';
-import { useNavigate, useParams } from 'react-router';
+import { useNavigate, useParams, Link } from 'react-router';
 import { getTagColor } from '../features/find-clubs/utils/TagColors';
 import { useToast } from '../hooks/useToast';
+import { clubWithEventsAndCountsSchema } from '@clubhive/shared';
+import { ClubWithEventsData } from '@clubhive/shared/src/types/club-types';
 
-/**
- * This class is a static view of what the Club Profile page
- * might look like, may be temporary and changed.
- */
 export function ClubProfile() {
     const { url } = useParams<{ url: string }>();
-    const [club, setClub] = useState(null);
-    const { errorToast } = useToast();
-
-    const events = [
-        //TODO: replace with real data!
-        {
-            title: 'Our first GBM of the quarter!',
-            details: 'Every Thursday at 6PM, Red Shoe Room',
-        },
-        {
-            title: 'Event',
-            details: 'Friday at 5PM, Student Center',
-        },
-        {
-            title: 'Event',
-            details: 'Next Tuesday, 7PM, TEC Cafe',
-        },
-    ];
-
+    const [club, setClub] = useState<ClubWithEventsData | null>(null);
+    const { errorToast, successToast } = useToast();
     const navigate = useNavigate();
     const [isOpen, setIsOpen] = useState(false);
     const [loading, setLoading] = useState(true);
@@ -40,16 +21,17 @@ export function ClubProfile() {
                 console.log('Fetch result:', data);
 
                 if (data.success) {
-                    setClub(data.club);
+                    const parsed = clubWithEventsAndCountsSchema.parse(data.club);
+                    setClub(parsed);
+                    successToast('Club loaded successfully');
+                    console.log('Upcoming events response:', data);
                 } else {
                     const errorMessage = data.error?.message || 'Unknown error';
                     errorToast(`Failed to load club: ${errorMessage}`);
-                    console.error('Failed to load club:', errorMessage);
                 }
             })
             .catch(err => {
                 errorToast(`Failed to load club: ${err.message}`);
-                console.error('Network error:', err);
             })
 
             .finally(() => setLoading(false));
@@ -80,12 +62,8 @@ export function ClubProfile() {
                     {/* logo circle , replace with {club.clubLogo.url} later */}
                     <div className="w-1/3 flex items-center justify-center">
                         <div className="w-30 h-30 rounded-full bg-outline-variant flex items-center justify-center overflow-hidden">
-                            {club.clubLogo?.url ? (
-                                <img
-                                    src={club.clubLogo.url}
-                                    alt={`${club.name} logo`}
-                                    className="w-full h-full object-cover object-center"
-                                />
+                            {club.clubLogo ? (
+                                <img src={club.clubLogo} alt={`${club.name} logo`} className="w-full h-full object-cover object-center" />
                             ) : (
                                 <span className="text-on-surface-variant text-sm text-center">No Logo</span>
                             )}
@@ -104,7 +82,7 @@ export function ClubProfile() {
                     <div className="flex flex-wrap gap-2 mt-2">
                         {club.tags?.map((tag, index) => (
                             <span key={index} className={`rounded-full px-3 py-1 text-xs font-semibold ${getTagColor(tag._id)}`}>
-                                #{tag.text}
+                                {tag.text}
                             </span>
                         ))}
                     </div>
@@ -113,7 +91,7 @@ export function ClubProfile() {
                     <div className="absolute top-0 right-0 flex space-x-4 w-[240px] justify-end">
                         <button
                             onClick={() => setIsOpen(true)}
-                            className="px-4 py-2 rounded-full font-medium border bg-surface text-on-surface border-outline hover:bg-outline-variant/30 transition-colors"
+                            className="px-4 py-2 rounded-full font-medium border bg-surface text-on-surface border-outline hover:bg-outline-variant/30 transition-colors cursor-pointer"
                         >
                             Links
                         </button>
@@ -123,35 +101,35 @@ export function ClubProfile() {
                 {isOpen && (
                     <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
                         <div className="bg-surface rounded-xl p-6 w-[90%] max-w-md shadow-lg relative">
-                            <p className="text-on-surface-variant">
-                                Website:
+                            <p className="text-on-surface-variant mb-2">
+                                <span>Website: </span>
                                 <a
                                     href={club.socials?.website}
                                     target="_blank"
                                     rel="noopener noreferrer"
-                                    className="text-primary underline"
+                                    className="text-primary underline ml-2"
                                 >
                                     {club.socials?.website}
                                 </a>
                             </p>
-                            <p className="text-on-surface-variant">
-                                Instagram:
+                            <p className="text-on-surface-variant mb-2">
+                                <span>Instagram: </span>
                                 <a
                                     href={club.socials?.instagram}
                                     target="_blank"
                                     rel="noopener noreferrer"
-                                    className="text-primary underline"
+                                    className="text-primary underline ml-2"
                                 >
                                     {club.socials?.instagram}
                                 </a>
                             </p>
-                            <p className="text-on-surface-variant">
-                                Discord:
+                            <p className="text-on-surface-variant mb-2">
+                                <span>Discord: </span>
                                 <a
                                     href={club.socials?.discord}
                                     target="_blank"
                                     rel="noopener noreferrer"
-                                    className="text-primary underline"
+                                    className="text-primary underline ml-2"
                                 >
                                     {club.socials?.discord}
                                 </a>
@@ -168,7 +146,7 @@ export function ClubProfile() {
                 )}
 
                 {/* club description */}
-                <h2 className="mt-10 text-2xl font-semibold text-on-surface mb-4">About Our Club: </h2>
+                <h2 className="mt-10 text-2xl font-semibold text-on-surface mb-4">About Our Club </h2>
                 <div className="mt-2 grid grid-cols-1 md:grid-cols-4 gap-4">
                     <div className="md:col-span-3">
                         <p className="text-on-surface leading-relaxed whitespace-pre-line border border-outline-variant p-4 rounded-md bg-surface">
@@ -182,17 +160,57 @@ export function ClubProfile() {
                 </div>
 
                 {/* events */}
-                <h2 className="mt-10 text-2xl font-semibold text-on-surface mb-4">Upcoming Events: </h2>
-                <div className="space-y-4">
-                    <div className="space-y-4">
-                        {events.map((event, index) => (
-                            <div key={index} className="bg-surface rounded-md p-4 border border-outline-variant">
-                                <h3 className="font-medium text-on-surface">{event.title}</h3>
-                                <p className="text-on-surface-variant">{event.details}</p>
+                <h2 className="mt-10 text-2xl font-semibold text-on-surface mb-4">Our Events</h2>
+                {/* upcoming events */}
+                {club.upcomingEvents && club.upcomingEvents.length > 0 && (
+                    <div className="mb-3">
+                        <h3 className="text-lg font-semibold text-on-surface mb-1">Upcoming Events</h3>
+                        <div className="overflow-x-auto">
+                            <div className="flex space-x-4">
+                                {club.upcomingEvents.map(event => (
+                                    <div key={event._id} className="min-w-[300px] p-4 border rounded-lg shadow-sm bg-surface">
+                                        <h3 className="font-semibold text-on-surface">
+                                            <Link to={`/events/${event._id}`} className="text-primary hover:underline cursor-pointer">
+                                                {event.name}
+                                            </Link>
+                                        </h3>
+                                        <p className="text-sm text-on-surface-variant">
+                                            📅 {event.date} ⏰ {event.startTime}
+                                        </p>
+                                        <p className="mt-2 text-on-surface-variant">{event.description}</p>
+                                    </div>
+                                ))}
                             </div>
-                        ))}
+                        </div>
                     </div>
-                </div>
+                )}
+                {/* past events */}
+                {club.pastEvents && club.pastEvents.length > 0 && (
+                    <div className="mb-8">
+                        <h3 className="text-lg font-semibold text-on-surface mb-1">Recent Past Events</h3>
+                        <div className="overflow-x-auto">
+                            <div className="flex space-x-4">
+                                {club.pastEvents.map(event => (
+                                    <div key={event._id} className="min-w-[300px] p-4 border rounded-lg shadow-sm bg-surface opacity-75">
+                                        <h3 className="font-semibold text-on-surface">
+                                            <Link to={`/events/${event._id}`} className="text-primary hover:underline cursor-pointer">
+                                                {event.name}
+                                            </Link>
+                                        </h3>
+                                        <p className="text-sm text-on-surface-variant">
+                                            📅 {event.date} ⏰ {event.startTime}
+                                        </p>
+                                        <p className="mt-2 text-on-surface-variant">{event.description}</p>
+                                    </div>
+                                ))}
+                            </div>
+                        </div>
+                    </div>
+                )}
+                {/* no events message */}
+                {!club.upcomingEvents?.length && !club.pastEvents?.length && (
+                    <p className="text-on-surface-variant">Check back for events soon!</p>
+                )}
 
                 {/* announcements */}
                 <div className="mt-10">
