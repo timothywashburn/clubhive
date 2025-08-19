@@ -6,6 +6,9 @@ import MyPolarChart from '../components/stats/PolarChart.tsx';
 
 interface StatsProps {
     club: UserClubData;
+    isOfficer?: boolean;
+    statsVisibleToAll?: boolean;
+    setStatsVisibleToAll?: (value: boolean) => void;
 }
 
 interface MemberDataPoint {
@@ -64,7 +67,7 @@ const mockData = {
     ] as MajorDistribution[],
 };
 
-export function Stats({ club }: StatsProps) {
+export function Stats({ club, isOfficer, setStatsVisibleToAll, statsVisibleToAll }: StatsProps) {
     const [view, setView] = useState<'all-time' | 'last-12-months' | 'last-30-days' | 'yearly'>('all-time');
     const [memberChangesData, setMemberChangesData] = useState<MemberDataPoint[]>(mockData.memberChanges);
     const [majorDistribution, setMajorDistribution] = useState<MajorDistribution[]>(mockData.majorDistribution);
@@ -185,7 +188,18 @@ export function Stats({ club }: StatsProps) {
     return (
         <div className="space-y-6">
             <div className="bg-surface rounded-lg shadow p-6 border border-outline-variant">
-                <h3 className="text-3xl font-bold text-primary mb-5">Club Statistics</h3>
+                <div className="flex items-center justify-between mb-5">
+                    <h3 className="text-3xl font-bold text-primary">Club Statistics</h3>
+
+                    {isOfficer && setStatsVisibleToAll && (
+                        <button
+                            onClick={() => setStatsVisibleToAll(!statsVisibleToAll)}
+                            className="px-3 py-1 text-sm bg-primary text-white rounded"
+                        >
+                            {statsVisibleToAll ? 'Hide Stats from Users' : 'Make Stats Visible to Everyone'}
+                        </button>
+                    )}
+                </div>
 
                 <div className="grid grid-cols-3 gap-20 mb-8">
                     <div>
