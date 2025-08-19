@@ -227,7 +227,14 @@ export function MyClubs() {
         } else if (activeTab === 'event-location' && selectedEvent) {
             content = <LocationPicker event={selectedEvent} onEventChange={setSelectedEvent} />;
         } else if (activeTab === 'stats' && (showOfficerView || showStatsTab)) {
-            content = <Stats club={selectedClub} />;
+            content = (
+                <Stats
+                    club={selectedClub}
+                    isOfficer={isOfficer}
+                    statsVisibleToAll={statsVisibleToAll}
+                    setStatsVisibleToAll={setStatsVisibleToAll}
+                />
+            );
         } else if (activeTab === 'stats') {
             setActiveTab('info');
             content = showOfficerView ? <OfficerInfo club={selectedClub} /> : <MemberInfo club={selectedClub} />;
@@ -310,17 +317,6 @@ export function MyClubs() {
                                         saveLoading={saveLoading || deleteLoading}
                                         isCreateMode={isCreateMode}
                                     />
-
-                                    {isOfficer && (
-                                        <div className="flex justify-end mb-4">
-                                            <button
-                                                onClick={() => setStatsVisibleToAll(!statsVisibleToAll)}
-                                                className="px-2 py-1 text-sm bg-primary text-white rounded"
-                                            >
-                                                {statsVisibleToAll ? 'Hide Stats from Users' : 'Make Stats Visible to Everyone'}
-                                            </button>
-                                        </div>
-                                    )}
 
                                     <UnifiedNavigation
                                         navType="tabs"
