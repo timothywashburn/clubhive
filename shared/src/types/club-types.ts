@@ -35,7 +35,8 @@ export const clubWithCountsSchema = clubSchema.extend({
 });
 
 export const clubWithEventsAndCountsSchema = clubSchema.extend({
-    events: z.array(eventSchema).default([]),
+    upcomingEvents: z.array(eventSchema).default([]),
+    pastEvents: z.array(eventSchema).default([]),
     memberCount: z.number().default(0),
     eventCount: z.number().default(0),
 });
