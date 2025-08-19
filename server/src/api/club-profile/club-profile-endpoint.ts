@@ -1,10 +1,11 @@
 import { ApiEndpoint, ApiRequest, ApiResponse, AuthType } from '@/types/api-types';
 import Club from '@/models/club-schema';
 import Event from '@/models/event-schema';
+import ClubMembership from '@/models/club-membership-schema';
 import '@/models/school-schema';
 import '@/models/image-schema';
 import '@/models/tag-schema';
-import { ClubData, clubWithEventsAndCountsSchema, ErrorCode } from '@clubhive/shared';
+import { ClubData, clubWithEventsAndCountsSchema, ClubWithEventsData, ErrorCode } from '@clubhive/shared';
 import { serializeRecursive } from '@/utils/db-doc-utils';
 
 type GetClubRequest = { url: string };
@@ -18,7 +19,7 @@ export const getClubProfileEndpoint: ApiEndpoint<GetClubRequest, GetClubResponse
         const { url } = req.params;
 
         try {
-            const club = await Club.findOne({ url }).populate('school').populate('tags').populate('clubLogo').exec();
+            const club = await Club.findOne({ url }).populate('school').populate('tags').exec();
             //add .populate('pictures') later
 
             if (!club) {
@@ -32,24 +33,25 @@ export const getClubProfileEndpoint: ApiEndpoint<GetClubRequest, GetClubResponse
                 return;
             }
 
-            // const today = new Date();
-            // today.setHours(0, 0, 0, 0);
-
-            const events = await Event.find({
+            const now = new Date();
+            const allEvents = await Event.find({
                 club: club._id,
-                // startTime: { $gte: today.toISOString().split('T')[0] },
             })
                 .populate('tags')
-                //.sort({ date: 1 })
-                .limit(20)
+                .sort({ date: 1 })
                 .exec();
+            const memberCount = await ClubMembership.countDocuments({ club: club._id }).exec();
+            const upcomingEvents = allEvents.filter(event => new Date(event.date) >= now);
+            const pastEvents = allEvents.filter(event => new Date(event.date) <= now);
 
             res.json({
                 success: true,
                 club: clubWithEventsAndCountsSchema.parse({
                     ...serializeRecursive(club),
-                    events: serializeRecursive(events) ?? [],
-                    eventCount: events.length,
+                    upcomingEvents: serializeRecursive(upcomingEvents) ?? [],
+                    pastEvents: serializeRecursive(pastEvents) ?? [],
+                    eventCount: allEvents.length,
+                    memberCount,
                 }),
             });
         } catch (err) {

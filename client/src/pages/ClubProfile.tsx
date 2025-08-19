@@ -5,19 +5,13 @@ import { useToast } from '../hooks/useToast';
 import { clubWithEventsAndCountsSchema } from '@clubhive/shared';
 import { ClubWithEventsData } from '@clubhive/shared/src/types/club-types';
 
-/**
- * This class is a static view of what the Club Profile page
- * might look like, may be temporary and changed.
- */
 export function ClubProfile() {
     const { url } = useParams<{ url: string }>();
     const [club, setClub] = useState<ClubWithEventsData | null>(null);
-    const { errorToast } = useToast();
-
+    const { errorToast, successToast } = useToast();
     const navigate = useNavigate();
     const [isOpen, setIsOpen] = useState(false);
     const [loading, setLoading] = useState(true);
-    const [events, setEvents] = useState([]);
 
     useEffect(() => {
         if (!url) return;
@@ -29,16 +23,15 @@ export function ClubProfile() {
                 if (data.success) {
                     const parsed = clubWithEventsAndCountsSchema.parse(data.club);
                     setClub(parsed);
+                    successToast('Club loaded successfully');
                     console.log('Upcoming events response:', data);
                 } else {
                     const errorMessage = data.error?.message || 'Unknown error';
                     errorToast(`Failed to load club: ${errorMessage}`);
-                    console.error('Failed to load club:', errorMessage);
                 }
             })
             .catch(err => {
                 errorToast(`Failed to load club: ${err.message}`);
-                console.error('Network error:', err);
             })
 
             .finally(() => setLoading(false));
@@ -89,7 +82,7 @@ export function ClubProfile() {
                     <div className="flex flex-wrap gap-2 mt-2">
                         {club.tags?.map((tag, index) => (
                             <span key={index} className={`rounded-full px-3 py-1 text-xs font-semibold ${getTagColor(tag._id)}`}>
-                                #{tag.text}
+                                {tag.text}
                             </span>
                         ))}
                     </div>
@@ -98,7 +91,7 @@ export function ClubProfile() {
                     <div className="absolute top-0 right-0 flex space-x-4 w-[240px] justify-end">
                         <button
                             onClick={() => setIsOpen(true)}
-                            className="px-4 py-2 rounded-full font-medium border bg-surface text-on-surface border-outline hover:bg-outline-variant/30 transition-colors"
+                            className="px-4 py-2 rounded-full font-medium border bg-surface text-on-surface border-outline hover:bg-outline-variant/30 transition-colors cursor-pointer"
                         >
                             Links
                         </button>
@@ -153,7 +146,7 @@ export function ClubProfile() {
                 )}
 
                 {/* club description */}
-                <h2 className="mt-10 text-2xl font-semibold text-on-surface mb-4">About Our Club: </h2>
+                <h2 className="mt-10 text-2xl font-semibold text-on-surface mb-4">About Our Club </h2>
                 <div className="mt-2 grid grid-cols-1 md:grid-cols-4 gap-4">
                     <div className="md:col-span-3">
                         <p className="text-on-surface leading-relaxed whitespace-pre-line border border-outline-variant p-4 rounded-md bg-surface">
@@ -167,30 +160,55 @@ export function ClubProfile() {
                 </div>
 
                 {/* events */}
-                <h2 className="mt-10 text-2xl font-semibold text-on-surface mb-4">
-                    Our Events ({club.eventCount ?? club.events.length} total)
-                </h2>
-
-                {/* Scrollable horizontal events */}
-                {club.events && club.events.length > 0 ? (
-                    <div className="overflow-x-auto">
-                        <div className="flex space-x-4">
-                            {club.events.map(event => (
-                                <div key={event._id} className="min-w-[300px] p-4 border rounded-lg shadow-sm bg-surface">
-                                    <h3 className="font-semibold text-on-surface">
-                                        <Link to={`/events/${event._id}`} className="text-primary hover:underline">
-                                            {event.name}
-                                        </Link>
-                                    </h3>
-                                    <p className="text-sm text-on-surface-variant">
-                                        📅 {event.date} ⏰ {event.startTime}
-                                    </p>
-                                    <p className="mt-2 text-on-surface-variant">{event.description}</p>
-                                </div>
-                            ))}
+                <h2 className="mt-10 text-2xl font-semibold text-on-surface mb-4">Our Events</h2>
+                {/* upcoming events */}
+                {club.upcomingEvents && club.upcomingEvents.length > 0 && (
+                    <div className="mb-3">
+                        <h3 className="text-lg font-semibold text-on-surface mb-1">Upcoming Events</h3>
+                        <div className="overflow-x-auto">
+                            <div className="flex space-x-4">
+                                {club.upcomingEvents.map(event => (
+                                    <div key={event._id} className="min-w-[300px] p-4 border rounded-lg shadow-sm bg-surface">
+                                        <h3 className="font-semibold text-on-surface">
+                                            <Link to={`/events/${event._id}`} className="text-primary hover:underline cursor-pointer">
+                                                {event.name}
+                                            </Link>
+                                        </h3>
+                                        <p className="text-sm text-on-surface-variant">
+                                            📅 {event.date} ⏰ {event.startTime}
+                                        </p>
+                                        <p className="mt-2 text-on-surface-variant">{event.description}</p>
+                                    </div>
+                                ))}
+                            </div>
                         </div>
                     </div>
-                ) : (
+                )}
+                {/* past events */}
+                {club.pastEvents && club.pastEvents.length > 0 && (
+                    <div className="mb-8">
+                        <h3 className="text-lg font-semibold text-on-surface mb-1">Recent Past Events</h3>
+                        <div className="overflow-x-auto">
+                            <div className="flex space-x-4">
+                                {club.pastEvents.map(event => (
+                                    <div key={event._id} className="min-w-[300px] p-4 border rounded-lg shadow-sm bg-surface opacity-75">
+                                        <h3 className="font-semibold text-on-surface">
+                                            <Link to={`/events/${event._id}`} className="text-primary hover:underline cursor-pointer">
+                                                {event.name}
+                                            </Link>
+                                        </h3>
+                                        <p className="text-sm text-on-surface-variant">
+                                            📅 {event.date} ⏰ {event.startTime}
+                                        </p>
+                                        <p className="mt-2 text-on-surface-variant">{event.description}</p>
+                                    </div>
+                                ))}
+                            </div>
+                        </div>
+                    </div>
+                )}
+                {/* no events message */}
+                {!club.upcomingEvents?.length && !club.pastEvents?.length && (
                     <p className="text-on-surface-variant">Check back for events soon!</p>
                 )}
 

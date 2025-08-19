@@ -25,14 +25,12 @@ export const getClubEndpoint: ApiEndpoint<undefined, GetClubResponse> = {
                 return;
             }
 
-            //fetch upcoming events
+            //fetch events
             const now = new Date();
             const events = await Event.find({
                 club: id,
-                // startTime: { $gte: now }, //only upcoming events, this doesn't work :0
             })
                 .populate('tags')
-                // .sort({ startTime: 1 }) //also doesn't work?
                 .limit(20) //limit amount of events to send at once
                 .exec();
 
