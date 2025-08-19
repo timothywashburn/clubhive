@@ -6,11 +6,13 @@ import type { TagData } from '@clubhive/shared';
 import { getTagColor } from '../features/find-clubs/utils/TagColors';
 import { createClubRequestSchema } from '@clubhive/shared/src/types/club-types';
 import { useToast } from '../hooks/useToast';
+import { useNavigate } from 'react-router';
 
 export function ClubRegistration() {
     const { tags } = useClubTagsData();
     const { schools } = useSchoolData();
     const [selectedTags, setSelectedTags] = useState<TagData[]>([]);
+    const navigate = useNavigate();
 
     const inputClass =
         'mt-1 block w-full rounded-md text-on-primary-container border bg-surface px-3 py-2 shadow-sm ' +
@@ -86,6 +88,7 @@ export function ClubRegistration() {
                 console.log('Club registered successfully:', result.club);
                 successToast('Club registered successfully!');
             }
+            navigate(`/my-clubs/${result.club.url}/info`);
         } catch (error) {
             console.error('Error registering club:', error);
             errorToast('Failed to register club. Please try again.');
