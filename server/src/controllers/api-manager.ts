@@ -43,6 +43,7 @@ import { postNotificationEndpoint } from '@/api/notifications/post-notification'
 import { uploadImageEndpoint } from '@/api/images/create-image';
 import { deleteImageEndpoint } from '@/api/images/delete-image';
 import { getImageEndpoint } from '@/api/images/get-image';
+import { leaveMembershipEndpoint } from '@/api/memberships/leave-membership';
 
 export default class ApiManager {
     private static instance: ApiManager;
@@ -110,6 +111,9 @@ export default class ApiManager {
         this.addEndpoint(getImageEndpoint);
         this.addEndpoint(uploadImageEndpoint);
         this.addEndpoint(deleteImageEndpoint);
+
+        // Membership endpoints
+        this.addEndpoint(leaveMembershipEndpoint);
 
         console.log(`registered api endpoints`);
     }

@@ -1,5 +1,5 @@
 import { ApiEndpoint, AuthType } from '@/types/api-types';
-import { getNotifications } from '@/controllers/notification-controller';
+import NotificationController from '@/controllers/notification-controller';
 
 export const getNotificationsEndpoint: ApiEndpoint<undefined, any> = {
     path: '/api/notifications',
@@ -18,6 +18,6 @@ export const getNotificationsEndpoint: ApiEndpoint<undefined, any> = {
             return;
         }
 
-        await getNotifications(req, res);
+        await NotificationController.getNotifications(req, res);
     },
 };

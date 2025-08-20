@@ -47,4 +47,9 @@ export default class EventController {
         const result = await Event.findByIdAndDelete(id).exec();
         return result !== null;
     }
+
+    static async deleteAllEventsForClub(clubId: string): Promise<number> {
+        const result = await Event.deleteMany({ club: clubId });
+        return result.deletedCount || 0;
+    }
 }
