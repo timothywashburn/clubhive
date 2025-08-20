@@ -24,6 +24,13 @@ export const notifDisplaySchema = z.object({
     userNotifId: z.string(),
 });
 
+export const getNotificationRequestSchema = z.object({});
+
+export const getNotificationResponseSchema = z.object({
+    success: z.boolean(),
+    notifications: z.array(notificationSchema),
+});
+
 export const postNotificationRequestSchema = z.object({
     club: z.string(),
     title: z.string(),
@@ -50,5 +57,8 @@ export type PostNotificationResponse = z.infer<typeof postNotificationResponseSc
 
 export type DeleteNotificationRequest = z.infer<typeof deleteNotificationRequestSchema>;
 export type DeleteNotificationResponse = z.infer<typeof deleteNotificationResponseSchema>;
+
+export type GetNotificationRequest = z.infer<typeof getNotificationRequestSchema>;
+export type GetNotificationResponse = z.infer<typeof getNotificationResponseSchema>;
 
 export type NotifDisplayData = z.infer<typeof notifDisplaySchema>;
