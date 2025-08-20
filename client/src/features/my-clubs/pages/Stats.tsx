@@ -22,79 +22,79 @@ interface MajorDistribution {
     count: number;
 }
 
-// Using MockData for sprint review, will replace with actual data later
-const mockData = {
-    memberCount: 34,
-    memberChange: 7,
-    memberChangePercent: 4.8,
-    eventSavesPerMonth: 5,
-    memberChanges: [
-        { date: '2024-07-05', newMembers: 9, leavingMembers: 4 },
-        { date: '2024-07-18', newMembers: 7, leavingMembers: 2 },
-        { date: '2024-08-03', newMembers: 10, leavingMembers: 3 },
-        { date: '2024-08-20', newMembers: 8, leavingMembers: 2 },
-        { date: '2024-09-10', newMembers: 6, leavingMembers: 1 },
-        { date: '2024-09-25', newMembers: 11, leavingMembers: 5 },
-        { date: '2024-10-07', newMembers: 8, leavingMembers: 3 },
-        { date: '2024-10-22', newMembers: 10, leavingMembers: 5 },
-        { date: '2024-11-12', newMembers: 6, leavingMembers: 2 },
-        { date: '2024-11-28', newMembers: 8, leavingMembers: 4 },
-        { date: '2024-12-05', newMembers: 7, leavingMembers: 3 },
-        { date: '2024-12-19', newMembers: 9, leavingMembers: 2 },
-        { date: '2025-01-08', newMembers: 6, leavingMembers: 1 },
-        { date: '2025-01-23', newMembers: 4, leavingMembers: 2 },
-        { date: '2025-02-14', newMembers: 5, leavingMembers: 1 },
-        { date: '2025-02-28', newMembers: 8, leavingMembers: 3 },
-        { date: '2025-03-10', newMembers: 7, leavingMembers: 2 },
-        { date: '2025-03-25', newMembers: 9, leavingMembers: 4 },
-        { date: '2025-04-05', newMembers: 10, leavingMembers: 3 },
-        { date: '2025-04-20', newMembers: 8, leavingMembers: 2 },
-        { date: '2025-05-11', newMembers: 6, leavingMembers: 1 },
-        { date: '2025-05-26', newMembers: 11, leavingMembers: 5 },
-        { date: '2025-06-03', newMembers: 8, leavingMembers: 3 },
-        { date: '2025-06-18', newMembers: 10, leavingMembers: 5 },
-        { date: '2025-07-02', newMembers: 6, leavingMembers: 2 },
-        { date: '2025-07-15', newMembers: 8, leavingMembers: 4 },
-        { date: '2025-07-23', newMembers: 7, leavingMembers: 3 },
-    ] as MemberDataPoint[],
-    majorDistribution: [
-        { major: 'Computer Science', count: 55 },
-        { major: 'Math-Economics', count: 40 },
-        { major: 'Visual Arts', count: 20 },
-        { major: 'General Biology', count: 35 },
-        { major: 'Political Science', count: 25 },
-        { major: 'Music', count: 20 },
-    ] as MajorDistribution[],
-};
+// MockData
+// const mockData = {
+//     memberCount: 34,
+//     memberChange: 7,
+//     memberChangePercent: 4.8,
+//     eventSavesPerMonth: 5,
+//     memberChanges: [
+//         { date: '2024-07-05', newMembers: 9, leavingMembers: 4 },
+//         { date: '2024-07-18', newMembers: 7, leavingMembers: 2 },
+//         { date: '2024-08-03', newMembers: 10, leavingMembers: 3 },
+//         { date: '2024-08-20', newMembers: 8, leavingMembers: 2 },
+//         { date: '2024-09-10', newMembers: 6, leavingMembers: 1 },
+//         { date: '2024-09-25', newMembers: 11, leavingMembers: 5 },
+//         { date: '2024-10-07', newMembers: 8, leavingMembers: 3 },
+//         { date: '2024-10-22', newMembers: 10, leavingMembers: 5 },
+//         { date: '2024-11-12', newMembers: 6, leavingMembers: 2 },
+//         { date: '2024-11-28', newMembers: 8, leavingMembers: 4 },
+//         { date: '2024-12-05', newMembers: 7, leavingMembers: 3 },
+//         { date: '2024-12-19', newMembers: 9, leavingMembers: 2 },
+//         { date: '2025-01-08', newMembers: 6, leavingMembers: 1 },
+//         { date: '2025-01-23', newMembers: 4, leavingMembers: 2 },
+//         { date: '2025-02-14', newMembers: 5, leavingMembers: 1 },
+//         { date: '2025-02-28', newMembers: 8, leavingMembers: 3 },
+//         { date: '2025-03-10', newMembers: 7, leavingMembers: 2 },
+//         { date: '2025-03-25', newMembers: 9, leavingMembers: 4 },
+//         { date: '2025-04-05', newMembers: 10, leavingMembers: 3 },
+//         { date: '2025-04-20', newMembers: 8, leavingMembers: 2 },
+//         { date: '2025-05-11', newMembers: 6, leavingMembers: 1 },
+//         { date: '2025-05-26', newMembers: 11, leavingMembers: 5 },
+//         { date: '2025-06-03', newMembers: 8, leavingMembers: 3 },
+//         { date: '2025-06-18', newMembers: 10, leavingMembers: 5 },
+//         { date: '2025-07-02', newMembers: 6, leavingMembers: 2 },
+//         { date: '2025-07-15', newMembers: 8, leavingMembers: 4 },
+//         { date: '2025-07-23', newMembers: 7, leavingMembers: 3 },
+//     ] as MemberDataPoint[],
+//     majorDistribution: [
+//         { major: 'Computer Science', count: 55 },
+//         { major: 'Math-Economics', count: 40 },
+//         { major: 'Visual Arts', count: 20 },
+//         { major: 'General Biology', count: 35 },
+//         { major: 'Political Science', count: 25 },
+//         { major: 'Music', count: 20 },
+//     ] as MajorDistribution[],
+// };
 
 export function Stats({ club, isOfficer, setStatsVisibleToAll, statsVisibleToAll }: StatsProps) {
     const [view, setView] = useState<'all-time' | 'last-12-months' | 'last-30-days' | 'yearly'>('all-time');
-    const [memberChangesData, setMemberChangesData] = useState<MemberDataPoint[]>(mockData.memberChanges);
-    const [majorDistribution, setMajorDistribution] = useState<MajorDistribution[]>(mockData.majorDistribution);
-    const [memberCount, setMemberCount] = useState<number>(mockData.memberCount);
-    const [memberChange, setMemberChange] = useState<number>(mockData.memberChange);
-    const [memberChangePercent, setMemberChangePercent] = useState<number>(mockData.memberChangePercent);
-    const [eventSavesPerMonth, setEventSavesPerMonth] = useState<number>(mockData.eventSavesPerMonth);
+    const [memberChangesData, setMemberChangesData] = useState<MemberDataPoint[]>([]);
+    const [majorDistribution, setMajorDistribution] = useState<MajorDistribution[]>([]);
+    const [memberCount, setMemberCount] = useState<number>(0);
+    const [memberChange, setMemberChange] = useState<number>(0);
+    const [memberChangePercent, setMemberChangePercent] = useState<number>(0);
+    const [eventSavesPerMonth, setEventSavesPerMonth] = useState<number>(0);
 
-    // useEffect(() => {
-    //     const fetchStats = async () => {
-    //         try {
-    //             const res = await fetch(`/api/club-stats/${club._id}`);
-    //             if (!res.ok) throw new Error('Failed to fetch');
-    //             const data = await res.json();
+    useEffect(() => {
+        const fetchStats = async () => {
+            try {
+                const res = await fetch(`/api/club-stats/${club._id}`);
+                if (!res.ok) throw new Error('Failed to fetch');
+                const data = await res.json();
 
-    //             setMemberChangesData(data.memberChanges || []);
-    //             setMajorDistribution(data.majorDistribution || []);
-    //             setMemberCount(data.memberCount || 0);
-    //             setMemberChange(data.memberChange || 0);
-    //             setMemberChangePercent(data.memberChangePercent || 0);
-    //             setEventSavesPerMonth(data.eventSavesPerMonth || 0);
-    //         } catch (error) {
-    //             console.error('Error fetching club stats:', ErrorCode);
-    //         }
-    //     };
-    //     fetchStats();
-    // }, [club._id]);
+                setMemberChangesData(data.memberChanges || []);
+                setMajorDistribution(data.majorDistribution || []);
+                setMemberCount(data.memberCount || 0);
+                setMemberChange(data.memberChange || 0);
+                setMemberChangePercent(data.memberChangePercent || 0);
+                setEventSavesPerMonth(data.eventSavesPerMonth || 0);
+            } catch (error) {
+                console.error('Error fetching club stats:', ErrorCode);
+            }
+        };
+        fetchStats();
+    }, [club._id]);
 
     const initialCount = memberCount > 0 ? memberCount : 0;
     const filteredMemberChangesData = useMemo(() => {
