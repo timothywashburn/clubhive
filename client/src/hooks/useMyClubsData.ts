@@ -6,7 +6,6 @@ import { useToast } from './useToast.ts';
 export const useMyClubsData = () => {
     const [clubs, setClubs] = useState<UserClubData[]>([]);
     const [loading, setLoading] = useState(true);
-    const [error, setError] = useState<string | null>(null);
     const { errorToast } = useToast();
 
     useEffect(() => {
@@ -24,7 +23,6 @@ export const useMyClubsData = () => {
                 }
             } catch (err) {
                 const errorMessage = err instanceof Error ? err.message : 'Unknown error';
-                setError(errorMessage);
                 errorToast(`Failed to fetch my clubs: ${errorMessage}`);
             } finally {
                 setLoading(false);
@@ -84,7 +82,6 @@ export const useMyClubsData = () => {
     return {
         clubs,
         loading,
-        error,
         getClubColors,
         getMembershipData,
     };

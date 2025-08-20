@@ -5,13 +5,13 @@ import { EventPlanner } from './event-planner';
 import { EventDetails, LocationPicker } from './event-editor';
 import { EventData, EventType } from '@clubhive/shared';
 import { eventService } from '../../services/eventService';
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useMyClubsData } from '../../hooks/useMyClubsData.ts';
 import { useClubState } from '../../hooks/useClubState.ts';
 import { useClubEvents } from '../../hooks/useClubEvents.ts';
 
 export function MyClubs() {
-    const { clubs, loading, error } = useMyClubsData();
+    const { clubs, loading } = useMyClubsData();
 
     const {
         selectedClub,
@@ -265,22 +265,6 @@ export function MyClubs() {
                 <div className="text-center">
                     <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-primary"></div>
                     <p className="mt-4 text-on-surface-variant">Loading your clubs...</p>
-                </div>
-            </div>
-        );
-    }
-
-    if (error) {
-        return (
-            <div className="h-full flex items-center justify-center">
-                <div className="text-center">
-                    <p className="text-error">Error loading clubs: {error}</p>
-                    <button
-                        onClick={() => window.location.reload()}
-                        className="mt-4 px-4 py-2 bg-primary text-on-primary rounded hover:bg-primary-variant"
-                    >
-                        Retry
-                    </button>
                 </div>
             </div>
         );
