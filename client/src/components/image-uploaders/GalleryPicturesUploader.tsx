@@ -54,7 +54,6 @@ export function GalleryPicturesUploader({
 
             // Update club with new pictures first
             await updateClub(clubId, {
-                status: club?.status,
                 pictures: newImageIds,
             });
 
