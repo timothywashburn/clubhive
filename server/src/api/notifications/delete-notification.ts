@@ -1,9 +1,9 @@
 import { ApiEndpoint, AuthType } from '@/types/api-types';
-import { DeleteNotificationRequest, DeleteNotificationResponse } from '@clubhive/shared/src';
+import { DeleteNotificationResponse } from '@clubhive/shared/src';
 import Notification from '@/models/notification-schema';
 import UserNotification from '@/models/user-notification-schema';
 
-export const deleteNotificationEndpoint: ApiEndpoint<DeleteNotificationRequest, DeleteNotificationResponse> = {
+export const deleteNotificationEndpoint: ApiEndpoint<undefined, DeleteNotificationResponse> = {
     path: '/api/notifications/:id',
     method: 'delete',
     auth: AuthType.VERIFIED_EMAIL,
