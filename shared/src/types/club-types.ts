@@ -86,7 +86,7 @@ export const updateClubRequestSchema = z.object({
     description: z.string().optional(),
     url: z.string().optional(),
     joinRequirements: z.string().optional(),
-    status: z.enum(ClubStatus),
+    status: z.enum(ClubStatus).optional(),
     socials: z
         .object({
             website: z.string().optional(),
