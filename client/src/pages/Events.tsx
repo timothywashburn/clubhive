@@ -4,6 +4,7 @@ import TagFilterPopover from '../features/find-clubs/components/FilterTagsButton
 import type { TagData } from '@clubhive/shared';
 import { useEventTagsData } from '../hooks/fetchEventTags';
 import { getTagColor } from '../features/find-clubs/utils/TagColors';
+import WebDatePicker from '../components/date-picker/WebDatePicker';
 
 function TimeFilter({
     afterTime,
@@ -38,7 +39,7 @@ function TimeFilter({
                 Time
             </button>
             {open && (
-                <div className="absolute z-50 mt-2 bg-surface border border-outline-variant rounded-md shadow-lg p-3 space-y-2">
+                <div className="absolute z-50 mt-2 bg-surface border border-outline-variant rounded-md shadow-lg p-3 space-y-2 right-0">
                     <label className="block text-sm text-on-surface">
                         After:
                         <input
@@ -69,11 +70,14 @@ export function Events() {
     const [searchTerm, setSearchTerm] = useState('');
     const { tags } = useEventTagsData();
     const [selectedTags, setSelectedTags] = useState<TagData[]>([]);
-    const [date, setDate] = useState('');
+    const [date, setDate] = useState<Date | null>(null);
+    const [showDatePicker, setShowDatePicker] = useState(false);
     const [location, setLocation] = useState('');
     const [events, setEvents] = useState<any[]>([]);
     const [afterTime, setAfterTime] = useState('');
     const [beforeTime, setBeforeTime] = useState('');
+
+    const datePickerRef = useRef<HTMLDivElement>(null);
 
     useEffect(() => {
         const fetchEvents = async () => {
@@ -96,6 +100,17 @@ export function Events() {
         fetchEvents();
     }, []);
 
+    // Close date picker when clicking outside
+    useEffect(() => {
+        function handleClickOutside(event: MouseEvent) {
+            if (datePickerRef.current && !datePickerRef.current.contains(event.target as Node)) {
+                setShowDatePicker(false);
+            }
+        }
+        document.addEventListener('mousedown', handleClickOutside);
+        return () => document.removeEventListener('mousedown', handleClickOutside);
+    }, []);
+
     const filteredEvents = Array.isArray(events)
         ? events
               .filter(event => event.name?.toLowerCase().includes(searchTerm.toLowerCase()))
@@ -106,12 +121,11 @@ export function Events() {
               )
               .filter(event => {
                   if (!date) return true;
-                  const selected = new Date(date);
                   const eventDate = new Date(event.date);
                   return (
-                      (!date || selected.getFullYear() === eventDate.getFullYear()) &&
-                      (date.length <= 4 || selected.getMonth() === eventDate.getMonth()) &&
-                      (date.length <= 7 || selected.getDate() === eventDate.getDate())
+                      eventDate.getFullYear() === date.getFullYear() &&
+                      eventDate.getMonth() === date.getMonth() &&
+                      eventDate.getDate() === date.getDate()
                   );
               })
               .filter(event => location.trim() === '' || event.location?.toLowerCase().includes(location.toLowerCase()))
@@ -148,7 +162,7 @@ export function Events() {
                         placeholder="Search events..."
                         value={searchTerm}
                         onChange={e => setSearchTerm(e.target.value)}
-                        className="block w-full pl-10 pr-3 py-2 border text-on-surface border-outline-variant rounded-l-none leading-5 bg-surface placeholder-on-surface-variant focus:outline-none focus:border-primary focus:ring-1"
+                        className="flex-1 pl-10 pr-3 py-2 border text-on-surface border-outline-variant rounded-l-none leading-5 bg-surface placeholder-on-surface-variant focus:outline-none focus:border-primary focus:ring-1"
                     />
                     <input
                         type="text"
@@ -157,12 +171,25 @@ export function Events() {
                         onChange={e => setLocation(e.target.value)}
                         className="w-45 pl-3 pr-3 py-2 border text-on-surface border-outline-variant bg-surface placeholder-on-surface-variant focus:outline-none focus:ring-primary focus:ring-1 focus:z-10"
                     />
-                    <input
-                        type="date"
-                        value={date}
-                        onChange={e => setDate(e.target.value)}
-                        className="pl-3 pr-3 py-2 border border-outline-variant border-r-0 rounded-none bg-surface text-on-surface focus:outline-none focus:ring-primary focus:ring-1 focus:z-10"
-                    />
+                    <div className="relative" ref={datePickerRef}>
+                        <button
+                            onClick={() => setShowDatePicker(!showDatePicker)}
+                            className="pl-3 pr-3 py-2 border border-outline-variant border-r-0 rounded-none bg-surface text-on-surface focus:outline-none focus:ring-primary focus:ring-1 focus:z-10 h-10 whitespace-nowrap min-w-[120px]"
+                        >
+                            {date ? date.toLocaleDateString() : 'Select Date'}
+                        </button>
+                        {showDatePicker && (
+                            <div className="absolute z-50 mt-2 bg-surface border border-outline-variant rounded-md shadow-lg right-0">
+                                <WebDatePicker
+                                    selectedDate={date || new Date()}
+                                    onDateSelected={selectedDate => {
+                                        setDate(selectedDate);
+                                        setShowDatePicker(false);
+                                    }}
+                                />
+                            </div>
+                        )}
+                    </div>
                     <TimeFilter afterTime={afterTime} beforeTime={beforeTime} setAfterTime={setAfterTime} setBeforeTime={setBeforeTime} />
                 </div>
 
@@ -237,6 +264,7 @@ export function Events() {
                                                     d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"
                                                 />
                                             </svg>
+                                            x{' '}
                                             {new Date(event.date).toLocaleDateString(undefined, {
                                                 month: 'short',
                                                 day: 'numeric',
