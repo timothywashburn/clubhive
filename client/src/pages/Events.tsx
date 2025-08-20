@@ -99,7 +99,11 @@ export function Events() {
     const filteredEvents = Array.isArray(events)
         ? events
               .filter(event => event.name?.toLowerCase().includes(searchTerm.toLowerCase()))
-              .filter(event => selectedTags.length === 0 || selectedTags.every(tag => event.tags?.includes(tag)))
+              .filter(
+                  event =>
+                      selectedTags.length === 0 ||
+                      selectedTags.every(selectedTag => event.tags?.some(eventTag => eventTag._id === selectedTag._id))
+              )
               .filter(event => {
                   if (!date) return true;
                   const selected = new Date(date);
@@ -121,6 +125,10 @@ export function Events() {
                   if (beforeTimestamp && eventTime > beforeTimestamp) return false;
 
                   return true;
+              })
+              .filter(event => {
+                  const eventDateTime = new Date(event.date + 'T' + (event.startTime || '00:00'));
+                  return eventDateTime.getTime() >= Date.now();
               })
         : [];
 
