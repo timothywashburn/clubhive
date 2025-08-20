@@ -167,7 +167,6 @@ export default class ApiManager {
         try {
             const tokenPayload = AuthManager.verifyRefreshToken(refreshToken);
             req.auth = AuthManager.toAuthInfo(tokenPayload);
-            console.log(req.auth);
             next();
         } catch (error) {
             res.status(401).json({

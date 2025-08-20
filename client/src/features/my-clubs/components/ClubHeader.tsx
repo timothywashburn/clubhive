@@ -51,7 +51,9 @@ export function ClubHeader({
                                             ? selectedEvent._id
                                             : `event-${selectedEvent._id}`
                                     }
-                                    className="bg-primary text-on-primary px-3 py-2 rounded-lg font-medium text-sm"
+                                    className={`px-3 py-2 rounded-lg font-medium text-sm ${
+                                        selectedEvent.published ? 'bg-primary text-on-primary' : 'bg-secondary text-on-secondary'
+                                    }`}
                                     transition={{ duration: 0.6, ease: [0.4, 0, 0.2, 1] }}
                                 >
                                     {selectedEvent.name}

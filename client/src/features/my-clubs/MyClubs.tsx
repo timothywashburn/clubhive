@@ -168,6 +168,7 @@ export function MyClubs() {
             date: selectedDate ? selectedDate.toISOString().split('T')[0] : new Date().toISOString().split('T')[0],
             startTime: '09:00',
             endTime: '10:00',
+            published: false,
             location: '',
             type: EventType.UCSD_STUDENTS,
             tags: [],
@@ -201,7 +202,7 @@ export function MyClubs() {
                     onViewModeChange={setEventPlannerViewMode}
                 />
             ) : (
-                <Events events={events} loading={eventsLoading} error={eventsError} />
+                <Events events={events.filter(event => event.published)} loading={eventsLoading} error={eventsError} />
             );
         } else if (activeTab === 'event-details' && selectedEvent) {
             content = (

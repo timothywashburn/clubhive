@@ -72,6 +72,34 @@ export function EventDetails({ event, onEventChange, onDelete, isCreateMode = fa
 
     return (
         <div>
+            {/* Publish Status Section */}
+            <div className="bg-surface rounded-lg shadow border border-outline-variant mb-6">
+                <div className="px-6 py-6">
+                    <div className="flex items-center justify-between gap-6">
+                        <div className="flex-1 min-w-0">
+                            <h5 className="font-medium text-on-surface mb-1">
+                                {event.published ? 'Event is Published' : 'Event is Draft'}
+                            </h5>
+                            <p className="text-sm text-on-surface-variant">
+                                {event.published
+                                    ? 'This event is live and visible to members'
+                                    : 'This event is saved as a draft and not visible to members'}
+                            </p>
+                        </div>
+                        <button
+                            onClick={() => onEventChange({ ...event, published: !event.published })}
+                            className={`flex items-center px-4 py-2 rounded-lg text-sm font-medium transition-colors cursor-pointer whitespace-nowrap ${
+                                event.published
+                                    ? 'bg-primary text-on-primary hover:bg-primary/90'
+                                    : 'bg-outline text-on-surface hover:bg-outline/80'
+                            }`}
+                        >
+                            {event.published ? 'Published' : 'Publish'}
+                        </button>
+                    </div>
+                </div>
+            </div>
+
             <div className="bg-surface rounded-lg shadow p-8 border border-outline-variant min-h-[600px]">
                 <h4 className="text-xl font-semibold text-on-surface mb-6">Event Details</h4>
                 <div className="space-y-6">
@@ -135,12 +163,7 @@ export function EventDetails({ event, onEventChange, onDelete, isCreateMode = fa
             </div>
 
             {!isCreateMode && onDelete && (
-                <DeleteDangerZone
-                    itemName={event.name}
-                    itemType="Event"
-                    onDelete={onDelete}
-                    isDeleteLoading={isDeleteLoading}
-                />
+                <DeleteDangerZone itemName={event.name} itemType="Event" onDelete={onDelete} isDeleteLoading={isDeleteLoading} />
             )}
 
             {/* Date Time Range Picker Modal */}

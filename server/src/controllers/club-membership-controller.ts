@@ -1,6 +1,6 @@
-// creating just create and delete methods for now
 import ClubMembership from '../models/club-membership-schema';
 import Club from '../models/club-schema';
+import { ClubRole } from '@clubhive/shared';
 
 export default class ClubMembershipController {
     static async createMembership(clubId: string, userId: string, role: string) {
@@ -37,5 +37,15 @@ export default class ClubMembershipController {
         }
 
         return true;
+    }
+
+    static async getUserClubRole(clubId: string, userId: string): Promise<ClubRole | null> {
+        const membership = await ClubMembership.findOne({ club: clubId, user: userId });
+        return membership ? membership.role : null;
+    }
+
+    static async isOfficerOrOwner(clubId: string, userId: string): Promise<boolean> {
+        const role = await this.getUserClubRole(clubId, userId);
+        return role === ClubRole.OFFICER || role === ClubRole.OWNER;
     }
 }
