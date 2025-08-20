@@ -46,7 +46,6 @@ export function ProfilePictureUploader({ clubId, maxFileSizeKB = 5000, onSuccess
 
             // Update with new profile picture first
             await updateClub(clubId, {
-                status: club?.status,
                 clubLogo: images[0]._id,
             });
 
