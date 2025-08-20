@@ -35,7 +35,6 @@ import { updateSchoolEndpoint } from '@/api/schools/update-school';
 import { deleteSchoolEndpoint } from '@/api/schools/delete-school';
 import { getMyClubsEndpoint } from '@/api/me/clubs';
 import { getMyEventsEndpoint } from '@/api/me/events';
-import { getClubMembersEndpoint } from '@/api/me/clubs';
 import { getDailyVenueAvailabilityEndpoint } from '@/api/venues/daily-availability';
 import { getWeeklyVenueAvailabilityEndpoint } from '@/api/venues/weekly-availability';
 import { getMonthlyVenueAvailabilityEndpoint } from '@/api/venues/monthly-availability';

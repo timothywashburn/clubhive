@@ -1,11 +1,11 @@
 import React, { useState, useEffect } from 'react';
+import { Trash2, UserCog } from 'lucide-react';
 
 export function useClubMembers(clubId: string | null) {
     //hook
     const [members, setMembers] = useState<any[]>([]);
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState<string | null>(null);
-
     useEffect(() => {
         if (!clubId) return;
         setLoading(true);
@@ -39,12 +39,13 @@ export function Members({ club }: { club: any }) {
     const [tempRole, setTempRole] = useState('');
     const [updatingRole, setUpdatingRole] = useState<string | null>(null);
 
+    const [removingMember, setRemovingMember] = useState<string | null>(null);
+    const [confirmRemove, setConfirmRemove] = useState<string | null>(null);
+
     if (loading) return <p> Loading members...</p>;
     if (error) return <p>Error: {error}</p>;
-    //club.members || [];
 
     const filteredMembers = members.filter(member => member.name?.toLowerCase().includes(searchTerm.toLowerCase()));
-
     const categorizeMembers = (members: any[]) => {
         const officers = members.filter(member => ['officer'].includes(member.role?.toLowerCase()));
         const execs = members.filter(member => ['owner', 'principal member'].includes(member.role?.toLowerCase()));
@@ -57,6 +58,32 @@ export function Members({ club }: { club: any }) {
 
     const { officers, execs, regularMembers } = categorizeMembers(members);
 
+    // UPDATED REMOVE HANDLER TO WORK PER MEMBER
+    const handleRemoveMember = async (memberId: string) => {
+        setRemovingMember(memberId);
+        try {
+            // TODO: Replace with actual API call, `/api/clubs/${clubId}/members`
+            const response = await fetch(`/api/clubs/${club._id}/members/${memberId}`, {
+                method: 'DELETE',
+                credentials: 'include',
+            });
+
+            const data = await response.json();
+            if (data.success) {
+                setMembers(prevMembers => prevMembers.filter(member => member._id !== memberId));
+                setConfirmRemove(null);
+                console.log('Member removed successfully!');
+            } else {
+                alert('Failed to remove member: ' + data.message);
+            }
+        } catch (err) {
+            console.error('Error removing member:', err);
+            alert('Failed to remove member');
+        } finally {
+            setRemovingMember(null);
+        }
+    };
+
     const renderMemberColumn = (title: string, membersList: any[], bgColor: string) => (
         <div className="flex-1">
             <div className={`${bgColor} rounded-lg shadow p-6 border border-outline-variant h-full`}>
@@ -67,50 +94,94 @@ export function Members({ club }: { club: any }) {
                     <div className="space-y-3">
                         {membersList.map((member: any) => (
                             <div key={member._id} className="p-3 bg-surface rounded-lg border border-outline-variant">
-                                <div className="flex justify-between">
+                                <div className="flex justify-between items-start">
                                     {/* Left side: Name and Role */}
-                                    <div className="flex-1">
-                                        <p className="font-medium text-base text-on-surface">{member.name}</p>
-                                        <p className="text-xs font-semibold text-primary">{member.role}</p>
+                                    <div className="flex-1 min-w-0">
+                                        <p className="font-medium text-base text-on-surface truncate">{member.name}</p>
 
                                         {editingRole === member._id ? (
-                                            <div className="flex items-center gap-2 mt-1">
+                                            <div className="flex items-center gap-1 mt-1 w-fit min-h-[24px]">
                                                 <input
                                                     type="text"
                                                     value={tempRole}
                                                     onChange={e => setTempRole(e.target.value)}
-                                                    className="text-xs px-2 py-1 border border-outline-variant rounded bg-surface text-on-surface focus:outline-none focus:ring-1 focus:ring-primary"
+                                                    className="text-xs px-2 py-1 border border-outline-variant rounded bg-surface text-on-surface focus:outline-none focus:ring-1 focus:ring-primary w-20"
+                                                    placeholder="Enter role"
                                                     autoFocus
+                                                    onKeyDown={e => {
+                                                        if (e.key === 'Enter') handleRoleSave(member._id);
+                                                        if (e.key === 'Escape') handleRoleCancel();
+                                                    }}
                                                 />
                                                 <button
                                                     onClick={() => handleRoleSave(member._id)}
                                                     disabled={updatingRole === member._id}
                                                     className="text-xs px-2 py-1 bg-primary text-on-primary rounded hover:bg-primary-dark disabled:opacity-50"
+                                                    title="Save (enter)"
                                                 >
                                                     {updatingRole === member._id ? '...' : '✓'}
                                                 </button>
                                                 <button
-                                                    onClick={handleRoleCancel}
+                                                    onClick={() => handleRoleCancel()}
                                                     disabled={updatingRole === member._id}
                                                     className="text-xs px-2 py-1 bg-error text-on-error rounded hover:bg-error-dark disabled:opacity-50"
                                                 >
-                                                    ✕
+                                                    (esc)
                                                 </button>
                                             </div>
                                         ) : (
-                                            <button
-                                                onClick={() => handleRoleEdit(member._id, member.role)}
-                                                className="text-xs font-semibold text-primary hover:text-primary-dark hover:underline cursor-pointer text-left"
-                                            >
-                                                {member.role} ✏️
-                                            </button>
+                                            <div className="flex items-center justify-between mt-1 min-h-[24px]">
+                                                <button
+                                                    onClick={() => handleRoleEdit(member._id, member.role)}
+                                                    className="text-xs text-gray-500 hover:text-primary hover:underline transition-colors mt-1 cursor-pointer mt-2"
+                                                    title="Edit role"
+                                                >
+                                                    edit role ✏️
+                                                </button>
+                                            </div>
                                         )}
                                     </div>
 
                                     {/* Right side: Year and Major */}
-                                    <div className="text-right">
+                                    <div className="text-right flex-shrink-0 mx-3">
                                         <p className="text-xs text-on-surface-variant">Year: {member.year}</p>
                                         <p className="text-xs text-on-surface-variant">Major: {member.major}</p>
+                                        <p className="text-xs font-semibold text-primary">Role: {member.role}</p>
+                                    </div>
+
+                                    {/* Right: Remove Button */}
+                                    <div className="flex-shrink-0">
+                                        {confirmRemove === member._id ? (
+                                            <div className="flex flex-col gap-1">
+                                                <p className="text-xs text-on-surface whitespace-nowrap">Remove?</p>
+                                                <div className="flex gap-1">
+                                                    <button
+                                                        onClick={() => handleRemoveMember(member._id)}
+                                                        disabled={removingMember === member._id}
+                                                        className="text-xs px-2 py-1 bg-red-600 text-white rounded hover:bg-red-700 disabled:opacity-50"
+                                                        title="Confirm removal"
+                                                    >
+                                                        {removingMember === member._id ? '⏳' : 'Yes'}
+                                                    </button>
+                                                    <button
+                                                        onClick={() => setConfirmRemove(null)}
+                                                        disabled={removingMember === member._id}
+                                                        className="text-xs px-2 py-1 bg-gray-500 text-white rounded hover:bg-gray-600 disabled:opacity-50"
+                                                        title="Cancel removal"
+                                                    >
+                                                        No
+                                                    </button>
+                                                </div>
+                                            </div>
+                                        ) : (
+                                            <button
+                                                onClick={() => setConfirmRemove(member._id)}
+                                                className="p-1 text-gray-400 hover:text-red-600 hover:bg-red-50 rounded transition-colors"
+                                                title="Remove member from club"
+                                            >
+                                                <Trash2 size={16} />
+                                            </button>
+                                        )}
                                     </div>
                                 </div>
                             </div>
@@ -135,7 +206,7 @@ export function Members({ club }: { club: any }) {
                     'Content-Type': 'application/json',
                 },
                 credentials: 'include',
-                body: JSON.stringify({ role: tempRole }),
+                body: JSON.stringify({ userRole: tempRole }),
             });
 
             const data = await response.json();
