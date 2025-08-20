@@ -19,6 +19,6 @@ export const getNotificationsEndpoint: ApiEndpoint<undefined, GetNotificationRes
             return;
         }
 
-        await getNotifications(req, res);
+        await NotificationController.getNotifications(req, res);
     },
 };

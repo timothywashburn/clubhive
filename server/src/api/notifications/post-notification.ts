@@ -1,6 +1,6 @@
 import { ApiEndpoint, AuthType } from '@/types/api-types';
 import { PostNotificationRequest, PostNotificationResponse } from '@clubhive/shared/src/types';
-import { createNotification } from '@/controllers/notification-controller';
+import NotificationController from '@/controllers/notification-controller';
 
 export const postNotificationEndpoint: ApiEndpoint<PostNotificationRequest, PostNotificationResponse> = {
     path: '/api/notifications',
@@ -20,7 +20,7 @@ export const postNotificationEndpoint: ApiEndpoint<PostNotificationRequest, Post
         }
 
         try {
-            await createNotification(req, res);
+            await NotificationController.createNotification(req, res);
         } catch (err) {
             res.status(500).json({
                 success: false,

@@ -48,4 +48,9 @@ export default class ClubMembershipController {
         const role = await this.getUserClubRole(clubId, userId);
         return role === ClubRole.OFFICER || role === ClubRole.OWNER;
     }
+
+    static async deleteAllMembershipsForClub(clubId: string): Promise<number> {
+        const result = await ClubMembership.deleteMany({ club: clubId });
+        return result.deletedCount || 0;
+    }
 }
