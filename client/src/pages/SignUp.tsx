@@ -3,14 +3,8 @@ import { Link } from 'react-router';
 import { useNavigate } from 'react-router';
 import { useAuthStore } from '../stores/authStore';
 import { useToast } from '../hooks/useToast';
+import { useSchoolData } from '../hooks/fetchSchools';
 
-/**
- * THIS CLASS IS AI GENERATED AND TEMPORARY
- *
- * This class is a placeholder that bears no resemblance to the real
- * implementation for this page. This code is temporary and can be
- * replaced by the real implementation at any time.
- */
 export function SignUp() {
     const [fullName, setFullName] = useState('');
     const [email, setEmail] = useState('');
@@ -20,8 +14,10 @@ export function SignUp() {
     const [major, setMajor] = useState('');
     const [educationType, setEducationType] = useState('');
     const [year, setYear] = useState('');
+    const [emailError, setEmailError] = useState('');
 
     const navigate = useNavigate();
+    const { schools } = useSchoolData();
 
     const inputClass =
         'mt-1 block w-full rounded-md text-on-primary-container border border-outline-variant bg-surface px-3 py-2 shadow-sm ' +
@@ -93,8 +89,35 @@ export function SignUp() {
 
     const { errorToast } = useToast();
 
+    // Email validation function
+    const validateEmail = (emailValue: string) => {
+        if (!school || !emailValue) {
+            setEmailError('');
+            return;
+        }
+
+        const selectedSchool = schools.find(s => s._id === school);
+        if (selectedSchool && selectedSchool.emailPattern) {
+            const emailRegex = new RegExp(selectedSchool.emailPattern);
+            if (!emailRegex.test(emailValue)) {
+                setEmailError(selectedSchool.emailError);
+            } else {
+                setEmailError('');
+            }
+        }
+    };
+
+    // Validate email when school or email changes
+    useEffect(() => {
+        validateEmail(email);
+    }, [school, email, schools]);
+
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
+
+        if (emailError) {
+            return;
+        }
 
         if (confirmPassword !== password) {
             clearErrors();
@@ -124,7 +147,7 @@ export function SignUp() {
             case '4':
                 return '4th Year';
             case '>4':
-                return '4+ Year';
+                return '4+ Years';
             default:
                 return year;
         }
@@ -168,9 +191,13 @@ export function SignUp() {
                                     name="email"
                                     type="email"
                                     value={email}
-                                    onChange={e => setEmail(e.target.value)}
-                                    className={inputClass}
+                                    onChange={e => {
+                                        setEmail(e.target.value);
+                                        validateEmail(e.target.value);
+                                    }}
+                                    className={inputClass + ' ' + (emailError ? 'border-red-500' : '')}
                                 />
+                                {emailError && <p className="text-red-500 text-sm mt-1">{emailError}</p>}
                             </div>
 
                             <div>
@@ -215,7 +242,11 @@ export function SignUp() {
                                     <option className="text-on-background-variant" value="">
                                         Select your school
                                     </option>
-                                    <option value="507f1f77bcf86cd799439021">UCSD</option> {/* ucsd school id */}
+                                    {schools.map(schoolOption => (
+                                        <option key={schoolOption._id} value={schoolOption._id}>
+                                            {schoolOption.name}
+                                        </option>
+                                    ))}
                                 </select>
                             </div>
 
@@ -289,7 +320,7 @@ export function SignUp() {
                                                         ${
                                                             year === yearOption
                                                                 ? 'bg-primary text-on-primary shadow-sm'
-                                                                : 'text-on-surface-variant hover:text-on-surface hover:bg-surface'
+                                                                : 'text-on-surface-variant hover:text-on-surface hover:bg-surface cursor-pointer'
                                                         }
                                                     `}
                                     >
@@ -302,7 +333,7 @@ export function SignUp() {
                         <div>
                             <button
                                 type="submit"
-                                className="group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-on-primary bg-primary hover:bg-primary/90 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary disabled:opacity-50 disabled:cursor-not-allowed"
+                                className="group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-on-primary bg-primary hover:bg-primary/90 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer"
                             >
                                 {' '}
                                 Create Account
