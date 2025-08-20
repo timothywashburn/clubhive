@@ -109,6 +109,32 @@ export function SendNotification() {
         }
     };
 
+    const handleDelete = async (id: string) => {
+        setErrorMsg(null);
+        setSuccessMsg(null);
+
+        const prevItems = historyItems;
+        setHistoryItems(prevItems.filter(item => item._id !== id));
+
+        try {
+            const res = await fetch(`/api/notifications/${id}`, {
+                method: 'DELETE',
+                credentials: 'include',
+            });
+            const data = await res.json();
+
+            if (!res.ok || data.success === false) {
+                setHistoryItems(prevItems);
+                setErrorMsg(data?.error?.message || 'Failed to delete notification');
+            } else {
+                setSuccessMsg('Notification deleted.');
+            }
+        } catch (err) {
+            setHistoryItems(prevItems);
+            setErrorMsg(err.message || 'Failed to delete notification');
+        }
+    };
+
     return (
         <div className="h-full relative">
             <div className="w-full py-8">
@@ -176,7 +202,18 @@ export function SendNotification() {
 
                                                         <div className="text-right">
                                                             <div className="text-sm text-on-surface-variant whitespace-nowrap">{time}</div>
-                                                            <div className="text-red-500 italic text-xs mt-1">delete</div>
+                                                            <button
+                                                                type="button"
+                                                                onClick={() => {
+                                                                    const id = item._id;
+                                                                    if (id && window.confirm('Delete this notification?')) {
+                                                                        void handleDelete(id);
+                                                                    }
+                                                                }}
+                                                                className="text-red-500 italic text-xs mt-1 hover:underline"
+                                                            >
+                                                                Delete
+                                                            </button>
                                                         </div>
                                                     </div>
                                                 </div>
