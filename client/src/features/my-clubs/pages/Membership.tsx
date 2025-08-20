@@ -2,7 +2,9 @@ import { LogOut, Crown, Trash2, Globe, Instagram, Mail } from 'lucide-react';
 import { UserClubData } from '@clubhive/shared';
 import { DangerZone } from '../../../components/DangerZone';
 import { useState } from 'react';
+import { useNavigate } from 'react-router';
 import { useMyClubsData } from '../../../hooks/useMyClubsData.ts';
+import { useToast } from '../../../hooks/useToast';
 
 interface MembershipProps {
     club: UserClubData;
@@ -10,8 +12,10 @@ interface MembershipProps {
 }
 
 export function Membership({ club, isOwner }: MembershipProps) {
+    const navigate = useNavigate();
     const { getMembershipData } = useMyClubsData();
     const membershipData = getMembershipData(club);
+    const { successToast, errorToast } = useToast();
 
     const [leaveLoading, setLeaveLoading] = useState(false);
     const [transferLoading, setTransferLoading] = useState(false);
@@ -20,13 +24,27 @@ export function Membership({ club, isOwner }: MembershipProps) {
     const handleLeaveClub = async () => {
         setLeaveLoading(true);
         try {
-            // TODO: Implement leave club API call
             console.log('Leaving club:', club.name);
-            await new Promise(resolve => setTimeout(resolve, 1500));
-            alert('Successfully left the club');
+
+            const response = await fetch(`/api/memberships/${club._id}`, {
+                method: 'DELETE',
+                credentials: 'include',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+            });
+
+            const data = await response.json();
+
+            if (response.ok && data.success) {
+                successToast('Successfully left the club');
+                navigate('/my-clubs');
+            } else {
+                throw new Error(data.error?.message || 'Failed to leave club');
+            }
         } catch (error) {
             console.error('Error leaving club:', error);
-            alert('Failed to leave club');
+            errorToast('Failed to leave club');
         } finally {
             setLeaveLoading(false);
         }
@@ -38,10 +56,10 @@ export function Membership({ club, isOwner }: MembershipProps) {
             // TODO: Implement transfer ownership flow (maybe open a modal to select member)
             console.log('Transferring ownership of:', club.name);
             await new Promise(resolve => setTimeout(resolve, 2000));
-            alert('Ownership transfer initiated');
+            successToast('Ownership transfer initiated');
         } catch (error) {
             console.error('Error transferring ownership:', error);
-            alert('Failed to transfer ownership');
+            errorToast('Failed to transfer ownership');
         } finally {
             setTransferLoading(false);
         }
@@ -50,13 +68,27 @@ export function Membership({ club, isOwner }: MembershipProps) {
     const handleDisbandClub = async () => {
         setDisbandLoading(true);
         try {
-            // TODO: Implement disband club API call
             console.log('Disbanding club:', club.name);
-            await new Promise(resolve => setTimeout(resolve, 2000));
-            alert('Club successfully disbanded');
+
+            const response = await fetch(`/api/clubs/${club._id}`, {
+                method: 'DELETE',
+                credentials: 'include',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+            });
+
+            const data = await response.json();
+
+            if (response.ok && data.success) {
+                successToast('Club successfully disbanded');
+                navigate('/my-clubs');
+            } else {
+                throw new Error(data.error?.message || 'Failed to disband club');
+            }
         } catch (error) {
             console.error('Error disbanding club:', error);
-            alert('Failed to disband club');
+            errorToast('Failed to disband club');
         } finally {
             setDisbandLoading(false);
         }
@@ -174,14 +206,15 @@ export function Membership({ club, isOwner }: MembershipProps) {
                                 // Owner actions
                                 ...(isOwner
                                     ? [
-                                          {
-                                              label: 'Transfer Ownership',
-                                              description: 'Transfer ownership of this club to another member.',
-                                              onClick: handleTransferOwnership,
-                                              isLoading: transferLoading,
-                                              loadingText: 'Processing...',
-                                              icon: Crown,
-                                          },
+                                          // TODO: this could probably be implemented in the members page (where other promotions will be)
+                                          // {
+                                          //     label: 'Transfer Ownership',
+                                          //     description: 'Transfer ownership of this club to another member.',
+                                          //     onClick: handleTransferOwnership,
+                                          //     isLoading: transferLoading,
+                                          //     loadingText: 'Processing...',
+                                          //     icon: Crown,
+                                          // },
                                           {
                                               label: 'Disband Club',
                                               description: 'Permanently delete this club and all its data. This cannot be undone.',
