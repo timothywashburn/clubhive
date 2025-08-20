@@ -49,7 +49,9 @@ function AgendaItemCard({
                 <motion.div
                     data-event-name
                     layoutId={`event-${event._id}`}
-                    className="text-sm bg-primary text-on-primary px-1 py-0.5 rounded cursor-pointer max-w-full"
+                    className={`text-sm px-1 py-0.5 rounded cursor-pointer max-w-full ${
+                        event.published ? 'bg-primary text-on-primary' : 'bg-secondary text-on-secondary'
+                    }`}
                 >
                     <span className="truncate block">{event.name}</span>
                 </motion.div>

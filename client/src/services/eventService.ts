@@ -117,6 +117,7 @@ class EventService {
             date: eventData.date,
             startTime: eventData.startTime,
             endTime: eventData.endTime,
+            published: eventData.published,
             tags: (eventData.tags || []).map(tag => (typeof tag === 'string' ? tag : tag._id)),
         };
     }

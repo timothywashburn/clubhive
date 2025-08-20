@@ -9,7 +9,7 @@ import Event from '../src/models/event-schema';
 import Notification from '../src/models/notification-schema';
 import UserNotification from '../src/models/user-notification-schema';
 import { ClubhiveConfigModel } from '../src/models/clubhive-config-schema';
-import { EventType, ClubRole } from '@clubhive/shared';
+import { EventType, ClubRole, ClubStatus } from '@clubhive/shared';
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-expect-error
 import bcrypt from 'bcrypt';
@@ -138,6 +138,7 @@ async function seed() {
                 clubTagMap['Career'],
                 clubTagMap['Coding'],
             ],
+            status: ClubStatus.ANYONE_CAN_JOIN,
             socials: {
                 website: 'https://csclub.ucsd.edu',
                 discord: 'https://discord.gg/csclub',
@@ -160,6 +161,7 @@ async function seed() {
                 clubTagMap['Career'],
                 clubTagMap['Coding'],
             ],
+            status: ClubStatus.ANYONE_CAN_JOIN,
             socials: {
                 website: 'https://hackthetriton.ucsd.edu',
                 discord: 'https://discord.gg/hackucsd',
@@ -182,6 +184,7 @@ async function seed() {
                 clubTagMap['Career'],
                 clubTagMap['Coding'],
             ],
+            status: ClubStatus.ANYONE_CAN_JOIN,
             socials: {
                 website: 'https://wic.ucsd.edu',
                 discord: '',
@@ -196,6 +199,7 @@ async function seed() {
             url: 'triton-community',
             school: ucsd._id,
             tags: [clubTagMap['Service'], clubTagMap['Community'], clubTagMap['Leadership']],
+            status: ClubStatus.ANYONE_CAN_JOIN,
             socials: {
                 website: 'https://community.ucsd.edu',
                 discord: '',
@@ -210,6 +214,7 @@ async function seed() {
             url: 'workshop-central',
             school: ucsd._id,
             tags: [clubTagMap['Technology'], clubTagMap['Academic'], clubTagMap['STEM'], clubTagMap['Career']],
+            status: ClubStatus.ANYONE_CAN_JOIN,
             socials: {
                 website: 'https://workshopcentral.ucsd.edu',
                 discord: 'https://discord.gg/workshops',
@@ -224,6 +229,7 @@ async function seed() {
             url: 'startup-circle',
             school: ucsd._id,
             tags: [clubTagMap['Entrepreneurship'], clubTagMap['Career'], clubTagMap['Leadership']],
+            status: ClubStatus.ANYONE_CAN_JOIN,
             socials: {
                 website: 'https://startupcircle.ucsd.edu',
                 discord: '',
@@ -238,6 +244,7 @@ async function seed() {
             url: 'triton-gamers',
             school: ucsd._id,
             tags: [clubTagMap['Gaming & Esports'], clubTagMap['Community'], clubTagMap['Social'], clubTagMap['Technology']],
+            status: ClubStatus.ANYONE_CAN_JOIN,
             socials: {
                 website: 'https://gamers.ucsd.edu',
                 discord: 'https://discord.gg/gaming',
@@ -252,6 +259,7 @@ async function seed() {
             url: 'triton-creatives',
             school: ucsd._id,
             tags: [clubTagMap['Art'], clubTagMap['Music'], clubTagMap['Media & Journalism'], clubTagMap['Community']],
+            status: ClubStatus.ANYONE_CAN_JOIN,
             socials: {
                 website: 'https://creatives.ucsd.edu',
                 discord: '',
@@ -266,6 +274,7 @@ async function seed() {
             url: 'diversity-in-data',
             school: ucsd._id,
             tags: [clubTagMap['Diversity'], clubTagMap['STEM'], clubTagMap['Technology'], clubTagMap['Academic']],
+            status: ClubStatus.ANYONE_CAN_JOIN,
             socials: {
                 website: 'https://diversitydata.ucsd.edu',
                 discord: '',
@@ -280,6 +289,7 @@ async function seed() {
             url: 'infosessions-at-ucsd',
             school: ucsd._id,
             tags: [clubTagMap['Career'], clubTagMap['Professional Development'], clubTagMap['STEM']],
+            status: ClubStatus.ANYONE_CAN_JOIN,
             socials: {
                 website: 'https://infosessions.ucsd.edu',
                 discord: '',
@@ -355,6 +365,7 @@ async function seed() {
             date: '2025-06-25',
             startTime: '15:00',
             endTime: '16:00',
+            published: true,
             tags: [eventTagMap['Meeting']],
         },
         {
@@ -366,6 +377,7 @@ async function seed() {
             date: '2025-06-30',
             startTime: '16:00',
             endTime: '17:00',
+            published: false,
             tags: [eventTagMap['Review'], eventTagMap['Meeting']],
         },
         {
@@ -377,6 +389,7 @@ async function seed() {
             date: '2025-07-01',
             startTime: '10:00',
             endTime: '12:00',
+            published: true,
             tags: [eventTagMap['Preparation'], eventTagMap['Social']],
         },
         {
@@ -388,6 +401,7 @@ async function seed() {
             date: '2025-07-02',
             startTime: '14:00',
             endTime: '16:00',
+            published: false,
             tags: [eventTagMap['Social'], eventTagMap['Meeting']],
         },
         {
@@ -399,6 +413,7 @@ async function seed() {
             date: '2025-07-08',
             startTime: '14:00',
             endTime: '17:00',
+            published: true,
             tags: [eventTagMap['Workshop'], eventTagMap['Educational']],
         },
         {
@@ -410,6 +425,7 @@ async function seed() {
             date: '2025-07-15',
             startTime: '14:00',
             endTime: '16:00',
+            published: false,
             tags: [eventTagMap['Workshop'], eventTagMap['Photography']],
         },
         {
@@ -421,6 +437,7 @@ async function seed() {
             date: '2025-07-15',
             startTime: '19:00',
             endTime: '22:00',
+            published: true,
             tags: [eventTagMap['Tournament'], eventTagMap['Competition']],
         },
         {
@@ -432,6 +449,7 @@ async function seed() {
             date: '2025-07-22',
             startTime: '13:00',
             endTime: '15:00',
+            published: false,
             tags: [eventTagMap['Hackathon'], eventTagMap['Preparation']],
         },
         {
@@ -443,6 +461,7 @@ async function seed() {
             date: '2025-07-22',
             startTime: '16:00',
             endTime: '17:30',
+            published: true,
             tags: [eventTagMap['Tech Talk'], eventTagMap['Educational']],
         },
         {
@@ -454,6 +473,7 @@ async function seed() {
             date: '2025-07-22',
             startTime: '18:30',
             endTime: '20:00',
+            published: true,
             tags: [eventTagMap['Networking'], eventTagMap['Professional']],
         },
         {
@@ -465,6 +485,7 @@ async function seed() {
             date: '2025-07-22',
             startTime: '20:00',
             endTime: '21:30',
+            published: false,
             tags: [eventTagMap['Panel'], eventTagMap['Professional']],
         },
         {
@@ -476,6 +497,7 @@ async function seed() {
             date: '2025-07-25',
             startTime: '15:00',
             endTime: '17:00',
+            published: false,
             tags: [eventTagMap['Debate'], eventTagMap['Competition']],
         },
         {
@@ -487,6 +509,7 @@ async function seed() {
             date: '2025-08-01',
             startTime: '11:00',
             endTime: '17:00',
+            published: true,
             tags: [eventTagMap['Fair'], eventTagMap['Social']],
         },
         {
@@ -498,6 +521,7 @@ async function seed() {
             date: '2025-08-05',
             startTime: '09:00',
             endTime: '15:00',
+            published: true,
             tags: [eventTagMap['Volunteer'], eventTagMap['Social']],
         },
     ];
@@ -520,6 +544,7 @@ async function seed() {
                 date: '2025-07-10',
                 startTime: '18:00',
                 endTime: '20:00',
+                published: false,
                 tags: [eventTagMap['Workshop'], eventTagMap['Educational']],
             },
             {
@@ -531,6 +556,7 @@ async function seed() {
                 date: '2025-07-25',
                 startTime: '17:00',
                 endTime: '19:00',
+                published: true,
                 tags: [eventTagMap['Social'], eventTagMap['Networking']],
             }
         );

@@ -223,7 +223,9 @@ export function CalendarView({ events, onUpdateEvent, onEditEvent, onCreateEvent
                                                     key={event._id}
                                                     layoutId={`event-${event._id}`}
                                                     onClick={e => handleEventClick(event, e)}
-                                                    className="w-full text-xs bg-primary text-on-primary px-1 py-0.5 rounded truncate cursor-pointer"
+                                                    className={`w-full text-xs px-1 py-0.5 rounded truncate cursor-pointer ${
+                                                        event.published ? 'bg-primary text-on-primary' : 'bg-secondary text-on-secondary'
+                                                    }`}
                                                 >
                                                     {event.name}
                                                 </motion.button>

@@ -19,6 +19,7 @@ export const eventSchema = z.object({
     date: z.string(),
     startTime: z.string(),
     endTime: z.string(),
+    published: z.boolean(),
     picture: z.string().optional(),
     tags: z.array(tagSchema),
 });
@@ -47,6 +48,7 @@ export const updateEventRequestSchema = z.object({
     date: z.string().optional(),
     startTime: z.string().optional(),
     endTime: z.string().optional(),
+    published: z.boolean().optional(),
     picture: z.string().optional(),
     tags: z.array(z.string()).optional(),
 });

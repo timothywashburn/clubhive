@@ -41,6 +41,10 @@ const schema = new Schema({
         type: String,
         required: true,
     },
+    published: {
+        type: Boolean,
+        default: false,
+    },
     picture: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Image',
