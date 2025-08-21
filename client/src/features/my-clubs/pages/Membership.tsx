@@ -144,13 +144,13 @@ export function Membership({ club, isOwner }: MembershipProps) {
 
                                 <div className="flex flex-col justify-between flex-1">
                                     <div className="space-y-2">
-                                        {club.socials.website && (
+                                        {club.socials?.website && (
                                             <div className="flex items-center gap-2 text-xs text-on-surface-variant">
                                                 <Globe className="w-3 h-3" />
                                                 <span>{club.socials.website}</span>
                                             </div>
                                         )}
-                                        {club.socials.instagram && (
+                                        {club.socials?.instagram && (
                                             <div className="flex items-center gap-2 text-xs text-on-surface-variant">
                                                 <Instagram className="w-3 h-3" />
                                                 <span>{club.socials.instagram}</span>
