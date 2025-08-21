@@ -13,10 +13,26 @@ import { EventType, ClubRole, ClubStatus } from '@clubhive/shared';
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-expect-error
 import bcrypt from 'bcrypt';
+import ClubSnapshot from '../src/models/club-snapshot-schema';
+import dotenv from 'dotenv';
+
+dotenv.config();
+
+interface MemberDataPoint {
+    date: string;
+    newMembers: number;
+    leavingMembers: number;
+}
+
+interface MajorDistribution {
+    major: string;
+    count: number;
+}
 
 const TEST_USER_ID = new mongoose.Types.ObjectId('507f1f77bcf86cd799439020');
 const UCSD_SCHOOL_ID = new mongoose.Types.ObjectId('507f1f77bcf86cd799439021');
 const CS_CLUB_ID = new mongoose.Types.ObjectId('507f1f77bcf86cd799439022');
+const WIC_CLUB_ID = new mongoose.Types.ObjectId('507f1f77bcf86cd799439023');
 
 async function seed() {
     console.log('Connecting to MongoDB at:', process.env.MONGODB_URI);
@@ -169,6 +185,7 @@ async function seed() {
             },
         },
         {
+            _id: WIC_CLUB_ID,
             name: 'Women in Computing',
             tagline: 'Empowering Women in Tech at UCSD',
             description:
@@ -563,6 +580,66 @@ async function seed() {
     }
 
     await Event.insertMany(otherClubsEvents);
+    await ClubSnapshot.deleteMany({});
+    // Adding mockdata for stats page
+    const mockData = {
+        memberCount: 34,
+        memberChange: 7,
+        memberChangePercent: 4.8,
+        eventSavesPerMonth: 5,
+        memberChanges: [
+            { date: '2024-07-05', newMembers: 9, leavingMembers: 4 },
+            { date: '2024-07-18', newMembers: 7, leavingMembers: 2 },
+            { date: '2024-08-03', newMembers: 10, leavingMembers: 3 },
+            { date: '2024-08-20', newMembers: 8, leavingMembers: 2 },
+            { date: '2024-09-10', newMembers: 6, leavingMembers: 1 },
+            { date: '2024-09-25', newMembers: 11, leavingMembers: 5 },
+            { date: '2024-10-07', newMembers: 8, leavingMembers: 3 },
+            { date: '2024-10-22', newMembers: 10, leavingMembers: 5 },
+            { date: '2024-11-12', newMembers: 6, leavingMembers: 2 },
+            { date: '2024-11-28', newMembers: 8, leavingMembers: 4 },
+            { date: '2024-12-05', newMembers: 7, leavingMembers: 3 },
+            { date: '2024-12-19', newMembers: 9, leavingMembers: 2 },
+            { date: '2025-01-08', newMembers: 6, leavingMembers: 1 },
+            { date: '2025-01-23', newMembers: 4, leavingMembers: 2 },
+            { date: '2025-02-14', newMembers: 5, leavingMembers: 1 },
+            { date: '2025-02-28', newMembers: 8, leavingMembers: 3 },
+            { date: '2025-03-10', newMembers: 7, leavingMembers: 2 },
+            { date: '2025-03-25', newMembers: 9, leavingMembers: 4 },
+            { date: '2025-04-05', newMembers: 10, leavingMembers: 3 },
+            { date: '2025-04-20', newMembers: 8, leavingMembers: 2 },
+            { date: '2025-05-11', newMembers: 6, leavingMembers: 1 },
+            { date: '2025-05-26', newMembers: 11, leavingMembers: 5 },
+            { date: '2025-06-03', newMembers: 8, leavingMembers: 3 },
+            { date: '2025-06-18', newMembers: 10, leavingMembers: 5 },
+            { date: '2025-07-02', newMembers: 6, leavingMembers: 2 },
+            { date: '2025-07-15', newMembers: 8, leavingMembers: 4 },
+            { date: '2025-07-23', newMembers: 7, leavingMembers: 3 },
+        ] as MemberDataPoint[],
+        majorDistribution: [
+            { major: 'Computer Science', count: 55 },
+            { major: 'Math-Economics', count: 40 },
+            { major: 'Visual Arts', count: 20 },
+            { major: 'General Biology', count: 35 },
+            { major: 'Political Science', count: 25 },
+            { major: 'Music', count: 20 },
+        ] as MajorDistribution[],
+    };
+
+    const snapshots = mockData.memberChanges.map(entry => ({
+        date: new Date(entry.date),
+        clubs: [
+            {
+                clubId: CS_CLUB_ID,
+                memberCount: mockData.memberCount,
+                newMembersToday: entry.newMembers,
+                leavingMembersToday: entry.leavingMembers,
+                eventSavesToday: mockData.eventSavesPerMonth,
+                majorDistribution: mockData.majorDistribution,
+            },
+        ],
+    }));
+    await ClubSnapshot.insertMany(snapshots);
 
     // Seed configuration
     await ClubhiveConfigModel.create({

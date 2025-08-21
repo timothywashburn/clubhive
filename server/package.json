@@ -10,24 +10,19 @@
     "seed:dev": "dotenv -c -- npx tsx scripts/seed-dev.ts"
   },
   "devDependencies": {
-    "@types/bcrypt": "^6.0.0",
-    "@types/cookie-parser": "^1.4.9",
-    "@types/jsonwebtoken": "^9.0.10",
-    "@types/multer": "^2.0.0",
+    "@types/node": "^24.2.0",
     "tsc-alias": "^1.8.16",
-    "typescript": "^5.8.3"
+    "typescript": "^5.9.2"
   },
   "dependencies": {
     "@clubhive/shared": "file:../shared",
     "@types/cors": "^2.8.19",
     "@types/express": "^5.0.3",
-    "@types/node": "^24.0.10",
-    "bcrypt": "^6.0.0",
     "chart.js": "^4.5.0",
     "cloudinary": "^1.41.3",
     "cookie-parser": "^1.4.7",
     "cors": "^2.8.5",
-    "dotenv": "^17.2.0",
+    "dotenv": "^17.2.1",
     "dotenv-cli": "^10.0.0",
     "express": "^5.1.0",
     "jsonwebtoken": "^9.0.2",
@@ -35,6 +30,6 @@
     "multer": "^2.0.2",
     "multer-storage-cloudinary": "^4.0.0",
     "react-chartjs-2": "^5.3.0",
-    "zod": "^4.0.10"
+    "zod": "^4.0.14"
   }
 }
