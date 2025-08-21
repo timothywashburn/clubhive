@@ -31,6 +31,7 @@ function AppContent() {
     const { initializeAuth, isAuthenticated } = useAuthStore();
     const [scrollY, setScrollY] = useState(0);
     const backgroundRef = useRef<HTMLDivElement>(null);
+    const mainRef = useRef<HTMLElement>(null);
     const location = useLocation();
     useTheme();
     const { theme } = useThemeStore();
@@ -42,11 +43,23 @@ function AppContent() {
 
     useEffect(() => {
         const handleScroll = () => {
-            setScrollY(window.scrollY);
+            if (mainRef.current) {
+                setScrollY(mainRef.current.scrollTop);
+            }
         };
 
-        window.addEventListener('scroll', handleScroll);
-        return () => window.removeEventListener('scroll', handleScroll);
+        const timer = setTimeout(() => {
+            if (mainRef.current) {
+                mainRef.current.addEventListener('scroll', handleScroll);
+            }
+        }, 0);
+
+        return () => {
+            clearTimeout(timer);
+            if (mainRef.current) {
+                mainRef.current.removeEventListener('scroll', handleScroll);
+            }
+        };
     }, []);
 
     useEffect(() => {
@@ -79,7 +92,7 @@ function AppContent() {
                 toggleSiteNavType={toggleSiteNavType}
                 activeRoute={location.pathname}
             />
-            <main className="flex-1 overflow-auto flex flex-col">
+            <main ref={mainRef} className="flex-1 overflow-auto flex flex-col">
                 <div className="flex-1">
                     <Routes>
                         <Route path="/" element={<Home />} />
