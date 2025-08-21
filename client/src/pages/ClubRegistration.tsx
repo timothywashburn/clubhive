@@ -4,7 +4,7 @@ import React, { useState } from 'react';
 import { TagSelectionPopup } from '../features/find-clubs/components/TagsSelectionPopup';
 import type { TagData } from '@clubhive/shared';
 import { getTagColor } from '../features/find-clubs/utils/TagColors';
-import { createClubRequestSchema } from '@clubhive/shared/src/types/club-types';
+import { createClubRequestSchema, ClubStatus } from '@clubhive/shared/src/types/club-types';
 import { useToast } from '../hooks/useToast';
 import { useNavigate } from 'react-router';
 
@@ -28,6 +28,7 @@ export function ClubRegistration() {
     const [instagram, setInstagram] = useState('');
     const [website, setWebsite] = useState('');
     const [description, setDescription] = useState('');
+    const [status, setStatus] = useState<ClubStatus>(ClubStatus.ANYONE_CAN_JOIN);
 
     const maxDescriptionLength = 1000;
     const maxTaglineLength = 50;
@@ -41,19 +42,21 @@ export function ClubRegistration() {
         const clubData = {
             name: name,
             school: school,
-            tagline: tagline || undefined,
+            tagline: tagline,
             url: url || undefined,
             socials: {
                 discord: discord || undefined,
                 instagram: instagram || undefined,
                 website: website || undefined,
             },
+            status: status,
             description: description || undefined,
             tags: selectedTags.map(tag => tag._id) || undefined,
             clubLogo: undefined,
             pictures: undefined,
         };
         // Validate using Zod schema
+        console.log('Club data being validated:', clubData);
         const result = createClubRequestSchema.safeParse(clubData);
 
         if (!result.success) {
@@ -215,7 +218,7 @@ export function ClubRegistration() {
                             {/* Tagline */}
                             <div className="mt-5">
                                 <label htmlFor="club-tagline" className="block text-sm font-medium text-on-background">
-                                    Tagline
+                                    Tagline <span className="text-error">*</span>
                                 </label>
                                 <input
                                     type="text"
@@ -252,6 +255,23 @@ export function ClubRegistration() {
                                 <div className="text-right text-sm text-gray-500 mt-1">
                                     {description.length} / {maxDescriptionLength}
                                 </div>
+                            </div>
+
+                            {/* Status */}
+                            <div className="mt-5">
+                                <label htmlFor="club-status" className="block text-sm font-medium text-on-background">
+                                    Club Status
+                                </label>
+                                <select
+                                    id="club-status"
+                                    className={inputClass + ' border-outline-variant'}
+                                    value={status}
+                                    onChange={e => setStatus(e.target.value as ClubStatus)}
+                                >
+                                    <option value={ClubStatus.ANYONE_CAN_JOIN}>{ClubStatus.ANYONE_CAN_JOIN}</option>
+                                    <option value={ClubStatus.REQUEST_TO_JOIN}>{ClubStatus.REQUEST_TO_JOIN}</option>
+                                    <option value={ClubStatus.CLOSED}>{ClubStatus.CLOSED}</option>
+                                </select>
                             </div>
 
                             {/* Tags */}
