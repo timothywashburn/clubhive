@@ -116,7 +116,8 @@ function AppContent() {
                         <Route path="*" element={<NotFound />} />
                     </Routes>
                 </div>
-                <Footer />
+                {/* Hide footer on landing page (for non-authenticated users) since it has its own footer */}
+                {!(location.pathname === '/' && !isAuthenticated) && <Footer />}
             </main>
             <ToastContainer
                 position="bottom-right"

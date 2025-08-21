@@ -1,24 +1,56 @@
 import React from 'react';
-import { motion } from 'framer-motion';
+import { motion, useScroll, useTransform } from 'framer-motion';
 import { Users, Calendar, Target, Star, ArrowRight, CheckCircle } from 'lucide-react';
 import { useNavigate } from 'react-router';
 import { StaticHoneycomb } from '../../components/honeycomb';
+import { Footer } from '../../components/footer/Footer';
 
 export function LandingPage() {
     const navigate = useNavigate();
+    const { scrollYProgress } = useScroll();
+    
+    // Parallax transforms for honeycomb background
+    const honeycombY = useTransform(scrollYProgress, [0, 1], ['0%', '50%']);
+    const honeycombOpacity = useTransform(scrollYProgress, [0, 0.8, 1], [0.3, 0.2, 0.1]);
+    
+    // Section-based scroll transforms
+    const heroScale = useTransform(scrollYProgress, [0, 0.2], [1, 0.95]);
+    const heroOpacity = useTransform(scrollYProgress, [0, 0.2], [1, 0.8]);
+    
+    // Progress indicator
+    const progressWidth = useTransform(scrollYProgress, [0, 1], ['0%', '100%']);
 
     const fadeInUp = {
         initial: { opacity: 0, y: 60 },
         animate: { opacity: 1, y: 0 },
-        transition: { duration: 0.6 },
+        transition: { duration: 0.8, ease: "easeOut" },
+    };
+    
+    const slideInLeft = {
+        initial: { opacity: 0, x: -60 },
+        animate: { opacity: 1, x: 0 },
+        transition: { duration: 0.8, ease: "easeOut" },
+    };
+    
+    const slideInRight = {
+        initial: { opacity: 0, x: 60 },
+        animate: { opacity: 1, x: 0 },
+        transition: { duration: 0.8, ease: "easeOut" },
     };
 
     const staggerContainer = {
         animate: {
             transition: {
-                staggerChildren: 0.1,
+                staggerChildren: 0.15,
+                delayChildren: 0.2,
             },
         },
+    };
+    
+    const scaleOnView = {
+        initial: { opacity: 0, scale: 0.8 },
+        animate: { opacity: 1, scale: 1 },
+        transition: { duration: 0.6, ease: "easeOut" },
     };
 
     const features = [
@@ -61,10 +93,27 @@ export function LandingPage() {
     ];
 
     return (
-        <div className="h-full relative">
+        <div className="fixed inset-0 top-16 overflow-hidden">
+            <div className="h-full overflow-y-scroll overflow-x-hidden scroll-smooth scrollbar-hide" style={{ scrollSnapType: 'y mandatory' }}>
+            {/* Scroll Progress Indicator - positioned under navbar */}
+            <motion.div 
+                className="fixed top-16 left-0 h-1 bg-primary z-0"
+                style={{ width: progressWidth }}
+            />
+            
+            {/* Fixed Honeycomb Background */}
+            <motion.div 
+                className="fixed inset-0 pointer-events-none z-0"
+                style={{ y: honeycombY, opacity: honeycombOpacity }}
+            >
+                <StaticHoneycomb />
+            </motion.div>
             {/* Hero Section */}
-            <section className="relative overflow-hidden">
-                <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20 lg:py-32">
+            <section className="relative h-screen flex items-center justify-center" style={{ scrollSnapAlign: 'start' }}>
+                <motion.div 
+                    className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8"
+                    style={{ scale: heroScale, opacity: heroOpacity }}
+                >
                     <motion.div
                         className="text-center"
                         initial={{ opacity: 0, y: 20 }}
@@ -122,18 +171,38 @@ export function LandingPage() {
                             </button>
                         </motion.div>
                     </motion.div>
-                </div>
+                </motion.div>
             </section>
 
             {/* Mission Section */}
-            <section className="py-20 bg-surface/40">
-                <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                    <motion.div className="text-center mb-16" {...fadeInUp} viewport={{ once: true }}>
-                        <h2 className="text-4xl font-bold text-on-surface mb-6">Our Mission</h2>
-                        <p className="text-xl text-on-surface-variant max-w-3xl mx-auto">
+            <section className="h-screen flex items-center justify-center relative" style={{ scrollSnapAlign: 'start' }}>
+                <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+                    <motion.div 
+                        className="text-center mb-16" 
+                        initial={{ opacity: 0, y: 60 }}
+                        whileInView={{ opacity: 1, y: 0 }}
+                        transition={{ duration: 0.8, ease: "easeOut" }}
+                        viewport={{ amount: 0.3 }}
+                    >
+                        <motion.h2 
+                            className="text-4xl font-bold text-on-surface mb-6"
+                            initial={{ opacity: 0, scale: 0.9 }}
+                            whileInView={{ opacity: 1, scale: 1 }}
+                            transition={{ duration: 0.6, delay: 0.2 }}
+                            viewport={{}}
+                        >
+                            Our Mission
+                        </motion.h2>
+                        <motion.p 
+                            className="text-xl text-on-surface-variant max-w-3xl mx-auto"
+                            initial={{ opacity: 0, y: 20 }}
+                            whileInView={{ opacity: 1, y: 0 }}
+                            transition={{ duration: 0.6, delay: 0.4 }}
+                            viewport={{}}
+                        >
                             We believe that student organizations are the heart of campus life. Our mission is to empower every club and
                             student with the tools they need to create meaningful connections and unforgettable experiences.
-                        </p>
+                        </motion.p>
                     </motion.div>
 
                     <motion.div
@@ -141,13 +210,13 @@ export function LandingPage() {
                         variants={staggerContainer}
                         initial="initial"
                         whileInView="animate"
-                        viewport={{ once: true }}
+                        viewport={{}}
                     >
                         {features.map((feature, index) => (
                             <motion.div
                                 key={index}
-                                className="text-center p-8 bg-background rounded-xl shadow-sm border border-outline-variant hover:shadow-md transition-shadow"
-                                variants={fadeInUp}
+                                className="text-center p-8 bg-background/80 backdrop-blur-sm rounded-xl shadow-lg border border-outline-variant hover:shadow-xl transition-all duration-300 hover:scale-105"
+                                variants={scaleOnView}
                             >
                                 <div className="w-16 h-16 mx-auto mb-6 bg-primary/10 rounded-full flex items-center justify-center">
                                     <feature.icon className="w-8 h-8 text-primary" />
@@ -161,13 +230,33 @@ export function LandingPage() {
             </section>
 
             {/* Stats Section */}
-            <section className="py-20">
-                <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                    <motion.div className="text-center mb-16" {...fadeInUp} viewport={{ once: true }}>
-                        <h2 className="text-4xl font-bold text-on-background mb-6">Join the Movement</h2>
-                        <p className="text-xl text-on-background-variant">
+            <section className="h-screen flex items-center justify-center relative" style={{ scrollSnapAlign: 'start' }}>
+                <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+                    <motion.div 
+                        className="text-center mb-16"
+                        initial={{ opacity: 0, y: 60 }}
+                        whileInView={{ opacity: 1, y: 0 }}
+                        transition={{ duration: 0.8, ease: "easeOut" }}
+                        viewport={{ amount: 0.3 }}
+                    >
+                        <motion.h2 
+                            className="text-4xl font-bold text-on-background mb-6"
+                            initial={{ opacity: 0, scale: 0.9 }}
+                            whileInView={{ opacity: 1, scale: 1 }}
+                            transition={{ duration: 0.6, delay: 0.2 }}
+                            viewport={{}}
+                        >
+                            Join the Movement
+                        </motion.h2>
+                        <motion.p 
+                            className="text-xl text-on-background-variant"
+                            initial={{ opacity: 0, y: 20 }}
+                            whileInView={{ opacity: 1, y: 0 }}
+                            transition={{ duration: 0.6, delay: 0.4 }}
+                            viewport={{}}
+                        >
                             Thousands of students are already using clubhive to enhance their campus experience
-                        </p>
+                        </motion.p>
                     </motion.div>
 
                     <motion.div
@@ -175,31 +264,75 @@ export function LandingPage() {
                         variants={staggerContainer}
                         initial="initial"
                         whileInView="animate"
-                        viewport={{ once: true }}
+                        viewport={{}}
                     >
                         {[
                             { number: '500+', label: 'Active Clubs' },
                             { number: '15K+', label: 'Students Connected' },
                             { number: '2K+', label: 'Events Hosted' },
                             { number: '50+', label: 'Universities' },
-                        ].map((stat, index) => (
-                            <motion.div key={index} className="text-center" variants={fadeInUp}>
-                                <div className="text-4xl font-bold text-primary mb-2">{stat.number}</div>
-                                <div className="text-on-background-variant">{stat.label}</div>
-                            </motion.div>
-                        ))}
+                        ].map((stat, index) => {
+                            const directions = [
+                                { initial: { x: -60, opacity: 0 } },
+                                { initial: { y: -60, opacity: 0 } },
+                                { initial: { y: 60, opacity: 0 } },
+                                { initial: { x: 60, opacity: 0 } }
+                            ];
+                            
+                            return (
+                                <motion.div 
+                                    key={index} 
+                                    className="text-center"
+                                    initial={directions[index].initial}
+                                    whileInView={{ x: 0, y: 0, opacity: 1 }}
+                                    transition={{ duration: 0.8, delay: index * 0.1, ease: "easeOut" }}
+                                    viewport={{ amount: 0.3 }}
+                                >
+                                    <motion.div 
+                                        className="text-4xl font-bold text-primary mb-2"
+                                        initial={{ scale: 0 }}
+                                        whileInView={{ scale: 1 }}
+                                        transition={{ duration: 0.6, delay: 0.5 + index * 0.1, type: "spring", stiffness: 200 }}
+                                        viewport={{}}
+                                    >
+                                        {stat.number}
+                                    </motion.div>
+                                    <div className="text-on-background-variant">{stat.label}</div>
+                                </motion.div>
+                            );
+                        })}
                     </motion.div>
                 </div>
             </section>
 
             {/* Testimonials Section */}
-            <section className="py-20 bg-surface/40">
-                <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                    <motion.div className="text-center mb-16" {...fadeInUp} viewport={{ once: true }}>
-                        <h2 className="text-4xl font-bold text-on-surface mb-6">What Students Say</h2>
-                        <p className="text-xl text-on-surface-variant">
+            <section className="h-screen flex items-center justify-center relative" style={{ scrollSnapAlign: 'start' }}>
+                <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+                    <motion.div 
+                        className="text-center mb-16"
+                        initial={{ opacity: 0, y: 60 }}
+                        whileInView={{ opacity: 1, y: 0 }}
+                        transition={{ duration: 0.8, ease: "easeOut" }}
+                        viewport={{ amount: 0.3 }}
+                    >
+                        <motion.h2 
+                            className="text-4xl font-bold text-on-surface mb-6"
+                            initial={{ opacity: 0, scale: 0.9 }}
+                            whileInView={{ opacity: 1, scale: 1 }}
+                            transition={{ duration: 0.6, delay: 0.2 }}
+                            viewport={{}}
+                        >
+                            What Students Say
+                        </motion.h2>
+                        <motion.p 
+                            className="text-xl text-on-surface-variant"
+                            initial={{ opacity: 0, y: 20 }}
+                            whileInView={{ opacity: 1, y: 0 }}
+                            transition={{ duration: 0.6, delay: 0.4 }}
+                            viewport={{}}
+                        >
                             Hear from real students who are transforming their campus experience
-                        </p>
+                        </motion.p>
                     </motion.div>
 
                     <motion.div
@@ -207,7 +340,7 @@ export function LandingPage() {
                         variants={staggerContainer}
                         initial="initial"
                         whileInView="animate"
-                        viewport={{ once: true }}
+                        viewport={{}}
                     >
                         {testimonials.map((testimonial, index) => (
                             <motion.div
@@ -236,24 +369,64 @@ export function LandingPage() {
                 </div>
             </section>
 
-            {/* CTA Section */}
-            <section className="py-20">
-                <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-                    <motion.div {...fadeInUp} viewport={{ once: true }}>
-                        <h2 className="text-4xl font-bold text-on-background mb-6">Ready to Transform Your Campus Experience?</h2>
-                        <p className="text-xl text-on-background-variant mb-8">
-                            Join thousands of students who are already making the most of their college years with clubhive.
-                        </p>
-                        <button
-                            onClick={() => navigate('/auth/signup')}
-                            className="bg-primary text-on-primary px-8 py-4 rounded-lg text-lg font-semibold hover:bg-primary/90 transition-colors cursor-pointer inline-flex items-center group"
+            {/* CTA Section with Footer */}
+            <section className="h-screen flex flex-col justify-between relative" style={{ scrollSnapAlign: 'start' }}>
+                {/* Main CTA Content */}
+                <div className="flex-1 flex items-center justify-center">
+                    <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center relative z-10">
+                        <motion.div 
+                            initial={{ opacity: 0, scale: 0.9 }}
+                            whileInView={{ opacity: 1, scale: 1 }}
+                            transition={{ duration: 0.8, ease: "easeOut" }}
+                            viewport={{ amount: 0.3 }}
                         >
-                            Start Your Journey
-                            <ArrowRight className="ml-2 w-5 h-5 group-hover:translate-x-1 transition-transform" />
-                        </button>
-                    </motion.div>
+                            <motion.h2 
+                                className="text-4xl font-bold text-on-background mb-6"
+                                initial={{ opacity: 0, y: 30 }}
+                                whileInView={{ opacity: 1, y: 0 }}
+                                transition={{ duration: 0.6, delay: 0.2 }}
+                                viewport={{}}
+                            >
+                                Ready to Transform Your Campus Experience?
+                            </motion.h2>
+                            <motion.p 
+                                className="text-xl text-on-background-variant mb-8"
+                                initial={{ opacity: 0, y: 20 }}
+                                whileInView={{ opacity: 1, y: 0 }}
+                                transition={{ duration: 0.6, delay: 0.4 }}
+                                viewport={{}}
+                            >
+                                Join thousands of students who are already making the most of their college years with clubhive.
+                            </motion.p>
+                            <motion.button
+                                onClick={() => navigate('/auth/signup')}
+                                className="bg-primary text-on-primary px-8 py-4 rounded-lg text-lg font-semibold hover:bg-primary/90 transition-all duration-300 cursor-pointer inline-flex items-center group hover:scale-105 shadow-lg hover:shadow-xl"
+                                initial={{ opacity: 0, y: 20, scale: 0.9 }}
+                                whileInView={{ opacity: 1, y: 0, scale: 1 }}
+                                transition={{ duration: 0.6, delay: 0.6, type: "spring", stiffness: 200 }}
+                                viewport={{}}
+                                whileHover={{ scale: 1.05 }}
+                                whileTap={{ scale: 0.95 }}
+                            >
+                                Start Your Journey
+                                <ArrowRight className="ml-2 w-5 h-5 group-hover:translate-x-1 transition-transform" />
+                            </motion.button>
+                        </motion.div>
+                    </div>
                 </div>
+                
+                {/* Footer at bottom of section */}
+                <motion.div 
+                    className="relative z-10"
+                    initial={{ opacity: 0, y: 30 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.6, delay: 0.8 }}
+                    viewport={{}}
+                >
+                    <Footer />
+                </motion.div>
             </section>
+            </div>
         </div>
     );
 }
