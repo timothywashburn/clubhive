@@ -13,15 +13,15 @@ import { useAuthStore } from '../../stores/authStore.ts';
 import { useNavigate } from 'react-router';
 
 export function MyClubs() {
-    const { isAuthenticated } = useAuthStore();
+    const { isAuthenticated, isInitialized } = useAuthStore();
     const navigate = useNavigate();
     const { clubs, loading } = useMyClubsData();
 
     useEffect(() => {
-        if (!isAuthenticated) {
+        if (isInitialized && !isAuthenticated) {
             navigate('/', { replace: true });
         }
-    }, [isAuthenticated, navigate]);
+    }, [isAuthenticated, isInitialized, navigate]);
 
     const {
         selectedClub,
