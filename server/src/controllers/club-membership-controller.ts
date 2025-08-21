@@ -56,12 +56,20 @@ export default class ClubMembershipController {
     }
 
     static async getClubMembers(clubId: string): Promise<{ user: any; role: ClubRole; joinedAt: Date }[]> {
+        console.log('Querying for clubId:', clubId);
+        // Debug: Check all memberships in DB
+        const allMemberships = await ClubMembership.find({}).select('club user role');
+        console.log('All memberships in DB:', allMemberships);
+
         const memberships = await ClubMembership.find({ club: clubId })
             .populate<{ user: UserDoc }>({
                 path: 'user',
                 select: '_id name year major',
             })
             .exec();
+
+        console.log('Found memberships count:', memberships.length); // Add this line
+        console.log('Raw memberships:', memberships); // Add this line
         console.log(
             'Members for Club:',
             memberships.map(m => m.user.name)
