@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
 import { NotificationCard } from '../features/notifications/NotificationCard.tsx';
 import { NotifExpanded } from '../features/notifications/NotifExpanded.tsx';
 import { useNotifs } from '../hooks/fetchNotifs.tsx';
@@ -51,13 +52,20 @@ export function Notifications() {
                     <p className="text-on-surface-variant mt-2">Stay updated with your club activities</p>
                 </div>
 
-                <div className="flex gap-6 px-4 sm:px-6 lg:px-8">
-                    <div className="w-1/3 bg-surface rounded-lg shadow border border-outline-variant">
-                        <div className="px-6 py-4 border-b border-outline-variant">
+                <div className="flex gap-6 px-4 sm:px-6 lg:px-8 min-h-[calc(100vh-200px)]">
+                    <motion.div
+                        className="bg-surface rounded-lg shadow border border-outline-variant flex flex-col h-fit w-1/3"
+                        initial={{ x: '100%' }}
+                        animate={{
+                            x: selected ? '0%' : '100%',
+                        }}
+                        transition={{ duration: 0.3, ease: 'easeInOut' }}
+                    >
+                        <div className="px-6 py-4 border-b border-outline-variant flex-shrink-0">
                             <div className="flex items-center justify-between">
                                 <h2 className="text-lg font-medium text-on-surface">Recent Activity</h2>
                                 <button
-                                    className="text-sm text-primary hover:text-primary/90"
+                                    className="text-sm text-primary hover:text-primary/90 cursor-pointer"
                                     onClick={() => {
                                         notifs.forEach(n => {
                                             if (!n.read) {
@@ -89,7 +97,7 @@ export function Notifications() {
                                 />
                             ))}
                         </div>
-                        <div className="p-4  ">
+                        <div className="p-4">
                             <button
                                 onClick={() => navigate('/send-notification')}
                                 className="bg-primary text-on-primary px-4 py-2 w-full rounded-md font-medium shadow-sm hover:bg-primary/90 transition"
@@ -97,11 +105,21 @@ export function Notifications() {
                                 Send Notification
                             </button>
                         </div>
-                    </div>
+                    </motion.div>
 
-                    <div className="flex-1 min-w-0">
-                        <NotifExpanded notification={selectedNotification} />
-                    </div>
+                    <AnimatePresence>
+                        {selected && (
+                            <motion.div
+                                className="flex-1 min-w-0 h-full overflow-y-auto"
+                                initial={{ opacity: 0, x: 50 }}
+                                animate={{ opacity: 1, x: 0 }}
+                                exit={{ opacity: 0, x: 50 }}
+                                transition={{ duration: 0.3, ease: 'easeInOut', delay: 0.2 }}
+                            >
+                                <NotifExpanded notification={selectedNotification} />
+                            </motion.div>
+                        )}
+                    </AnimatePresence>
                 </div>
             </div>
         </div>
