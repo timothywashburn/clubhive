@@ -9,9 +9,19 @@ import React, { useState, useEffect } from 'react';
 import { useMyClubsData } from '../../hooks/useMyClubsData.ts';
 import { useClubState } from '../../hooks/useClubState.ts';
 import { useClubEvents } from '../../hooks/useClubEvents.ts';
+import { useAuthStore } from '../../stores/authStore.ts';
+import { useNavigate } from 'react-router';
 
 export function MyClubs() {
+    const { isAuthenticated, isInitialized } = useAuthStore();
+    const navigate = useNavigate();
     const { clubs, loading } = useMyClubsData();
+
+    useEffect(() => {
+        if (isInitialized && !isAuthenticated) {
+            navigate('/', { replace: true });
+        }
+    }, [isAuthenticated, isInitialized, navigate]);
 
     const {
         selectedClub,

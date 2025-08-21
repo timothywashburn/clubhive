@@ -3,12 +3,12 @@ import { useNavigate, useParams, Link } from 'react-router';
 import { getTagColor } from '../features/find-clubs/utils/TagColors';
 import { useToast } from '../hooks/useToast';
 import { clubWithEventsAndCountsSchema } from '@clubhive/shared';
-import { ClubWithEventsData } from '@clubhive/shared/src/types/club-types';
+import { ClubWithEventsData } from '@clubhive/shared';
 
 export function ClubProfile() {
     const { url } = useParams<{ url: string }>();
     const [club, setClub] = useState<ClubWithEventsData | null>(null);
-    const { errorToast, successToast } = useToast();
+    const { errorToast } = useToast();
     const navigate = useNavigate();
     const [isOpen, setIsOpen] = useState(false);
     const [loading, setLoading] = useState(true);
@@ -23,7 +23,6 @@ export function ClubProfile() {
                 if (data.success) {
                     const parsed = clubWithEventsAndCountsSchema.parse(data.club);
                     setClub(parsed);
-                    successToast('Club loaded successfully');
                     console.log('Upcoming events response:', data);
                 } else {
                     const errorMessage = data.error?.message || 'Unknown error';

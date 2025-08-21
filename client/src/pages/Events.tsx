@@ -1,9 +1,10 @@
 import { Link } from 'react-router';
 import React, { useState, useRef, useEffect } from 'react';
 import TagFilterPopover from '../features/find-clubs/components/FilterTagsButton';
-import type { TagData } from '@clubhive/shared';
+import { ApiResponseBody, EventData, GetEventsResponse, isSuccess, TagData } from '@clubhive/shared';
 import { useEventTagsData } from '../hooks/fetchEventTags';
 import { getTagColor } from '../features/find-clubs/utils/TagColors';
+import { useToast } from '../hooks/useToast.ts';
 import WebDatePicker from '../components/date-picker/WebDatePicker';
 
 function TimeFilter({
@@ -73,24 +74,22 @@ export function Events() {
     const [date, setDate] = useState<Date | null>(null);
     const [showDatePicker, setShowDatePicker] = useState(false);
     const [location, setLocation] = useState('');
-    const [events, setEvents] = useState<any[]>([]);
+    const [events, setEvents] = useState<EventData[]>([]);
     const [afterTime, setAfterTime] = useState('');
     const [beforeTime, setBeforeTime] = useState('');
-
     const datePickerRef = useRef<HTMLDivElement>(null);
+
+    const { errorToast } = useToast();
 
     useEffect(() => {
         const fetchEvents = async () => {
             try {
                 const res = await fetch('/api/events');
-                const data = await res.json();
-                // console.log('Fetch result:', data);
-                if (data.success) {
+                const data: ApiResponseBody<GetEventsResponse> = await res.json();
+                if (isSuccess(data)) {
                     setEvents(Array.isArray(data.events) ? data.events : []);
-                    // console.log('Fetched events full data:', data);
-                    // console.log('Fetched events:', data.events);
                 } else {
-                    console.warn('No events array in response');
+                    errorToast(`Error: ${data.error.message}`);
                     setEvents([]);
                 }
             } catch (err) {
@@ -143,6 +142,11 @@ export function Events() {
               .filter(event => {
                   const eventDateTime = new Date(event.date + 'T' + (event.startTime || '00:00'));
                   return eventDateTime.getTime() >= Date.now();
+              })
+              .sort((a, b) => {
+                  const dateA = new Date(a.date + 'T' + (a.startTime || '00:00'));
+                  const dateB = new Date(b.date + 'T' + (b.startTime || '00:00'));
+                  return dateA.getTime() - dateB.getTime();
               })
         : [];
 
@@ -226,7 +230,7 @@ export function Events() {
                                                 </Link>
                                                 <span className="text-secondary mr-1"> - </span>
                                                 <Link
-                                                    to={`/club-profile/${event.club?.url}`}
+                                                    to={`/club-profile/${event.club}`}
                                                     className="text-secondary hover:text-primary hover:underline mr-1"
                                                 >
                                                     {/* event.club?.name */}
@@ -245,7 +249,7 @@ export function Events() {
                                             ?.filter(tag => tag !== null && typeof tag === 'object')
                                             .map(tag => (
                                                 <span
-                                                    key={tag.idx}
+                                                    key={tag._id}
                                                     className={`rounded-full px-3 py-1 text-xs font-semibold ${getTagColor(tag._id)}`}
                                                 >
                                                     {tag.text}
@@ -264,7 +268,6 @@ export function Events() {
                                                     d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"
                                                 />
                                             </svg>
-                                            x{' '}
                                             {new Date(event.date).toLocaleDateString(undefined, {
                                                 month: 'short',
                                                 day: 'numeric',

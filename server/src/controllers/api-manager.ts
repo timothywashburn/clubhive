@@ -39,6 +39,7 @@ import { getMonthlyVenueAvailabilityEndpoint } from '@/api/venues/monthly-availa
 import { getNotificationsEndpoint } from '@/api/notifications/get-notifications';
 import { markReadEndpoint } from '@/api/notifications/mark-read';
 import { postNotificationEndpoint } from '@/api/notifications/post-notification';
+import { deleteNotificationEndpoint } from '@/api/notifications/delete-notification';
 
 import { uploadImageEndpoint } from '@/api/images/create-image';
 import { deleteImageEndpoint } from '@/api/images/delete-image';
@@ -98,6 +99,7 @@ export default class ApiManager {
         this.addEndpoint(getNotificationsEndpoint);
         this.addEndpoint(markReadEndpoint);
         this.addEndpoint(postNotificationEndpoint);
+        this.addEndpoint(deleteNotificationEndpoint);
 
         // Me endpoints
         this.addEndpoint(getMyClubsEndpoint);
@@ -152,41 +154,47 @@ export default class ApiManager {
         });
     }
 
-    private handleAuth: RequestHandler = async (req: ApiRequest, res: ApiResponse, next: NextFunction): Promise<void> => {
+    private parseAuth: RequestHandler = async (req: ApiRequest, res: ApiResponse, next: NextFunction): Promise<void> => {
         const refreshToken = req.cookies?.refreshToken;
 
-        if (!refreshToken) {
+        if (refreshToken) {
+            try {
+                const tokenPayload = AuthManager.verifyRefreshToken(refreshToken);
+                req.auth = AuthManager.toAuthInfo(tokenPayload);
+            } catch (error) {
+                // Silently ignore invalid tokens - req.auth will remain undefined
+            }
+        }
+
+        next();
+    };
+
+    private handleAuth: RequestHandler = async (req: ApiRequest, res: ApiResponse, next: NextFunction): Promise<void> => {
+        if (!req.auth) {
             res.status(401).json({
                 success: false,
                 error: {
-                    message: 'No token provided',
+                    message: 'No valid token provided',
                     code: ErrorCode.MISSING_TOKEN,
                 },
             });
             return;
         }
 
-        try {
-            const tokenPayload = AuthManager.verifyRefreshToken(refreshToken);
-            req.auth = AuthManager.toAuthInfo(tokenPayload);
-            next();
-        } catch (error) {
-            res.status(401).json({
-                success: false,
-                error: {
-                    message: 'Invalid token',
-                    code: ErrorCode.INVALID_TOKEN,
-                },
-            });
-            return;
-        }
+        next();
     };
 
     private addEndpoint<TReq, TRes>(endpoint: ApiEndpoint<TReq, TRes>) {
         const handlers: RequestHandler[] = [];
+
+        // Always parse auth if cookies exist
+        handlers.push(this.parseAuth);
+
+        // Only enforce auth requirements for authenticated endpoints
         if (endpoint.auth === AuthType.AUTHENTICATED || endpoint.auth === AuthType.VERIFIED_EMAIL) {
             handlers.push(this.handleAuth);
         }
+
         handlers.push(endpoint.handler);
 
         this.router[endpoint.method](endpoint.path, ...handlers);

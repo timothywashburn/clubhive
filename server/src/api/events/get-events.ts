@@ -8,20 +8,9 @@ import { z } from 'zod';
 export const getEventsEndpoint: ApiEndpoint<undefined, GetEventsResponse> = {
     path: '/api/events',
     method: 'get',
-    auth: AuthType.VERIFIED_EMAIL,
+    auth: AuthType.NONE,
     handler: async (req, res) => {
         try {
-            const userId = req.auth?.userId;
-            if (!userId) {
-                res.status(401).json({
-                    success: false,
-                    error: {
-                        message: 'User not authenticated',
-                    },
-                });
-                return;
-            }
-
             const queryResult = getEventsQuerySchema.safeParse(req.query);
             if (!queryResult.success) {
                 res.status(400).json({
@@ -37,6 +26,17 @@ export const getEventsEndpoint: ApiEndpoint<undefined, GetEventsResponse> = {
 
             let events;
             if (clubId) {
+                const userId = req.auth?.userId;
+                if (!userId) {
+                    res.status(401).json({
+                        success: false,
+                        error: {
+                            message: 'User not authenticated',
+                        },
+                    });
+                    return;
+                }
+
                 const includeUnpublished = await ClubMembershipController.isOfficerOrOwner(clubId, userId);
                 events = await EventController.getEventsByClub(clubId, includeUnpublished);
             } else {

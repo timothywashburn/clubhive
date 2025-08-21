@@ -79,7 +79,7 @@ export function UnifiedNavigation(props: UnifiedNavigationProps & { style?: Navi
 // Site navigation item generation
 function generateSiteNavigation(props: SiteNavigationConfig, currentPath: string, isAuthenticated: boolean) {
     const mainNavItems: NavigationItem[] = [
-        { key: 'my-clubs', label: 'My Clubs', to: '/my-clubs' },
+        ...(isAuthenticated ? [{ key: 'my-clubs', label: 'My Clubs', to: '/my-clubs' }] : []),
         { key: 'clubs', label: 'Find Clubs', to: '/clubs' },
         { key: 'events', label: 'Events', to: '/events' },
     ];

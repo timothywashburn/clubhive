@@ -1,5 +1,5 @@
 import { ApiEndpoint, AuthType } from '@/types/api-types';
-import { PostNotificationRequest, PostNotificationResponse } from '@clubhive/shared/src/types';
+import { PostNotificationRequest, PostNotificationResponse } from '@clubhive/shared';
 import NotificationController from '@/controllers/notification-controller';
 
 export const postNotificationEndpoint: ApiEndpoint<PostNotificationRequest, PostNotificationResponse> = {

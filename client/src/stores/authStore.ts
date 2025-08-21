@@ -16,6 +16,7 @@ interface AuthError {
 
 interface AuthStore {
     isAuthenticated: boolean;
+    isInitialized: boolean;
     user: User | null;
     errors: AuthError;
 
@@ -37,6 +38,7 @@ interface AuthStore {
 
 export const useAuthStore = create<AuthStore>((set, get) => ({
     isAuthenticated: false,
+    isInitialized: false,
     user: null,
     errors: {},
 
@@ -52,6 +54,7 @@ export const useAuthStore = create<AuthStore>((set, get) => ({
                 if (result.success) {
                     set({
                         isAuthenticated: true,
+                        isInitialized: true,
                         user: null, // User data can be fetched separately when needed
                         errors: {},
                     });
@@ -59,10 +62,10 @@ export const useAuthStore = create<AuthStore>((set, get) => ({
                 }
             }
 
-            set({ isAuthenticated: false, user: null });
+            set({ isAuthenticated: false, isInitialized: true, user: null });
         } catch (error) {
             console.error('Error initializing auth:', error);
-            set({ isAuthenticated: false, user: null });
+            set({ isAuthenticated: false, isInitialized: true, user: null });
         }
     },
 
