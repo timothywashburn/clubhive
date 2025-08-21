@@ -1,5 +1,6 @@
 import ClubMembership from '../models/club-membership-schema';
 import Club from '../models/club-schema';
+import User, { UserDoc } from '../models/user-schema';
 import { ClubRole } from '@clubhive/shared';
 
 export default class ClubMembershipController {
@@ -52,5 +53,47 @@ export default class ClubMembershipController {
     static async deleteAllMembershipsForClub(clubId: string): Promise<number> {
         const result = await ClubMembership.deleteMany({ club: clubId });
         return result.deletedCount || 0;
+    }
+
+    static async getClubMembers(clubId: string): Promise<{ user: any; role: ClubRole; joinedAt: Date }[]> {
+        const memberships = await ClubMembership.find({ club: clubId })
+            .populate<{ user: UserDoc }>({
+                path: 'user',
+                select: '_id name year major',
+            })
+            .exec();
+        console.log(
+            'Members for Club:',
+            memberships.map(m => m.user.name)
+        );
+
+        return memberships.map(m => ({
+            user: (m.user as UserDoc).toObject(),
+            role: m.role,
+            joinedAt: (m as any).joinedAt || m.createdAt,
+        }));
+    }
+
+    static async updateMemberRole(clubId: string, memberId: string, newRole: ClubRole): Promise<boolean> {
+        try {
+            const result = await ClubMembership.findOneAndUpdate({ club: clubId, user: memberId }, { role: newRole }, { new: true }).exec();
+            return result !== null;
+        } catch (error) {
+            console.error('Error updating member role: ', error);
+            throw error;
+        }
+    }
+
+    static async removeMemberFromClub(clubId: string, memberId: string): Promise<boolean> {
+        try {
+            const result = await ClubMembership.findOneAndDelete({
+                club: clubId,
+                user: memberId,
+            }).exec();
+            return result !== null;
+        } catch (error) {
+            console.error('Error removing member from club:', error);
+            throw error;
+        }
     }
 }

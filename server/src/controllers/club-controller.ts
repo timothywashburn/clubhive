@@ -1,13 +1,12 @@
 import { CreateClubRequest, UpdateClubRequest } from '@clubhive/shared';
 import Club, { ClubDoc } from '../models/club-schema';
-import ClubMembership, { ClubMembershipData } from '../models/club-membership-schema';
+import ClubMembership from '../models/club-membership-schema';
 import Event from '../models/event-schema';
 import { updateDocument } from '@/utils/db-doc-utils';
 import { ClubRole } from '@clubhive/shared';
 import ClubMembershipController from './club-membership-controller';
 import EventController from './event-controller';
 import NotificationController from './notification-controller';
-import User, { UserDoc } from '../models/user-schema';
 
 export interface ClubWithCounts extends ClubDoc {
     memberCount: number;
@@ -114,34 +113,5 @@ export default class ClubController {
             doc: membership.club,
             userRole: membership.role,
         }));
-    }
-    static async getClubMembers(clubId: string): Promise<{ user: any; role: ClubRole; joinedAt: Date }[]> {
-        const memberships = await ClubMembership.find({ club: clubId })
-            .populate<{ user: UserDoc }>({
-                path: 'user',
-                // model: User,
-                select: '_id name year major', //pick what is needed
-            })
-            .exec();
-
-        console.log(
-            'Members for Club:',
-            memberships.map(m => m.user.name)
-        );
-
-        return memberships.map(m => ({
-            user: (m.user as UserDoc).toObject(),
-            role: m.role,
-            joinedAt: (m as any).joinedAt || m.createdAt,
-        }));
-    }
-    static async updateMemberRole(clubId: string, memberId: string, newRole: ClubRole): Promise<boolean> {
-        try {
-            const result = await ClubMembership.findOneAndUpdate({ club: clubId, user: memberId }, { role: newRole }, { new: true }).exec();
-            return result !== null;
-        } catch (error) {
-            console.error('Error updating member role: ', error);
-            throw error;
-        }
     }
 }

@@ -302,6 +302,7 @@ async function seed() {
         },
     ]);
 
+    /* 
     await ClubMembership.insertMany([
         { user: testUser._id, club: clubs[0]._id, role: ClubRole.OWNER }, //
         { user: testUser._id, club: clubs[1]._id, role: ClubRole.MEMBER },
@@ -312,7 +313,7 @@ async function seed() {
         { user: testUser2._id, club: clubs[6]._id, role: ClubRole.OWNER },
 
         { user: testUser._id, club: clubs[0]._id, role: ClubRole.OFFICER },
-    ]);
+    ]); */
 
     const notifications = await Notification.insertMany([
         {
@@ -612,6 +613,18 @@ async function seed() {
         { user: userB._id, club: clubs[0]._id, role: ClubRole.OFFICER },
         { user: userC._id, club: clubs[0]._id, role: ClubRole.OFFICER },
         { user: userD._id, club: clubs[0]._id, role: ClubRole.MEMBER },
+
+        { user: testUser._id, club: clubs[1]._id, role: ClubRole.MEMBER },
+        { user: testUser._id, club: clubs[4]._id, role: ClubRole.OFFICER },
+        { user: testUser2._id, club: clubs[0]._id, role: ClubRole.OFFICER },
+        { user: testUser2._id, club: clubs[2]._id, role: ClubRole.MEMBER },
+        { user: testUser2._id, club: clubs[6]._id, role: ClubRole.OWNER },
+
+        // Add some memberships for your new users in other clubs too
+        { user: userA._id, club: clubs[1]._id, role: ClubRole.MEMBER },
+        { user: userB._id, club: clubs[2]._id, role: ClubRole.MEMBER },
+        { user: userC._id, club: clubs[3]._id, role: ClubRole.OFFICER },
+        { user: userD._id, club: clubs[1]._id, role: ClubRole.MEMBER },
     ]);
 
     // Seed configuration
