@@ -150,11 +150,9 @@ export interface DeleteClubResponse {
 }
 
 export interface GetClubMembersResponse {
-    success: boolean;
     members: ClubMemberData[];
 }
 
 export interface UserClubDataResponse {
-    success: boolean;
     message?: string;
 }
