@@ -4,7 +4,7 @@ import React, { useState } from 'react';
 import { TagSelectionPopup } from '../features/find-clubs/components/TagsSelectionPopup';
 import type { TagData } from '@clubhive/shared';
 import { getTagColor } from '../features/find-clubs/utils/TagColors';
-import { createClubRequestSchema } from '@clubhive/shared/src/types/club-types';
+import { createClubRequestSchema } from '@clubhive/shared';
 import { useToast } from '../hooks/useToast';
 import { useNavigate } from 'react-router';
 

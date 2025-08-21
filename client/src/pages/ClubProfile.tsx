@@ -3,7 +3,7 @@ import { useNavigate, useParams, Link } from 'react-router';
 import { getTagColor } from '../features/find-clubs/utils/TagColors';
 import { useToast } from '../hooks/useToast';
 import { clubWithEventsAndCountsSchema } from '@clubhive/shared';
-import { ClubWithEventsData } from '@clubhive/shared/src/types/club-types';
+import { ClubWithEventsData } from '@clubhive/shared';
 
 export function ClubProfile() {
     const { url } = useParams<{ url: string }>();

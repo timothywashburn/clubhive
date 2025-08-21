@@ -1,5 +1,5 @@
 import { ApiEndpoint, AuthType } from '@/types/api-types';
-import { DeleteNotificationResponse } from '@clubhive/shared/src';
+import { DeleteNotificationResponse } from '@clubhive/shared';
 import Notification from '@/models/notification-schema';
 import UserNotification from '@/models/user-notification-schema';
 

@@ -1,6 +1,6 @@
 import { ApiEndpoint, AuthType } from '@/types/api-types';
 import UserNotification from '@/models/user-notification-schema';
-import { MarkReadRequest, MarkReadResponse } from '@clubhive/shared/src/types';
+import { MarkReadRequest, MarkReadResponse } from '@clubhive/shared';
 
 export const markReadEndpoint: ApiEndpoint<MarkReadRequest, MarkReadResponse> = {
     path: '/api/notifications/mark-read',

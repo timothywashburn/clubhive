@@ -1,5 +1,5 @@
 import mongoose, { Schema, InferSchemaType, HydratedDocument } from 'mongoose';
-import { ClubStatus } from '@clubhive/shared/src';
+import { ClubStatus } from '@clubhive/shared';
 
 const schema = new Schema(
     {

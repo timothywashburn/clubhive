@@ -1,6 +1,5 @@
 import { ApiEndpoint, AuthType } from '@/types/api-types';
-import getNotifications from '@/controllers/notification-controller';
-import { GetNotificationResponse } from '@clubhive/shared/src';
+import { GetNotificationResponse } from '@clubhive/shared';
 import NotificationController from '@/controllers/notification-controller';
 
 export const getNotificationsEndpoint: ApiEndpoint<undefined, GetNotificationResponse> = {

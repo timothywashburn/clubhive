@@ -3,7 +3,7 @@ import { ApiEndpoint, AuthType } from '@/types/api-types';
 import Club from '@/models/club-schema';
 import Event from '@/models/event-schema';
 import { serializeRecursive } from '@/utils/db-doc-utils';
-import { clubWithEventsAndCountsSchema } from '@clubhive/shared/src/types';
+import { clubWithEventsAndCountsSchema } from '@clubhive/shared';
 
 export const getClubEndpoint: ApiEndpoint<undefined, GetClubResponse> = {
     path: '/api/clubs/:id',
