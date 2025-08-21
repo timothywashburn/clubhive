@@ -15,12 +15,14 @@ export interface ClubWithCounts extends ClubDoc {
 
 export default class ClubController {
     static async createClub(data: CreateClubRequest): Promise<ClubDoc> {
+        console.log('Data passed to createClub:', data);
         const newClub = new Club({
             school: data.school,
             name: data.name,
             tagline: data.tagline,
             description: data.description || '',
             url: data.url || '',
+            status: data.status,
             socials: data.socials || {
                 website: '',
                 discord: '',

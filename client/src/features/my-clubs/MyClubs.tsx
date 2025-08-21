@@ -1,5 +1,5 @@
 import { motion, AnimatePresence } from 'framer-motion';
-import { ClubSelector, ClubHeader, MemberInfo, OfficerInfo, Events, Stats, Membership, EmptyState, RegisterClubButton } from './components';
+import { ClubSelector, ClubHeader, MemberInfo, OfficerInfo, Events, Stats, Membership, EmptyState } from './components';
 import { UnifiedNavigation } from '../../components/navigation';
 import { EventPlanner } from './event-planner';
 import { EventDetails, LocationPicker } from './event-editor';
@@ -294,7 +294,6 @@ export function MyClubs() {
                             onToggleMinimize={handleToggleMinimize}
                             disabled={!!selectedEvent}
                         />
-                        <RegisterClubButton />
                     </div>
 
                     <div className="flex-1 min-w-0">
