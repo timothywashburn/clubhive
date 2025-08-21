@@ -1,17 +1,15 @@
-import React from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import { motion, useScroll, useTransform } from 'framer-motion';
-import { Users, Calendar, Target, Star, ArrowRight, CheckCircle } from 'lucide-react';
+import { Users, Calendar, Target, Star, ArrowRight } from 'lucide-react';
 import { useNavigate } from 'react-router';
-import { StaticHoneycomb } from '../../components/honeycomb';
 import { Footer } from '../../components/footer/Footer';
 
 export function LandingPage() {
     const navigate = useNavigate();
-    const { scrollYProgress } = useScroll();
-    
-    // Parallax transforms for honeycomb background
-    const honeycombY = useTransform(scrollYProgress, [0, 1], ['0%', '50%']);
-    const honeycombOpacity = useTransform(scrollYProgress, [0, 0.8, 1], [0.3, 0.2, 0.1]);
+    const scrollRef = useRef<HTMLDivElement>(null);
+    const { scrollYProgress, scrollY } = useScroll({ container: scrollRef });
+    const [isNavbarVisible, setIsNavbarVisible] = useState(true);
+    const [lastScrollY, setLastScrollY] = useState(0);
     
     // Section-based scroll transforms
     const heroScale = useTransform(scrollYProgress, [0, 0.2], [1, 0.95]);
@@ -19,6 +17,34 @@ export function LandingPage() {
     
     // Progress indicator
     const progressWidth = useTransform(scrollYProgress, [0, 1], ['0%', '100%']);
+    
+    // Navbar hide/show logic
+    useEffect(() => {
+        const unsubscribe = scrollY.on('change', (latest) => {
+            const direction = latest > lastScrollY ? 'down' : 'up';
+            const shouldHideNavbar = latest > 100 && direction === 'down';
+            const shouldShowNavbar = direction === 'up' || latest < 50;
+            
+            if (shouldHideNavbar && isNavbarVisible) {
+                setIsNavbarVisible(false);
+            } else if (shouldShowNavbar && !isNavbarVisible) {
+                setIsNavbarVisible(true);
+            }
+            
+            setLastScrollY(latest);
+        });
+        
+        return () => unsubscribe();
+    }, [scrollY, lastScrollY, isNavbarVisible]);
+    
+    // Apply navbar transform
+    useEffect(() => {
+        const navbar = document.querySelector('nav');
+        if (navbar) {
+            navbar.style.transform = isNavbarVisible ? 'translateY(0)' : 'translateY(-100%)';
+            navbar.style.transition = 'transform 0.3s ease-in-out';
+        }
+    }, [isNavbarVisible]);
 
     const fadeInUp = {
         initial: { opacity: 0, y: 60 },
@@ -93,21 +119,24 @@ export function LandingPage() {
     ];
 
     return (
-        <div className="fixed inset-0 top-16 overflow-hidden">
-            <div className="h-full overflow-y-scroll overflow-x-hidden scroll-smooth scrollbar-hide" style={{ scrollSnapType: 'y mandatory' }}>
+        <div 
+            className="fixed inset-0 overflow-hidden"
+            style={{ 
+                top: isNavbarVisible ? '64px' : '0px',
+                transition: 'top 0.3s ease-in-out'
+            }}
+        >
+            <div ref={scrollRef} className="h-full overflow-y-scroll overflow-x-hidden scroll-smooth scrollbar-hide" style={{ scrollSnapType: 'y mandatory' }}>
             {/* Scroll Progress Indicator - positioned under navbar */}
             <motion.div 
-                className="fixed top-16 left-0 h-1 bg-primary z-0"
-                style={{ width: progressWidth }}
+                className="fixed left-0 h-1 bg-primary z-50"
+                style={{ 
+                    width: progressWidth,
+                    top: isNavbarVisible ? '64px' : '0px',
+                    transition: 'top 0.3s ease-in-out'
+                }}
             />
-            
-            {/* Fixed Honeycomb Background */}
-            <motion.div 
-                className="fixed inset-0 pointer-events-none z-0"
-                style={{ y: honeycombY, opacity: honeycombOpacity }}
-            >
-                <StaticHoneycomb />
-            </motion.div>
+
             {/* Hero Section */}
             <section className="relative h-screen flex items-center justify-center" style={{ scrollSnapAlign: 'start' }}>
                 <motion.div 
