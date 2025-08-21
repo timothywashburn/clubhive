@@ -2,6 +2,7 @@ import React from 'react';
 import { motion } from 'framer-motion';
 import { Users, Calendar, Target, Star, ArrowRight, CheckCircle } from 'lucide-react';
 import { useNavigate } from 'react-router';
+import { StaticHoneycomb } from '../../components/honeycomb';
 
 export function LandingPage() {
     const navigate = useNavigate();
@@ -60,10 +61,10 @@ export function LandingPage() {
     ];
 
     return (
-        <div className="min-h-screen bg-background">
+        <div className="h-full relative">
             {/* Hero Section */}
-            <section className="relative overflow-hidden bg-gradient-to-br from-primary/10 via-background to-secondary/5">
-                <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20 lg:py-32">
+            <section className="relative overflow-hidden">
+                <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20 lg:py-32">
                     <motion.div
                         className="text-center"
                         initial={{ opacity: 0, y: 20 }}
@@ -122,36 +123,10 @@ export function LandingPage() {
                         </motion.div>
                     </motion.div>
                 </div>
-
-                {/* Animated background elements */}
-                <motion.div
-                    className="absolute top-20 left-10 w-32 h-32 bg-primary/20 rounded-full blur-3xl"
-                    animate={{
-                        y: [-20, 20, -20],
-                        x: [-10, 10, -10],
-                    }}
-                    transition={{
-                        duration: 6,
-                        repeat: Infinity,
-                        ease: 'easeInOut',
-                    }}
-                />
-                <motion.div
-                    className="absolute bottom-20 right-10 w-40 h-40 bg-secondary/20 rounded-full blur-3xl"
-                    animate={{
-                        y: [20, -20, 20],
-                        x: [10, -10, 10],
-                    }}
-                    transition={{
-                        duration: 8,
-                        repeat: Infinity,
-                        ease: 'easeInOut',
-                    }}
-                />
             </section>
 
             {/* Mission Section */}
-            <section className="py-20 bg-surface">
+            <section className="py-20 bg-surface/40">
                 <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                     <motion.div className="text-center mb-16" {...fadeInUp} viewport={{ once: true }}>
                         <h2 className="text-4xl font-bold text-on-surface mb-6">Our Mission</h2>
@@ -186,7 +161,7 @@ export function LandingPage() {
             </section>
 
             {/* Stats Section */}
-            <section className="py-20 bg-background">
+            <section className="py-20">
                 <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                     <motion.div className="text-center mb-16" {...fadeInUp} viewport={{ once: true }}>
                         <h2 className="text-4xl font-bold text-on-background mb-6">Join the Movement</h2>
@@ -218,7 +193,7 @@ export function LandingPage() {
             </section>
 
             {/* Testimonials Section */}
-            <section className="py-20 bg-surface">
+            <section className="py-20 bg-surface/40">
                 <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                     <motion.div className="text-center mb-16" {...fadeInUp} viewport={{ once: true }}>
                         <h2 className="text-4xl font-bold text-on-surface mb-6">What Students Say</h2>
@@ -262,7 +237,7 @@ export function LandingPage() {
             </section>
 
             {/* CTA Section */}
-            <section className="py-20 bg-gradient-to-r from-primary/10 to-secondary/10">
+            <section className="py-20">
                 <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
                     <motion.div {...fadeInUp} viewport={{ once: true }}>
                         <h2 className="text-4xl font-bold text-on-background mb-6">Ready to Transform Your Campus Experience?</h2>

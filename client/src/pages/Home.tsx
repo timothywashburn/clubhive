@@ -1,7 +1,7 @@
 import React from 'react';
 import { useAuthStore } from '../stores/authStore';
-import { AuthenticatedHome } from '../features/home/AuthenticatedHome';
-import { LandingPage } from '../features/home/LandingPage';
+import { AuthenticatedHome } from '../features/home';
+import { LandingPage } from '../features/home';
 
 export function Home() {
     const { isAuthenticated, isInitialized } = useAuthStore();
