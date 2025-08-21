@@ -76,7 +76,6 @@ export function OfficerInfo({ club }: OfficerInfoProps) {
                 <div className="space-y-4 max-w-2xl">
                     <div>
                         <label className="block text-sm font-medium mb-1">Current Tags</label>
-                        <label className="block text-sm font-medium mb-1">Current Tags</label>
                         <div className="flex flex-wrap gap-2 mb-3">
                             {club.tags.map((tag, index) => (
                                 <span
