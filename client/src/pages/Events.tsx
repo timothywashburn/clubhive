@@ -1,9 +1,10 @@
 import { Link } from 'react-router';
 import React, { useState, useRef, useEffect } from 'react';
 import TagFilterPopover from '../features/find-clubs/components/FilterTagsButton';
-import type { TagData } from '@clubhive/shared';
+import { ApiResponseBody, GetEventsResponse, GetWeeklyVenueAvailabilityResponse, isSuccess, TagData } from '@clubhive/shared';
 import { useEventTagsData } from '../hooks/fetchEventTags';
 import { getTagColor } from '../features/find-clubs/utils/TagColors';
+import { useToast } from '../hooks/useToast.ts';
 import WebDatePicker from '../components/date-picker/WebDatePicker';
 
 function TimeFilter({
@@ -76,21 +77,19 @@ export function Events() {
     const [events, setEvents] = useState<any[]>([]);
     const [afterTime, setAfterTime] = useState('');
     const [beforeTime, setBeforeTime] = useState('');
-
     const datePickerRef = useRef<HTMLDivElement>(null);
+
+    const { errorToast } = useToast();
 
     useEffect(() => {
         const fetchEvents = async () => {
             try {
                 const res = await fetch('/api/events');
-                const data = await res.json();
-                // console.log('Fetch result:', data);
-                if (data.success) {
+                const data: ApiResponseBody<GetEventsResponse> = await res.json();
+                if (isSuccess(data)) {
                     setEvents(Array.isArray(data.events) ? data.events : []);
-                    // console.log('Fetched events full data:', data);
-                    // console.log('Fetched events:', data.events);
                 } else {
-                    console.warn('No events array in response');
+                    errorToast(`Error: ${data.error.message}`);
                     setEvents([]);
                 }
             } catch (err) {
