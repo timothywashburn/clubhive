@@ -17,7 +17,6 @@ export interface SiteNavigationConfig {
     navType: 'site';
     siteNavType: SiteNavType;
     isAuthenticated: boolean;
-    //toggleAuth: () => void;
     toggleSiteNavType?: () => void;
     activeRoute: string;
 }
@@ -46,7 +45,7 @@ export interface TabNavigationConfig {
 }
 
 // Unified props
-export type UnifiedNavigationProps = SiteNavigationConfig | TabNavigationConfig;
+export type UnifiedNavigationProps = (SiteNavigationConfig | TabNavigationConfig) & { style?: NavigationStyle };
 
 // Style configuration
 export interface NavigationStyle {

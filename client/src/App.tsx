@@ -88,7 +88,6 @@ function AppContent() {
                 navType="site"
                 siteNavType={siteNavType}
                 isAuthenticated={isAuthenticated}
-                //toggleAuth={toggleAuth}
                 toggleSiteNavType={toggleSiteNavType}
                 activeRoute={location.pathname}
             />
@@ -113,8 +112,8 @@ function AppContent() {
                         <Route path="/admin/clubs" element={<AdminClubs />} />
                         <Route path="/admin/users" element={<AdminUsers />} />
                         <Route path="/send-notification" element={<SendNotification />} />
-                        <Route path="*" element={<NotFound />} />
                         <Route path="/test-images" element={<TestImages />} />
+                        <Route path="*" element={<NotFound />} />
                     </Routes>
                 </div>
                 <Footer />

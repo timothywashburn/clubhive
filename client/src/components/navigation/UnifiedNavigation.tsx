@@ -4,14 +4,10 @@ import { BarChart3, Calendar, FileText, MapPin, Menu, Shield, ShieldOff, User, U
 import { AnimatePresence, motion } from 'framer-motion';
 import { NavLink } from '../navbar/NavLink';
 import { useUnifiedIndicator } from './useUnifiedIndicator';
-import { NavigationItem, NavigationStyle, SiteNavigationConfig, TabNavigationConfig, TabType, UnifiedNavigationProps } from './types';
+import { NavigationItem, SiteNavigationConfig, TabNavigationConfig, TabType, UnifiedNavigationProps } from './types';
 import { useAuthStore } from '../../stores/authStore.ts';
 
-interface Props {
-    style?: NavigationStyle;
-}
-
-export function UnifiedNavigation(props: UnifiedNavigationProps & { style?: NavigationStyle }) {
+export function UnifiedNavigation(props: UnifiedNavigationProps) {
     const [isMenuOpen, setIsMenuOpen] = useState(false);
     const location = useLocation();
 
