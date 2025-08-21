@@ -1,7 +1,7 @@
 import { Link } from 'react-router';
 import React, { useState, useRef, useEffect } from 'react';
 import TagFilterPopover from '../features/find-clubs/components/FilterTagsButton';
-import { ApiResponseBody, GetEventsResponse, GetWeeklyVenueAvailabilityResponse, isSuccess, TagData } from '@clubhive/shared';
+import { ApiResponseBody, EventData, GetEventsResponse, isSuccess, TagData } from '@clubhive/shared';
 import { useEventTagsData } from '../hooks/fetchEventTags';
 import { getTagColor } from '../features/find-clubs/utils/TagColors';
 import { useToast } from '../hooks/useToast.ts';
@@ -74,7 +74,7 @@ export function Events() {
     const [date, setDate] = useState<Date | null>(null);
     const [showDatePicker, setShowDatePicker] = useState(false);
     const [location, setLocation] = useState('');
-    const [events, setEvents] = useState<any[]>([]);
+    const [events, setEvents] = useState<EventData[]>([]);
     const [afterTime, setAfterTime] = useState('');
     const [beforeTime, setBeforeTime] = useState('');
     const datePickerRef = useRef<HTMLDivElement>(null);
@@ -225,7 +225,7 @@ export function Events() {
                                                 </Link>
                                                 <span className="text-secondary mr-1"> - </span>
                                                 <Link
-                                                    to={`/club-profile/${event.club?.url}`}
+                                                    to={`/club-profile/${event.club}`}
                                                     className="text-secondary hover:text-primary hover:underline mr-1"
                                                 >
                                                     {/* event.club?.name */}
@@ -244,7 +244,7 @@ export function Events() {
                                             ?.filter(tag => tag !== null && typeof tag === 'object')
                                             .map(tag => (
                                                 <span
-                                                    key={tag.idx}
+                                                    key={tag._id}
                                                     className={`rounded-full px-3 py-1 text-xs font-semibold ${getTagColor(tag._id)}`}
                                                 >
                                                     {tag.text}
@@ -263,7 +263,6 @@ export function Events() {
                                                     d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"
                                                 />
                                             </svg>
-                                            x{' '}
                                             {new Date(event.date).toLocaleDateString(undefined, {
                                                 month: 'short',
                                                 day: 'numeric',
