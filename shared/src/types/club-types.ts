@@ -19,11 +19,13 @@ export const clubSchema = z.object({
     url: z.string(),
     joinRequirements: z.string().optional(),
     status: z.enum(ClubStatus),
-    socials: z.object({
-        website: z.string().optional(),
-        discord: z.string().optional(),
-        instagram: z.string().optional(),
-    }),
+    socials: z
+        .object({
+            website: z.string().optional(),
+            discord: z.string().optional(),
+            instagram: z.string().optional(),
+        })
+        .optional(),
     clubLogo: z.string().nullable().optional(),
     pictures: z.array(z.string()),
     tags: z.array(tagSchema),
@@ -50,9 +52,10 @@ export const createClubRequestSchema = z.object({
     description: z.string().max(1000, 'Description must be 1000 characters or less').optional(),
     url: z
         .string()
+        .min(1, 'URL is required')
         .regex(/^[a-zA-Z0-9_-]+$/, 'URL can only contain letters, numbers, hyphens, and underscores')
-        .max(50, 'URL must be 50 characters or less')
-        .optional(),
+        .max(50, 'URL must be 50 characters or less'),
+    // will be optional later
     joinRequirements: z.string().optional(),
     status: z.enum(ClubStatus),
     socials: z

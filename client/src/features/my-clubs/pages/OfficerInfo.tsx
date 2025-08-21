@@ -54,7 +54,7 @@ export function OfficerInfo({ club }: OfficerInfoProps) {
                         <input
                             type="url"
                             className="w-full p-3 border border-outline-variant rounded-md bg-surface text-on-surface"
-                            defaultValue={club.socials.website}
+                            defaultValue={club.socials?.website}
                             placeholder="https://website.com"
                         />
                     </div>
@@ -63,7 +63,7 @@ export function OfficerInfo({ club }: OfficerInfoProps) {
                         <input
                             type="text"
                             className="w-full p-3 border border-outline-variant rounded-md bg-surface text-on-surface"
-                            defaultValue={club.socials.discord}
+                            defaultValue={club.socials?.discord}
                             placeholder="https://discord.gg/invite"
                         />
                     </div>
@@ -72,7 +72,7 @@ export function OfficerInfo({ club }: OfficerInfoProps) {
                         <input
                             type="text"
                             className="w-full p-3 border border-outline-variant rounded-md bg-surface text-on-surface"
-                            defaultValue={club.socials.instagram}
+                            defaultValue={club.socials?.instagram}
                             placeholder="@username"
                         />
                     </div>

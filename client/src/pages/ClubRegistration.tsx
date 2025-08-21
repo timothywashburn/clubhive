@@ -1,6 +1,6 @@
 import { useClubTagsData } from '../hooks/fetchClubTags';
 import { useSchoolData } from '../hooks/fetchSchools';
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { TagSelectionPopup } from '../features/find-clubs/components/TagsSelectionPopup';
 import type { TagData } from '@clubhive/shared';
 import { getTagColor } from '../features/find-clubs/utils/TagColors';
@@ -12,6 +12,8 @@ export function ClubRegistration() {
     const { tags } = useClubTagsData();
     const { schools } = useSchoolData();
     const [selectedTags, setSelectedTags] = useState<TagData[]>([]);
+    const [userClubsCount, setUserClubsCount] = useState<number | null>(null);
+    const [isLoadingClubs, setIsLoadingClubs] = useState(true);
     const navigate = useNavigate();
 
     const inputClass =
@@ -32,18 +34,57 @@ export function ClubRegistration() {
 
     const maxDescriptionLength = 1000;
     const maxTaglineLength = 50;
+    const MAX_CLUBS_PER_USER = 5;
 
     const { errorToast } = useToast();
     const { successToast } = useToast();
 
+    // Fetch user's clubs to check the limit
+    useEffect(() => {
+        const fetchUserClubs = async () => {
+            try {
+                setIsLoadingClubs(true);
+                const response = await fetch('/api/me/clubs', {
+                    method: 'GET',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                });
+
+                const result = await response.json();
+
+                if (result.success) {
+                    const ownedClubs = result.clubs.filter(club => club.userRole === 'owner');
+                    setUserClubsCount(ownedClubs.length);
+                } else {
+                    console.error('Failed to fetch user clubs:', result.error);
+                    errorToast('Failed to load your clubs. Please refresh the page.');
+                }
+            } catch (error) {
+                console.error('Error fetching user clubs:', error);
+                errorToast('Failed to load your clubs. Please refresh the page.');
+            } finally {
+                setIsLoadingClubs(false);
+            }
+        };
+
+        fetchUserClubs();
+    }, []);
+
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
+
+        // Check club limit
+        if (userClubsCount !== null && userClubsCount >= MAX_CLUBS_PER_USER) {
+            errorToast(`You can only create up to ${MAX_CLUBS_PER_USER} clubs.`);
+            return;
+        }
 
         const clubData = {
             name: name,
             school: school,
             tagline: tagline,
-            url: url || undefined,
+            url: url,
             socials: {
                 discord: discord || undefined,
                 instagram: instagram || undefined,
@@ -90,13 +131,59 @@ export function ClubRegistration() {
             if (result.success) {
                 console.log('Club registered successfully:', result.club);
                 successToast('Club registered successfully!');
+                navigate(`/my-clubs/${result.club.url}/info`);
             }
-            navigate(`/my-clubs/${result.club.url}/info`);
         } catch (error) {
             console.error('Error registering club:', error);
             errorToast('Failed to register club. Please try again.');
         }
     };
+
+    // Show loading state while fetching clubs
+    if (isLoadingClubs) {
+        return (
+            <div className="h-full relative z-1">
+                <div className="max-w-7xl mx-auto px-6 sm:px-8 lg:px-10 py-8">
+                    <div className="mb-8">
+                        <h1 className="text-3xl font-bold text-on-background">Register Your Club</h1>
+                        <div className="bg-surface rounded-lg shadow p-6 mt-4">
+                            <div className="flex items-center justify-center py-12">
+                                <div className="text-on-background">Loading...</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        );
+    }
+
+    // Show limit reached message
+    if (userClubsCount !== null && userClubsCount >= MAX_CLUBS_PER_USER) {
+        return (
+            <div className="h-full relative z-1">
+                <div className="max-w-7xl mx-auto px-6 sm:px-8 lg:px-10 py-8">
+                    <div className="mb-8">
+                        <h1 className="text-3xl font-bold text-on-background">Register Your Club</h1>
+                        <div className="bg-surface rounded-lg shadow p-6 mt-4">
+                            <div className="text-center py-12">
+                                <div className="text-error text-lg font-semibold mb-4">Club Creation Limit Reached</div>
+                                <div className="text-on-background-variant mb-6">
+                                    You have reached the maximum limit of {MAX_CLUBS_PER_USER} clubs per user. You currently have{' '}
+                                    {userClubsCount} clubs.
+                                </div>
+                                <button
+                                    onClick={() => navigate('/my-clubs')}
+                                    className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-on-primary bg-primary hover:cursor-pointer"
+                                >
+                                    View My Clubs
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        );
+    }
 
     return (
         <div className="h-full relative z-1">
@@ -104,6 +191,15 @@ export function ClubRegistration() {
                 <div className="mb-8">
                     <h1 className="text-3xl font-bold text-on-background">Register Your Club</h1>
                     <p className="text-on-background-variant mt-2">Fill out the form below to register your club to clubhive.</p>
+
+                    {/* Club count indicator */}
+                    {userClubsCount !== null && (
+                        <div className="mt-2 text-sm text-on-background-variant">
+                            You may only register up to {MAX_CLUBS_PER_USER} clubs. You currently have {userClubsCount} club
+                            {userClubsCount !== 1 ? 's' : ''} registered.
+                        </div>
+                    )}
+
                     <div className="bg-surface rounded-lg shadow p-6 mt-4">
                         <form onSubmit={handleSubmit} className="overflow-y-auto">
                             <h2 className="text-xl font-semibold text-on-background mb-4">Club Information</h2>
@@ -148,7 +244,7 @@ export function ClubRegistration() {
                             {/* URL */}
                             <div className="mt-5">
                                 <label htmlFor="club-url" className="block text-sm font-medium text-on-background">
-                                    Profile Page URL
+                                    Profile Page URL <span className="text-error">*</span>
                                 </label>
                                 <div className="flex">
                                     <span className={prefixClass + ' whitespace-nowrap'}>https://clubhive.timothyw.dev/club-profile/</span>
