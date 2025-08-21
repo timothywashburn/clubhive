@@ -1,98 +1,11 @@
 import { UserClubData } from '@clubhive/shared';
 import { useState } from 'react';
-import { saveClubChanges } from '../../../../../server/src/utils/save-changes';
 
 interface OfficerInfoProps {
     club: UserClubData;
 }
 
 export function OfficerInfo({ club }: OfficerInfoProps) {
-    const [formData, setFormData] = useState<UserClubData>(club);
-    const [newTag, setNewTag] = useState('');
-
-    const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-        const { name, value } = e.target;
-        if (name.includes('.')) {
-            const [parent, child] = name.split('.');
-            setFormData(prevData => ({
-                ...prevData,
-                [parent]: {
-                    ...prevData[parent],
-                    [child]: value,
-                },
-            }));
-        } else {
-            setFormData(prevData => ({
-                ...prevData,
-                [name]: value,
-            }));
-        }
-    };
-
-    const handleTagChange = e => {
-        setNewTag(e.target.value);
-    };
-
-    const handleAddTag = (e: React.KeyboardEvent<HTMLInputElement>) => {
-        if (e.key === 'Enter' && newTag.trim() !== '') {
-            setFormData(prevData => ({
-                ...prevData,
-                tags: [...prevData.tags, { text: newTag.trim(), _id: 'temp-id-' + Date.now() } as any],
-            }));
-            setNewTag('');
-        }
-    };
-
-    const handleDeleteTag = tagId => {
-        setFormData(prevData => ({
-            ...prevData,
-            tags: prevData.tags.filter(tag => tag._id !== tagId),
-        }));
-    };
-
-    const handleSaveChanges = async () => {
-        try {
-            const tagsToSave = formData.tags.filter(tag => !tag._id.startsWith('temp-id-')).map(tag => tag._id);
-            const newTags = formData.tags.filter(tag => tag._id.startsWith('temp-id-')).map(tag => tag.text);
-
-            const updatedData = {
-                name: formData.name,
-                tagline: formData.tagline,
-                description: formData.description,
-                url: formData.url,
-                socials: formData.socials,
-                tags: formData.tags,
-                school: formData.school._id,
-            };
-
-            const response = await fetch(`/api/clubs/${club._id}`, {
-                method: 'PUT',
-                headers: {
-                    'Content-Type': 'application/json',
-                    Authorization: `Bearer edd26a4797e15471b1dc2394fa571f7517f8f3890d22d999051452b0c6c32377`,
-                },
-                body: JSON.stringify(updatedData),
-            });
-
-            if (!response.ok) {
-                throw new Error('Failed to save changes');
-            }
-
-            const updatedClub = await response.json();
-
-            console.log('Changes saved successfully:', updatedClub);
-            alert('Changes saved successfully!');
-        } catch (error) {
-            console.error('Error saving changes:', error);
-            alert('Failed to save changes.');
-        }
-    };
-
-    const handleDiscardChanges = () => {
-        setFormData(club);
-        setNewTag('');
-    };
-
     return (
         <div className="min-h-screen bg-gray-100 p-6">
             <div className="grid grid-cols-2 gap-6">
@@ -151,7 +64,7 @@ export function OfficerInfo({ club }: OfficerInfoProps) {
                     <div>
                         <label className="block text-sm font-medium mb-1">Current Tags</label>
                         <div className="flex flex-wrap gap-2 mb-3">
-                            {formData.tags.map((tag, index) => (
+                            {club.tags.map((tag, index) => (
                                 <span
                                     key={index}
                                     className="inline-flex items-center px-3 py-1 rounded-full text-sm bg-blue-100 text-blue-800"

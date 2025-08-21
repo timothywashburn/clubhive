@@ -1,4 +1,4 @@
-import mongoose, { Document, Schema, ObjectId } from 'mongoose';
+import mongoose, { InferSchemaType, HydratedDocument, Document, Schema, ObjectId } from 'mongoose';
 
 export interface AuthData extends Document {
     _id: ObjectId;
@@ -34,8 +34,8 @@ const AuthSchema: Schema<AuthData> = new Schema(
     { timestamps: true }
 );
 
-export type AuthSchema = InferSchemaType<typeof schema>;
-export type AuthDoc = HydratedDocument<InferSchemaType<typeof schema>>;
+export type AuthSchema = InferSchemaType<typeof Schema>;
+export type AuthDoc = HydratedDocument<InferSchemaType<typeof Schema>>;
 
-const Auth = mongoose.model('Auth', schema);
+const Auth = mongoose.model('Auth', AuthSchema);
 export default Auth;
