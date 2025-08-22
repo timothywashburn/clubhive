@@ -1,3 +1,4 @@
+import mongoose from 'mongoose';
 import ClubMembership from '../models/club-membership-schema';
 import Club from '../models/club-schema';
 import User, { UserDoc } from '../models/user-schema';
@@ -95,8 +96,8 @@ export default class ClubMembershipController {
     static async removeMemberFromClub(clubId: string, memberId: string): Promise<boolean> {
         try {
             const result = await ClubMembership.findOneAndDelete({
-                club: clubId,
-                user: memberId,
+                club: new mongoose.Types.ObjectId(clubId),
+                user: new mongoose.Types.ObjectId(memberId),
             }).exec();
             return result !== null;
         } catch (error) {

@@ -45,15 +45,15 @@ export function Members({ club }: { club: any }) {
 
     const filteredMembers = members.filter(member => member.name?.toLowerCase().includes(searchTerm.toLowerCase()));
     const categorizeMembers = (members: any[]) => {
-        const officers = members.filter(member => ['officer'].includes(member.role?.toLowerCase()));
+        const officers = members.filter(member => member.role?.toLowerCase() === 'officer');
         const execs = members.filter(member => ['owner', 'principal member'].includes(member.role?.toLowerCase()));
-        const regularMembers = members.filter(
-            member => !officers.some(officer => officer._id === member._id) && !execs.some(exec => exec._id === member._id)
-        );
+        const regularMembers = members.filter(member => !['officer', 'owner', 'principal member'].includes(member.role?.toLowerCase()));
         return { officers, execs, regularMembers };
     };
 
-    const { officers, execs, regularMembers } = categorizeMembers(members);
+    const roleOptions = ['member', 'officer', 'owner', 'principal member'];
+
+    const { officers, execs, regularMembers } = categorizeMembers(filteredMembers);
 
     const handleRemoveMember = async (memberId: string) => {
         setRemovingMember(memberId);
@@ -91,80 +91,88 @@ export function Members({ club }: { club: any }) {
                                 <div className="flex justify-between items-start mb-2">
                                     <p className="font-medium text-base text-on-surface flex-1">{member.name}</p>
 
-                                    {/* remove button */}
-                                    {confirmRemove === member._id ? (
-                                        <div className="flex items-center gap-2 ml-2">
-                                            <span className="text-xs text-on-surface">Remove?</span>
+                                    <div className="flex-shrink-0 w-32 flex justify-end">
+                                        {confirmRemove === member._id ? (
+                                            <div className="flex items-center gap-2">
+                                                <span className="text-xs text-on-surface">Remove?</span>
+                                                <button
+                                                    onClick={() => handleRemoveMember(member._id)}
+                                                    disabled={removingMember === member._id}
+                                                    className="text-xs px-2 py-1 bg-red-600 text-white rounded hover:bg-red-700 disabled:opacity-50"
+                                                >
+                                                    {removingMember === member._id ? '...' : 'Yes'}
+                                                </button>
+                                                <button
+                                                    onClick={() => setConfirmRemove(null)}
+                                                    disabled={removingMember === member._id}
+                                                    className="text-xs px-2 py-1 bg-gray-500 text-white rounded hover:bg-gray-600 disabled:opacity-50"
+                                                >
+                                                    No
+                                                </button>
+                                            </div>
+                                        ) : (
                                             <button
-                                                onClick={() => handleRemoveMember(member._id)}
-                                                disabled={removingMember === member._id}
-                                                className="text-xs px-2 py-1 bg-red-600 text-white rounded hover:bg-red-700 disabled:opacity-50"
+                                                onClick={() => setConfirmRemove(member._id)}
+                                                className="p-1 text-gray-400 hover:text-red-600 hover:bg-red-50 rounded transition-colors cursor-pointer"
+                                                title="Remove member from club"
                                             >
-                                                {removingMember === member._id ? '...' : 'Yes'}
+                                                <Trash2 size={16} />
                                             </button>
-                                            <button
-                                                onClick={() => setConfirmRemove(null)}
-                                                disabled={removingMember === member._id}
-                                                className="text-xs px-2 py-1 bg-gray-500 text-white rounded hover:bg-gray-600 disabled:opacity-50"
-                                            >
-                                                No
-                                            </button>
-                                        </div>
-                                    ) : (
-                                        <button
-                                            onClick={() => setConfirmRemove(member._id)}
-                                            className="p-1 text-gray-400 hover:text-red-600 hover:bg-red-50 rounded transition-colors ml-2 cursor-pointer"
-                                            title="Remove member from club"
-                                        >
-                                            <Trash2 size={16} />
-                                        </button>
-                                    )}
+                                        )}
+                                    </div>
                                 </div>
 
-                                {/* member role + edit role */}
-                                <div className="flex justify-between items-center mb-2">
-                                    <p className="text-xs font-semibold text-primary">Role: {member.role}</p>
-                                    {editingRole === member._id ? (
-                                        <div className="flex items-center gap-1">
-                                            <input
-                                                type="text"
-                                                value={tempRole}
-                                                onChange={e => setTempRole(e.target.value)}
-                                                className="text-xs px-2 py-1 border border-outline-variant rounded bg-surface text-on-surface focus:outline-none focus:ring-1 focus:ring-primary w-20"
-                                                placeholder="Enter role"
-                                                autoFocus
-                                                onKeyDown={e => {
-                                                    if (e.key === 'Enter') handleRoleSave(member._id);
-                                                    if (e.key === 'Escape') handleRoleCancel();
-                                                }}
-                                            />
-                                            <button
-                                                onClick={() => handleRoleSave(member._id)}
-                                                disabled={updatingRole === member._id}
-                                                className="text-xs px-2 py-1 bg-primary text-on-primary rounded hover:bg-primary-dark disabled:opacity-50"
-                                            >
-                                                {updatingRole === member._id ? '...' : '✓'}
-                                            </button>
-                                            <button
-                                                onClick={() => handleRoleCancel()}
-                                                disabled={updatingRole === member._id}
-                                                className="text-xs px-2 py-1 bg-error text-on-error rounded hover:bg-error-dark disabled:opacity-50"
-                                            >
-                                                ×
-                                            </button>
+                                <div className="mb-2 h-8 flex items-center">
+                                    <div className="flex justify-between items-center w-full">
+                                        <p className="text-xs font-semibold text-primary">Role: {member.role}</p>
+
+                                        <div className="flex-shrink-0 w-32 flex justify-end">
+                                            {editingRole === member._id ? (
+                                                <div className="flex items-center gap-1">
+                                                    <select
+                                                        value={tempRole}
+                                                        onChange={e => setTempRole(e.target.value)}
+                                                        className="text-xs px-1 py-1 border border-outline-variant rounded bg-surface text-on-surface focus:outline-none focus:ring-1 focus:ring-primary w-20"
+                                                        autoFocus
+                                                        onKeyDown={e => {
+                                                            if (e.key === 'Enter') handleRoleSave(member._id);
+                                                            if (e.key === 'Escape') handleRoleCancel();
+                                                        }}
+                                                    >
+                                                        {roleOptions.map(role => (
+                                                            <option key={role} value={role}>
+                                                                {role}
+                                                            </option>
+                                                        ))}
+                                                    </select>
+                                                    <button
+                                                        onClick={() => handleRoleSave(member._id)}
+                                                        disabled={updatingRole === member._id}
+                                                        className="text-xs px-1 py-1 bg-primary text-on-primary rounded hover:bg-primary-dark disabled:opacity-50 w-6 h-6"
+                                                    >
+                                                        {updatingRole === member._id ? '...' : '✓'}
+                                                    </button>
+                                                    <button
+                                                        onClick={() => handleRoleCancel()}
+                                                        disabled={updatingRole === member._id}
+                                                        className="text-xs px-1 py-1 bg-error text-on-error rounded hover:bg-error-dark disabled:opacity-50 w-6 h-6"
+                                                    >
+                                                        ×
+                                                    </button>
+                                                </div>
+                                            ) : (
+                                                <button
+                                                    onClick={() => handleRoleEdit(member._id, member.role)}
+                                                    className="text-xs text-gray-500 hover:text-primary hover:underline transition-colors cursor-pointer"
+                                                    title="Edit role"
+                                                >
+                                                    Edit role ✏️
+                                                </button>
+                                            )}
                                         </div>
-                                    ) : (
-                                        <button
-                                            onClick={() => handleRoleEdit(member._id, member.role)}
-                                            className="text-xs text-gray-500 hover:text-primary hover:underline transition-colors cursor-pointer"
-                                            title="Edit role"
-                                        >
-                                            Edit role ✏️
-                                        </button>
-                                    )}
+                                    </div>
                                 </div>
 
-                                {/* member year and major */}
                                 <div className="flex justify-between items-center text-xs text-on-surface-variant">
                                     <p>Year: {member.year}</p>
                                     <p>Major: {member.major}</p>
@@ -251,7 +259,6 @@ export function Members({ club }: { club: any }) {
                 </div>
             </div>
 
-            {/* 3 column layout */}
             <div className="flex flex-col lg:flex-row gap-6">
                 {renderMemberColumn('Execs', execs, 'bg-surface-variant')}
                 {renderMemberColumn('Officers', officers, 'bg-surface-variant')}
