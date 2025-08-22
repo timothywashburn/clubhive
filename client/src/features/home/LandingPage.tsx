@@ -18,6 +18,8 @@ export function LandingPage() {
     const [currentPosition, setCurrentPosition] = useState(0);
     const [isTransitioning, setIsTransitioning] = useState(false);
     const [hasMounted, setHasMounted] = useState(false);
+    const [nextAction, setNextAction] = useState<'next' | 'prev' | null>(null);
+    const [lastScrollTime, setLastScrollTime] = useState(0);
 
     // Section types for navigation and rendering
     const sectionTypes = ['hero', 'text', 'features', 'stats', 'testimonials', 'contributions', 'cta'];
@@ -47,20 +49,60 @@ export function LandingPage() {
         { x: 0, y: 0, scale: 0.2 },
     ];
 
+    // Process next queued action when transition finishes
+    useEffect(() => {
+        if (nextAction && !isTransitioning) {
+            const actionToProcess = nextAction;
+            setNextAction(null);
+
+            if (actionToProcess === 'next' && currentPosition < totalPositions - 1) {
+                setIsTransitioning(true);
+                setCurrentPosition(prev => prev + 1);
+                setTimeout(() => {
+                    setIsTransitioning(false);
+                }, 700);
+            } else if (actionToProcess === 'prev' && currentPosition > 0) {
+                setIsTransitioning(true);
+                setCurrentPosition(prev => prev - 1);
+                setTimeout(() => {
+                    setIsTransitioning(false);
+                }, 700);
+            }
+        }
+    }, [nextAction, isTransitioning, currentPosition, totalPositions]);
+
     // Handle navigation between positions
     const handleNext = useCallback(() => {
-        if (isTransitioning || currentPosition + 1 == totalPositions) return;
-        setIsTransitioning(true);
-        setCurrentPosition(prev => (prev + 1) % totalPositions);
-        setTimeout(() => setIsTransitioning(false), 1000);
-    }, [currentPosition, isTransitioning]);
+        if (currentPosition >= totalPositions - 1) return;
+
+        if (isTransitioning) {
+            if (!nextAction && currentPosition + 1 < totalPositions - 1) {
+                setNextAction('next');
+            }
+        } else {
+            setIsTransitioning(true);
+            setCurrentPosition(prev => prev + 1);
+            setTimeout(() => {
+                setIsTransitioning(false);
+            }, 700);
+        }
+    }, [currentPosition, totalPositions, isTransitioning, nextAction]);
 
     const handlePrev = useCallback(() => {
-        if (isTransitioning || currentPosition == 0) return;
-        setIsTransitioning(true);
-        setCurrentPosition(prev => (prev - 1 + totalPositions) % totalPositions);
-        setTimeout(() => setIsTransitioning(false), 1000);
-    }, [currentPosition, isTransitioning]);
+        if (currentPosition <= 0) return;
+
+        if (isTransitioning) {
+            if (!nextAction && currentPosition - 1 > 0) {
+                setNextAction('prev');
+            }
+        } else {
+            setIsTransitioning(true);
+            setCurrentPosition(prev => prev - 1);
+            setTimeout(() => {
+                setIsTransitioning(false);
+            }, 700);
+        }
+    }, [currentPosition, isTransitioning, nextAction]);
 
     // Keyboard navigation
     useEffect(() => {
@@ -78,20 +120,29 @@ export function LandingPage() {
         return () => window.removeEventListener('keydown', handleKeyDown);
     }, [handleNext, handlePrev]);
 
-    // Mouse wheel navigation
     useEffect(() => {
+        let lastProcessedTime = lastScrollTime;
+
         const handleWheel = (e: WheelEvent) => {
             e.preventDefault();
-            if (e.deltaY > 0) {
-                handleNext();
-            } else {
-                handlePrev();
+
+            const now = Date.now();
+            if (now - lastProcessedTime < 700) return;
+
+            if (Math.abs(e.deltaY) > 10) {
+                lastProcessedTime = now;
+                setLastScrollTime(now);
+                if (e.deltaY > 0) {
+                    handleNext();
+                } else {
+                    handlePrev();
+                }
             }
         };
 
         window.addEventListener('wheel', handleWheel, { passive: false });
         return () => window.removeEventListener('wheel', handleWheel);
-    }, [handleNext, handlePrev]);
+    }, [handleNext, handlePrev, lastScrollTime]);
 
     const currentTransform = hexagonPositions[currentPosition];
 
@@ -172,9 +223,9 @@ export function LandingPage() {
                 }}
                 transition={{
                     type: 'spring',
-                    damping: 20,
-                    stiffness: 90,
-                    duration: 1,
+                    damping: 25,
+                    stiffness: 150,
+                    duration: 0.6,
                 }}
             >
                 {/* All content sections positioned at their hexagon coordinates */}
