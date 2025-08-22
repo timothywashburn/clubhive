@@ -31,6 +31,7 @@ function AppContent() {
     const { initializeAuth, isAuthenticated } = useAuthStore();
     const [scrollY, setScrollY] = useState(0);
     const backgroundRef = useRef<HTMLDivElement>(null);
+    const mainRef = useRef<HTMLElement>(null);
     const location = useLocation();
     useTheme();
     const { theme } = useThemeStore();
@@ -42,11 +43,23 @@ function AppContent() {
 
     useEffect(() => {
         const handleScroll = () => {
-            setScrollY(window.scrollY);
+            if (mainRef.current) {
+                setScrollY(mainRef.current.scrollTop);
+            }
         };
 
-        window.addEventListener('scroll', handleScroll);
-        return () => window.removeEventListener('scroll', handleScroll);
+        const timer = setTimeout(() => {
+            if (mainRef.current) {
+                mainRef.current.addEventListener('scroll', handleScroll);
+            }
+        }, 0);
+
+        return () => {
+            clearTimeout(timer);
+            if (mainRef.current) {
+                mainRef.current.removeEventListener('scroll', handleScroll);
+            }
+        };
     }, []);
 
     useEffect(() => {
@@ -65,21 +78,19 @@ function AppContent() {
                     left: '0',
                     right: '0',
                     height: '150vh',
-                    transform: `translateY(${scrollY * -0.05}px)`,
                     zIndex: -1,
                 }}
             >
-                <StaticHoneycomb />
+                <StaticHoneycomb y={scrollY * -0.05} />
             </div>
             <UnifiedNavigation
                 navType="site"
                 siteNavType={siteNavType}
                 isAuthenticated={isAuthenticated}
-                //toggleAuth={toggleAuth}
                 toggleSiteNavType={toggleSiteNavType}
                 activeRoute={location.pathname}
             />
-            <main className="flex-1 overflow-auto flex flex-col">
+            <main ref={mainRef} className="flex-1 overflow-auto flex flex-col">
                 <div className="flex-1">
                     <Routes>
                         <Route path="/" element={<Home />} />
@@ -100,11 +111,12 @@ function AppContent() {
                         <Route path="/admin/clubs" element={<AdminClubs />} />
                         <Route path="/admin/users" element={<AdminUsers />} />
                         <Route path="/send-notification" element={<SendNotification />} />
-                        <Route path="*" element={<NotFound />} />
                         <Route path="/test-images" element={<TestImages />} />
+                        <Route path="*" element={<NotFound />} />
                     </Routes>
                 </div>
-                <Footer />
+                {/* Hide footer on landing page (for non-authenticated users) since it has its own footer */}
+                {!(location.pathname === '/' && !isAuthenticated) && <Footer />}
             </main>
             <ToastContainer
                 position="bottom-right"

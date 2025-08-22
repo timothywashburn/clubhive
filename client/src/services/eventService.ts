@@ -7,6 +7,7 @@ import {
     DeleteEventResponse,
     ApiResponseBody,
     isSuccess,
+    GetMyEventsResponse,
 } from '@clubhive/shared';
 
 const API_BASE_URL = '/api';
@@ -120,6 +121,54 @@ class EventService {
             published: eventData.published,
             tags: (eventData.tags || []).map(tag => (typeof tag === 'string' ? tag : tag._id)),
         };
+    }
+
+    async getMyEvents(): Promise<{ upcomingEvents: EventData[]; savedEvents: EventData[] }> {
+        try {
+            const response = await fetch(`${API_BASE_URL}/me/events`, {
+                method: 'GET',
+                ...this.getRequestOptions(),
+            });
+
+            const data: ApiResponseBody<GetMyEventsResponse> = await response.json();
+
+            if (isSuccess(data)) {
+                return {
+                    upcomingEvents: data.upcomingEvents,
+                    savedEvents: data.savedEvents,
+                };
+            } else {
+                throw new Error(data.error?.message || 'Failed to fetch my events');
+            }
+        } catch (error) {
+            if (error instanceof Error) {
+                throw error;
+            }
+            throw new Error('Network error occurred while fetching my events');
+        }
+    }
+
+    async toggleSaveEvent(eventId: string, save: boolean): Promise<boolean> {
+        try {
+            const response = await fetch(`${API_BASE_URL}/events/${eventId}/save`, {
+                method: 'POST',
+                ...this.getRequestOptions(),
+                body: JSON.stringify({ save }),
+            });
+
+            const data: ApiResponseBody<{ saved: boolean }> = await response.json();
+
+            if (isSuccess(data)) {
+                return data.saved;
+            } else {
+                throw new Error(data.error?.message || 'Failed to toggle save event');
+            }
+        } catch (error) {
+            if (error instanceof Error) {
+                throw error;
+            }
+            throw new Error('Network error occurred while toggling save event');
+        }
     }
 }
 
