@@ -1,4 +1,3 @@
-import { GetClubMembersResponse } from '@clubhive/shared';
 import { ApiEndpoint, AuthType } from '@/types/api-types';
 import ClubMembershipController from '@/controllers/club-membership-controller';
 
