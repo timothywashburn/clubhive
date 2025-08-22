@@ -46,7 +46,7 @@ export function LandingPage() {
         // Top
         { x: 0, y: -hexagonRadius, scale: 1 },
         // Center (CTA now replaces overview)
-        { x: 0, y: 0, scale: 0.2 },
+        { x: 0, y: 0, scale: 0.02 },
     ];
 
     // Process next queued action when transition finishes
