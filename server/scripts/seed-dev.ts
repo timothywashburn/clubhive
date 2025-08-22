@@ -18,10 +18,6 @@ const TEST_USER_ID = new mongoose.Types.ObjectId('507f1f77bcf86cd799439020');
 const UCSD_SCHOOL_ID = new mongoose.Types.ObjectId('507f1f77bcf86cd799439021');
 const CS_CLUB_ID = new mongoose.Types.ObjectId('507f1f77bcf86cd799439022');
 
-const TEST_USER_ID2 = new mongoose.Types.ObjectId('507f1f77bcf86cd799439023');
-const TEST_USER_ID3 = new mongoose.Types.ObjectId('507f1f77bcf86cd799439024');
-const TEST_USER_ID4 = new mongoose.Types.ObjectId('507f1f77bcf86cd799439025');
-
 async function seed() {
     console.log('Connecting to MongoDB at:', process.env.MONGODB_URI);
     await mongoose.connect(process.env.MONGODB_URI!);
@@ -573,7 +569,6 @@ async function seed() {
 
     const [userA, userB, userC, userD] = await User.insertMany([
         {
-            _id: TEST_USER_ID2,
             name: 'Alice Johnson',
             school: ucsd._id,
             major: 'Computer Science',
@@ -581,7 +576,6 @@ async function seed() {
             year: Year.SECOND,
         },
         {
-            _id: TEST_USER_ID3,
             name: 'David Lee',
             school: ucsd._id,
             major: 'Math and Computer Science',
@@ -589,7 +583,6 @@ async function seed() {
             year: Year.THIRD,
         },
         {
-            _id: TEST_USER_ID4,
             name: 'Bob Ross',
             school: ucsd._id,
             major: 'Computer Science',
@@ -606,17 +599,10 @@ async function seed() {
     ]);
 
     await ClubMembership.insertMany([
-        { user: testUser._id, club: clubs[0]._id, role: ClubRole.OWNER },
         { user: userA._id, club: clubs[0]._id, role: ClubRole.OFFICER },
         { user: userB._id, club: clubs[0]._id, role: ClubRole.OFFICER },
-        { user: userC._id, club: clubs[0]._id, role: ClubRole.OFFICER },
+        { user: userC._id, club: clubs[0]._id, role: ClubRole.MEMBER },
         { user: userD._id, club: clubs[0]._id, role: ClubRole.MEMBER },
-
-        { user: testUser._id, club: clubs[1]._id, role: ClubRole.MEMBER },
-        { user: testUser._id, club: clubs[4]._id, role: ClubRole.OFFICER },
-        { user: testUser2._id, club: clubs[0]._id, role: ClubRole.OFFICER },
-        { user: testUser2._id, club: clubs[2]._id, role: ClubRole.MEMBER },
-        { user: testUser2._id, club: clubs[6]._id, role: ClubRole.OWNER },
 
         { user: userA._id, club: clubs[1]._id, role: ClubRole.MEMBER },
         { user: userB._id, club: clubs[2]._id, role: ClubRole.MEMBER },

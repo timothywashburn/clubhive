@@ -123,6 +123,9 @@ export default class ApiManager {
 
         // Membership endpoints
         this.addEndpoint(leaveMembershipEndpoint);
+        this.addEndpoint(getClubMembersEndpoint);
+        this.addEndpoint(updateMemberRoleEndpoint);
+        this.addEndpoint(removeMemberEndpoint);
 
         console.log(`registered api endpoints`);
     }

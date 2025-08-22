@@ -56,7 +56,7 @@ export default class ClubMembershipController {
         return result.deletedCount || 0;
     }
 
-    static async getClubMembers(clubId: string): Promise<{ user: any; role: ClubRole; joinedAt: Date }[]> {
+    static async getClubMembers(clubId: string): Promise<{ user: UserDoc; role: ClubRole }[]> {
         console.log('Querying for clubId:', clubId);
         // Debug: Check all memberships in DB
         const allMemberships = await ClubMembership.find({}).select('club user role');
@@ -65,21 +65,19 @@ export default class ClubMembershipController {
         const memberships = await ClubMembership.find({ club: clubId })
             .populate<{ user: UserDoc }>({
                 path: 'user',
-                select: '_id name year major',
             })
             .exec();
 
-        console.log('Found memberships count:', memberships.length); // Add this line
-        console.log('Raw memberships:', memberships); // Add this line
+        console.log('Found memberships count:', memberships.length);
+        console.log('Raw memberships:', memberships);
         console.log(
             'Members for Club:',
             memberships.map(m => m.user.name)
         );
 
         return memberships.map(m => ({
-            user: (m.user as UserDoc).toObject(),
+            user: m.user,
             role: m.role,
-            joinedAt: (m as any).joinedAt || m.createdAt,
         }));
     }
 

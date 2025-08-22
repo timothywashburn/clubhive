@@ -15,7 +15,7 @@ export function useClubMembers(clubId: string | null) {
                 console.log('Raw response:', data);
                 if (data.success) {
                     const formattedMembers = data.members.map((m: any) => ({
-                        ...m.user, // _id, name, year, major
+                        ...m.user,
                         role: m.role,
                         joinedAt: m.joinedAt,
                     }));
