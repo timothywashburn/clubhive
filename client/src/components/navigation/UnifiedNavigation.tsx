@@ -177,7 +177,7 @@ function renderSiteNavigation({
                             to={props.siteNavType === 'admin' ? '/admin/dashboard' : '/'}
                             className="flex items-center text-primary hover:text-primary/90"
                         >
-                            <img src="/clubhive.svg" alt="clubhive" className="h-16 w-32 object-cover object-center" />
+                            <img src="/logo_dark.svg" alt="clubhive" className="h-8" />
                         </Link>
 
                         <AnimatePresence mode="wait">
@@ -289,7 +289,7 @@ function renderSiteNavigation({
                         to={props.siteNavType === 'admin' ? '/admin/dashboard' : '/'}
                         className="flex items-center text-primary hover:text-primary/90"
                     >
-                        <img src="/clubhive.svg" alt="clubhive" className="h-16 w-32 object-cover object-center" />
+                        <img src="/logo_dark.svg" alt="clubhive" className="h-8" />
                     </Link>
 
                     <button

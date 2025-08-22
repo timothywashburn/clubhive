@@ -15,9 +15,6 @@ export function LandingPage() {
         // Position 0: Hero
         {
             id: 'hero',
-            title: 'Welcome to clubhive',
-            subtitle: 'The ultimate platform for student organizations',
-            content: 'Discover clubs, manage events, and build lasting communities that matter.',
             type: 'hero',
         },
         // Position 1: Mission
@@ -33,11 +30,11 @@ export function LandingPage() {
         {
             id: 'features',
             title: 'Key Features',
-            subtitle: 'Everything you need',
+            subtitle: 'Get started exploring clubs, searching for events, or by creating an account to manage your own club!',
             content: [
-                { icon: Users, title: 'Join Communities', description: 'Connect with like-minded students' },
+                { icon: Users, title: 'Explore Clubs', description: 'Connect with like-minded students' },
                 { icon: Calendar, title: 'Discover Events', description: 'Never miss exciting activities' },
-                { icon: Target, title: 'Manage Clubs', description: 'Streamline operations' },
+                { icon: Target, title: 'Create an Account', description: 'Streamline operations' },
             ],
             type: 'features',
         },
@@ -298,28 +295,28 @@ function ContentSection({ section, position, isActive, isOverview, navigate }: C
                                 animate={isActive ? { opacity: 1, scale: 1, y: 0 } : { opacity: 0.7, scale: 0.6, y: -40 }}
                                 transition={{ duration: 0.8, delay: 0.2, ease: 'easeOut' }}
                             >
-                                <div className="w-24 h-24 mx-auto mb-6 bg-primary rounded-2xl flex items-center justify-center text-on-primary text-3xl font-bold shadow-lg">
-                                    CH
+                                <div className="h-50 mx-auto rounded-2xl flex items-center justify-center p-2">
+                                    <img src="/bee.svg" alt="Clubhive Bee Icon" className="w-full h-full object-contain" />
                                 </div>
                             </motion.div>
 
                             <motion.h1
-                                className="text-5xl md:text-7xl font-bold text-on-background mb-6"
+                                className="text-5xl md:text-7xl font-bold text-on-background mb-6 flex items-center justify-center gap-4"
                                 initial={false}
                                 animate={isActive ? { opacity: 1, y: 0, scale: 1 } : { opacity: 0.7, y: 60, scale: 0.8 }}
                                 transition={{ duration: 0.8, delay: 0.4, ease: 'easeOut' }}
                             >
-                                Welcome to <span className="text-primary">clubhive</span>
+                                <span>welcome to</span>
+                                <img src="/logo_dark.svg" alt="Clubhive Logo" className="h-16 md:h-20 w-auto" />
                             </motion.h1>
 
                             <motion.p
-                                className="text-xl md:text-2xl text-on-background-variant mb-12 max-w-3xl mx-auto"
+                                className="text-xl md:text-2xl text-on-background-variant mb-12 max-w-2xl mx-auto"
                                 initial={false}
                                 animate={isActive ? { opacity: 1, y: 0 } : { opacity: 0.7, y: 40 }}
                                 transition={{ duration: 0.8, delay: 0.6, ease: 'easeOut' }}
                             >
-                                The ultimate platform for student organizations. Discover clubs, manage events, and build lasting
-                                communities that matter.
+                                The only platform needed for you to explore clubs, find events, and organize your own club's affairs.
                             </motion.p>
 
                             <motion.div
