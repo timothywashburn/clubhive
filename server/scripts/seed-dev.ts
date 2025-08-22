@@ -93,7 +93,7 @@ async function seed() {
     const clubTagMap = Object.fromEntries(tags.filter(t => t.type === 'club').map(t => [t.text, t._id]));
     const eventTagMap = Object.fromEntries(tags.filter(t => t.type === 'event').map(t => [t.text, t._id]));
 
-    const [testUser, testUser2] = await User.insertMany([
+    const [testUser, testUser2, userA, userB, userC, userD] = await User.insertMany([
         {
             _id: TEST_USER_ID,
             name: 'Test User',
@@ -108,6 +108,34 @@ async function seed() {
             major: 'Data Science',
             educationType: EducationType.GRADUATE,
             year: Year.FIRST,
+        },
+        {
+            name: 'Alice Johnson',
+            school: ucsd._id,
+            major: 'Computer Science',
+            educationType: EducationType.UNDERGRADUATE,
+            year: Year.SECOND,
+        },
+        {
+            name: 'David Lee',
+            school: ucsd._id,
+            major: 'Math and Computer Science',
+            educationType: EducationType.UNDERGRADUATE,
+            year: Year.THIRD,
+        },
+        {
+            name: 'Bob Ross',
+            school: ucsd._id,
+            major: 'Computer Science',
+            educationType: EducationType.UNDERGRADUATE,
+            year: Year.SECOND,
+        },
+        {
+            name: 'Carol Lee',
+            school: ucsd._id,
+            major: 'Data Science',
+            educationType: EducationType.UNDERGRADUATE,
+            year: Year.FOURTH,
         },
     ]);
 
@@ -295,37 +323,6 @@ async function seed() {
                 discord: '',
                 instagram: '',
             },
-        },
-    ]);
-
-    const [userA, userB, userC, userD] = await User.insertMany([
-        {
-            name: 'Alice Johnson',
-            school: ucsd._id,
-            major: 'Computer Science',
-            educationType: EducationType.UNDERGRADUATE,
-            year: Year.SECOND,
-        },
-        {
-            name: 'David Lee',
-            school: ucsd._id,
-            major: 'Math and Computer Science',
-            educationType: EducationType.UNDERGRADUATE,
-            year: Year.THIRD,
-        },
-        {
-            name: 'Bob Ross',
-            school: ucsd._id,
-            major: 'Computer Science',
-            educationType: EducationType.UNDERGRADUATE,
-            year: Year.SECOND,
-        },
-        {
-            name: 'Carol Lee',
-            school: ucsd._id,
-            major: 'Data Science',
-            educationType: EducationType.UNDERGRADUATE,
-            year: Year.FOURTH,
         },
     ]);
 
