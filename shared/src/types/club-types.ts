@@ -120,10 +120,9 @@ export type ClubData = z.infer<typeof clubSchema>;
 export type ClubWithCountsData = z.infer<typeof clubWithCountsSchema>;
 export type ClubWithEventsData = z.infer<typeof clubWithEventsAndCountsSchema>;
 export type UserClubData = z.infer<typeof userClubSchema>;
-export type ClubMemberData = z.infer<typeof clubMemberSchema>; //
+export type ClubMemberData = z.infer<typeof clubMemberSchema>;
 export type CreateClubRequest = z.infer<typeof createClubRequestSchema>;
 export type UpdateClubRequest = z.infer<typeof updateClubRequestSchema>;
-//export type UpdateMemberRoleRequest = z.infer<typeof userClubSchema>;
 
 export interface CreateClubResponse {
     club: ClubData;
