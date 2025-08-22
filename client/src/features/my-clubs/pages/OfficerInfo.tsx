@@ -111,12 +111,6 @@ export function OfficerInfo({ club }: OfficerInfoProps) {
                             <input type="mongoose.Schema.types.ObjectId" className="w-full p-2 border rounded" defaultValue={club.pictures} />
                         </div>
                     )} */}
-                    {club.joinRequirements && (
-                        <div>
-                            <label className="block text-sm font-medium mb-1">Membership Requirements</label>
-                            <input type="text" className="w-full p-2 border rounded" defaultValue={club.joinRequirements} />
-                        </div>
-                    )}
                     <div>
                         <label className="block text-sm font-medium mb-1">Current Tags</label>
                         <div className="flex flex-wrap gap-2 mb-3">
