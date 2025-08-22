@@ -13,6 +13,7 @@ import { getEventByIdEndpoint } from '@/api/events/get-event-page';
 import { getEventsEndpoint } from '@/api/events/get-events';
 import { updateEventEndpoint } from '@/api/events/update-event';
 import { deleteEventEndpoint } from '@/api/events/delete-event';
+import { toggleSaveEventEndpoint } from '@/api/events/save-event';
 
 import { ErrorCode } from '@clubhive/shared';
 import { createClubEndpoint } from '@/api/clubs/create-club';
@@ -33,6 +34,7 @@ import { createSchoolEndpoint } from '@/api/schools/create-school';
 import { updateSchoolEndpoint } from '@/api/schools/update-school';
 import { deleteSchoolEndpoint } from '@/api/schools/delete-school';
 import { getMyClubsEndpoint } from '@/api/me/clubs';
+import { getMyEventsEndpoint } from '@/api/me/events';
 import { getDailyVenueAvailabilityEndpoint } from '@/api/venues/daily-availability';
 import { getWeeklyVenueAvailabilityEndpoint } from '@/api/venues/weekly-availability';
 import { getMonthlyVenueAvailabilityEndpoint } from '@/api/venues/monthly-availability';
@@ -94,6 +96,7 @@ export default class ApiManager {
         this.addEndpoint(getEventsEndpoint);
         this.addEndpoint(updateEventEndpoint);
         this.addEndpoint(deleteEventEndpoint);
+        this.addEndpoint(toggleSaveEventEndpoint);
 
         // Notifications endpoints
         this.addEndpoint(getNotificationsEndpoint);
@@ -103,6 +106,7 @@ export default class ApiManager {
 
         // Me endpoints
         this.addEndpoint(getMyClubsEndpoint);
+        this.addEndpoint(getMyEventsEndpoint);
 
         // Venue endpoints
         this.addEndpoint(getDailyVenueAvailabilityEndpoint);

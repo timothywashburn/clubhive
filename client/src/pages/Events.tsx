@@ -212,7 +212,7 @@ export function Events() {
                 <div className="space-y-6 mt-6">
                     {/* event cards */}
                     {filteredEvents.map(event => (
-                        <div key={event._id} className="bg-surface rounded-lg shadow p-6 border border-outline-variant">
+                        <div key={event._id} className="rounded-lg shadow p-6 border border-outline-variant">
                             <div className="flex items-start justify-between">
                                 <div className="flex-1">
                                     <div className="flex items-center mb-2">
