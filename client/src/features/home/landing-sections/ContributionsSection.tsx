@@ -28,7 +28,7 @@ export function ContributionsSection({ isActive }: ContributionsSectionProps) {
                     animate={isActive ? { opacity: 1, scale: 1 } : { opacity: 0.7, scale: 0.9 }}
                     transition={{ duration: 0.6, delay: 0.2 }}
                 >
-                    Open Source & Community
+                    Open Source, Community Driven
                 </motion.h2>
                 <motion.p
                     className="text-xl text-on-surface-variant max-w-3xl mx-auto"
@@ -36,8 +36,8 @@ export function ContributionsSection({ isActive }: ContributionsSectionProps) {
                     animate={isActive ? { opacity: 1, y: 0 } : { opacity: 0.7, y: 20 }}
                     transition={{ duration: 0.6, delay: 0.4 }}
                 >
-                    Clubhive is built by students, for students. Join our growing community of contributors and help shape the future of
-                    campus life.
+                    We're students building this for students. If you want to help out, here are some ways you can give back (The stuff
+                    below is fake for now):
                 </motion.p>
             </motion.div>
 

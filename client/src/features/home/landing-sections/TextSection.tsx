@@ -7,8 +7,7 @@ interface TextSectionProps {
 
 export function TextSection({ isActive }: TextSectionProps) {
     const title = 'Our Mission';
-    const content =
-        'We believe that student organizations are the heart of campus life. Our mission is to empower every club and student with the tools they need to create meaningful connections.';
+    const content = "I swear I'll write this at some point";
     return (
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10" style={{ opacity: isActive ? 1 : 0.7 }}>
             <motion.div

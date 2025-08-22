@@ -6,8 +6,8 @@ interface StatsSectionProps {
 }
 
 export function StatsSection({ isActive }: StatsSectionProps) {
-    const title = 'Join the Movement';
-    const subtitle = 'Thousands of students trust clubhive';
+    const title = 'Join Our Community';
+    const subtitle = 'Believe it or not this data is 100% real';
     const stats = [
         { number: '500+', label: 'Active Clubs' },
         { number: '15K+', label: 'Students Connected' },

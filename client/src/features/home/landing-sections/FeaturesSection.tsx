@@ -10,9 +10,9 @@ export function FeaturesSection({ isActive }: FeaturesSectionProps) {
     const title = 'Key Features';
     const subtitle = 'Get started exploring clubs, searching for events, or by creating an account to manage your own club!';
     const features = [
-        { icon: Users, title: 'Explore Clubs', description: 'Connect with like-minded students' },
-        { icon: Calendar, title: 'Discover Events', description: 'Never miss exciting activities' },
-        { icon: Target, title: 'Create an Account', description: 'Streamline operations' },
+        { icon: Users, title: 'Explore Clubs', description: '...' },
+        { icon: Calendar, title: 'Discover Events', description: '...' },
+        { icon: Target, title: 'Create an Account', description: '...' },
     ];
     return (
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10" style={{ opacity: isActive ? 1 : 0.7 }}>

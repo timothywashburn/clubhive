@@ -9,7 +9,7 @@ interface CTASectionProps {
 
 export function CTASection({ isActive, navigate }: CTASectionProps) {
     const title = 'Ready to Start?';
-    const content = 'Join thousands of students who are already making the most of their college years with clubhive.';
+    const content = 'I have no idea what to put here, should it be a redirect to the signup page?';
     return (
         <div className="w-full h-full flex flex-col items-center justify-center relative z-10" style={{ transform: 'scale(50)' }}>
             {/* Top content - equal height to bottom */}

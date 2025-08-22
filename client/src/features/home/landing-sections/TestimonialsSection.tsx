@@ -7,8 +7,8 @@ interface TestimonialsSectionProps {
 }
 
 export function TestimonialsSection({ isActive }: TestimonialsSectionProps) {
-    const title = 'What Students Say';
-    const subtitle = 'Real experiences from our community';
+    const title = 'I still need to figure out something to put here';
+    const subtitle = 'Maybe it would be fun to get real students to do testimonials lol';
     const testimonials = [
         { name: 'Sarah Chen', role: 'CS Club President', text: 'Clubhive has transformed how we manage our club.', avatar: 'SC' },
         { name: 'Marcus Johnson', role: 'Photography Member', text: 'My go-to platform for campus activities.', avatar: 'MJ' },
