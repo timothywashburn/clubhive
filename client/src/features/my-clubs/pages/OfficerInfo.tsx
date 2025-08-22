@@ -1,3 +1,5 @@
+import { TagType } from '@clubhive/shared/src/types/tag-types';
+import { useState } from 'react';
 import { UserClubData } from '@clubhive/shared';
 
 interface OfficerInfoProps {
@@ -5,6 +7,22 @@ interface OfficerInfoProps {
 }
 
 export function OfficerInfo({ club }: OfficerInfoProps) {
+    // backend in progress
+    // const [FormData, setFormData] = useState({
+    //     name: club.name,
+    //     tagline: club.tagline,
+    //     description: club.description || '',
+    //     url: club.url || '',
+    //     joinRequirements: club.joinRequirements || '',
+    //     status: club.status,
+    //     socials: {
+    //         website: club.socials.website || '',
+    //         instagram: club.socials.instagram || '',
+    //         discord: club.socials.discord || '',
+    //     },
+    //     tags: club.tags.map(tag=>tag.text),
+    // clubLogo: club.clubLogo?.url || '',
+    // )}
     return (
         <div className="min-h-screen bg-gray-100 p-6">
             <div className="grid grid-cols-2 gap-6">
@@ -18,62 +36,54 @@ export function OfficerInfo({ club }: OfficerInfoProps) {
                         <label className="block text-sm font-medium mb-1">Tagline</label>
                         <input type="text" className="w-full p-2 border rounded" defaultValue={club.tagline} />
                     </div>
-                    <div>
-                        <label className="block text-sm font-medium text-on-surface mb-1">Description</label>
-                        <textarea
-                            className="w-full p-3 border border-outline-variant rounded-md bg-surface text-on-surface"
-                            rows={4}
-                            defaultValue={club.description}
-                        />
-                    </div>
-                    <div>
-                        <label className="block text-sm font-medium text-on-surface mb-1">Club URL</label>
-                        <input
-                            type="url"
-                            className="w-full p-3 border border-outline-variant rounded-md bg-surface text-on-surface"
-                            defaultValue={club.url}
-                            placeholder="https://example.com"
-                        />
-                    </div>
-                </div>
-            </div>
-
-            <div className="bg-surface rounded-lg shadow p-6 border border-outline-variant">
-                <h3 className="text-lg font-medium text-on-surface mb-4">Social Media</h3>
-                <div className="space-y-4 max-w-2xl">
-                    <div>
-                        <label className="block text-sm font-medium text-on-surface mb-1">Website</label>
-                        <input
-                            type="url"
-                            className="w-full p-3 border border-outline-variant rounded-md bg-surface text-on-surface"
-                            defaultValue={club.socials?.website}
-                            placeholder="https://website.com"
-                        />
-                    </div>
-                    <div>
-                        <label className="block text-sm font-medium text-on-surface mb-1">Discord</label>
-                        <input
-                            type="text"
-                            className="w-full p-3 border border-outline-variant rounded-md bg-surface text-on-surface"
-                            defaultValue={club.socials?.discord}
-                            placeholder="https://discord.gg/invite"
-                        />
-                    </div>
-                    <div>
-                        <label className="block text-sm font-medium text-on-surface mb-1">Instagram</label>
-                        <input
-                            type="text"
-                            className="w-full p-3 border border-outline-variant rounded-md bg-surface text-on-surface"
-                            defaultValue={club.socials?.instagram}
-                            placeholder="@username"
-                        />
-                    </div>
-                </div>
-            </div>
-
-            <div className="bg-surface rounded-lg shadow p-6 border border-outline-variant">
-                <h3 className="text-lg font-medium text-on-surface mb-4">Club Tags</h3>
-                <div className="space-y-4 max-w-2xl">
+                    {club.description && (
+                        <div>
+                            <label className="block text-sm font-medium mb-1">Description</label>
+                            <textarea className="w-full p-2 border rounded" rows={4} defaultValue={club.description} />
+                        </div>
+                    )}
+                    {club.url && (
+                        <div>
+                            <label className="block text-sm font-medium mb-1">Url</label>
+                            <input type="text" className="w-full p-2 border rounded" defaultValue={club.url} />
+                        </div>
+                    )}
+                    {club.socials.website && (
+                        <div>
+                            <label className="block text-sm font-medium mb-1">Website</label>
+                            <input type="text" className="w-full p-2 border rounded" defaultValue={club.socials.website} />
+                        </div>
+                    )}
+                    {club.socials.discord && (
+                        <div>
+                            <label className="block text-sm font-medium mb-1">Discord</label>
+                            <input type="text" className="w-full p-2 border rounded" defaultValue={club.socials.discord} />
+                        </div>
+                    )}
+                    {club.socials.instagram && (
+                        <div>
+                            <label className="block text-sm font-medium mb-1">Instagram</label>
+                            <input type="text" className="w-full p-2 border rounded" defaultValue={club.socials.instagram} />
+                        </div>
+                    )}
+                    {/* {club.clubLogo && (
+                        <div>
+                            <label className="block text-sm font-medium mb-1">Club Logo</label>
+                            <input type="mongoose.Schema.types.ObjectId" className="w-full p-2 border rounded" defaultValue={club.clubLogo} />
+                        </div>
+                    )}
+                    {club.pictures && (
+                        <div>
+                            <label className="block text-sm font-medium mb-1">Pictures</label>
+                            <input type="mongoose.Schema.types.ObjectId" className="w-full p-2 border rounded" defaultValue={club.pictures} />
+                        </div>
+                    )} */}
+                    {club.joinRequirements && (
+                        <div>
+                            <label className="block text-sm font-medium mb-1">Membership Requirements</label>
+                            <input type="text" className="w-full p-2 border rounded" defaultValue={club.joinRequirements} />
+                        </div>
+                    )}
                     <div>
                         <label className="block text-sm font-medium mb-1">Current Tags</label>
                         <div className="flex flex-wrap gap-2 mb-3">
@@ -126,10 +136,12 @@ export function OfficerInfo({ club }: OfficerInfoProps) {
                             <input type="text" className="w-full p-2 border rounded" defaultValue={club.socials.instagram} />
                         </div>
                     )}
-                    <div>
-                        <label className="block text-sm font-medium mb-1">Membership Requirements</label>
-                        <input type="text" className="w-full p-2 border rounded" placeholder="None" />
-                    </div>
+                    {!club.joinRequirements && (
+                        <div>
+                            <label className="block text-sm font-medium mb-1">Membership Requirements</label>
+                            <input type="text" className="w-full p-2 border rounded" placeholder="None" />
+                        </div>
+                    )}
                     {/* {!club.clubLogo && (
                         <div>
                             <label className="block text-sm font-medium mb-1">Club Logo</label>
