@@ -93,7 +93,7 @@ async function seed() {
     const clubTagMap = Object.fromEntries(tags.filter(t => t.type === 'club').map(t => [t.text, t._id]));
     const eventTagMap = Object.fromEntries(tags.filter(t => t.type === 'event').map(t => [t.text, t._id]));
 
-    const [testUser, testUser2] = await User.insertMany([
+    const [testUser, testUser2, userA, userB, userC, userD] = await User.insertMany([
         {
             _id: TEST_USER_ID,
             name: 'Test User',
@@ -108,6 +108,34 @@ async function seed() {
             major: 'Data Science',
             educationType: EducationType.GRADUATE,
             year: Year.FIRST,
+        },
+        {
+            name: 'Alice Johnson',
+            school: ucsd._id,
+            major: 'Computer Science',
+            educationType: EducationType.UNDERGRADUATE,
+            year: Year.SECOND,
+        },
+        {
+            name: 'David Lee',
+            school: ucsd._id,
+            major: 'Math and Computer Science',
+            educationType: EducationType.UNDERGRADUATE,
+            year: Year.THIRD,
+        },
+        {
+            name: 'Bob Ross',
+            school: ucsd._id,
+            major: 'Computer Science',
+            educationType: EducationType.UNDERGRADUATE,
+            year: Year.SECOND,
+        },
+        {
+            name: 'Carol Lee',
+            school: ucsd._id,
+            major: 'Data Science',
+            educationType: EducationType.UNDERGRADUATE,
+            year: Year.FOURTH,
         },
     ]);
 
@@ -302,9 +330,20 @@ async function seed() {
         { user: testUser._id, club: clubs[0]._id, role: ClubRole.OWNER },
         { user: testUser._id, club: clubs[1]._id, role: ClubRole.MEMBER },
         { user: testUser._id, club: clubs[4]._id, role: ClubRole.OFFICER },
+        { user: testUser2._id, club: clubs[0]._id, role: ClubRole.OFFICER },
 
         { user: testUser2._id, club: clubs[2]._id, role: ClubRole.MEMBER },
         { user: testUser2._id, club: clubs[6]._id, role: ClubRole.OWNER },
+
+        { user: userA._id, club: clubs[0]._id, role: ClubRole.OFFICER },
+        { user: userB._id, club: clubs[0]._id, role: ClubRole.OFFICER },
+        { user: userC._id, club: clubs[0]._id, role: ClubRole.MEMBER },
+        { user: userD._id, club: clubs[0]._id, role: ClubRole.MEMBER },
+
+        { user: userA._id, club: clubs[1]._id, role: ClubRole.MEMBER },
+        { user: userB._id, club: clubs[2]._id, role: ClubRole.MEMBER },
+        { user: userC._id, club: clubs[3]._id, role: ClubRole.OFFICER },
+        { user: userD._id, club: clubs[1]._id, role: ClubRole.MEMBER },
     ]);
 
     const notifications = await Notification.insertMany([
