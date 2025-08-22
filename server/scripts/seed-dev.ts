@@ -298,6 +298,37 @@ async function seed() {
         },
     ]);
 
+    const [userA, userB, userC, userD] = await User.insertMany([
+        {
+            name: 'Alice Johnson',
+            school: ucsd._id,
+            major: 'Computer Science',
+            educationType: EducationType.UNDERGRADUATE,
+            year: Year.SECOND,
+        },
+        {
+            name: 'David Lee',
+            school: ucsd._id,
+            major: 'Math and Computer Science',
+            educationType: EducationType.UNDERGRADUATE,
+            year: Year.THIRD,
+        },
+        {
+            name: 'Bob Ross',
+            school: ucsd._id,
+            major: 'Computer Science',
+            educationType: EducationType.UNDERGRADUATE,
+            year: Year.SECOND,
+        },
+        {
+            name: 'Carol Lee',
+            school: ucsd._id,
+            major: 'Data Science',
+            educationType: EducationType.UNDERGRADUATE,
+            year: Year.FOURTH,
+        },
+    ]);
+
     await ClubMembership.insertMany([
         { user: testUser._id, club: clubs[0]._id, role: ClubRole.OWNER },
         { user: testUser._id, club: clubs[1]._id, role: ClubRole.MEMBER },
@@ -307,7 +338,15 @@ async function seed() {
         { user: testUser2._id, club: clubs[2]._id, role: ClubRole.MEMBER },
         { user: testUser2._id, club: clubs[6]._id, role: ClubRole.OWNER },
 
-        { user: testUser._id, club: clubs[0]._id, role: ClubRole.OFFICER },
+        { user: userA._id, club: clubs[0]._id, role: ClubRole.OFFICER },
+        { user: userB._id, club: clubs[0]._id, role: ClubRole.OFFICER },
+        { user: userC._id, club: clubs[0]._id, role: ClubRole.MEMBER },
+        { user: userD._id, club: clubs[0]._id, role: ClubRole.MEMBER },
+
+        { user: userA._id, club: clubs[1]._id, role: ClubRole.MEMBER },
+        { user: userB._id, club: clubs[2]._id, role: ClubRole.MEMBER },
+        { user: userC._id, club: clubs[3]._id, role: ClubRole.OFFICER },
+        { user: userD._id, club: clubs[1]._id, role: ClubRole.MEMBER },
     ]);
 
     const notifications = await Notification.insertMany([
@@ -566,49 +605,6 @@ async function seed() {
     }
 
     await Event.insertMany(otherClubsEvents);
-
-    const [userA, userB, userC, userD] = await User.insertMany([
-        {
-            name: 'Alice Johnson',
-            school: ucsd._id,
-            major: 'Computer Science',
-            educationType: EducationType.UNDERGRADUATE,
-            year: Year.SECOND,
-        },
-        {
-            name: 'David Lee',
-            school: ucsd._id,
-            major: 'Math and Computer Science',
-            educationType: EducationType.UNDERGRADUATE,
-            year: Year.THIRD,
-        },
-        {
-            name: 'Bob Ross',
-            school: ucsd._id,
-            major: 'Computer Science',
-            educationType: EducationType.UNDERGRADUATE,
-            year: Year.SECOND,
-        },
-        {
-            name: 'Carol Lee',
-            school: ucsd._id,
-            major: 'Data Science',
-            educationType: EducationType.UNDERGRADUATE,
-            year: Year.FOURTH,
-        },
-    ]);
-
-    await ClubMembership.insertMany([
-        { user: userA._id, club: clubs[0]._id, role: ClubRole.OFFICER },
-        { user: userB._id, club: clubs[0]._id, role: ClubRole.OFFICER },
-        { user: userC._id, club: clubs[0]._id, role: ClubRole.MEMBER },
-        { user: userD._id, club: clubs[0]._id, role: ClubRole.MEMBER },
-
-        { user: userA._id, club: clubs[1]._id, role: ClubRole.MEMBER },
-        { user: userB._id, club: clubs[2]._id, role: ClubRole.MEMBER },
-        { user: userC._id, club: clubs[3]._id, role: ClubRole.OFFICER },
-        { user: userD._id, club: clubs[1]._id, role: ClubRole.MEMBER },
-    ]);
 
     // Seed configuration
     await ClubhiveConfigModel.create({
