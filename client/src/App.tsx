@@ -78,11 +78,10 @@ function AppContent() {
                     left: '0',
                     right: '0',
                     height: '150vh',
-                    transform: `translateY(${scrollY * -0.05}px)`,
                     zIndex: -1,
                 }}
             >
-                <StaticHoneycomb />
+                <StaticHoneycomb y={scrollY * -0.05} />
             </div>
             <UnifiedNavigation
                 navType="site"

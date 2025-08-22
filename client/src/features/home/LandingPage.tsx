@@ -2,6 +2,7 @@ import React, { useEffect, useState, useCallback } from 'react';
 import { motion } from 'framer-motion';
 import { Users, Calendar, Target, Star, ArrowRight, ChevronDown } from 'lucide-react';
 import { useNavigate } from 'react-router';
+import { StaticHoneycomb } from '../../components/honeycomb';
 
 export function LandingPage() {
     const navigate = useNavigate();
@@ -150,8 +151,41 @@ export function LandingPage() {
 
     const currentTransform = hexagonPositions[currentPosition];
 
+    const getHoneycombPosition = () => {
+        const parallaxIntensity = -0.1;
+        const currentHexPos = hexagonPositions[currentPosition] || { x: 0, y: 0 };
+
+        return {
+            x: currentHexPos.x * parallaxIntensity,
+            y: currentHexPos.y * parallaxIntensity,
+        };
+    };
+
+    const honeycombPos = getHoneycombPosition();
+
     return (
         <div className="fixed inset-0 overflow-hidden">
+            {/* Landing Page Honeycomb Background */}
+            <div
+                className="fixed"
+                style={{
+                    top: 0,
+                    left: 0,
+                    right: 0,
+                    height: '100vh',
+                    width: '100vw',
+                    transform: 'translate(0vw, 0vh)',
+                    zIndex: -1,
+                }}
+            >
+                <StaticHoneycomb
+                    x={honeycombPos.x}
+                    y={honeycombPos.y}
+                    scale={currentPosition + 1 == totalPositions ? 1 : 1.7}
+                    numPoints={10000}
+                />
+            </div>
+
             {/* Navigation Progress Dots */}
             <div className="fixed top-20 right-8 z-50 flex flex-col gap-2">
                 {contentSections.map((_, index) => (
