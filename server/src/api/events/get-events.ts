@@ -1,6 +1,8 @@
-import { GetEventsResponse, eventSchema, getEventsQuerySchema } from '@clubhive/shared';
+import { GetEventsResponse, eventSchema, getEventsQuerySchema, clubSchema } from '@clubhive/shared';
 import { ApiEndpoint, AuthType } from '@/types/api-types';
 import EventController from '@/controllers/event-controller';
+import ClubController from '@/controllers/club-controller';
+import Club from '@/models/club-schema';
 import ClubMembershipController from '@/controllers/club-membership-controller';
 import { serializeRecursive } from '@/utils/db-doc-utils';
 import { z } from 'zod';
