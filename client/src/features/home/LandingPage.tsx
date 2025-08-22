@@ -8,6 +8,7 @@ export function LandingPage() {
     const navigate = useNavigate();
     const [currentPosition, setCurrentPosition] = useState(0);
     const [isTransitioning, setIsTransitioning] = useState(false);
+    const [hasMounted, setHasMounted] = useState(false);
 
     // Content sections positioned at hexagon vertices
     const contentSections = [
@@ -85,6 +86,12 @@ export function LandingPage() {
 
     const totalPositions = 7;
     const hexagonRadius = 1500;
+
+    // Set hasMounted to true after component mounts to trigger hero animations
+    useEffect(() => {
+        const timer = setTimeout(() => setHasMounted(true), 100);
+        return () => clearTimeout(timer);
+    }, []);
 
     const hexagonPositions = [
         // Top-left
@@ -216,6 +223,11 @@ export function LandingPage() {
             {/* Main Content Container */}
             <motion.div
                 className="w-screen h-screen relative"
+                initial={{
+                    x: -hexagonPositions[0].x,
+                    y: -hexagonPositions[0].y,
+                    scale: hexagonPositions[0].scale,
+                }}
                 animate={{
                     x: -currentTransform.x,
                     y: -currentTransform.y,
@@ -236,7 +248,7 @@ export function LandingPage() {
                             key={section.id}
                             section={section}
                             position={position}
-                            isActive={currentPosition === index}
+                            isActive={currentPosition === index && hasMounted}
                             isOverview={currentPosition === totalPositions - 1}
                             navigate={navigate}
                         />
@@ -269,40 +281,6 @@ function ContentSection({ section, position, isActive, isOverview, navigate }: C
         justifyContent: 'center',
     };
 
-    // Original animation variants from scroll-based version
-    const fadeInUp = {
-        initial: { opacity: 0, y: 60 },
-        animate: { opacity: 1, y: 0 },
-        transition: { duration: 0.8, ease: 'easeOut' },
-    };
-
-    const slideInLeft = {
-        initial: { opacity: 0, x: -60 },
-        animate: { opacity: 1, x: 0 },
-        transition: { duration: 0.8, ease: 'easeOut' },
-    };
-
-    const slideInRight = {
-        initial: { opacity: 0, x: 60 },
-        animate: { opacity: 1, x: 0 },
-        transition: { duration: 0.8, ease: 'easeOut' },
-    };
-
-    const staggerContainer = {
-        animate: {
-            transition: {
-                staggerChildren: 0.15,
-                delayChildren: 0.2,
-            },
-        },
-    };
-
-    const scaleOnView = {
-        initial: { opacity: 0, scale: 0.8 },
-        animate: { opacity: 1, scale: 1 },
-        transition: { duration: 0.6, ease: 'easeOut' },
-    };
-
     const renderContent = () => {
         switch (section.type) {
             case 'hero':
@@ -311,14 +289,14 @@ function ContentSection({ section, position, isActive, isOverview, navigate }: C
                         <motion.div
                             className="text-center"
                             initial={false}
-                            animate={isActive ? { opacity: 1, y: 0, scale: 1 } : { opacity: 0.7, y: 40, scale: 0.95 }}
-                            transition={{ duration: 0.6, ease: 'easeOut' }}
+                            animate={isActive ? { opacity: 1, y: 0, scale: 1 } : { opacity: 0.7, y: 60, scale: 0.8 }}
+                            transition={{ duration: 0.8, ease: 'easeOut' }}
                         >
                             <motion.div
                                 className="mb-8"
                                 initial={false}
-                                animate={isActive ? { opacity: 1, scale: 1 } : { opacity: 0.7, scale: 0.9 }}
-                                transition={{ duration: 0.6, ease: 'easeOut' }}
+                                animate={isActive ? { opacity: 1, scale: 1, y: 0 } : { opacity: 0.7, scale: 0.6, y: -40 }}
+                                transition={{ duration: 0.8, delay: 0.2, ease: 'easeOut' }}
                             >
                                 <div className="w-24 h-24 mx-auto mb-6 bg-primary rounded-2xl flex items-center justify-center text-on-primary text-3xl font-bold shadow-lg">
                                     CH
@@ -328,8 +306,8 @@ function ContentSection({ section, position, isActive, isOverview, navigate }: C
                             <motion.h1
                                 className="text-5xl md:text-7xl font-bold text-on-background mb-6"
                                 initial={false}
-                                animate={isActive ? { opacity: 1, y: 0 } : { opacity: 0.7, y: 20 }}
-                                transition={{ duration: 0.6, ease: 'easeOut' }}
+                                animate={isActive ? { opacity: 1, y: 0, scale: 1 } : { opacity: 0.7, y: 60, scale: 0.8 }}
+                                transition={{ duration: 0.8, delay: 0.4, ease: 'easeOut' }}
                             >
                                 Welcome to <span className="text-primary">clubhive</span>
                             </motion.h1>
@@ -337,8 +315,8 @@ function ContentSection({ section, position, isActive, isOverview, navigate }: C
                             <motion.p
                                 className="text-xl md:text-2xl text-on-background-variant mb-12 max-w-3xl mx-auto"
                                 initial={false}
-                                animate={isActive ? { opacity: 1, y: 0 } : { opacity: 0.7, y: 20 }}
-                                transition={{ duration: 0.6, ease: 'easeOut' }}
+                                animate={isActive ? { opacity: 1, y: 0 } : { opacity: 0.7, y: 40 }}
+                                transition={{ duration: 0.8, delay: 0.6, ease: 'easeOut' }}
                             >
                                 The ultimate platform for student organizations. Discover clubs, manage events, and build lasting
                                 communities that matter.
@@ -347,8 +325,8 @@ function ContentSection({ section, position, isActive, isOverview, navigate }: C
                             <motion.div
                                 className="flex flex-col sm:flex-row gap-4 justify-center"
                                 initial={false}
-                                animate={isActive ? { opacity: 1, y: 0 } : { opacity: 0.7, y: 20 }}
-                                transition={{ duration: 0.6, ease: 'easeOut' }}
+                                animate={isActive ? { opacity: 1, y: 0, scale: 1 } : { opacity: 0.7, y: 40, scale: 0.8 }}
+                                transition={{ duration: 0.8, delay: 0.8, ease: 'easeOut' }}
                             >
                                 <button
                                     onClick={() => navigate('/signup')}
