@@ -1,5 +1,5 @@
-import React, { useEffect, useState, useRef, useCallback } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
+import React, { useEffect, useState, useCallback } from 'react';
+import { motion } from 'framer-motion';
 import { Users, Calendar, Target, Star, ArrowRight, ChevronDown } from 'lucide-react';
 import { useNavigate } from 'react-router';
 
@@ -8,42 +8,114 @@ export function LandingPage() {
     const [currentPosition, setCurrentPosition] = useState(0);
     const [isTransitioning, setIsTransitioning] = useState(false);
 
-    // Total positions: 6 hexagon vertices + 1 overview = 7 positions
-    const totalPositions = 7;
+    // Content sections positioned at hexagon vertices
+    const contentSections = [
+        // Position 0: Hero
+        {
+            id: 'hero',
+            title: 'Welcome to clubhive',
+            subtitle: 'The ultimate platform for student organizations',
+            content: 'Discover clubs, manage events, and build lasting communities that matter.',
+            type: 'hero',
+        },
+        // Position 1: Mission
+        {
+            id: 'mission',
+            title: 'Our Mission',
+            subtitle: 'Empowering student organizations',
+            content:
+                'We believe that student organizations are the heart of campus life. Our mission is to empower every club and student with the tools they need to create meaningful connections.',
+            type: 'text',
+        },
+        // Position 2: Features
+        {
+            id: 'features',
+            title: 'Key Features',
+            subtitle: 'Everything you need',
+            content: [
+                { icon: Users, title: 'Join Communities', description: 'Connect with like-minded students' },
+                { icon: Calendar, title: 'Discover Events', description: 'Never miss exciting activities' },
+                { icon: Target, title: 'Manage Clubs', description: 'Streamline operations' },
+            ],
+            type: 'features',
+        },
+        // Position 3: Stats
+        {
+            id: 'stats',
+            title: 'Join the Movement',
+            subtitle: 'Thousands of students trust clubhive',
+            content: [
+                { number: '500+', label: 'Active Clubs' },
+                { number: '15K+', label: 'Students Connected' },
+                { number: '2K+', label: 'Events Hosted' },
+                { number: '50+', label: 'Universities' },
+            ],
+            type: 'stats',
+        },
+        // Position 4: Testimonials
+        {
+            id: 'testimonials',
+            title: 'What Students Say',
+            subtitle: 'Real experiences from our community',
+            content: [
+                { name: 'Sarah Chen', role: 'CS Club President', text: 'Clubhive has transformed how we manage our club.', avatar: 'SC' },
+                { name: 'Marcus Johnson', role: 'Photography Member', text: 'My go-to platform for campus activities.', avatar: 'MJ' },
+                { name: 'Emily Rodriguez', role: 'Drama Officer', text: '300% increase in attendance since using Clubhive.', avatar: 'ER' },
+            ],
+            type: 'testimonials',
+        },
+        // Position 5: CTA
+        {
+            id: 'cta',
+            title: 'Ready to Start?',
+            subtitle: 'Transform your campus experience',
+            content: 'Join thousands of students who are already making the most of their college years with clubhive.',
+            type: 'cta',
+        },
+        // Position 6: Overview
+        {
+            id: 'overview',
+            title: 'Complete Platform',
+            subtitle: 'Everything connected',
+            content: 'Discover how all features work together to create the ultimate student organization platform.',
+            type: 'overview',
+        },
+    ];
 
-    // Hexagon vertex positions (6 vertices around a circle)
-    const hexagonRadius = 1200; // Increased distance from center for more spread
+    const totalPositions = 7;
+    const hexagonRadius = 1500;
+
     const hexagonPositions = [
-        // Position 0: Top-left vertex (Hero) - Start position, not center
+        // Top-left
         { x: -hexagonRadius * Math.cos(Math.PI / 6), y: -hexagonRadius * Math.sin(Math.PI / 6), scale: 1 },
-        // Position 1: Top vertex (Mission)
-        { x: 0, y: -hexagonRadius, scale: 1 },
-        // Position 2: Top-right vertex (Features)
-        { x: hexagonRadius * Math.cos(Math.PI / 6), y: -hexagonRadius * Math.sin(Math.PI / 6), scale: 1 },
-        // Position 3: Bottom-right vertex (Stats)
-        { x: hexagonRadius * Math.cos(Math.PI / 6), y: hexagonRadius * Math.sin(Math.PI / 6), scale: 1 },
-        // Position 4: Bottom vertex (Testimonials)
-        { x: 0, y: hexagonRadius, scale: 1 },
-        // Position 5: Bottom-left vertex (CTA)
+        // Bottom-left
         { x: -hexagonRadius * Math.cos(Math.PI / 6), y: hexagonRadius * Math.sin(Math.PI / 6), scale: 1 },
-        // Position 6: Overview (zoom out to see all from center)
-        { x: 0, y: 0, scale: 0.25 },
+        // Bottom
+        { x: 0, y: hexagonRadius, scale: 1 },
+        // Bottom-right
+        { x: hexagonRadius * Math.cos(Math.PI / 6), y: hexagonRadius * Math.sin(Math.PI / 6), scale: 1 },
+        // Top-right
+        { x: hexagonRadius * Math.cos(Math.PI / 6), y: -hexagonRadius * Math.sin(Math.PI / 6), scale: 1 },
+        // Top
+        { x: 0, y: -hexagonRadius, scale: 1 },
+        // Overview
+        { x: 0, y: 0, scale: 0.2 },
     ];
 
     // Handle navigation between positions
     const handleNext = useCallback(() => {
-        if (isTransitioning) return;
+        if (isTransitioning || currentPosition + 1 == totalPositions) return;
         setIsTransitioning(true);
         setCurrentPosition(prev => (prev + 1) % totalPositions);
         setTimeout(() => setIsTransitioning(false), 1000);
-    }, [isTransitioning, totalPositions]);
+    }, [currentPosition, isTransitioning]);
 
     const handlePrev = useCallback(() => {
-        if (isTransitioning) return;
+        if (isTransitioning || currentPosition == 0) return;
         setIsTransitioning(true);
         setCurrentPosition(prev => (prev - 1 + totalPositions) % totalPositions);
         setTimeout(() => setIsTransitioning(false), 1000);
-    }, [isTransitioning, totalPositions]);
+    }, [currentPosition, isTransitioning]);
 
     // Keyboard navigation
     useEffect(() => {
@@ -76,81 +148,6 @@ export function LandingPage() {
         return () => window.removeEventListener('wheel', handleWheel);
     }, [handleNext, handlePrev]);
 
-    // Content sections positioned at hexagon vertices
-    const contentSections = [
-        // Position 0: Hero (Center)
-        {
-            id: 'hero',
-            title: 'Welcome to clubhive',
-            subtitle: 'The ultimate platform for student organizations',
-            content: 'Discover clubs, manage events, and build lasting communities that matter.',
-            type: 'hero',
-        },
-        // Position 1: Mission (Top vertex)
-        {
-            id: 'mission',
-            title: 'Our Mission',
-            subtitle: 'Empowering student organizations',
-            content:
-                'We believe that student organizations are the heart of campus life. Our mission is to empower every club and student with the tools they need to create meaningful connections.',
-            type: 'text',
-        },
-        // Position 2: Features (Top-right vertex)
-        {
-            id: 'features',
-            title: 'Key Features',
-            subtitle: 'Everything you need',
-            content: [
-                { icon: Users, title: 'Join Communities', description: 'Connect with like-minded students' },
-                { icon: Calendar, title: 'Discover Events', description: 'Never miss exciting activities' },
-                { icon: Target, title: 'Manage Clubs', description: 'Streamline operations' },
-            ],
-            type: 'features',
-        },
-        // Position 3: Stats (Bottom-right vertex)
-        {
-            id: 'stats',
-            title: 'Join the Movement',
-            subtitle: 'Thousands of students trust clubhive',
-            content: [
-                { number: '500+', label: 'Active Clubs' },
-                { number: '15K+', label: 'Students Connected' },
-                { number: '2K+', label: 'Events Hosted' },
-                { number: '50+', label: 'Universities' },
-            ],
-            type: 'stats',
-        },
-        // Position 4: Testimonials (Bottom vertex)
-        {
-            id: 'testimonials',
-            title: 'What Students Say',
-            subtitle: 'Real experiences from our community',
-            content: [
-                { name: 'Sarah Chen', role: 'CS Club President', text: 'Clubhive has transformed how we manage our club.', avatar: 'SC' },
-                { name: 'Marcus Johnson', role: 'Photography Member', text: 'My go-to platform for campus activities.', avatar: 'MJ' },
-                { name: 'Emily Rodriguez', role: 'Drama Officer', text: '300% increase in attendance since using Clubhive.', avatar: 'ER' },
-            ],
-            type: 'testimonials',
-        },
-        // Position 5: CTA (Bottom-left vertex)
-        {
-            id: 'cta',
-            title: 'Ready to Start?',
-            subtitle: 'Transform your campus experience',
-            content: 'Join thousands of students who are already making the most of their college years with clubhive.',
-            type: 'cta',
-        },
-        // Position 6: Overview (Zoom out)
-        {
-            id: 'overview',
-            title: 'Complete Platform',
-            subtitle: 'Everything connected',
-            content: 'Discover how all features work together to create the ultimate student organization platform.',
-            type: 'overview',
-        },
-    ];
-
-    // Current viewport transform
     const currentTransform = hexagonPositions[currentPosition];
 
     return (
