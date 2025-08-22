@@ -1,28 +1,51 @@
 import { TagType } from '@clubhive/shared/src/types/tag-types';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { UserClubData } from '@clubhive/shared';
+import { editClubInfo } from '../../../hooks/editClubInfo';
 
 interface OfficerInfoProps {
     club: UserClubData;
 }
 
 export function OfficerInfo({ club }: OfficerInfoProps) {
-    // backend in progress
-    // const [FormData, setFormData] = useState({
-    //     name: club.name,
-    //     tagline: club.tagline,
-    //     description: club.description || '',
-    //     url: club.url || '',
-    //     joinRequirements: club.joinRequirements || '',
-    //     status: club.status,
-    //     socials: {
-    //         website: club.socials.website || '',
-    //         instagram: club.socials.instagram || '',
-    //         discord: club.socials.discord || '',
-    //     },
-    //     tags: club.tags.map(tag=>tag.text),
-    // clubLogo: club.clubLogo?.url || '',
-    // )}
+    const [clubData, setClubData] = useState(null);
+    const [loading, setLoading] = useState(true);
+
+    useEffect(() => {
+        const fetchClub = async () => {
+            try {
+                const response = await fetch(`/api/clubs/${club._id}`);
+                const data = await response.json();
+
+                setClubData({
+                    name: data.club.name,
+                    tagline: data.club.tagline,
+                    description: data.club.description || '',
+                    url: data.club.url || '',
+                    socials: {
+                        website: data.club.socials?.website || '',
+                        discord: data.club.socials?.discord || '',
+                        instagram: data.club.socials?.instagram || '',
+                    },
+                    tags: data.club.tags.map(tag => tag.text),
+                    clubLogo: data.club.clubLogo?.url || '',
+                    pictures: data.club.pictures?.map(pic => pic.url) || [],
+                });
+            } catch (error) {
+                console.error('Error fetching club:', error);
+            } finally {
+                setLoading(false);
+            }
+        };
+
+        fetchClub();
+    }, [club._id]);
+
+    const { formData, newTag, setNewTag, handlers } = editClubInfo(clubData ? clubData : null);
+
+    if (loading) return <div>Loading...</div>;
+    if (!clubData) return <div>Club not found</div>;
+
     return (
         <div className="min-h-screen bg-gray-100 p-6">
             <div className="grid grid-cols-2 gap-6">
@@ -36,10 +59,20 @@ export function OfficerInfo({ club }: OfficerInfoProps) {
                         <label className="block text-sm font-medium mb-1">Tagline</label>
                         <input type="text" className="w-full p-2 border rounded" defaultValue={club.tagline} />
                     </div>
+                    <div>
+                        <label className="block text-sm font-medium mb-1">Club Status</label>
+                        <input type="text" className="w-full p-2 border rounded" defaultValue={club.status} />
+                    </div>
                     {club.description && (
                         <div>
                             <label className="block text-sm font-medium mb-1">Description</label>
                             <textarea className="w-full p-2 border rounded" rows={4} defaultValue={club.description} />
+                        </div>
+                    )}
+                    {club.joinRequirements && (
+                        <div>
+                            <label className="block text-sm font-medium mb-1">Membership Requirements</label>
+                            <input type="text" className="w-full p-2 border rounded" defaultValue={club.joinRequirements} />
                         </div>
                     )}
                     {club.url && (
