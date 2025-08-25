@@ -16,6 +16,11 @@ export function SignUp() {
     const [year, setYear] = useState('');
     const [emailError, setEmailError] = useState('');
 
+    const maxNameLength = 50;
+    const maxEmailLength = 100;
+    const maxPasswordLength = 100;
+    const maxMajorLength = 75;
+
     const navigate = useNavigate();
     const { schools } = useSchoolData();
 
@@ -177,7 +182,11 @@ export function SignUp() {
                                     name="fullName"
                                     type="text"
                                     value={fullName}
-                                    onChange={e => setFullName(e.target.value)}
+                                    onChange={e => {
+                                        if (e.target.value.length <= maxEmailLength) {
+                                            setFullName(e.target.value);
+                                        }
+                                    }}
                                     className={inputClass}
                                 />
                             </div>
@@ -192,8 +201,10 @@ export function SignUp() {
                                     type="email"
                                     value={email}
                                     onChange={e => {
-                                        setEmail(e.target.value);
-                                        validateEmail(e.target.value);
+                                        if (e.target.value.length <= maxEmailLength) {
+                                            setEmail(e.target.value);
+                                            validateEmail(e.target.value);
+                                        }
                                     }}
                                     className={inputClass + ' ' + (emailError ? 'border-red-500' : '')}
                                 />
@@ -209,7 +220,11 @@ export function SignUp() {
                                     name="password"
                                     type="password"
                                     value={password}
-                                    onChange={e => setPassword(e.target.value)}
+                                    onChange={e => {
+                                        if (e.target.value.length <= maxPasswordLength) {
+                                            setPassword(e.target.value);
+                                        }
+                                    }}
                                     className={inputClass + ' ' + (errors.password ? 'border-red-500' : '')}
                                 />
                             </div>
@@ -223,7 +238,11 @@ export function SignUp() {
                                     name="confirmPassword"
                                     type="password"
                                     value={confirmPassword}
-                                    onChange={e => setConfirmPassword(e.target.value)}
+                                    onChange={e => {
+                                        if (e.target.value.length <= maxPasswordLength) {
+                                            setConfirmPassword(e.target.value);
+                                        }
+                                    }}
                                     className={inputClass + ' ' + (errors.confirmPassword ? 'border-red-500' : '')}
                                 />
                             </div>
@@ -256,9 +275,11 @@ export function SignUp() {
                                     type="text"
                                     value={majorInput}
                                     onChange={e => {
-                                        setMajorInput(e.target.value);
-                                        setShowMajorDropdown(true);
-                                        setMajor(e.target.value);
+                                        if (e.target.value.length <= maxMajorLength) {
+                                            setMajorInput(e.target.value);
+                                            setShowMajorDropdown(true);
+                                            setMajor(e.target.value);
+                                        }
                                     }}
                                     onFocus={() => setShowMajorDropdown(true)}
                                     onBlur={() => setTimeout(() => setShowMajorDropdown(false), 200)}
