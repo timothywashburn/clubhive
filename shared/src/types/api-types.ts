@@ -30,14 +30,7 @@ export interface AuthInfo {
     userId: string;
 }
 
-export type ApiSuccessResponse<TRes = unknown> = TRes & {
-    success: true;
-};
-
-// export interface ApiSuccessResponse<TRes = unknown> {
-//     success: true;
-//     data: TRes;
-// }
+export type ApiSuccessResponse<TRes = unknown> = TRes extends undefined ? { success: true } : TRes & { success: true };
 
 export interface ApiErrorResponse {
     success: false;

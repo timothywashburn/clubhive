@@ -50,6 +50,7 @@ import { uploadImageEndpoint } from '@/api/images/create-image';
 import { deleteImageEndpoint } from '@/api/images/delete-image';
 import { getImageEndpoint } from '@/api/images/get-image';
 import { leaveMembershipEndpoint } from '@/api/memberships/leave-membership';
+import { joinMembershipEndpoint } from '@/api/memberships/join-membership';
 
 export default class ApiManager {
     private static instance: ApiManager;
@@ -123,6 +124,7 @@ export default class ApiManager {
 
         // Membership endpoints
         this.addEndpoint(leaveMembershipEndpoint);
+        this.addEndpoint(joinMembershipEndpoint);
         this.addEndpoint(getClubMembersEndpoint);
         this.addEndpoint(updateMemberRoleEndpoint);
         this.addEndpoint(removeMemberEndpoint);
