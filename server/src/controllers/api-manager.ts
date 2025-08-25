@@ -35,6 +35,7 @@ import { updateSchoolEndpoint } from '@/api/schools/update-school';
 import { deleteSchoolEndpoint } from '@/api/schools/delete-school';
 import { getMyClubsEndpoint } from '@/api/me/clubs';
 import { getMyEventsEndpoint } from '@/api/me/events';
+import { getMeEndpoint } from '@/api/me/get-me';
 import { getClubMembersEndpoint } from '@/api/memberships/get-members';
 import { updateMemberRoleEndpoint } from '@/api/memberships/update-members';
 import { removeMemberEndpoint } from '@/api/memberships/delete-member';
@@ -110,6 +111,7 @@ export default class ApiManager {
         this.addEndpoint(deleteNotificationEndpoint);
 
         // Me endpoints
+        this.addEndpoint(getMeEndpoint);
         this.addEndpoint(getMyClubsEndpoint);
         this.addEndpoint(getMyEventsEndpoint);
         this.addEndpoint(deleteAccountEndpoint);

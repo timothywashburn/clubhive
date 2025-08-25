@@ -11,7 +11,8 @@ export function UnifiedNavigation(props: UnifiedNavigationProps) {
     const [isMenuOpen, setIsMenuOpen] = useState(false);
     const location = useLocation();
 
-    const { isAuthenticated } = useAuthStore();
+    const { isAuthenticated, user } = useAuthStore();
+    console.log(user);
 
     const style = props.style || {};
     const isAboutPage = location.pathname === '/about';
@@ -58,6 +59,7 @@ export function UnifiedNavigation(props: UnifiedNavigationProps) {
             frozenPosition,
             isTransitioning,
             style,
+            user,
         });
     } else {
         return renderTabNavigation({
@@ -161,6 +163,7 @@ function renderSiteNavigation({
     frozenPosition,
     isTransitioning,
     style,
+    user,
 }: any) {
     return (
         <nav
@@ -207,7 +210,7 @@ function renderSiteNavigation({
 
                     {/* Right Content */}
                     <div className="flex items-center space-x-4">
-                        {props.toggleSiteNavType && (
+                        {props.toggleSiteNavType && user?.admin && (
                             <button
                                 onClick={props.toggleSiteNavType}
                                 className="p-2 rounded-md bg-secondary-container hover:bg-primary-container transition-colors cursor-pointer"

@@ -43,6 +43,11 @@ const schema = new Schema(
             enum: Object.values(Year),
             required: true,
         },
+        admin: {
+            type: Boolean,
+            required: true,
+            default: false,
+        },
     },
     { timestamps: true }
 );

@@ -21,6 +21,7 @@ export const userSchema = z.object({
     major: z.string(),
     educationType: z.enum([EducationType.UNDERGRADUATE, EducationType.GRADUATE]),
     year: z.enum([Year.FIRST, Year.SECOND, Year.THIRD, Year.FOURTH, Year.OVER_FOUR]),
+    admin: z.boolean(),
     createdAt: z.string(),
     updatedAt: z.string(),
 });
