@@ -1,9 +1,9 @@
 import { ApiEndpoint, AuthType } from '@/types/api-types';
-import { CreateMembershipRequest, CreateMembershipResponse } from '@clubhive/shared';
+import { CreateMembershipRequest } from '@clubhive/shared';
 import ClubMembershipController from '@/controllers/club-membership-controller';
 
 // endpoint for creating regular membership (not owner or officer)
-export const joinMembershipEndpoint: ApiEndpoint<CreateMembershipRequest, CreateMembershipResponse> = {
+export const joinMembershipEndpoint: ApiEndpoint<CreateMembershipRequest, any> = {
     path: '/api/memberships/:clubId',
     method: 'post',
     auth: AuthType.VERIFIED_EMAIL,

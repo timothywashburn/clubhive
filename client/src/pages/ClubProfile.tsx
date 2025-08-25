@@ -52,11 +52,7 @@ export function ClubProfile() {
                     </button>
                 </div>
 
-                {/* Join Club button*
-                <div className="flex justify-end mb-5">
-                    <button className="bg-primary text-on-primary px-4 py-2 rounded-full hover:bg-primary/90 font-medium">Join Club</button>
-                </div> */}
-
+                {/* Join Club Button */}
                 <div className="flex justify-end mb-5">
                     <JoinClubButton clubId={club._id} onJoinSuccess={() => {}} />
                 </div>
