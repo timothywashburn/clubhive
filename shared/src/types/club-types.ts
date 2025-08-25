@@ -92,17 +92,17 @@ export const createClubRequestSchema = z.object({
 });
 
 export const updateClubRequestSchema = z.object({
-    school: z.string().min(1, 'School is required'),
-    name: z.string().min(1, 'Club name is required').max(50, 'Club name must be 50 characters or less'),
-    tagline: z.string().min(1, 'Tagline is required').max(50, 'Tagline must be 50 characters or less').optional(),
+    school: z.string().optional(),
+    name: z.string().max(50, 'Club name must be 50 characters or less').optional(),
+    tagline: z.string().max(50, 'Tagline must be 50 characters or less').optional(),
     description: z.string().max(1000, 'Description must be 1000 characters or less').optional(),
     url: z
         .string()
-        .min(1, 'URL is required')
         .regex(/^[a-zA-Z0-9_-]+$/, 'URL can only contain letters, numbers, hyphens, and underscores')
-        .max(50, 'URL must be 50 characters or less'),
+        .max(50, 'URL must be 50 characters or less')
+        .optional(),
     joinRequirements: z.string().optional(),
-    status: z.enum(ClubStatus),
+    status: z.enum(ClubStatus).optional(),
     socials: z
         .object({
             website: z
