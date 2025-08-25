@@ -1,6 +1,6 @@
 import { useState, useMemo } from 'react';
-import { AdminTable, AdminTableColumn, AdminTableItem, AdminToolbar } from '../../components/admin';
-import { useSchoolData } from '../../hooks/fetchSchools';
+import { AdminTable, AdminTableColumn, AdminTableItem, AdminToolbar } from '../components';
+import { useSchoolData } from '../../../hooks/useSchoolData.ts';
 
 const columns: AdminTableColumn[] = [
     {

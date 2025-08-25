@@ -1,5 +1,5 @@
-import { useClubTagsData } from '../hooks/fetchClubTags';
-import { useSchoolData } from '../hooks/fetchSchools';
+import { useClubTagsData } from '../hooks/useClubTagsData.ts';
+import { useSchoolData } from '../hooks/useSchoolData.ts';
 import React, { useState, useEffect } from 'react';
 import { TagSelectionPopup } from '../features/find-clubs/components/TagsSelectionPopup';
 import type { TagData } from '@clubhive/shared';

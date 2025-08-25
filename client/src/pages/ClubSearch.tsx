@@ -1,20 +1,20 @@
 import { useState } from 'react';
 import { Link } from 'react-router';
-import { useClubData } from '../hooks/fetchClubs';
+import { useClubsData } from '../hooks/useClubsData.ts';
 import type { ClubData } from '@clubhive/shared';
 import type { TagData } from '@clubhive/shared';
-import { useClubTagsData } from '../hooks/fetchClubTags';
+import { useClubTagsData } from '../hooks/useClubTagsData.ts';
 import ClubCardSmall from '../features/find-clubs/components/ClubCardSmall';
 import FilterTagsButton from '../features/find-clubs/components/FilterTagsButton';
 import { getTagColor } from '../features/find-clubs/utils/TagColors';
 import SocialLinks from '../features/find-clubs/components/SocialLinks';
-import { useImageData } from '../hooks/getImageFile';
+import { useImageData } from '../hooks/useImageData.ts';
 
 export function Clubs() {
     const [searchTerm, setSearchTerm] = useState('');
     const [selectedClub, setSelectedClub] = useState<ClubData | null>(null);
     const [selectedTags, setSelectedTags] = useState<TagData[]>([]);
-    const { clubs, isLoading, error } = useClubData();
+    const { clubs, isLoading, error } = useClubsData();
     const { tags } = useClubTagsData();
 
     // this is how you get the club logo image data for the selected club

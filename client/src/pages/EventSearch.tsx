@@ -2,7 +2,7 @@ import { Link } from 'react-router';
 import React, { useState, useRef, useEffect } from 'react';
 import TagFilterPopover from '../features/find-clubs/components/FilterTagsButton';
 import { ApiResponseBody, EventData, GetEventsResponse, isSuccess, TagData } from '@clubhive/shared';
-import { useEventTagsData } from '../hooks/fetchEventTags';
+import { useEventTagsData } from '../hooks/useEventTagsData.ts';
 import { getTagColor } from '../features/find-clubs/utils/TagColors';
 import { useToast } from '../hooks/useToast.ts';
 import WebDatePicker from '../components/date-picker/WebDatePicker';
@@ -67,7 +67,7 @@ function TimeFilter({
     );
 }
 
-export function Events() {
+export function EventSearch() {
     const [searchTerm, setSearchTerm] = useState('');
     const { tags } = useEventTagsData();
     const [selectedTags, setSelectedTags] = useState<TagData[]>([]);

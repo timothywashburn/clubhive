@@ -35,6 +35,7 @@ import { updateSchoolEndpoint } from '@/api/schools/update-school';
 import { deleteSchoolEndpoint } from '@/api/schools/delete-school';
 import { getMyClubsEndpoint } from '@/api/me/clubs';
 import { getMyEventsEndpoint } from '@/api/me/events';
+import { getMeEndpoint } from '@/api/me/get-me';
 import { getClubMembersEndpoint } from '@/api/memberships/get-members';
 import { updateMemberRoleEndpoint } from '@/api/memberships/update-members';
 import { removeMemberEndpoint } from '@/api/memberships/delete-member';
@@ -50,6 +51,8 @@ import { uploadImageEndpoint } from '@/api/images/create-image';
 import { deleteImageEndpoint } from '@/api/images/delete-image';
 import { getImageEndpoint } from '@/api/images/get-image';
 import { leaveMembershipEndpoint } from '@/api/memberships/leave-membership';
+import { deleteAccountEndpoint } from '@/api/me/delete-account';
+import { joinMembershipEndpoint } from '@/api/memberships/join-membership';
 
 export default class ApiManager {
     private static instance: ApiManager;
@@ -108,8 +111,10 @@ export default class ApiManager {
         this.addEndpoint(deleteNotificationEndpoint);
 
         // Me endpoints
+        this.addEndpoint(getMeEndpoint);
         this.addEndpoint(getMyClubsEndpoint);
         this.addEndpoint(getMyEventsEndpoint);
+        this.addEndpoint(deleteAccountEndpoint);
 
         // Venue endpoints
         this.addEndpoint(getDailyVenueAvailabilityEndpoint);
@@ -123,6 +128,7 @@ export default class ApiManager {
 
         // Membership endpoints
         this.addEndpoint(leaveMembershipEndpoint);
+        this.addEndpoint(joinMembershipEndpoint);
         this.addEndpoint(getClubMembersEndpoint);
         this.addEndpoint(updateMemberRoleEndpoint);
         this.addEndpoint(removeMemberEndpoint);

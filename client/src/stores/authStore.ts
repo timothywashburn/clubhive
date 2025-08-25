@@ -8,6 +8,7 @@ interface User {
     major: string;
     educationType: string;
     year: string;
+    admin: boolean;
 }
 
 interface AuthError {
@@ -36,6 +37,26 @@ interface AuthStore {
     checkToken: () => Promise<void>;
 }
 
+const fetchUserData = async (): Promise<User | null> => {
+    try {
+        const userResponse = await fetch('/api/me', {
+            method: 'GET',
+            credentials: 'include',
+        });
+
+        if (userResponse.ok) {
+            const userResult = await userResponse.json();
+            if (userResult.success) {
+                return userResult.user;
+            }
+        }
+        return null;
+    } catch (error) {
+        console.error('Error fetching user data:', error);
+        return null;
+    }
+};
+
 export const useAuthStore = create<AuthStore>((set, get) => ({
     isAuthenticated: false,
     isInitialized: false,
@@ -52,10 +73,11 @@ export const useAuthStore = create<AuthStore>((set, get) => ({
             if (response.ok) {
                 const result = await response.json();
                 if (result.success) {
+                    const user = await fetchUserData();
                     set({
                         isAuthenticated: true,
                         isInitialized: true,
-                        user: null, // User data can be fetched separately when needed
+                        user,
                         errors: {},
                     });
                     return;
@@ -94,9 +116,11 @@ export const useAuthStore = create<AuthStore>((set, get) => ({
             const result = await response.json();
 
             if (result.success) {
+                // Fetch user data after successful sign-in
+                const user = await fetchUserData();
                 set({
                     isAuthenticated: true,
-                    user: result.user,
+                    user,
                     errors: {},
                 });
             } else {
@@ -199,9 +223,10 @@ export const useAuthStore = create<AuthStore>((set, get) => ({
         const result = await response.json();
 
         if (result.success) {
+            const user = await fetchUserData();
             set({
                 isAuthenticated: true,
-                user: null,
+                user,
                 errors: {},
             });
         }

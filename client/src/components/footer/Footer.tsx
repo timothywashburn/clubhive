@@ -29,9 +29,7 @@ export const Footer: React.FC = () => {
     return (
         <div style={{ zIndex: 1 }}>
             <ChangelogModal isOpen={isChangelogOpen} onClose={() => setIsChangelogOpen(false)} />
-            <footer
-                className={`${isAboutPage ? 'bg-black/20 backdrop-blur-md border-t border-white/10' : 'bg-surface border-t border-divider'}`}
-            >
+            <footer className={`bg-surface/20 backdrop-blur-[4px] border-t border-outline/50 flex-shrink-0`}>
                 <div className="max-w-7xl mx-auto px-6 lg:px-8 py-6">
                     <div className="flex flex-col lg:flex-row justify-between items-center gap-4">
                         {/* Left Content */}

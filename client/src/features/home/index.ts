@@ -1,3 +1,3 @@
-export { AuthenticatedHome } from './AuthenticatedHome';
-export { LandingPage } from './LandingPage';
+export { HomePage } from './HomePage.tsx';
+export { LandingPage } from '../landing/LandingPage.tsx';
 export { EmptyEventState } from './components/EmptyEventState';

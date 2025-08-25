@@ -1,8 +1,8 @@
 import { useState, useEffect } from 'react';
 import { Link } from 'react-router';
 import { useNavigate } from 'react-router';
-import { useAuthStore } from '../stores/authStore';
-import { useToast } from '../hooks/useToast';
+import { useAuthStore } from '../../stores/authStore.ts';
+import { useToast } from '../../hooks/useToast.ts';
 
 export function SignIn() {
     const [email, setEmail] = useState('');

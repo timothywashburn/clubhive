@@ -1,9 +1,9 @@
 import React from 'react';
 import { BaseImageUploader } from './BaseImageUploader';
-import { updateClub } from '../../hooks/updateClub';
+import { updateClub } from '../../utils/updateClub.ts';
 import type { ImageData } from '@clubhive/shared';
-import { useClubData } from '../../hooks/fetchClub';
-import { useDeleteImage } from '../../hooks/deleteImageFile';
+import { useClubData } from '../../hooks/useClubData.ts';
+import { useDeleteImage } from '../../hooks/useDeleteImageFile.ts';
 
 // Use this component to upload gallery pictures for a club
 // It will completely replace the club's pictures array with the uploaded images

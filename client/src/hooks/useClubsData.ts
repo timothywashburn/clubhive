@@ -9,7 +9,7 @@ const getRequestOptions = () => ({
     },
 });
 
-export const useClubData = () => {
+export const useClubsData = () => {
     const [clubs, setClubs] = useState<ClubWithCountsData[]>([]);
     const [isLoading, setIsLoading] = useState(true);
     const [isRefreshing, setIsRefreshing] = useState(false);

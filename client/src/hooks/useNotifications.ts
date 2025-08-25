@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { NotifDisplayData } from '@clubhive/shared';
 import { useToast } from './useToast';
 
-export const useNotifs = () => {
+export const useNotifications = () => {
     const [notifs, setNotifs] = useState<NotifDisplayData[]>([]);
     const [isLoading, setIsLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);

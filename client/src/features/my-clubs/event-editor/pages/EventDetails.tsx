@@ -1,7 +1,7 @@
 import { EventData, EventType } from '@clubhive/shared';
 import { DeleteDangerZone } from '../../../../components/DangerZone';
-import { WebDateTimeRangePicker } from '../../../../components/date-picker';
 import React, { useState } from 'react';
+import WebDateTimeRangePicker from '../../../../components/date-picker/WebDateTimeRangePicker.tsx';
 
 interface EventDetailsProps {
     event: EventData;

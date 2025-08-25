@@ -1,9 +1,10 @@
 import { useEffect, useState } from 'react';
 import { useNavigate, useParams, Link } from 'react-router';
-import { getTagColor } from '../features/find-clubs/utils/TagColors';
-import { useToast } from '../hooks/useToast';
+import { getTagColor } from '../find-clubs/utils/TagColors.ts';
+import { useToast } from '../../hooks/useToast.ts';
 import { clubWithEventsAndCountsSchema } from '@clubhive/shared';
 import { ClubWithEventsData } from '@clubhive/shared';
+import JoinClubButton from './components/JoinClubButton.tsx';
 
 export function ClubProfile() {
     const { url } = useParams<{ url: string }>();
@@ -51,9 +52,9 @@ export function ClubProfile() {
                     </button>
                 </div>
 
-                {/* Join Club button*/}
+                {/* Join Club Button */}
                 <div className="flex justify-end mb-5">
-                    <button className="bg-primary text-on-primary px-4 py-2 rounded-full hover:bg-primary/90 font-medium">Join Club</button>
+                    <JoinClubButton clubId={club._id} onJoinSuccess={() => {}} />
                 </div>
 
                 {/* Club Profile header*/}

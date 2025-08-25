@@ -1,12 +1,12 @@
-import { ApiEndpoint, ApiRequest, ApiResponse, AuthType } from '@/types/api-types';
+import { ApiEndpoint, AuthType } from '@/types/api-types';
 import { ErrorCode } from '@clubhive/shared';
 import AuthManager from '@/managers/auth-manager';
 
-export const signOutEndpoint: ApiEndpoint<void, void> = {
+export const signOutEndpoint: ApiEndpoint<undefined, undefined> = {
     method: 'post',
     path: '/api/user/sign-out',
     auth: AuthType.NONE,
-    handler: async (req: ApiRequest, res: ApiResponse) => {
+    handler: async (req, res) => {
         try {
             AuthManager.clearRefreshTokenCookie(res);
 

@@ -1,5 +1,5 @@
 import React from 'react';
-import { useImageData } from '../hooks/getImageFile';
+import { useImageData } from '../hooks/useImageData.ts';
 
 interface ClubLogoProps {
     clubLogo?: string | null;

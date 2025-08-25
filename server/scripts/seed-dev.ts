@@ -101,6 +101,7 @@ async function seed() {
             major: 'Computer Science',
             educationType: EducationType.UNDERGRADUATE,
             year: Year.THIRD,
+            admin: true,
         },
         {
             name: 'Test User 2',
@@ -108,6 +109,7 @@ async function seed() {
             major: 'Data Science',
             educationType: EducationType.GRADUATE,
             year: Year.FIRST,
+            admin: true,
         },
         {
             name: 'Alice Johnson',

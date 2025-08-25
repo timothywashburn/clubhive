@@ -1,7 +1,7 @@
 import React from 'react';
 import type { TagData } from '@clubhive/shared';
 import { getTagColor } from '../utils/TagColors';
-import { useImageData } from '../../../hooks/getImageFile';
+import { useImageData } from '../../../hooks/useImageData.ts';
 type ClubCardProps = {
     name: string;
     tagline: string;
