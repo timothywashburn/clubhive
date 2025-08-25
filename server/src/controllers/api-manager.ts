@@ -50,6 +50,7 @@ import { uploadImageEndpoint } from '@/api/images/create-image';
 import { deleteImageEndpoint } from '@/api/images/delete-image';
 import { getImageEndpoint } from '@/api/images/get-image';
 import { leaveMembershipEndpoint } from '@/api/memberships/leave-membership';
+import { deleteAccountEndpoint } from '@/api/me/delete-account';
 import { joinMembershipEndpoint } from '@/api/memberships/join-membership';
 
 export default class ApiManager {
@@ -111,6 +112,7 @@ export default class ApiManager {
         // Me endpoints
         this.addEndpoint(getMyClubsEndpoint);
         this.addEndpoint(getMyEventsEndpoint);
+        this.addEndpoint(deleteAccountEndpoint);
 
         // Venue endpoints
         this.addEndpoint(getDailyVenueAvailabilityEndpoint);
