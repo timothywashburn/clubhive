@@ -23,17 +23,32 @@ import { AdminDashboard, AdminSchools, AdminClubs, AdminUsers } from './pages/ad
 import { StaticHoneycomb } from './components/honeycomb';
 import { useThemeStore } from './stores/themeStore.ts';
 import { useAuthStore } from './stores/authStore.ts';
+import { useHoneycombStore } from './stores/honeycombStore.ts';
 
 import { TestImages } from './pages/TestImages.tsx';
 
 function AppContent() {
     const { initializeAuth, isAuthenticated } = useAuthStore();
-    const [scrollY, setScrollY] = useState(0);
     const backgroundRef = useRef<HTMLDivElement>(null);
     const mainRef = useRef<HTMLElement>(null);
     const location = useLocation();
     useTheme();
     const { theme } = useThemeStore();
+    const { x, y, scale, setIsLandingPage, setScrollY } = useHoneycombStore();
+
+    // Update landing page state when route or auth changes
+    useEffect(() => {
+        const isOnLandingPage = location.pathname === '/' && !isAuthenticated;
+        setIsLandingPage(isOnLandingPage);
+    }, [location.pathname, isAuthenticated, setIsLandingPage]);
+
+    // Update scroll Y in store when not on landing page
+    useEffect(() => {
+        const isOnLandingPage = location.pathname === '/' && !isAuthenticated;
+        if (!isOnLandingPage) {
+            setScrollY(scrollY);
+        }
+    }, [location.pathname, isAuthenticated, setScrollY]);
     const [siteNavType, setSiteNavType] = useState<'regular' | 'admin'>('regular');
 
     const toggleSiteNavType = () => {
@@ -76,11 +91,12 @@ function AppContent() {
                     top: 0,
                     left: '0',
                     right: '0',
-                    height: '150vh',
+                    height: '100vh',
+                    width: '100vw',
                     zIndex: -1,
                 }}
             >
-                <StaticHoneycomb y={scrollY * -0.05} />
+                <StaticHoneycomb x={x} y={y} scale={scale} numPoints={10000} />
             </div>
             <UnifiedNavigation
                 navType="site"

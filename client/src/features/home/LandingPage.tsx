@@ -2,7 +2,7 @@ import React, { useEffect, useState, useCallback } from 'react';
 import { motion } from 'framer-motion';
 import { ChevronDown } from 'lucide-react';
 import { useNavigate } from 'react-router';
-import { StaticHoneycomb } from '../../components/honeycomb';
+import { useHoneycombStore } from '../../stores/honeycombStore';
 import {
     HeroSection,
     TextSection,
@@ -21,7 +21,6 @@ export function LandingPage() {
     const [nextAction, setNextAction] = useState<'next' | 'prev' | null>(null);
     const [lastScrollTime, setLastScrollTime] = useState(0);
 
-    // Section types for navigation and rendering
     const sectionTypes = ['hero', 'text', 'features', 'stats', 'testimonials', 'contributions', 'cta'];
     const totalPositions = sectionTypes.length;
     const hexagonRadius = 1500;
@@ -30,6 +29,12 @@ export function LandingPage() {
     useEffect(() => {
         const timer = setTimeout(() => setHasMounted(true), 100);
         return () => clearTimeout(timer);
+    }, []);
+
+    // Reset scroll position to top when landing page loads
+    useEffect(() => {
+        const mainElement = document.querySelector('main');
+        if (mainElement) mainElement.scrollTop = 0;
     }, []);
 
     const hexagonPositions = [
@@ -145,6 +150,7 @@ export function LandingPage() {
     }, [handleNext, handlePrev, lastScrollTime]);
 
     const currentTransform = hexagonPositions[currentPosition];
+    const { setPosition } = useHoneycombStore();
 
     const getHoneycombPosition = () => {
         const parallaxIntensity = -0.1;
@@ -158,29 +164,13 @@ export function LandingPage() {
 
     const honeycombPos = getHoneycombPosition();
 
+    // Update global honeycomb position
+    useEffect(() => {
+        setPosition(honeycombPos.x, honeycombPos.y, currentPosition + 1 == totalPositions ? 1 : 1.7);
+    }, [honeycombPos.x, honeycombPos.y, currentPosition, totalPositions, setPosition]);
+
     return (
         <div className="h-full relative">
-            {/* Landing Page Honeycomb Background */}
-            <div
-                className="fixed"
-                style={{
-                    top: 0,
-                    left: 0,
-                    right: 0,
-                    height: '100vh',
-                    width: '100vw',
-                    transform: 'translate(0vw, 0vh)',
-                    zIndex: -1,
-                }}
-            >
-                <StaticHoneycomb
-                    x={honeycombPos.x}
-                    y={honeycombPos.y}
-                    scale={currentPosition + 1 == totalPositions ? 1 : 1.7}
-                    numPoints={10000}
-                />
-            </div>
-
             {/* Navigation Progress Dots */}
             <div className="fixed top-20 right-8 z-50 flex flex-col gap-2">
                 {sectionTypes.map((_, index) => (

@@ -15,7 +15,7 @@ interface StaticHoneycombProps extends HoneycombProps {
 export function StaticHoneycomb({
     className = '',
     numPoints = 7000,
-    noiseAmount = 0.15,
+    noiseAmount = 0.25,
     showDebug = false,
     x = 0,
     y = 0,

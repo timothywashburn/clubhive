@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { CalendarHeart, Bookmark, Plus } from 'lucide-react';
 import { useNavigate } from 'react-router';
+import { motion } from 'framer-motion';
 import { EventData } from '@clubhive/shared';
 import { eventService } from '../../services/eventService';
 import { EventCard } from '../../components/EventCard';
@@ -88,14 +89,29 @@ export function AuthenticatedHome() {
     }
 
     return (
-        <div className="h-full relative">
-            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-                <div className="text-center mb-12">
+        <motion.div
+            className="min-h-full relative"
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, ease: 'easeOut' }}
+        >
+            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+                <motion.div
+                    className="text-center mb-12"
+                    initial={{ opacity: 0, y: 30 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.6, delay: 0.1, ease: 'easeOut' }}
+                >
                     <h1 className="text-4xl font-bold text-on-surface mb-4">Welcome to clubhive</h1>
                     <p className="text-xl text-on-surface-variant mb-8">Discover, join, and manage your clubs all in one place</p>
-                </div>
+                </motion.div>
 
-                <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                <motion.div
+                    className="grid grid-cols-1 lg:grid-cols-2 gap-8"
+                    initial={{ opacity: 0, y: 40 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.6, delay: 0.2, ease: 'easeOut' }}
+                >
                     {/* Upcoming Club Events */}
                     <div className="bg-surface rounded-lg shadow border border-outline-variant">
                         <div className="p-6 border-b border-outline-variant">
@@ -164,8 +180,8 @@ export function AuthenticatedHome() {
                             )}
                         </div>
                     </div>
-                </div>
+                </motion.div>
             </div>
-        </div>
+        </motion.div>
     );
 }
