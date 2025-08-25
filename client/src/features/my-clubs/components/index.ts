@@ -7,3 +7,4 @@ export { Stats } from '../pages/Stats.tsx';
 export { Membership } from '../pages/Membership.tsx';
 export { EmptyState } from './EmptyState';
 export { RegisterClubButton } from './RegisterClubButton';
+export { Members } from '../pages/Members';

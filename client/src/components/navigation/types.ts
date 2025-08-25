@@ -28,6 +28,7 @@ export type TabType =
     | 'events'
     | 'planner'
     | 'stats'
+    | 'members'
     | 'event-details'
     | 'event-location'
     | 'event-tap'
@@ -38,6 +39,7 @@ export interface TabNavigationConfig {
     showOfficerView: boolean;
     selectedEvent?: EventData | null;
     showStatsTab: boolean;
+    showMembersTab?: boolean;
     activeTab: TabType;
     onTabChange: (tab: TabType) => void;
     contextId?: string; // For tracking context changes
