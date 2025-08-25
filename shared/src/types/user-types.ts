@@ -29,8 +29,13 @@ export const userWithCountsSchema = userSchema.extend({
     clubsCount: z.number(),
 });
 
+export const deleteUserResponseSchema = z.object({
+    deleted: z.boolean(),
+});
+
 export type UserData = z.infer<typeof userSchema>;
 export type UserWithCountsData = z.infer<typeof userWithCountsSchema>;
+export type DeleteUserResponse = z.infer<typeof deleteUserResponseSchema>;
 
 export interface GetUsersResponse {
     users: UserWithCountsData[];

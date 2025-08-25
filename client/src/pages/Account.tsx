@@ -127,12 +127,32 @@ export function Account() {
     };
 
     const handleDeleteAccount = async () => {
+        if (deleteLoading) return;
+
+        const confirmed = window.confirm(
+            'This will permanently delete your account and all associated data. This action cannot be undone.\n\nDo you want to continue?'
+        );
+        if (!confirmed) return;
+
         setDeleteLoading(true);
         try {
-            // TODO: Implement actual account deletion API call
+            const res = await fetch('/api/me/delete-account', {
+                method: 'DELETE',
+                credentials: 'include', // keep if you use cookies
+                headers: { 'Content-Type': 'application/json' },
+            });
+
+            if (!res.ok) {
+                const body = await res.json().catch(() => null);
+                throw new Error(body?.error?.message || `Request failed: ${res.status}`);
+            }
+
             console.log('Deleting account...');
             await new Promise(resolve => setTimeout(resolve, 2000));
             alert('Account deleted successfully');
+
+            await signOut();
+            navigate('/signin');
         } catch (error) {
             console.error('Error deleting account:', error);
             alert('Failed to delete account');
