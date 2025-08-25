@@ -4,7 +4,6 @@ import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { UnifiedNavigation } from './components/navigation';
 import { Footer } from './components/footer/Footer.tsx';
-//import { useAuth } from './hooks/useAuth';
 import { useTheme } from './hooks/useTheme';
 import { Home } from './pages/Home';
 import { MyClubs } from './features/my-clubs';
@@ -90,7 +89,10 @@ function AppContent() {
                 toggleSiteNavType={toggleSiteNavType}
                 activeRoute={location.pathname}
             />
-            <main ref={mainRef} className="flex-1 overflow-auto flex flex-col">
+            <main
+                ref={mainRef}
+                className={`flex-1 overflow-auto flex flex-col ${location.pathname === '/' && !isAuthenticated ? 'scrollbar-hide' : ''}`}
+            >
                 <div className="flex-1">
                     <Routes>
                         <Route path="/" element={<Home />} />
@@ -115,7 +117,6 @@ function AppContent() {
                         <Route path="*" element={<NotFound />} />
                     </Routes>
                 </div>
-                {/* Hide footer on landing page (for non-authenticated users) since it has its own footer */}
                 {!(location.pathname === '/' && !isAuthenticated) && <Footer />}
             </main>
             <ToastContainer

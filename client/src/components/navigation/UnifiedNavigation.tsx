@@ -162,13 +162,11 @@ function renderSiteNavigation({
     isTransitioning,
     style,
 }: any) {
-    const navClasses =
-        variant === 'about-page'
-            ? 'bg-black/20 backdrop-blur-md border-b border-white/10'
-            : 'bg-surface shadow-md border-b border-outline-variant';
-
     return (
-        <nav style={{ zIndex: 1 }} className={`${navClasses} flex-shrink-0 ${style.className || ''}`}>
+        <nav
+            style={{ zIndex: 1 }}
+            className={`bg-surface/20 backdrop-blur-[4px] border-b border-outline/50 flex-shrink-0 ${style.className || ''}`}
+        >
             <div className="max-w-7xl mx-auto px-6 lg:px-8">
                 {/* Desktop Navigation */}
                 <div className="hidden md:flex justify-between items-center h-16 nav-container relative">

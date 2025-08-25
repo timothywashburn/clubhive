@@ -1,7 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { Code, Users, Star } from 'lucide-react';
-import { HoneycombTest } from './HoneycombTest.tsx';
-import { DevPanel } from './DevPanel.tsx';
+import { Code, Users } from 'lucide-react';
+import { GlowingHoneycomb } from '../../components/honeycomb';
 
 type HoneycombType = 'static' | 'dynamic' | 'glowing';
 
@@ -13,9 +12,20 @@ export function About() {
     const backgroundRef = useRef<HTMLDivElement>(null);
 
     useEffect(() => {
-        const handleScroll = () => setScrollY(window.scrollY);
-        window.addEventListener('scroll', handleScroll);
-        return () => window.removeEventListener('scroll', handleScroll);
+        const handleScroll = () => {
+            // Find the main scrollable container (App.tsx's main element)
+            const mainElement = document.querySelector('main');
+            if (mainElement) {
+                setScrollY(mainElement.scrollTop);
+            }
+        };
+
+        // Find the main scrollable container and add listener
+        const mainElement = document.querySelector('main');
+        if (mainElement) {
+            mainElement.addEventListener('scroll', handleScroll);
+            return () => mainElement.removeEventListener('scroll', handleScroll);
+        }
     }, []);
 
     return (
@@ -29,22 +39,23 @@ export function About() {
                     right: '0',
                     height: '150vh',
                     transform: `translateY(${scrollY * -0.05}px)`,
+                    zIndex: -1,
                 }}
             >
-                <HoneycombTest numPoints={7000} noiseAmount={noiseAmount} showDebug={showDebug} honeycombType={honeycombType} />
+                <GlowingHoneycomb
+                    numPoints={7000}
+                    noiseAmount={0.25}
+                    glowRadius={250}
+                    activationChance={1.5}
+                    decayChance={0.03}
+                    glowSpeed={0.02}
+                    fadeSpeed={0.01}
+                />
             </div>
 
-            <DevPanel
-                noiseAmount={noiseAmount}
-                onNoiseAmountChange={setNoiseAmount}
-                showDebug={showDebug}
-                onShowDebugChange={setShowDebug}
-                honeycombType={honeycombType}
-                onHoneycombTypeChange={setHoneycombType}
-            />
             <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-16 relative z-1">
                 {/* Hero Section */}
-                <div className="text-center mb-20 bg-black/20 backdrop-blur-md rounded-2xl p-8">
+                <div className="text-center mb-20 bg-surface/80 backdrop-blur-[4px] rounded-lg shadow p-8 border border-outline-variant">
                     <h1 className="text-5xl md:text-7xl font-black text-on-surface mb-6">hey there! 👋</h1>
                     <p className="text-xl md:text-2xl text-on-surface-variant max-w-4xl mx-auto leading-relaxed">
                         welcome to <span className="font-bold text-primary">clubhive</span> - Lorem ipsum dolor sit amet, consectetur
@@ -53,7 +64,7 @@ export function About() {
                 </div>
 
                 {/* Project Story */}
-                <div className="mb-20 max-w-4xl mx-auto bg-black/20 backdrop-blur-md rounded-2xl p-8">
+                <div className="mb-20 max-w-4xl mx-auto bg-surface/80 backdrop-blur-[4px] rounded-lg shadow p-8 border border-outline-variant">
                     <h2 className="text-4xl font-bold text-on-surface mb-8 text-center">the project</h2>
                     <div className="space-y-6 text-lg text-on-surface-variant leading-relaxed">
                         <p>
@@ -73,7 +84,7 @@ export function About() {
                 </div>
 
                 {/* Team Section */}
-                <div className="mb-20 bg-black/20 backdrop-blur-md rounded-2xl p-8">
+                <div className="mb-20 bg-surface/80 backdrop-blur-[4px] rounded-lg shadow p-8 border border-outline-variant">
                     <h2 className="text-4xl font-bold text-on-surface text-center mb-4">our team</h2>
                     <p className="text-lg text-on-surface-variant text-center mb-12">SDSC RDS Internship Summer 2025</p>
 
@@ -99,30 +110,30 @@ export function About() {
                 </div>
 
                 {/* Contributors Section */}
-                <div className="mb-20 bg-black/20 backdrop-blur-md rounded-2xl p-8">
+                <div className="mb-20 bg-surface/80 backdrop-blur-[4px] rounded-lg shadow p-8 border border-outline-variant">
                     <h2 className="text-4xl font-bold text-on-surface text-center mb-4">contributors</h2>
                     <p className="text-lg text-on-surface-variant text-center mb-12">
                         Welcome to the hive! Our contributors work together like busy bees.
                     </p>
 
-                    <div className="relative h-96 bg-black/30 backdrop-blur-sm rounded-2xl overflow-hidden">
+                    <div className="relative h-96 bg-surface-variant rounded-lg overflow-hidden border border-outline-variant">
                         <div className="absolute inset-0 p-8 flex items-center justify-center">
-                            <p className="text-white/80 text-lg text-center">put some text here</p>
+                            <p className="text-on-surface-variant text-lg text-center">put some text here</p>
                         </div>
                     </div>
                 </div>
 
                 {/* Casual CTA */}
-                <div className="text-center bg-black/20 backdrop-blur-md rounded-2xl p-8">
+                <div className="text-center bg-surface/80 backdrop-blur-[4px] rounded-lg shadow p-8 border border-outline-variant">
                     <h2 className="text-4xl font-bold text-on-surface mb-6">ready to explore?</h2>
                     <p className="text-xl text-on-surface-variant mb-10">
                         Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt.
                     </p>
                     <div className="flex flex-col sm:flex-row justify-center gap-4">
-                        <button className="bg-primary text-on-primary px-8 py-4 rounded-md hover:bg-primary/90 font-medium text-lg transition-colors">
+                        <button className="bg-primary text-on-primary px-8 py-4 rounded-lg text-lg font-semibold hover:bg-primary/90 transition-colors cursor-pointer">
                             browse clubs
                         </button>
-                        <button className="border border-primary text-primary px-8 py-4 rounded-md hover:bg-primary/10 font-medium text-lg transition-colors">
+                        <button className="border-2 border-primary text-primary px-8 py-4 rounded-lg text-lg font-semibold hover:bg-primary hover:text-on-primary transition-colors cursor-pointer">
                             create a club
                         </button>
                     </div>

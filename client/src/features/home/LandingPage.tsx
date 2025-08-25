@@ -159,7 +159,7 @@ export function LandingPage() {
     const honeycombPos = getHoneycombPosition();
 
     return (
-        <div className="fixed inset-0 overflow-hidden">
+        <div className="h-full relative">
             {/* Landing Page Honeycomb Background */}
             <div
                 className="fixed"
