@@ -106,10 +106,21 @@ export const userClubSchema = clubSchema.extend({
     userRole: z.enum(ClubRole),
 });
 
+export const clubMemberSchema = z.object({
+    user: z.object({
+        _id: z.string(),
+        name: z.string(),
+        year: z.string(),
+        major: z.string(),
+    }),
+    userRole: z.enum(ClubRole),
+});
+
 export type ClubData = z.infer<typeof clubSchema>;
 export type ClubWithCountsData = z.infer<typeof clubWithCountsSchema>;
 export type ClubWithEventsData = z.infer<typeof clubWithEventsAndCountsSchema>;
 export type UserClubData = z.infer<typeof userClubSchema>;
+export type ClubMemberData = z.infer<typeof clubMemberSchema>;
 export type CreateClubRequest = z.infer<typeof createClubRequestSchema>;
 export type UpdateClubRequest = z.infer<typeof updateClubRequestSchema>;
 
@@ -135,4 +146,12 @@ export interface UpdateClubResponse {
 
 export interface DeleteClubResponse {
     deleted: boolean;
+}
+
+export interface GetClubMembersResponse {
+    members: ClubMemberData[];
+}
+
+export interface UserClubDataResponse {
+    message?: string;
 }
