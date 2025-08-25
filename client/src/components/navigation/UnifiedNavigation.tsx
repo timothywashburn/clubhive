@@ -4,14 +4,10 @@ import { BarChart3, Calendar, FileText, MapPin, Menu, Shield, ShieldOff, User, U
 import { AnimatePresence, motion } from 'framer-motion';
 import { NavLink } from '../navbar/NavLink';
 import { useUnifiedIndicator } from './useUnifiedIndicator';
-import { NavigationItem, NavigationStyle, SiteNavigationConfig, TabNavigationConfig, TabType, UnifiedNavigationProps } from './types';
+import { NavigationItem, SiteNavigationConfig, TabNavigationConfig, TabType, UnifiedNavigationProps } from './types';
 import { useAuthStore } from '../../stores/authStore.ts';
 
-interface Props {
-    style?: NavigationStyle;
-}
-
-export function UnifiedNavigation(props: UnifiedNavigationProps & { style?: NavigationStyle }) {
+export function UnifiedNavigation(props: UnifiedNavigationProps) {
     const [isMenuOpen, setIsMenuOpen] = useState(false);
     const location = useLocation();
 
@@ -181,7 +177,7 @@ function renderSiteNavigation({
                             to={props.siteNavType === 'admin' ? '/admin/dashboard' : '/'}
                             className="flex items-center text-primary hover:text-primary/90"
                         >
-                            <img src="/clubhive.svg" alt="clubhive" className="h-16 w-32 object-cover object-center" />
+                            <img src="/logo_dark.svg" alt="clubhive" className="h-8" />
                         </Link>
 
                         <AnimatePresence mode="wait">
@@ -293,7 +289,7 @@ function renderSiteNavigation({
                         to={props.siteNavType === 'admin' ? '/admin/dashboard' : '/'}
                         className="flex items-center text-primary hover:text-primary/90"
                     >
-                        <img src="/clubhive.svg" alt="clubhive" className="h-16 w-32 object-cover object-center" />
+                        <img src="/logo_dark.svg" alt="clubhive" className="h-8" />
                     </Link>
 
                     <button

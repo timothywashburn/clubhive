@@ -21,6 +21,8 @@ export const eventSchema = z.object({
     published: z.boolean(),
     picture: z.string().optional(),
     tags: z.array(tagSchema),
+    clubName: z.string().optional(),
+    clubLogo: z.string().nullable().optional(),
 });
 
 export const createEventRequestSchema = z.object({
@@ -77,4 +79,9 @@ export interface UpdateEventResponse {
 
 export interface DeleteEventResponse {
     deleted: boolean;
+}
+
+export interface GetMyEventsResponse {
+    upcomingEvents: EventData[];
+    savedEvents: EventData[];
 }
