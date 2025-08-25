@@ -5,27 +5,27 @@ import 'react-toastify/dist/ReactToastify.css';
 import { UnifiedNavigation } from './components/navigation';
 import { Footer } from './components/footer/Footer.tsx';
 import { useTheme } from './hooks/useTheme';
-import { Home } from './pages/Home';
+import { RootPage } from './pages/RootPage.tsx';
 import { MyClubs } from './features/my-clubs';
 import { Clubs } from './pages/ClubSearch.tsx';
-import { ClubProfile } from './pages/ClubProfile';
+import { ClubProfile } from './features/club-profile/ClubProfile.tsx';
 import { ClubRegistration } from './pages/ClubRegistration.tsx';
-import { Events } from './pages/Events';
-import { EventsPage } from './pages/EventsPage';
-import { Notifications } from './pages/Notifications';
-import { SignIn } from './pages/SignIn';
-import { SignUp } from './pages/SignUp';
+import { EventSearch } from './pages/EventSearch.tsx';
+import { EventsDetailPage } from './pages/EventsDetailPage.tsx';
+import { NotificationPage } from './features/notifications/NotificationPage.tsx';
+import { SignIn } from './features/account/SignIn.tsx';
+import { SignUp } from './features/account/SignUp.tsx';
 import { NotFound } from './pages/NotFound';
-import { Account } from './pages/Account.tsx';
+import { Account } from './features/account/Account.tsx';
 import { About } from './features/about/About.tsx';
-import { SendNotification } from './pages/SendNotification.tsx';
-import { AdminDashboard, AdminSchools, AdminClubs, AdminUsers } from './pages/admin';
+import { SendNotification } from './features/notifications/SendNotification.tsx';
+import { AdminDashboard, AdminSchools, AdminClubs, AdminUsers } from './features/admin/pages';
 import { StaticHoneycomb } from './components/honeycomb';
 import { useThemeStore } from './stores/themeStore.ts';
 import { useAuthStore } from './stores/authStore.ts';
-import { useHoneycombStore } from './stores/honeycombStore.ts';
+import { useBackgroundStore } from './stores/backgroundStore.ts';
 
-import { TestImages } from './pages/TestImages.tsx';
+import { ATestImages } from './pages/aTestImages.tsx';
 
 function AppContent() {
     const { initializeAuth, isAuthenticated } = useAuthStore();
@@ -34,7 +34,7 @@ function AppContent() {
     const location = useLocation();
     useTheme();
     const { theme } = useThemeStore();
-    const { x, y, scale, setIsLandingPage, setScrollY } = useHoneycombStore();
+    const { x, y, scale, setIsLandingPage, setScrollY } = useBackgroundStore();
 
     // Update landing page state when route or auth changes
     useEffect(() => {
@@ -111,15 +111,15 @@ function AppContent() {
             >
                 <div className="flex-1">
                     <Routes>
-                        <Route path="/" element={<Home />} />
+                        <Route path="/" element={<RootPage />} />
                         <Route path="/my-clubs" element={<MyClubs />} />
                         <Route path="/my-clubs/:clubUrl/:tab" element={<MyClubs />} />
                         <Route path="/clubs" element={<Clubs />} />
                         <Route path="/club-profile/:url" element={<ClubProfile />} />
-                        <Route path="/events" element={<Events />} />
-                        <Route path="/events/:id" element={<EventsPage />} />
+                        <Route path="/events" element={<EventSearch />} />
+                        <Route path="/events/:id" element={<EventsDetailPage />} />
                         <Route path="/account" element={<Account />} />
-                        <Route path="/notifications" element={<Notifications />} />
+                        <Route path="/notifications" element={<NotificationPage />} />
                         <Route path="/about" element={<About />} />
                         <Route path="/signin" element={<SignIn />} />
                         <Route path="/signup" element={<SignUp />} />
@@ -129,7 +129,7 @@ function AppContent() {
                         <Route path="/admin/clubs" element={<AdminClubs />} />
                         <Route path="/admin/users" element={<AdminUsers />} />
                         <Route path="/send-notification" element={<SendNotification />} />
-                        <Route path="/test-images" element={<TestImages />} />
+                        <Route path="/test-images" element={<ATestImages />} />
                         <Route path="*" element={<NotFound />} />
                     </Routes>
                 </div>

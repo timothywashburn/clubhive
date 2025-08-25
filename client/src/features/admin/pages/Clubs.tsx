@@ -1,6 +1,6 @@
 import { useState, useMemo } from 'react';
-import { AdminTable, AdminTableColumn, AdminTableItem, AdminToolbar } from '../../components/admin';
-import { useClubData } from '../../hooks/fetchClubs';
+import { AdminTable, AdminTableColumn, AdminTableItem, AdminToolbar } from '../components';
+import { useClubsData } from '../../../hooks/useClubsData.ts';
 
 const columns: AdminTableColumn[] = [
     {
@@ -34,7 +34,7 @@ const columns: AdminTableColumn[] = [
 ];
 
 export function AdminClubs() {
-    const { clubs, isLoading, error, refetch, isRefreshing } = useClubData();
+    const { clubs, isLoading, error, refetch, isRefreshing } = useClubsData();
     const [searchValue, setSearchValue] = useState('');
 
     const clubItems: AdminTableItem[] = useMemo(() => {

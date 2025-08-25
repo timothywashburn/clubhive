@@ -2,16 +2,8 @@ import React, { useEffect, useState, useCallback } from 'react';
 import { motion } from 'framer-motion';
 import { ChevronDown } from 'lucide-react';
 import { useNavigate } from 'react-router';
-import { useHoneycombStore } from '../../stores/honeycombStore';
-import {
-    HeroSection,
-    TextSection,
-    FeaturesSection,
-    StatsSection,
-    TestimonialsSection,
-    ContributionsSection,
-    CTASection,
-} from './landing-sections';
+import { useBackgroundStore } from '../../stores/backgroundStore.ts';
+import { HeroSection, TextSection, FeaturesSection, StatsSection, TestimonialsSection, ContributionsSection, CTASection } from './sections';
 
 export function LandingPage() {
     const navigate = useNavigate();
@@ -150,7 +142,7 @@ export function LandingPage() {
     }, [handleNext, handlePrev, lastScrollTime]);
 
     const currentTransform = hexagonPositions[currentPosition];
-    const { setPosition } = useHoneycombStore();
+    const { setPosition } = useBackgroundStore();
 
     const getHoneycombPosition = () => {
         const parallaxIntensity = -0.1;

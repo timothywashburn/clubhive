@@ -1,4 +1,5 @@
-export { default as WebDatePicker } from './WebDatePicker';
-export { default as WebTimePicker } from './WebTimePicker';
-export { default as WebDateTimePicker } from './WebDateTimePicker';
-export { default as WebDateTimeRangePicker } from './WebDateTimeRangePicker';
+export * from './TimeRangePicker.tsx';
+export * from './WebDatePicker.tsx';
+export * from './WebDateTimePicker.tsx';
+export * from './WebDateTimeRangePicker.tsx';
+export * from './WebTimePicker.tsx';

@@ -1,9 +1,9 @@
 import { useState, useEffect } from 'react';
 import { Link } from 'react-router';
 import { useNavigate } from 'react-router';
-import { useAuthStore } from '../stores/authStore';
-import { useToast } from '../hooks/useToast';
-import { useSchoolData } from '../hooks/fetchSchools';
+import { useAuthStore } from '../../stores/authStore.ts';
+import { useToast } from '../../hooks/useToast.ts';
+import { useSchoolData } from '../../hooks/useSchoolData.ts';
 
 export function SignUp() {
     const [fullName, setFullName] = useState('');

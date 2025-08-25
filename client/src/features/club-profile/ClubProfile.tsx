@@ -1,10 +1,10 @@
 import { useEffect, useState } from 'react';
 import { useNavigate, useParams, Link } from 'react-router';
-import { getTagColor } from '../features/find-clubs/utils/TagColors';
-import { useToast } from '../hooks/useToast';
+import { getTagColor } from '../find-clubs/utils/TagColors.ts';
+import { useToast } from '../../hooks/useToast.ts';
 import { clubWithEventsAndCountsSchema } from '@clubhive/shared';
 import { ClubWithEventsData } from '@clubhive/shared';
-import JoinClubButton from '../features/club-profile/components/JoinClubButton';
+import JoinClubButton from './components/JoinClubButton.tsx';
 
 export function ClubProfile() {
     const { url } = useParams<{ url: string }>();

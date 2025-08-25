@@ -1,9 +1,9 @@
 import { useState } from 'react';
 import { Settings, Mail, Lock, User, Monitor, Moon, Sun, Trash2, LogOut } from 'lucide-react';
 import { useNavigate } from 'react-router';
-import { ThemePreference, useThemeStore } from '../stores/themeStore.ts';
-import { useAuthStore } from '../stores/authStore.ts';
-import { DeleteDangerZone } from '../components/DangerZone';
+import { ThemePreference, useThemeStore } from '../../stores/themeStore.ts';
+import { useAuthStore } from '../../stores/authStore.ts';
+import { DeleteDangerZone } from '../../components/DangerZone.tsx';
 
 export function Account() {
     const { preference, setPreference } = useThemeStore();

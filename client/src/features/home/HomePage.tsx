@@ -8,7 +8,7 @@ import { EventCard } from '../../components/EventCard';
 import { EmptyEventState } from './components/EmptyEventState';
 import { useAuthStore } from '../../stores/authStore';
 
-export function AuthenticatedHome() {
+export function HomePage() {
     const navigate = useNavigate();
     const { isAuthenticated, isInitialized } = useAuthStore();
     const [upcomingEvents, setUpcomingEvents] = useState<EventData[]>([]);
@@ -61,16 +61,7 @@ export function AuthenticatedHome() {
         }
     };
 
-    if (!isInitialized || loading) {
-        return (
-            <div className="h-full flex items-center justify-center">
-                <div className="text-center">
-                    <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-primary mx-auto"></div>
-                    <p className="mt-4 text-on-surface-variant">Loading your events...</p>
-                </div>
-            </div>
-        );
-    }
+    if (!isInitialized || loading) return;
 
     if (error) {
         return (

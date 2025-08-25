@@ -1,10 +1,10 @@
 import React, { useEffect, useRef } from 'react';
 import { motion } from 'framer-motion';
-import { HoneycombBase } from '../core/HoneycombBase.ts';
-import { useCanvasSetup } from '../hooks/useCanvasSetup.ts';
-import { HoneycombProps, HoneycombConfig } from '../config/types.ts';
-import { DEFAULT_CONFIG } from '../config/animation.ts';
-import { useHoneycombColors } from '../hooks/useHoneycombColors.ts';
+import { HoneycombBase } from '../core';
+import { useCanvasSetup } from '../hooks';
+import { HoneycombProps, HoneycombConfig } from '../config';
+import { DEFAULT_CONFIG } from '../config';
+import { useHoneycombColors } from '../hooks';
 
 interface StaticHoneycombProps extends HoneycombProps {
     x?: number;

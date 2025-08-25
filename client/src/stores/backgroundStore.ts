@@ -1,6 +1,6 @@
 import { create } from 'zustand';
 
-interface HoneycombStore {
+interface BackgroundStore {
     x: number;
     y: number;
     scale: number;
@@ -10,7 +10,7 @@ interface HoneycombStore {
     setIsLandingPage: (isLanding: boolean) => void;
 }
 
-export const useHoneycombStore = create<HoneycombStore>((set, get) => ({
+export const useBackgroundStore = create<BackgroundStore>((set, get) => ({
     x: 0,
     y: 0,
     scale: 1.3,

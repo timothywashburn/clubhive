@@ -1,12 +1,10 @@
 import { useParams, useNavigate, Link } from 'react-router';
 import { useState, useEffect } from 'react';
 import { getTagColor } from '../features/find-clubs/utils/TagColors';
-import { useEventTagsData } from '../hooks/fetchEventTags';
-import TagFilterPopover from '../features/find-clubs/components/FilterTagsButton';
+import { useEventTagsData } from '../hooks/useEventTagsData.ts';
 import type { TagData } from '@clubhive/shared';
-//import FilterTagsButton from '../features/find-clubs/components/FilterTagsButton';
 
-export function EventsPage() {
+export function EventsDetailPage() {
     const { id } = useParams<{ id: string }>();
     const [event, setEvent] = useState(null);
     const [loading, setLoading] = useState(true);
@@ -167,27 +165,27 @@ export function EventsPage() {
                         )}
                     </div>
 
-                {/* location description box */}
-                <div className="bg-surface-variant p-4 rounded-md mb-6">
-                    <h3 className="font-medium text-on-secondary-container mb-2">How to get there!</h3>
-                    <p className="text-on-surface-variant text-sm">This event will be held in Price Center, located at:</p>
-                </div>
-
-                {/* Hosted by: */}
-                <div className="bg-surface-variant p-4 rounded-md mb-6">
-                    <h3 className="font-medium text-on-secondary-container mb-2">Hosted by </h3>
-                    <Link to={`/clubs/${event.club.url}`} className="text-blue-600 hover:underline font-medium">
-                        {event.club.name}
-                    </Link>
-                </div>
-
-                {/* requirements to attend event */}
-                {event.requirements && (
-                    <div className="bg-surface-variant p-4 rounded-md mt-6 mb-6">
-                        <h3 className="font-medium text-on-secondary-container mb-2">Requirements to Attend:</h3>
-                        <p className="text-on-surface-variant text-sm">{event.requirements}</p>
+                    {/* location description box */}
+                    <div className="bg-surface-variant p-4 rounded-md mb-6">
+                        <h3 className="font-medium text-on-secondary-container mb-2">How to get there!</h3>
+                        <p className="text-on-surface-variant text-sm">This event will be held in Price Center, located at:</p>
                     </div>
-                )}
+
+                    {/* Hosted by: */}
+                    <div className="bg-surface-variant p-4 rounded-md mb-6">
+                        <h3 className="font-medium text-on-secondary-container mb-2">Hosted by </h3>
+                        <Link to={`/clubs/${event.club.url}`} className="text-blue-600 hover:underline font-medium">
+                            {event.club.name}
+                        </Link>
+                    </div>
+
+                    {/* requirements to attend event */}
+                    {event.requirements && (
+                        <div className="bg-surface-variant p-4 rounded-md mt-6 mb-6">
+                            <h3 className="font-medium text-on-secondary-container mb-2">Requirements to Attend:</h3>
+                            <p className="text-on-surface-variant text-sm">{event.requirements}</p>
+                        </div>
+                    )}
 
                     {/* about event description box */}
                     <div className="bg-surface-variant p-4 rounded-md">

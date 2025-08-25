@@ -1,8 +1,8 @@
 import React, { useState, useRef } from 'react';
 import { Eye, X } from 'lucide-react';
 import type { ImageData } from '@clubhive/shared';
-import { useUploadImage } from '../../hooks/uploadImageFiles';
-import { useDeleteImage } from '../../hooks/deleteImageFile';
+import { useUploadImage } from '../../hooks/useUploadImage.ts';
+import { useDeleteImage } from '../../hooks/useDeleteImageFile.ts';
 
 // BaseImageUploader is a generic image uploader component that can be wrapped by components like ProfilePictureUploader
 // It handles file selection, preview, upload, and deletion of images

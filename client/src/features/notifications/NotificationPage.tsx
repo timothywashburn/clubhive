@@ -1,16 +1,16 @@
 import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { NotificationCard } from '../features/notifications/NotificationCard.tsx';
-import { NotifExpanded } from '../features/notifications/NotifExpanded.tsx';
-import { useNotifs } from '../hooks/fetchNotifs.tsx';
+import { NotificationCard } from './NotificationCard.tsx';
+import { NotifExpanded } from './NotifExpanded.tsx';
+import { useNotifications } from '../../hooks/useNotifications.ts';
 import { useNavigate } from 'react-router';
 
-export function Notifications() {
+export function NotificationPage() {
     const navigate = useNavigate();
 
     const [selected, setSelected] = useState<string | null>(null);
 
-    const { notifs, setNotifs, isLoading, error } = useNotifs();
+    const { notifs, setNotifs, isLoading, error } = useNotifications();
 
     const markAsRead = async (userNotifId: string) => {
         try {

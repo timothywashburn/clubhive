@@ -5,7 +5,7 @@ import { useToast } from '../hooks/useToast';
 // TestImages component is a simple page to test image uploaders
 // It uses the ProfilePictureUploader to upload a profile picture for a club
 
-export function TestImages() {
+export function ATestImages() {
     const clubId = '507f1f77bcf86cd799439022'; // this is the CS club's ID for testing
     const { successToast, errorToast } = useToast();
 
