@@ -1,6 +1,6 @@
 import { useMemo, useState } from 'react';
 import { Link, useLocation } from 'react-router';
-import { BarChart3, Calendar, FileText, MapPin, Menu, Shield, ShieldOff, User, Users, UserX, X } from 'lucide-react';
+import { BarChart3, Calendar, FileText, MapPin, Menu, Shield, ShieldOff, User, Users, UserX, UserCog, X } from 'lucide-react';
 import { AnimatePresence, motion } from 'framer-motion';
 import { NavLink } from '../navbar/NavLink';
 import { useUnifiedIndicator } from './useUnifiedIndicator';
@@ -126,6 +126,7 @@ function generateTabNavigation(props: TabNavigationConfig) {
         { key: 'info', label: 'Edit Info', icon: Users },
         { key: 'events', label: 'Event Planner', icon: Calendar },
         { key: 'stats', label: 'Stats', icon: BarChart3 },
+        { key: 'members', label: 'Members', icon: UserCog },
     ];
 
     const getEventEditTabs = (): NavigationItem[] => [

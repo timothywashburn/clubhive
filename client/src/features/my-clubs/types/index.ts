@@ -4,6 +4,7 @@ export type TabType =
     | 'events'
     | 'planner'
     | 'stats'
+    | 'members'
     | 'event-details'
     | 'event-location'
     | 'event-tap'

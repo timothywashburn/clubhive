@@ -1,5 +1,5 @@
 import { motion, AnimatePresence } from 'framer-motion';
-import { ClubSelector, ClubHeader, MemberInfo, OfficerInfo, Events, Stats, Membership, EmptyState } from './components';
+import { ClubSelector, ClubHeader, MemberInfo, OfficerInfo, Events, Stats, Members, Membership, EmptyState, RegisterClubButton } from './components';
 import { UnifiedNavigation } from '../../components/navigation';
 import { EventPlanner } from './event-planner';
 import { EventDetails, LocationPicker } from './event-editor';
@@ -193,6 +193,8 @@ export function MyClubs() {
 
     const showStatsTab = showOfficerView || statsVisibleToAll;
 
+    const showMembersTab = isOfficer;
+
     const renderTabContent = () => {
         const contentKey = `${selectedClub?._id}-${activeTab}-${isPreviewMode}`;
 
@@ -251,6 +253,8 @@ export function MyClubs() {
             content = showOfficerView ? <OfficerInfo club={selectedClub} /> : <MemberInfo club={selectedClub} />;
         } else if (activeTab === 'membership') {
             content = <Membership club={selectedClub} isOwner={isOwner} />;
+        } else if (activeTab === 'members') {
+            content = <Members club={selectedClub} />;
         }
 
         return (
@@ -319,6 +323,7 @@ export function MyClubs() {
                                         onTabChange={setActiveTab}
                                         selectedEvent={selectedEvent}
                                         showStatsTab={showStatsTab}
+                                        showMembersTab={showMembersTab}
                                         contextId={selectedClub?._id}
                                         isPreviewMode={isPreviewMode}
                                     />

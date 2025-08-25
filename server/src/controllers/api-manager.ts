@@ -35,6 +35,9 @@ import { updateSchoolEndpoint } from '@/api/schools/update-school';
 import { deleteSchoolEndpoint } from '@/api/schools/delete-school';
 import { getMyClubsEndpoint } from '@/api/me/clubs';
 import { getMyEventsEndpoint } from '@/api/me/events';
+import { getClubMembersEndpoint } from '@/api/memberships/get-members';
+import { updateMemberRoleEndpoint } from '@/api/memberships/update-members';
+import { removeMemberEndpoint } from '@/api/memberships/delete-member';
 import { getDailyVenueAvailabilityEndpoint } from '@/api/venues/daily-availability';
 import { getWeeklyVenueAvailabilityEndpoint } from '@/api/venues/weekly-availability';
 import { getMonthlyVenueAvailabilityEndpoint } from '@/api/venues/monthly-availability';
@@ -120,6 +123,9 @@ export default class ApiManager {
 
         // Membership endpoints
         this.addEndpoint(leaveMembershipEndpoint);
+        this.addEndpoint(getClubMembersEndpoint);
+        this.addEndpoint(updateMemberRoleEndpoint);
+        this.addEndpoint(removeMemberEndpoint);
 
         console.log(`registered api endpoints`);
     }
