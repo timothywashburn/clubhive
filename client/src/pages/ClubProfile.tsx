@@ -4,6 +4,7 @@ import { getTagColor } from '../features/find-clubs/utils/TagColors';
 import { useToast } from '../hooks/useToast';
 import { clubWithEventsAndCountsSchema } from '@clubhive/shared';
 import { ClubWithEventsData } from '@clubhive/shared';
+import JoinClubButton from '../features/club-profile/components/JoinClubButton';
 
 export function ClubProfile() {
     const { url } = useParams<{ url: string }>();
@@ -51,9 +52,13 @@ export function ClubProfile() {
                     </button>
                 </div>
 
-                {/* Join Club button*/}
+                {/* Join Club button*
                 <div className="flex justify-end mb-5">
                     <button className="bg-primary text-on-primary px-4 py-2 rounded-full hover:bg-primary/90 font-medium">Join Club</button>
+                </div> */}
+
+                <div className="flex justify-end mb-5">
+                    <JoinClubButton clubId={club._id} onJoinSuccess={() => {}} />
                 </div>
 
                 {/* Club Profile header*/}

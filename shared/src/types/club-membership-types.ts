@@ -26,7 +26,7 @@ export type CreateMembershipRequest = z.infer<typeof createMembershipRequestSche
 export type ClubMembershipData = z.infer<typeof clubMembershipSchema>;
 
 export interface CreateMembershipResponse {
-    membership: ClubMembershipData;
+    message: string;
 }
 
 export interface LeaveMembershipResponse {
