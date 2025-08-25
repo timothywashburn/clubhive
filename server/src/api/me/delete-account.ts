@@ -5,6 +5,7 @@ import User from '@/models/user-schema';
 import ClubMembership from '@/models/club-membership-schema';
 import UserNotification from '@/models/user-notification-schema';
 import SavedEvents from '@/models/saved-events';
+import Auth from '@/models/auth-schema';
 
 export const deleteAccountEndpoint: ApiEndpoint<undefined, DeleteUserResponse> = {
     path: '/api/me/delete-account',
@@ -28,6 +29,7 @@ export const deleteAccountEndpoint: ApiEndpoint<undefined, DeleteUserResponse> =
                 ClubMembership.deleteMany({ user: userId }),
                 UserNotification.deleteMany({ user: userId }),
                 SavedEvents.deleteMany({ user: userId }),
+                Auth.deleteMany({ user: userId }),
             ]);
 
             const deleted = await User.findByIdAndDelete(userId);
