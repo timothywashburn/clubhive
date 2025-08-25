@@ -35,7 +35,6 @@ export const joinMembershipEndpoint: ApiEndpoint<CreateMembershipRequest, undefi
             await ClubMembershipController.createMembership(clubId, userId, 'member');
             res.json({
                 success: true,
-                message: 'Successfully joined club',
             });
         } catch (error) {
             console.error('Error joining club:', error);

@@ -1,7 +1,7 @@
 import { ApiEndpoint, AuthType } from '@/types/api-types';
 import ClubMembershipController from '@/controllers/club-membership-controller';
 
-export const removeMemberEndpoint: ApiEndpoint<undefined, { message?: string }> = {
+export const removeMemberEndpoint: ApiEndpoint<undefined, undefined> = {
     path: '/api/clubs/:clubId/members/:memberId',
     method: 'delete',
     auth: AuthType.VERIFIED_EMAIL,
@@ -14,7 +14,6 @@ export const removeMemberEndpoint: ApiEndpoint<undefined, { message?: string }> 
             if (success) {
                 res.json({
                     success: true,
-                    message: 'Member removed successfully',
                 });
             } else {
                 res.status(404).json({
