@@ -1,8 +1,33 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import { updateClub } from './updateClub';
+import { UpdateClubRequest } from '@clubhive/shared';
+import { ClubStatus } from '@clubhive/shared';
 
-export const editClubInfo = initialData => {
-    const [formData, setFormData] = useState(initialData);
+export const editClubInfo = (initialData, clubId) => {
+    const defaultData = {
+        name: '',
+        tagline: '',
+        description: '',
+        url: '',
+        status: '',
+        joinRequirements: '',
+        socials: { website: '', discord: '', instagram: '' },
+        tags: [],
+        clubLogo: '',
+        pictures: [],
+    };
+
+    const [formData, setFormData] = useState(initialData || defaultData);
+    const [savedInitialData, setSavedInitialData] = useState(null);
     const [newTag, setNewTag] = useState('');
+
+    useEffect(() => {
+        if (initialData && initialData !== null) {
+            console.log('Updating formData with:', initialData);
+            setFormData(initialData);
+            setSavedInitialData({ ...initialData });
+        }
+    }, [initialData]);
 
     const handleInputChange = e => {
         const { name, value } = e.target;
@@ -40,6 +65,54 @@ export const editClubInfo = initialData => {
         }));
     };
 
+    // Needs debugging
+    const handleSaveChanges = async () => {
+        try {
+            const normalizeUpdatePayload = (data: typeof formData) => {
+                const statusMap: Record<string, ClubStatus> = {
+                    'Anyone can join': ClubStatus.ANYONE_CAN_JOIN,
+                    'Request to join': ClubStatus.REQUEST_TO_JOIN,
+                    Closed: ClubStatus.CLOSED,
+                };
+
+                return {
+                    name: data.name?.trim() || undefined,
+                    tagline: data.tagline?.trim() || undefined,
+                    description: data.description?.trim() || undefined,
+                    url: data.url?.trim() || undefined,
+                    joinRequirements: data.joinRequirements?.trim() || undefined,
+                    status: statusMap[data.status] || undefined,
+                    socials: data.socials
+                        ? {
+                              website: data.socials.website?.trim() || undefined,
+                              discord: data.socials.discord?.trim() || undefined,
+                              instagram: data.socials.instagram?.trim() || undefined,
+                          }
+                        : undefined,
+                    clubLogo: data.clubLogo || undefined,
+                    pictures: (data.pictures || []).filter((pic: string) => !!pic),
+                    tags: (data.tags || []).map((tag: any) => (typeof tag === 'string' ? tag : tag._id)).filter(Boolean),
+                };
+            };
+
+            const normalizedPayload = normalizeUpdatePayload(formData);
+            console.log('Normalized payload:', normalizedPayload);
+            const updatedClub = await updateClub(clubId, normalizedPayload);
+            console.log('Update successful:', updatedClub);
+        } catch (error) {
+            console.error('Error saving changes:', error);
+        }
+    };
+
+    const handleDiscardChanges = () => {
+        if (savedInitialData) {
+            setFormData({ ...savedInitialData });
+        } else {
+            setFormData(initialData);
+        }
+        setNewTag('');
+    };
+
     return {
         formData,
         newTag,
@@ -49,6 +122,8 @@ export const editClubInfo = initialData => {
             handleSocialsChange,
             handleAddTag,
             handleDeleteTag,
+            handleSaveChanges,
+            handleDiscardChanges,
         },
     };
 };

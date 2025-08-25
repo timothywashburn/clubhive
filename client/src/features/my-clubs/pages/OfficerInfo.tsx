@@ -22,6 +22,8 @@ export function OfficerInfo({ club }: OfficerInfoProps) {
                     tagline: data.club.tagline,
                     description: data.club.description || '',
                     url: data.club.url || '',
+                    status: data.club.status || '',
+                    joinRequirements: data.club.joinRequirements || '',
                     socials: {
                         website: data.club.socials?.website || '',
                         discord: data.club.socials?.discord || '',
@@ -41,7 +43,25 @@ export function OfficerInfo({ club }: OfficerInfoProps) {
         fetchClub();
     }, [club._id]);
 
-    const { formData, newTag, setNewTag, handlers } = editClubInfo(clubData ? clubData : null);
+    const { formData, newTag, setNewTag, handlers } = editClubInfo(
+        clubData || {
+            name: '',
+            tagline: '',
+            description: '',
+            url: '',
+            status: '',
+            joinRequirements: '',
+            socials: {
+                website: '',
+                discord: '',
+                instagram: '',
+            },
+            tags: [],
+            clubLogo: '',
+            pictures: [],
+        },
+        club._id
+    );
 
     if (loading) return <div>Loading...</div>;
     if (!clubData) return <div>Club not found</div>;
@@ -53,74 +73,121 @@ export function OfficerInfo({ club }: OfficerInfoProps) {
                     <h2 className="text-lg font-bold">Edit / Delete</h2>
                     <div>
                         <label className="block text-sm font-medium mb-1">Name</label>
-                        <input type="text" className="w-full p-2 border rounded" defaultValue={club.name} />
+                        <input
+                            type="text"
+                            name="name"
+                            className="w-full p-2 border rounded"
+                            value={formData.name || ''}
+                            onChange={handlers.handleInputChange}
+                        />
                     </div>
                     <div>
                         <label className="block text-sm font-medium mb-1">Tagline</label>
-                        <input type="text" className="w-full p-2 border rounded" defaultValue={club.tagline} />
+                        <input
+                            type="text"
+                            name="tagline"
+                            className="w-full p-2 border rounded"
+                            value={formData.tagline || ''}
+                            onChange={handlers.handleInputChange}
+                        />
                     </div>
                     <div>
                         <label className="block text-sm font-medium mb-1">Club Status</label>
-                        <input type="text" className="w-full p-2 border rounded" defaultValue={club.status} />
+                        <input
+                            type="text"
+                            name="status"
+                            className="w-full p-2 border rounded"
+                            value={formData.status || ''}
+                            onChange={handlers.handleInputChange}
+                        />
                     </div>
                     {club.description && (
                         <div>
                             <label className="block text-sm font-medium mb-1">Description</label>
-                            <textarea className="w-full p-2 border rounded" rows={4} defaultValue={club.description} />
+                            <textarea
+                                name="description"
+                                className="w-full p-2 border rounded"
+                                rows={4}
+                                value={formData.description || ''}
+                                onChange={handlers.handleInputChange}
+                            />
                         </div>
                     )}
                     {club.joinRequirements && (
                         <div>
                             <label className="block text-sm font-medium mb-1">Membership Requirements</label>
-                            <input type="text" className="w-full p-2 border rounded" defaultValue={club.joinRequirements} />
+                            <input
+                                type="text"
+                                name="joinRequirements"
+                                className="w-full p-2 border rounded"
+                                value={formData.joinRequirements || ''}
+                                onChange={handlers.handleInputChange}
+                            />
                         </div>
                     )}
                     {club.url && (
                         <div>
-                            <label className="block text-sm font-medium mb-1">Url</label>
-                            <input type="text" className="w-full p-2 border rounded" defaultValue={club.url} />
+                            <label className="block text-sm font-medium mb-1">URL</label>
+                            <input
+                                type="text"
+                                name="url"
+                                className="w-full p-2 border rounded"
+                                value={formData.url || ''}
+                                onChange={handlers.handleInputChange}
+                            />
                         </div>
                     )}
                     {club.socials.website && (
                         <div>
                             <label className="block text-sm font-medium mb-1">Website</label>
-                            <input type="text" className="w-full p-2 border rounded" defaultValue={club.socials.website} />
+                            <input
+                                type="text"
+                                name="website"
+                                className="w-full p-2 border rounded"
+                                value={formData.socials.website || ''}
+                                onChange={handlers.handleSocialsChange}
+                            />
                         </div>
                     )}
                     {club.socials.discord && (
                         <div>
                             <label className="block text-sm font-medium mb-1">Discord</label>
-                            <input type="text" className="w-full p-2 border rounded" defaultValue={club.socials.discord} />
+                            <input
+                                type="text"
+                                name="discord"
+                                className="w-full p-2 border rounded"
+                                value={formData.socials.discord || ''}
+                                onChange={handlers.handleSocialsChange}
+                            />
                         </div>
                     )}
                     {club.socials.instagram && (
                         <div>
                             <label className="block text-sm font-medium mb-1">Instagram</label>
-                            <input type="text" className="w-full p-2 border rounded" defaultValue={club.socials.instagram} />
+                            <input
+                                type="text"
+                                name="instagram"
+                                className="w-full p-2 border rounded"
+                                value={formData.socials.instagram || ''}
+                                onChange={handlers.handleSocialsChange}
+                            />
                         </div>
                     )}
-                    {/* {club.clubLogo && (
-                        <div>
-                            <label className="block text-sm font-medium mb-1">Club Logo</label>
-                            <input type="mongoose.Schema.types.ObjectId" className="w-full p-2 border rounded" defaultValue={club.clubLogo} />
-                        </div>
-                    )}
-                    {club.pictures && (
-                        <div>
-                            <label className="block text-sm font-medium mb-1">Pictures</label>
-                            <input type="mongoose.Schema.types.ObjectId" className="w-full p-2 border rounded" defaultValue={club.pictures} />
-                        </div>
-                    )} */}
                     <div>
                         <label className="block text-sm font-medium mb-1">Current Tags</label>
                         <div className="flex flex-wrap gap-2 mb-3">
-                            {club.tags.map((tag, index) => (
+                            {formData.tags.map((tag, index) => (
                                 <span
                                     key={index}
                                     className="inline-flex items-center px-3 py-1 rounded-full text-sm bg-blue-100 text-blue-800"
                                 >
-                                    {tag.text}
-                                    <button className="ml-2 text-red-500 hover:text-red-700">×</button>
+                                    {tag}
+                                    <button
+                                        onClick={() => handlers.handleDeleteTag(index)}
+                                        className="ml-2 text-red-500 hover:text-red-700"
+                                    >
+                                        ×
+                                    </button>
                                 </span>
                             ))}
                         </div>
@@ -131,89 +198,103 @@ export function OfficerInfo({ club }: OfficerInfoProps) {
                     <h2 className="text-lg font-bold">Add New</h2>
                     <div>
                         <label className="block text-sm font-medium mb-1">Tags</label>
-                        <input type="text" className="w-full p-2 border rounded" placeholder="Add new tag and press Enter" />
+                        <input
+                            type="text"
+                            value={newTag}
+                            onChange={e => setNewTag(e.target.value)}
+                            onKeyDown={handlers.handleAddTag}
+                            className="w-full p-2 border rounded"
+                            placeholder="Add new tag and press Enter"
+                        />
                     </div>
                     {!club.description && (
                         <div>
                             <label className="block text-sm font-medium mb-1">Description</label>
-                            <textarea className="w-full p-2 border rounded" rows={4} defaultValue={club.description} />
+                            <textarea
+                                name="description"
+                                onChange={handlers.handleInputChange}
+                                className="w-full p-2 border rounded"
+                                rows={4}
+                                value={formData.description || ''}
+                                placeholder="Add description"
+                            />
                         </div>
                     )}
                     {!club.url && (
                         <div>
-                            <label className="block text-sm font-medium mb-1">Url</label>
-                            <input type="text" className="w-full p-2 border rounded" defaultValue={club.url} />
+                            <label className="block text-sm font-medium mb-1">URL</label>
+                            <input
+                                name="url"
+                                onChange={handlers.handleInputChange}
+                                type="text"
+                                className="w-full p-2 border rounded"
+                                value={formData.url || ''}
+                                placeholder="Add URL"
+                            />
                         </div>
                     )}
                     {!club.socials.website && (
                         <div>
                             <label className="block text-sm font-medium mb-1">Website</label>
-                            <input type="text" className="w-full p-2 border rounded" defaultValue={club.socials.website} />
+                            <input
+                                name="website"
+                                onChange={handlers.handleSocialsChange}
+                                type="text"
+                                className="w-full p-2 border rounded"
+                                value={formData.socials.website || ''}
+                                placeholder="Add website URL"
+                            />
                         </div>
                     )}
                     {!club.socials.discord && (
                         <div>
                             <label className="block text-sm font-medium mb-1">Discord</label>
-                            <input type="text" className="w-full p-2 border rounded" defaultValue={club.socials.discord} />
+                            <input
+                                name="discord"
+                                onChange={handlers.handleSocialsChange}
+                                type="text"
+                                className="w-full p-2 border rounded"
+                                value={formData.socials.discord || ''}
+                                placeholder="Add Discord invite link"
+                            />
                         </div>
                     )}
                     {!club.socials.instagram && (
                         <div>
                             <label className="block text-sm font-medium mb-1">Instagram</label>
-                            <input type="text" className="w-full p-2 border rounded" defaultValue={club.socials.instagram} />
+                            <input
+                                name="instagram"
+                                onChange={handlers.handleSocialsChange}
+                                type="text"
+                                className="w-full p-2 border rounded"
+                                value={formData.socials.instagram || ''}
+                                placeholder="Add Instagram handle"
+                            />
                         </div>
                     )}
                     {!club.joinRequirements && (
                         <div>
                             <label className="block text-sm font-medium mb-1">Membership Requirements</label>
-                            <input type="text" className="w-full p-2 border rounded" placeholder="None" />
-                        </div>
-                    )}
-                    {/* {!club.clubLogo && (
-                        <div>
-                            <label className="block text-sm font-medium mb-1">Club Logo</label>
                             <input
-                                type="mongoose.Schema.types.ObjectId"
+                                name="joinRequirements"
+                                onChange={handlers.handleInputChange}
+                                type="text"
                                 className="w-full p-2 border rounded"
-                                defaultValue={club.clubLogo}
+                                value={formData.joinRequirements || ''}
+                                placeholder="Add membership requirements"
                             />
                         </div>
                     )}
-                    {!club.pictures && (
-                        <div>
-                            <label className="block text-sm font-medium mb-1">Pictures</label>
-                            <input
-                                type="mongoose.Schema.types.ObjectId"
-                                className="w-full p-2 border rounded"
-                                defaultValue={club.pictures}
-                            />
-                        </div>
-                    )} */}
-                    {/* {!club.clubLogo && (
-                        <div>
-                            <label className="block text-sm font-medium mb-1">Club Logo</label>
-                            <input
-                                type="mongoose.Schema.types.ObjectId"
-                                className="w-full p-2 border rounded"
-                                defaultValue={club.clubLogo}
-                            />
-                        </div>
-                    )}
-                    {!club.pictures && (
-                        <div>
-                            <label className="block text-sm font-medium mb-1">Pictures</label>
-                            <input
-                                type="mongoose.Schema.types.ObjectId"
-                                className="w-full p-2 border rounded"
-                                defaultValue={club.pictures}
-                            />
-                        </div>
-                    )} */}
                 </div>
             </div>
             <div className="flex gap-4 mt-6">
-                <button className="bg-primary text-white px-6 py-2 rounded hover:bg-green-600">Save Changes</button>
-                <button className="bg-secondary text-white px-6 py-2 rounded hover:bg-red-500 flex items-center gap-2">
+                <button onClick={handlers.handleSaveChanges} className="bg-primary text-white px-6 py-2 rounded hover:bg-green-600">
+                    Save Changes
+                </button>
+                <button
+                    onClick={handlers.handleDiscardChanges}
+                    className="bg-secondary text-white px-6 py-2 rounded hover:bg-red-500 flex items-center gap-2"
+                >
                     Discard Changes
                 </button>
             </div>
