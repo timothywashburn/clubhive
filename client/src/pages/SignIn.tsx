@@ -8,6 +8,9 @@ export function SignIn() {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
 
+    const maxEmailLength = 100;
+    const maxPasswordLength = 100;
+
     const { errorToast } = useToast();
 
     const inputClass =
@@ -56,7 +59,11 @@ export function SignIn() {
                                     name="email"
                                     type="email"
                                     value={email}
-                                    onChange={e => setEmail(e.target.value)}
+                                    onChange={e => {
+                                        if (e.target.value.length <= maxEmailLength) {
+                                            setEmail(e.target.value);
+                                        }
+                                    }}
                                     className={inputClass + ' ' + (errors.email ? 'border-red-500' : '')}
                                 />
                                 {errors.email && <p className="text-red-500 text-sm mt-1">{errors.email}</p>}
@@ -71,7 +78,11 @@ export function SignIn() {
                                     name="password"
                                     type="password"
                                     value={password}
-                                    onChange={e => setPassword(e.target.value)}
+                                    onChange={e => {
+                                        if (e.target.value.length <= maxPasswordLength) {
+                                            setPassword(e.target.value);
+                                        }
+                                    }}
                                     className={inputClass + ' ' + (errors.password ? 'border-red-500' : '')}
                                 />
                                 {errors.password && <p className="text-red-500 text-sm mt-1">{errors.password}</p>}
