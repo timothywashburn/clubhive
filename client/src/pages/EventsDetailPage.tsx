@@ -10,10 +10,8 @@ export function EventsDetailPage() {
     const [loading, setLoading] = useState(true);
     const navigate = useNavigate();
     const [saved, setSaved] = useState(false);
-    const [share, setShared] = useState(false);
+    const [showShareModal, setShowShareModal] = useState(false);
     const { tags } = useEventTagsData();
-
-    const [selectedTags, setSelectedTags] = useState<TagData[]>([]);
 
     const copyToClipboard = async () => {
         const url = `${window.location.origin}/events/${event.event._id}`;
@@ -25,10 +23,6 @@ export function EventsDetailPage() {
         }
     };
 
-    const tagObj = event?.tagIds //necessary?? idk
-        ? tags.filter(tag => event.event.tagIds.includes(tag._id))
-        : [];
-
     useEffect(() => {
         async function fetchEvent() {
             try {
@@ -37,7 +31,6 @@ export function EventsDetailPage() {
                     throw new Error('Failed to fetch event');
                 }
                 const data = await res.json();
-                // console.log('Fetched events:', data.data);
                 setEvent(data.data);
             } catch (err) {
                 console.error(err);
@@ -83,14 +76,16 @@ export function EventsDetailPage() {
                         </h1>
                     </div>
 
-                    {/* flyer/thumbnail placeholder */}
-                    <div className="w-full h-64 bg-outline-variant rounded-md flex items-center justify-center text-on-surface-variant mb-8">
-                        {event.event.flyerUrl ? (
-                            <img src={event.event.flyerUrl} alt="Event Flyer" className="h-full object-contain" />
-                        ) : (
-                            'Event flyer/thumbnail'
-                        )}
-                    </div>
+                    {/* flyer - only show if exists */}
+                    {event.event.flyerUrl && (
+                        <div className="w-full flex justify-center mb-8">
+                            <img
+                                src={event.event.flyerUrl}
+                                alt="Event Flyer"
+                                className="max-w-full max-h-96 object-contain rounded-md shadow-sm"
+                            />
+                        </div>
+                    )}
 
                     {/* tags */}
                     <div className="text-sm text-on-surface-variant flex flex-wrap gap-2 mt-2 mb-4">
@@ -120,7 +115,7 @@ export function EventsDetailPage() {
                         {/* share, save buttons */}
                         <div className="flex gap-2">
                             <button
-                                onClick={() => setShared(true)}
+                                onClick={() => setShowShareModal(true)}
                                 className="px-4 py-2 rounded-full font-medium border bg-surface text-on-surface border-outline hover:bg-outline-variant/30 transition-colors"
                             >
                                 Share Event
@@ -139,10 +134,10 @@ export function EventsDetailPage() {
                         </div>
 
                         {/* Share button popup */}
-                        {share && (
+                        {showShareModal && (
                             <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
                                 <div className="bg-surface rounded-xl p-6 w-[90%] max-w-sm shadow-lg relative">
-                                    <h2 className="text-lg font-semibold text-on-surface mb-4">Share This Event</h2>
+                                    <h2 className="text-lg font-semibold text-on-surface mb-4">Share Event</h2>
                                     <div className="space-y-2 text-on-surface-variant">
                                         <button
                                             onClick={copyToClipboard}
@@ -150,12 +145,9 @@ export function EventsDetailPage() {
                                         >
                                             🔗 Copy Link
                                         </button>
-                                        <p>📧 Share via Email</p>
-                                        <p>🐦 Share on Twitter</p>
-                                        <p>📘 Share on Facebook</p>
                                     </div>
                                     <button
-                                        onClick={() => setShared(false)}
+                                        onClick={() => setShowShareModal(false)}
                                         className="absolute top-3 right-4 text-on-surface-variant hover:text-on-surface"
                                     >
                                         ✕
@@ -165,19 +157,12 @@ export function EventsDetailPage() {
                         )}
                     </div>
 
-                    {/* location description box */}
+                    {/* location description box 
                     <div className="bg-surface-variant p-4 rounded-md mb-6">
                         <h3 className="font-medium text-on-secondary-container mb-2">How to get there!</h3>
                         <p className="text-on-surface-variant text-sm">This event will be held in Price Center, located at:</p>
                     </div>
-
-                    {/* Hosted by: */}
-                    <div className="bg-surface-variant p-4 rounded-md mb-6">
-                        <h3 className="font-medium text-on-secondary-container mb-2">Hosted by </h3>
-                        <Link to={`/clubs/${event.club.url}`} className="text-blue-600 hover:underline font-medium">
-                            {event.club.name}
-                        </Link>
-                    </div>
+                    */}
 
                     {/* requirements to attend event */}
                     {event.requirements && (
