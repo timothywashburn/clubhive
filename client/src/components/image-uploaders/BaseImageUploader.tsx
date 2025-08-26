@@ -120,6 +120,7 @@ export function BaseImageUploader({ clubId, maxImages, maxFileSizeKB, onSuccess,
                             <div key={idx} className="relative w-32 h-32">
                                 <img src={thumb} alt={`Selected ${idx + 1}`} className="w-full h-full object-cover rounded-md border" />
                                 <button
+                                    type="button"
                                     onClick={() => setPreviewImage(thumb)}
                                     className="hover: cursor-pointer absolute top-1 left-1 p-1 bg-white rounded-full border border-gray-300 hover:bg-gray-100"
                                     title="Preview image"
@@ -127,6 +128,7 @@ export function BaseImageUploader({ clubId, maxImages, maxFileSizeKB, onSuccess,
                                     <Eye size={16} />
                                 </button>
                                 <button
+                                    type="button"
                                     onClick={() => handleRemoveSelectedFile(idx)}
                                     className="hover: cursor-pointer absolute top-1 right-1 p-1 bg-red-500 text-white rounded-full hover:bg-red-600"
                                     title="Remove from selection"
@@ -145,6 +147,7 @@ export function BaseImageUploader({ clubId, maxImages, maxFileSizeKB, onSuccess,
                             <div key={image._id} className="relative w-32 h-32">
                                 <img src={image.url} alt={`Uploaded ${idx + 1}`} className="w-full h-full object-cover rounded-md border" />
                                 <button
+                                    type="button"
                                     onClick={() => setPreviewImage(image.url)}
                                     className="absolute top-1 left-1 p-1 bg-white rounded-full hover:bg-gray-100"
                                     title="Preview image"
@@ -170,6 +173,7 @@ export function BaseImageUploader({ clubId, maxImages, maxFileSizeKB, onSuccess,
                         ref={fileInputRef}
                     />
                     <button
+                        type="button"
                         onClick={() => fileInputRef.current?.click()}
                         disabled={uploading || hasUploaded}
                         className="px-4 py-2 text-sm font-medium rounded-md
@@ -190,6 +194,7 @@ export function BaseImageUploader({ clubId, maxImages, maxFileSizeKB, onSuccess,
             {/* Upload Button - only show when files are selected and nothing uploaded yet */}
             {hasSelected && !hasUploaded && (
                 <button
+                    type="button"
                     onClick={handleUpload}
                     disabled={uploading}
                     className="text-sm px-4 py-2 rounded-md font-semibold
@@ -203,6 +208,7 @@ export function BaseImageUploader({ clubId, maxImages, maxFileSizeKB, onSuccess,
             {/* Delete All Button - only show if there are uploaded images */}
             {hasUploaded && (
                 <button
+                    type="button"
                     onClick={handleDeleteAll}
                     className="text-sm px-4 py-2 font-semibold bg-error text-on-error rounded-md hover:bg-red-600"
                     title="Delete all images"
@@ -217,6 +223,7 @@ export function BaseImageUploader({ clubId, maxImages, maxFileSizeKB, onSuccess,
                     <div className="relative max-h-[90%] max-w-3xl">
                         <img src={previewImage} alt="Preview" className="rounded-lg max-h-full max-w-full object-contain" />
                         <button
+                            type="button"
                             onClick={() => setPreviewImage(null)}
                             className="absolute top-2 right-2 bg-black bg-opacity-50 text-white rounded-full p-2 hover:bg-opacity-75"
                         >

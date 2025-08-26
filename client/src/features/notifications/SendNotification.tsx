@@ -1,12 +1,15 @@
 import React, { useEffect } from 'react';
 import { useState } from 'react';
 import { formatDistanceToNow } from 'date-fns';
+import { NotificationImageUploader } from '../../components/image-uploaders/NotificationImageUploader';
+import type { ImageData } from '@clubhive/shared';
 
 export function SendNotification() {
     const [club, setClub] = useState('');
     const [title, setTitle] = useState('');
     const [message, setMessage] = useState('');
     const [isSubmitting, setIsSubmitting] = useState(false);
+    const [notificationImages, setNotificationImages] = useState<ImageData[]>([]);
     const [errorMsg, setErrorMsg] = useState<string | null>(null);
     const [successMsg, setSuccessMsg] = useState<string | null>(null);
 
@@ -71,6 +74,10 @@ export function SendNotification() {
         void loadClubs();
     }, []);
 
+    const handleImagesChange = (images: ImageData[]) => {
+        setNotificationImages(images);
+    };
+
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
 
@@ -94,6 +101,7 @@ export function SendNotification() {
                     club: club,
                     title: title,
                     body: message,
+                    pictures: notificationImages.map(img => img._id),
                 }),
             });
 
@@ -105,6 +113,7 @@ export function SendNotification() {
             setClub('');
             setTitle('');
             setMessage('');
+            setNotificationImages([]);
         } catch (err) {
             setErrorMsg(err.message);
         } finally {
@@ -303,12 +312,25 @@ export function SendNotification() {
                                 <div className="text-right text-sm text-gray-500 mt-1">
                                     {message.length} / {maxMessageLength}
                                 </div>
-                                <div className="mb-6 mt-4">
-                                    <label className="block text-sm font-medium text-on-surface mb-2">Add Photos</label>
-                                    <div className="w-full h-32 rounded-md border border-dashed border-outline-variant bg-surface-variant flex items-center justify-center text-on-surface-variant text-sm italic">
-                                        Photo upload area
+                            </div>
+
+                            <div className="mb-6">
+                                {club && (
+                                    <NotificationImageUploader
+                                        clubId={club}
+                                        onImagesChange={handleImagesChange}
+                                        maxImages={5}
+                                        maxFileSizeKB={5000}
+                                    />
+                                )}
+                                {!club && (
+                                    <div className="space-y-2">
+                                        <label className="block text-sm font-medium text-on-surface">Add Photos</label>
+                                        <div className="w-full h-32 rounded-md border border-dashed border-outline-variant bg-surface-variant flex items-center justify-center text-on-surface-variant text-sm italic">
+                                            Select a club first to upload photos
+                                        </div>
                                     </div>
-                                </div>
+                                )}
                             </div>
 
                             {errorMsg && <p className="text-sm text-red-500 mb-2">{errorMsg}</p>}

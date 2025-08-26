@@ -2,6 +2,8 @@ import { ApiEndpoint, AuthType } from '@/types/api-types';
 import { DeleteNotificationResponse } from '@clubhive/shared';
 import Notification from '@/models/notification-schema';
 import UserNotification from '@/models/user-notification-schema';
+// import ImageController from '@/controllers/image-controller';
+// import { deleteImageFromCloudinary } from '@/services/imageService';
 
 export const deleteNotificationEndpoint: ApiEndpoint<undefined, DeleteNotificationResponse> = {
     path: '/api/notifications/:id',
@@ -10,6 +12,28 @@ export const deleteNotificationEndpoint: ApiEndpoint<undefined, DeleteNotificati
     handler: async (req, res) => {
         try {
             const id = req.params.id;
+            /*
+            const notification = await Notification.findById(id).populate('pictures');
+
+            if (!notification) {
+                res.status(404).json({ success: false, error: { message: 'Notification not found' } });
+                return;
+            }
+            
+            // deleting pictures
+            if (notification.pictures && notification.pictures.length > 0) {
+                for (const image of notification.pictures) {
+                    try {
+                       // Delete from Cloudinary
+                        await deleteImageFromCloudinary(image.public_id);
+
+                        // Delete from database
+                        await ImageController.deleteImage(image._id);
+                    } catch (err) {
+                       
+                    }
+                }
+            } */
 
             const deleted = await Notification.findByIdAndDelete(id);
             if (!deleted) {

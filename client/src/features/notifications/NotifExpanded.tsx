@@ -1,5 +1,6 @@
 import React from 'react';
 import { BellRing } from 'lucide-react';
+import { useImageData } from '../../hooks/useImageData';
 
 interface NotifExpandedProps {
     notification: {
@@ -8,7 +9,18 @@ interface NotifExpandedProps {
         date: string;
         body: string;
         clubName: string;
+        pictures?: string[];
     } | null;
+}
+
+function NotificationImage({ imageId }: { imageId: string }) {
+    const { image, loading } = useImageData(imageId);
+
+    if (loading || !image) {
+        return <div className="h-24 w-24 bg-outline-variant/10 rounded-md flex-shrink-0" />;
+    }
+
+    return <img src={image.url} alt="Notification image" className="h-24 w-24 object-cover rounded-md flex-shrink-0" />;
 }
 
 export function NotifExpanded({ notification }: NotifExpandedProps) {
@@ -48,11 +60,14 @@ export function NotifExpanded({ notification }: NotifExpandedProps) {
             <div className="bg-surface rounded-lg p-6 space-y-4 border border-outline-variant">
                 <p className="text-on-surface text-med whitespace-pre-line">{notification.body}</p>
 
-                <div className="grid grid-cols-2 md:grid-cols-3 gap-4 pt-2">
-                    <div className="h-24 bg-outline-variant/10 rounded-md" />
-                    <div className="h-24 bg-outline-variant/10 rounded-md" />
-                    <div className="h-24 bg-outline-variant/10 rounded-md col-span-2 md:col-span-1" />
-                </div>
+                {/* Display images in a horizontal line */}
+                {notification.pictures && notification.pictures.length > 0 && (
+                    <div className="flex gap-3 overflow-x-auto pt-2">
+                        {notification.pictures.map(imageId => (
+                            <NotificationImage key={imageId} imageId={imageId} />
+                        ))}
+                    </div>
+                )}
             </div>
         </div>
     );
