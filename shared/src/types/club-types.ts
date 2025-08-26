@@ -13,16 +13,10 @@ export enum ClubStatus {
 export const clubSchema = z.object({
     _id: z.string(),
     school: schoolSchema,
-    name: z
-        .string()
-        .min(1) // required
-        .max(50),
+    name: z.string().max(50),
     tagline: z.string().max(50).optional(),
     description: z.string().max(1000).optional(),
-    url: z
-        .string()
-        .min(1) // url required
-        .max(50),
+    url: z.string().max(50),
     joinRequirements: z.string().max(1000).optional(),
     status: z.enum(ClubStatus),
     socials: z
