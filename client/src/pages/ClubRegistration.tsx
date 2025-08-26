@@ -32,8 +32,11 @@ export function ClubRegistration() {
     const [description, setDescription] = useState('');
     const [status, setStatus] = useState<ClubStatus>(ClubStatus.ANYONE_CAN_JOIN);
 
+    const maxNameLength = 50;
     const maxDescriptionLength = 1000;
     const maxTaglineLength = 50;
+    const maxUrlLength = 50;
+    const maxWebsiteLength = 100;
     const MAX_CLUBS_PER_USER = 5;
 
     const { errorToast } = useToast();
@@ -216,8 +219,15 @@ export function ClubRegistration() {
                                         id="club-name"
                                         className={inputClass + ' border-outline-variant'}
                                         value={name}
-                                        onChange={e => setName(e.target.value)}
+                                        onChange={e => {
+                                            if (e.target.value.length <= maxNameLength) {
+                                                setName(e.target.value);
+                                            }
+                                        }}
                                     />
+                                    <div className="text-right text-sm text-gray-500 mt-1">
+                                        {name.length} / {maxNameLength}
+                                    </div>
                                 </div>
                                 <div>
                                     <label htmlFor="club-school" className="block text-sm font-medium text-on-background">
@@ -254,8 +264,15 @@ export function ClubRegistration() {
                                         id="club-url"
                                         className={inputClass + ' rounded-none rounded-r-md border-outline-variant'}
                                         value={url}
-                                        onChange={e => setUrl(e.target.value)}
+                                        onChange={e => {
+                                            if (e.target.value.length <= maxUrlLength) {
+                                                setUrl(e.target.value);
+                                            }
+                                        }}
                                     />
+                                </div>
+                                <div className="text-right text-sm text-gray-500 mt-1">
+                                    {url.length} / {maxUrlLength}
                                 </div>
                             </div>
 
@@ -273,8 +290,15 @@ export function ClubRegistration() {
                                             id="club-discord"
                                             className={inputClass + ' rounded-none rounded-r-md border-outline-variant'}
                                             value={discord}
-                                            onChange={e => setDiscord(e.target.value)}
+                                            onChange={e => {
+                                                if (e.target.value.length <= maxUrlLength) {
+                                                    setDiscord(e.target.value);
+                                                }
+                                            }}
                                         />
+                                    </div>
+                                    <div className="text-right text-sm text-gray-500 mt-1">
+                                        {discord.length} / {maxUrlLength}
                                     </div>
                                 </div>
                                 <div>
@@ -289,8 +313,15 @@ export function ClubRegistration() {
                                             id="club-instagram"
                                             className={inputClass + ' rounded-none rounded-r-md border-outline-variant'}
                                             value={instagram}
-                                            onChange={e => setInstagram(e.target.value)}
+                                            onChange={e => {
+                                                if (e.target.value.length <= maxUrlLength) {
+                                                    setInstagram(e.target.value);
+                                                }
+                                            }}
                                         />
+                                    </div>
+                                    <div className="text-right text-sm text-gray-500 mt-1">
+                                        {instagram.length} / {maxUrlLength}
                                     </div>
                                 </div>
                                 <div>
@@ -305,8 +336,15 @@ export function ClubRegistration() {
                                             id="club-website"
                                             className={inputClass + ' rounded-none rounded-r-md border-outline-variant'}
                                             value={website}
-                                            onChange={e => setWebsite(e.target.value)}
+                                            onChange={e => {
+                                                if (e.target.value.length <= maxWebsiteLength) {
+                                                    setWebsite(e.target.value);
+                                                }
+                                            }}
                                         />
+                                    </div>
+                                    <div className="text-right text-sm text-gray-500 mt-1">
+                                        {website.length} / {maxWebsiteLength}
                                     </div>
                                 </div>
                             </div>
