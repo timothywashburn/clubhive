@@ -6,6 +6,12 @@ import { useEventTagsData } from '../hooks/useEventTagsData.ts';
 import { getTagColor } from '../features/find-clubs/utils/TagColors';
 import { useToast } from '../hooks/useToast.ts';
 import WebDatePicker from '../components/date-picker/WebDatePicker';
+import { ClubData } from '@clubhive/shared';
+
+interface EventWithClub {
+    event: EventData;
+    club: ClubData;
+}
 
 function TimeFilter({
     afterTime,
@@ -74,7 +80,7 @@ export function EventSearch() {
     const [date, setDate] = useState<Date | null>(null);
     const [showDatePicker, setShowDatePicker] = useState(false);
     const [location, setLocation] = useState('');
-    const [events, setEvents] = useState<EventData[]>([]);
+    const [events, setEvents] = useState<EventWithClub[]>([]);
     const [afterTime, setAfterTime] = useState('');
     const [beforeTime, setBeforeTime] = useState('');
     const datePickerRef = useRef<HTMLDivElement>(null);
@@ -94,6 +100,7 @@ export function EventSearch() {
                 }
             } catch (err) {
                 console.error('Error fetching events:', err);
+                setEvents([]);
             }
         };
         fetchEvents();
@@ -112,13 +119,13 @@ export function EventSearch() {
 
     const filteredEvents = Array.isArray(events)
         ? events
-              .filter(event => event.name?.toLowerCase().includes(searchTerm.toLowerCase()))
+              .filter(({ event }) => event.name?.toLowerCase().includes(searchTerm.toLowerCase()))
               .filter(
-                  event =>
+                  ({ event }) =>
                       selectedTags.length === 0 ||
                       selectedTags.every(selectedTag => event.tags?.some(eventTag => eventTag._id === selectedTag._id))
               )
-              .filter(event => {
+              .filter(({ event }) => {
                   if (!date) return true;
                   const eventDate = new Date(event.date);
                   return (
@@ -127,8 +134,8 @@ export function EventSearch() {
                       eventDate.getDate() === date.getDate()
                   );
               })
-              .filter(event => location.trim() === '' || event.location?.toLowerCase().includes(location.toLowerCase()))
-              .filter(event => {
+              .filter(({ event }) => location.trim() === '' || event.location?.toLowerCase().includes(location.toLowerCase()))
+              .filter(({ event }) => {
                   if (!afterTime && !beforeTime) return true;
                   const eventTime = new Date(event.date + 'T' + (event.startTime || '00:00')).getTime();
                   const afterTimestamp = afterTime ? new Date('1970-01-01T' + afterTime).getTime() : null;
@@ -139,13 +146,13 @@ export function EventSearch() {
 
                   return true;
               })
-              .filter(event => {
+              .filter(({ event }) => {
                   const eventDateTime = new Date(event.date + 'T' + (event.startTime || '00:00'));
                   return eventDateTime.getTime() >= Date.now();
               })
               .sort((a, b) => {
-                  const dateA = new Date(a.date + 'T' + (a.startTime || '00:00'));
-                  const dateB = new Date(b.date + 'T' + (b.startTime || '00:00'));
+                  const dateA = new Date(a.event.date + 'T' + (a.event.startTime || '00:00'));
+                  const dateB = new Date(b.event.date + 'T' + (b.event.startTime || '00:00'));
                   return dateA.getTime() - dateB.getTime();
               })
         : [];
@@ -211,13 +218,15 @@ export function EventSearch() {
                 <hr className="my-4 border-t border-outline-variant" />
                 <div className="space-y-6 mt-6">
                     {/* event cards */}
-                    {filteredEvents.map(event => (
-                        <div key={event._id} className="rounded-lg shadow p-6 border border-outline-variant">
+                    {filteredEvents.map(({ event, club }) => (
+                        <div key={event._id} className="bg-surface rounded-lg shadow p-6 border border-outline-variant">
                             <div className="flex items-start justify-between">
                                 <div className="flex-1">
                                     <div className="flex items-center mb-2">
                                         <div className="w-10 h-10 bg-primary/10 rounded-full flex items-center justify-center mr-3">
-                                            <span className="text-primary font-bold text-sm">C</span>
+                                            <span className="text-primary font-bold text-sm">
+                                                {club?.name ? club.name.charAt(0).toUpperCase() : 'C'}
+                                            </span>
                                         </div>
 
                                         <div>
@@ -230,11 +239,10 @@ export function EventSearch() {
                                                 </Link>
                                                 <span className="text-secondary mr-1"> - </span>
                                                 <Link
-                                                    to={`/club-profile/${event.club}`}
+                                                    to={`/club-profile/${club?.url}`}
                                                     className="text-secondary hover:text-primary hover:underline mr-1"
                                                 >
-                                                    {/* event.club?.name */}
-                                                    club name
+                                                    {club?.name}
                                                 </Link>
                                             </h2>
                                         </div>

@@ -27,7 +27,7 @@ export const useClubEvents = (clubId: string | null) => {
             const data: ApiResponseBody<GetEventsResponse> = await response.json();
 
             if (isSuccess(data)) {
-                setEvents(data.events);
+                setEvents(data.events.map(e => e.event));
             } else {
                 throw new Error(data.error?.message || 'Failed to fetch events');
             }
