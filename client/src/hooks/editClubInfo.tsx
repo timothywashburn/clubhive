@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { updateClub } from './updateClub';
 import { UpdateClubRequest } from '@clubhive/shared';
 import { ClubStatus } from '@clubhive/shared';
@@ -17,17 +17,26 @@ export const editClubInfo = (initialData, clubId) => {
         pictures: [],
     };
 
-    const [formData, setFormData] = useState(initialData || defaultData);
-    const [savedInitialData, setSavedInitialData] = useState(null);
-    const [newTag, setNewTag] = useState('');
+    const hasRealData = data => {
+        return data && (data.name?.trim() || data.tagline?.trim() || data.description?.trim() || data.url?.trim());
+    };
 
-    useEffect(() => {
-        if (initialData && initialData !== null) {
-            console.log('Updating formData with:', initialData);
-            setFormData(initialData);
-            setSavedInitialData({ ...initialData });
-        }
-    }, [initialData]);
+    const [formData, setFormData] = useState(() => {
+        return hasRealData(initialData) ? initialData : defaultData;
+    });
+
+    const [savedInitialData, setSavedInitialData] = useState(() => {
+        return hasRealData(initialData) ? { ...initialData } : null;
+    });
+
+    const [newTag, setNewTag] = useState('');
+    const prevInitialData = useRef(null);
+
+    if (hasRealData(initialData) && !hasRealData(prevInitialData.current)) {
+        setFormData(initialData);
+        setSavedInitialData({ ...initialData });
+        prevInitialData.current = initialData;
+    }
 
     const handleInputChange = e => {
         const { name, value } = e.target;
@@ -50,9 +59,14 @@ export const editClubInfo = (initialData, clubId) => {
 
     const handleAddTag = e => {
         if (e.key === 'Enter' && newTag.trim() !== '') {
+            const tempTag = {
+                _id: `temp_${Date.now()}`, // temp id
+                text: newTag.trim(),
+                isNew: true,
+            };
             setFormData(prevData => ({
                 ...prevData,
-                tags: [...prevData.tags, newTag.trim()],
+                tags: [...prevData.tags, tempTag],
             }));
             setNewTag('');
         }
@@ -69,38 +83,37 @@ export const editClubInfo = (initialData, clubId) => {
     const handleSaveChanges = async () => {
         try {
             const normalizeUpdatePayload = (data: typeof formData) => {
-                const statusMap: Record<string, ClubStatus> = {
-                    'Anyone can join': ClubStatus.ANYONE_CAN_JOIN,
-                    'Request to join': ClubStatus.REQUEST_TO_JOIN,
-                    Closed: ClubStatus.CLOSED,
-                };
-
                 return {
                     name: data.name?.trim() || undefined,
                     tagline: data.tagline?.trim() || undefined,
                     description: data.description?.trim() || undefined,
                     url: data.url?.trim() || undefined,
                     joinRequirements: data.joinRequirements?.trim() || undefined,
-                    status: statusMap[data.status] || undefined,
-                    socials: data.socials
-                        ? {
-                              website: data.socials.website?.trim() || undefined,
-                              discord: data.socials.discord?.trim() || undefined,
-                              instagram: data.socials.instagram?.trim() || undefined,
-                          }
-                        : undefined,
+                    status: data.status,
+                    socials: {
+                        discord: data.socials?.discord?.trim() || undefined,
+                        instagram: data.socials?.instagram?.trim() || undefined,
+                        website: data.socials?.website?.trim() || undefined,
+                    },
+                    tags:
+                        data.tags
+                            ?.map(tag => {
+                                if (tag.isNew) return tag.text;
+                                return tag._id || tag;
+                            })
+                            .filter(Boolean) || undefined,
                     clubLogo: data.clubLogo || undefined,
-                    pictures: (data.pictures || []).filter((pic: string) => !!pic),
-                    tags: (data.tags || []).map((tag: any) => (typeof tag === 'string' ? tag : tag._id)).filter(Boolean),
+                    pictures: data.pictures || undefined,
                 };
             };
-
             const normalizedPayload = normalizeUpdatePayload(formData);
             console.log('Normalized payload:', normalizedPayload);
             const updatedClub = await updateClub(clubId, normalizedPayload);
-            console.log('Update successful:', updatedClub);
+            console.log('Update successfull:', updatedClub);
+            alert('Your update was successfull!');
         } catch (error) {
             console.error('Error saving changes:', error);
+            alert('Error: Your updates were not saved.');
         }
     };
 
