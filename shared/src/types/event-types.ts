@@ -66,7 +66,11 @@ export interface CreateEventResponse {
 }
 
 export interface GetEventsResponse {
-    events: EventData[];
+    //events: EventData[];
+    events: Array<{
+        event: EventData;
+        club: any;
+    }>;
 }
 
 export interface GetEventResponse {
