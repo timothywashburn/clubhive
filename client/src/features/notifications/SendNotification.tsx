@@ -17,6 +17,9 @@ export function SendNotification() {
     const [myOfficerClubs, setMyOfficerClubs] = useState([]);
     const [loadingClubs, setLoadingClubs] = useState(false);
 
+    const maxTitleLength = 50;
+    const maxMessageLength = 1000;
+
     useEffect(() => {
         const loadClubHistory = async () => {
             setLoadingHistory(true);
@@ -267,10 +270,17 @@ export function SendNotification() {
                                         id="title"
                                         name="title"
                                         value={title}
-                                        onChange={e => setTitle(e.target.value)}
+                                        onChange={e => {
+                                            if (e.target.value.length <= maxTitleLength) {
+                                                setTitle(e.target.value);
+                                            }
+                                        }}
                                         placeholder="Enter title"
                                         className="w-full rounded-md border border-outline-variant bg-surface p-2 text-on-surface"
                                     />
+                                    <div className="text-right text-sm text-gray-500 mt-1">
+                                        {title.length} / {maxTitleLength}
+                                    </div>
                                 </div>
                             </div>
 
@@ -283,9 +293,16 @@ export function SendNotification() {
                                     name="message"
                                     rows={6}
                                     value={message}
-                                    onChange={e => setMessage(e.target.value)}
+                                    onChange={e => {
+                                        if (e.target.value.length <= maxMessageLength) {
+                                            setMessage(e.target.value);
+                                        }
+                                    }}
                                     className="w-full rounded-md border border-outline-variant bg-surface text-on-surface px-4 py-3 shadow-sm focus:outline-none focus:ring-2 focus:ring-primary"
                                 />
+                                <div className="text-right text-sm text-gray-500 mt-1">
+                                    {message.length} / {maxMessageLength}
+                                </div>
                                 <div className="mb-6 mt-4">
                                     <label className="block text-sm font-medium text-on-surface mb-2">Add Photos</label>
                                     <div className="w-full h-32 rounded-md border border-dashed border-outline-variant bg-surface-variant flex items-center justify-center text-on-surface-variant text-sm italic">
