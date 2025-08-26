@@ -4,6 +4,7 @@ import { useNavigate } from 'react-router';
 import { ThemePreference, useThemeStore } from '../../stores/themeStore.ts';
 import { useAuthStore } from '../../stores/authStore.ts';
 import { DeleteDangerZone } from '../../components/DangerZone.tsx';
+import { useToast } from '../../hooks/useToast.ts';
 
 export function Account() {
     const { preference, setPreference } = useThemeStore();
@@ -11,6 +12,8 @@ export function Account() {
     const navigate = useNavigate();
 
     const [loadingProfile, setLoadingProfile] = useState(true);
+    const [saving, setSaving] = useState(false);
+    const { errorToast, successToast } = useToast();
 
     const [formData, setFormData] = useState({
         name: 'John Doe',
@@ -21,6 +24,7 @@ export function Account() {
         year: 'third' as 'first' | 'second' | 'third' | 'fourth' | 'more-than-4',
     });
 
+    const [schoolId, setSchoolId] = useState<string | null>(null);
     const [majorInput, setMajorInput] = useState('Computer Science');
     const [showMajorDropdown, setShowMajorDropdown] = useState(false);
     const [deleteLoading, setDeleteLoading] = useState(false);
@@ -157,7 +161,7 @@ export function Account() {
             navigate('/signin');
         } catch (error) {
             console.error('Error deleting account:', error);
-            alert('Failed to delete account');
+            errorToast('Failed to delete account');
         } finally {
             setDeleteLoading(false);
         }
@@ -166,6 +170,46 @@ export function Account() {
     const handleSignOut = async () => {
         await signOut();
         navigate('/signin');
+    };
+
+    const handleSaveChanges = async () => {
+        if (saving) return;
+        setSaving(true);
+
+        try {
+            const yearMap: Record<'first' | 'second' | 'third' | 'fourth' | 'more-than-4', '1' | '2' | '3' | '4' | '>4'> = {
+                first: '1',
+                second: '2',
+                third: '3',
+                fourth: '4',
+                'more-than-4': '>4',
+            };
+
+            const res = await fetch('/api/user', {
+                method: 'PUT',
+                credentials: 'include',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    name: formData.name,
+                    school: schoolId,
+                    major: majorInput,
+                    educationType: formData.educationType,
+                    year: yearMap[formData.year],
+                }),
+            });
+
+            if (!res.ok) {
+                const body = await res.json().catch(() => null);
+                throw new Error(body?.error?.message || `Failed to save changes: ${res.status}`);
+            }
+
+            successToast('Changes saved successfully!');
+        } catch (error) {
+            console.error('Error saving changes:', error);
+            errorToast('Failed to save changes');
+        } finally {
+            setSaving(false);
+        }
     };
 
     useEffect(() => {
@@ -201,6 +245,7 @@ export function Account() {
                     year: yearMap[user.year],
                 });
                 setMajorInput(user?.major || '');
+                setSchoolId(user?.school?._id || (typeof user?.school === 'string' ? user.school : null));
             } catch (e) {
                 console.error(e);
                 alert((e as Error).message || 'Failed to load profile');
@@ -354,8 +399,12 @@ export function Account() {
                                 </div>
 
                                 <div className="mt-6 flex justify-end">
-                                    <button className="bg-primary text-on-primary px-4 py-2 rounded-md hover:bg-primary/90 font-medium cursor-pointer">
-                                        Save Changes
+                                    <button
+                                        onClick={handleSaveChanges}
+                                        disabled={saving || loadingProfile}
+                                        className="bg-primary text-on-primary px-4 py-2 rounded-md hover:bg-primary/90 font-medium cursor-pointer"
+                                    >
+                                        {saving ? 'Saving…' : 'Save Changes'}
                                     </button>
                                 </div>
                             </div>
