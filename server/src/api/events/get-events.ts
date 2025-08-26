@@ -1,6 +1,7 @@
-import { GetEventsResponse, eventSchema, getEventsQuerySchema } from '@clubhive/shared';
+import { GetEventsResponse, eventSchema, getEventsQuerySchema, clubSchema } from '@clubhive/shared';
 import { ApiEndpoint, AuthType } from '@/types/api-types';
 import EventController from '@/controllers/event-controller';
+import Club from '@/models/club-schema';
 import ClubMembershipController from '@/controllers/club-membership-controller';
 import { serializeRecursive } from '@/utils/db-doc-utils';
 import { z } from 'zod';
@@ -43,9 +44,20 @@ export const getEventsEndpoint: ApiEndpoint<undefined, GetEventsResponse> = {
                 events = await EventController.getAllEvents();
             }
 
+            const eventsWithClubs = await Promise.all(
+                events.map(async event => {
+                    const club = await Club.findById(event.club).populate('school').populate('tags').exec();
+
+                    return {
+                        event: eventSchema.parse(serializeRecursive(event)),
+                        club: club ? clubSchema.parse(serializeRecursive(club)) : null,
+                    };
+                })
+            );
+
             res.json({
                 success: true,
-                events: events.map(event => eventSchema.parse(serializeRecursive(event))),
+                events: eventsWithClubs,
             });
         } catch (error) {
             let message = 'Error getting events';
