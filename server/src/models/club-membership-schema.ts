@@ -1,7 +1,5 @@
 import mongoose, { Schema, Document, ObjectId } from 'mongoose';
-
-// mongoose adds an _id property by default for each document
-// it is of type ObjectId
+import { ClubRole } from '@clubhive/shared';
 
 export interface ClubMembershipData extends Document {
     _id: ObjectId;
@@ -10,13 +8,6 @@ export interface ClubMembershipData extends Document {
     role: ClubRole;
     createdAt: Date;
     updatedAt: Date;
-}
-
-export enum ClubRole {
-    OWNER = 'owner',
-    MEMBER = 'member',
-    OFFICER = 'officer',
-    PRINCIPAL_MEMBER = 'principal_member',
 }
 
 const ClubMembershipSchema: Schema<ClubMembershipData> = new Schema(

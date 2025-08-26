@@ -1,6 +1,7 @@
 import { CreateClubRequest, CreateClubResponse, createClubRequestSchema, clubSchema } from '@clubhive/shared';
 import { ApiEndpoint, AuthType } from '@/types/api-types';
 import ClubController from '@/controllers/club-controller';
+import ClubMembershipController from '@/controllers/club-membership-controller';
 import { serializeRecursive } from '@/utils/db-doc-utils';
 import { z } from 'zod';
 
@@ -12,6 +13,7 @@ export const createClubEndpoint: ApiEndpoint<CreateClubRequest, CreateClubRespon
         try {
             const data = createClubRequestSchema.parse(req.body);
             const club = await ClubController.createClub(data);
+            await ClubMembershipController.createMembership(club._id.toString(), req.auth!.userId, 'owner');
 
             res.json({
                 success: true,

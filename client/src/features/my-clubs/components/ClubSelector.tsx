@@ -1,7 +1,8 @@
 import { Crown, Shield, Search, ChevronLeft, ChevronRight } from 'lucide-react';
+import { RegisterClubButton } from './RegisterClubButton.tsx';
 import { useNavigate } from 'react-router';
 import { UserClubData } from '@clubhive/shared';
-import { useMyClubsData } from '../hooks';
+import { useMyClubsData } from '../../../hooks/useMyClubsData.ts';
 
 interface ClubSelectorProps {
     clubs: UserClubData[];
@@ -132,6 +133,7 @@ export function ClubSelector({
                         </button>
                     );
                 })}
+                <RegisterClubButton isMinimized={isMinimized} isAnimating={isAnimating} />
             </div>
         </div>
     );

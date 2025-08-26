@@ -18,8 +18,11 @@ export const eventSchema = z.object({
     date: z.string(),
     startTime: z.string(),
     endTime: z.string(),
+    published: z.boolean(),
     picture: z.string().optional(),
     tags: z.array(tagSchema),
+    clubName: z.string().optional(),
+    clubLogo: z.string().nullable().optional(),
 });
 
 export const createEventRequestSchema = z.object({
@@ -44,6 +47,7 @@ export const updateEventRequestSchema = z.object({
     date: z.string().optional(),
     startTime: z.string().optional(),
     endTime: z.string().optional(),
+    published: z.boolean().optional(),
     picture: z.string().optional(),
     tags: z.array(z.string()).optional(),
 });
@@ -62,7 +66,11 @@ export interface CreateEventResponse {
 }
 
 export interface GetEventsResponse {
-    events: EventData[];
+    //events: EventData[];
+    events: Array<{
+        event: EventData;
+        club: any;
+    }>;
 }
 
 export interface GetEventResponse {
@@ -75,4 +83,9 @@ export interface UpdateEventResponse {
 
 export interface DeleteEventResponse {
     deleted: boolean;
+}
+
+export interface GetMyEventsResponse {
+    upcomingEvents: EventData[];
+    savedEvents: EventData[];
 }

@@ -1,58 +1,126 @@
-import { useTagsData } from '../hooks/fetchTags';
-import React, { useState } from 'react';
+import { useClubTagsData } from '../hooks/useClubTagsData.ts';
+import { useSchoolData } from '../hooks/useSchoolData.ts';
+import React, { useState, useEffect } from 'react';
 import { TagSelectionPopup } from '../features/find-clubs/components/TagsSelectionPopup';
 import type { TagData } from '@clubhive/shared';
 import { getTagColor } from '../features/find-clubs/utils/TagColors';
+import { createClubRequestSchema, ClubStatus } from '@clubhive/shared/src/types/club-types';
+import { useToast } from '../hooks/useToast';
+import { useNavigate } from 'react-router';
 
 export function ClubRegistration() {
-    const { tags } = useTagsData();
+    const { tags } = useClubTagsData();
+    const { schools } = useSchoolData();
     const [selectedTags, setSelectedTags] = useState<TagData[]>([]);
+    const [userClubsCount, setUserClubsCount] = useState<number | null>(null);
+    const [isLoadingClubs, setIsLoadingClubs] = useState(true);
+    const navigate = useNavigate();
 
     const inputClass =
-        'mt-1 block w-full rounded-md text-on-primary-container border border-outline-variant bg-surface px-3 py-2 shadow-sm ' +
+        'mt-1 block w-full rounded-md text-on-primary-container border bg-surface px-3 py-2 shadow-sm ' +
         'focus:border-primary focus:ring focus:ring-primary focus:ring-opacity-50 focus:outline-none';
+    const prefixClass =
+        'mt-1 inline-flex items-center px-3 py-2 text-sm text-on-primary-container bg-surface-variant border border-outline-variant rounded-l-md';
 
-    const [clubName, setClubName] = useState('');
-    const [clubSchool, setClubSchool] = useState('');
-    const [clubTagline, setClubTagline] = useState('');
-    const [clubUrl, setClubUrl] = useState('');
-    const [clubDiscord, setClubDiscord] = useState('');
-    const [clubInstagram, setClubInstagram] = useState('');
-    const [clubWebsite, setClubWebsite] = useState('');
-    const [clubDescription, setClubDescription] = useState('');
+    const [name, setName] = useState('');
+    const [school, setSchool] = useState('');
+    const [tagline, setTagline] = useState('');
+    const [url, setUrl] = useState('');
+    const [discord, setDiscord] = useState('');
+    const [instagram, setInstagram] = useState('');
+    const [website, setWebsite] = useState('');
+    const [description, setDescription] = useState('');
+    const [status, setStatus] = useState<ClubStatus>(ClubStatus.ANYONE_CAN_JOIN);
 
+    const maxNameLength = 50;
     const maxDescriptionLength = 1000;
     const maxTaglineLength = 50;
+    const maxUrlLength = 50;
+    const maxWebsiteLength = 100;
+    const MAX_CLUBS_PER_USER = 5;
 
-    const [errors, setErrors] = useState<{ [key: string]: string }>({});
-    const newErrors: { [key: string]: string } = {};
+    const { errorToast } = useToast();
+    const { successToast } = useToast();
+
+    // Fetch user's clubs to check the limit
+    useEffect(() => {
+        const fetchUserClubs = async () => {
+            try {
+                setIsLoadingClubs(true);
+                const response = await fetch('/api/me/clubs', {
+                    method: 'GET',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                });
+
+                const result = await response.json();
+
+                if (result.success) {
+                    const ownedClubs = result.clubs.filter(club => club.userRole === 'owner');
+                    setUserClubsCount(ownedClubs.length);
+                } else {
+                    console.error('Failed to fetch user clubs:', result.error);
+                    errorToast('Failed to load your clubs. Please refresh the page.');
+                }
+            } catch (error) {
+                console.error('Error fetching user clubs:', error);
+                errorToast('Failed to load your clubs. Please refresh the page.');
+            } finally {
+                setIsLoadingClubs(false);
+            }
+        };
+
+        fetchUserClubs();
+    }, []);
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
 
-        if (!clubName) newErrors.clubName = 'Club name is required';
-        if (!clubSchool) newErrors.clubSchool = 'School is required';
-        if (!clubUrl) newErrors.clubUrl = 'URL is required';
-        if (clubDiscord && !clubDiscord.startsWith('https://discord.com/invite'))
-            newErrors.clubDiscord = 'Discord link must start with https://discord.com/invite/';
-        if (clubInstagram && !clubInstagram.startsWith('https://www.instagram.com/'))
-            newErrors.clubInstagram = 'Instagram link must start with https://www.instagram.com/';
-
-        if (Object.keys(newErrors).length > 0) {
-            setErrors(newErrors);
+        // Check club limit
+        if (userClubsCount !== null && userClubsCount >= MAX_CLUBS_PER_USER) {
+            errorToast(`You can only create up to ${MAX_CLUBS_PER_USER} clubs.`);
             return;
         }
+
         const clubData = {
-            name: clubName,
-            school: clubSchool,
-            tagline: clubTagline ? clubTagline : '',
-            url: clubUrl,
-            discord: clubDiscord,
-            instagram: clubInstagram,
-            website: clubWebsite,
-            description: clubDescription ? clubDescription : '',
-            tags: selectedTags.map(tag => tag._id),
+            name: name,
+            school: school,
+            tagline: tagline,
+            url: url,
+            socials: {
+                discord: discord || undefined,
+                instagram: instagram || undefined,
+                website: website || undefined,
+            },
+            status: status,
+            description: description || undefined,
+            tags: selectedTags.map(tag => tag._id) || undefined,
+            clubLogo: undefined,
+            pictures: undefined,
         };
+        // Validate using Zod schema
+        console.log('Club data being validated:', clubData);
+        const result = createClubRequestSchema.safeParse(clubData);
+
+        if (!result.success) {
+            // Flatten errors and show as toasts
+            const zodErrors = result.error.format();
+            console.log('Full Zod errors:', zodErrors);
+
+            if (zodErrors.name?._errors.length) errorToast(zodErrors.name._errors[0]);
+            if (zodErrors.school?._errors.length) errorToast(zodErrors.school._errors[0]);
+            if (zodErrors.url?._errors.length) errorToast(zodErrors.url._errors[0]);
+            if (zodErrors.tagline?._errors.length) errorToast(zodErrors.tagline._errors[0]);
+            if (zodErrors.description?._errors.length) errorToast(zodErrors.description._errors[0]);
+
+            // Handle nested socials errors
+            if (zodErrors.socials?.discord?._errors.length) errorToast(zodErrors.socials.discord._errors[0]);
+            if (zodErrors.socials?.instagram?._errors.length) errorToast(zodErrors.socials.instagram._errors[0]);
+            if (zodErrors.socials?.website?._errors.length) errorToast(zodErrors.socials.website._errors[0]);
+
+            return;
+        }
 
         try {
             const res = await fetch('/api/clubs', {
@@ -65,11 +133,60 @@ export function ClubRegistration() {
             const result = await res.json();
             if (result.success) {
                 console.log('Club registered successfully:', result.club);
+                successToast('Club registered successfully!');
+                navigate(`/my-clubs/${result.club.url}/info`);
             }
         } catch (error) {
             console.error('Error registering club:', error);
+            errorToast('Failed to register club. Please try again.');
         }
     };
+
+    // Show loading state while fetching clubs
+    if (isLoadingClubs) {
+        return (
+            <div className="h-full relative z-1">
+                <div className="max-w-7xl mx-auto px-6 sm:px-8 lg:px-10 py-8">
+                    <div className="mb-8">
+                        <h1 className="text-3xl font-bold text-on-background">Register Your Club</h1>
+                        <div className="bg-surface rounded-lg shadow p-6 mt-4">
+                            <div className="flex items-center justify-center py-12">
+                                <div className="text-on-background">Loading...</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        );
+    }
+
+    // Show limit reached message
+    if (userClubsCount !== null && userClubsCount >= MAX_CLUBS_PER_USER) {
+        return (
+            <div className="h-full relative z-1">
+                <div className="max-w-7xl mx-auto px-6 sm:px-8 lg:px-10 py-8">
+                    <div className="mb-8">
+                        <h1 className="text-3xl font-bold text-on-background">Register Your Club</h1>
+                        <div className="bg-surface rounded-lg shadow p-6 mt-4">
+                            <div className="text-center py-12">
+                                <div className="text-error text-lg font-semibold mb-4">Club Creation Limit Reached</div>
+                                <div className="text-on-background-variant mb-6">
+                                    You have reached the maximum limit of {MAX_CLUBS_PER_USER} clubs per user. You currently have{' '}
+                                    {userClubsCount} clubs.
+                                </div>
+                                <button
+                                    onClick={() => navigate('/my-clubs')}
+                                    className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-on-primary bg-primary hover:cursor-pointer"
+                                >
+                                    View My Clubs
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        );
+    }
 
     return (
         <div className="h-full relative z-1">
@@ -77,145 +194,218 @@ export function ClubRegistration() {
                 <div className="mb-8">
                     <h1 className="text-3xl font-bold text-on-background">Register Your Club</h1>
                     <p className="text-on-background-variant mt-2">Fill out the form below to register your club to clubhive.</p>
+
+                    {/* Club count indicator */}
+                    {userClubsCount !== null && (
+                        <div className="mt-2 text-sm text-on-background-variant">
+                            You may only register up to {MAX_CLUBS_PER_USER} clubs. You currently have {userClubsCount} club
+                            {userClubsCount !== 1 ? 's' : ''} registered.
+                        </div>
+                    )}
+
                     <div className="bg-surface rounded-lg shadow p-6 mt-4">
                         <form onSubmit={handleSubmit} className="overflow-y-auto">
                             <h2 className="text-xl font-semibold text-on-background mb-4">Club Information</h2>
                             <hr className="my-4 border-t border-outline-variant" />
 
-                            {/* Club Details */}
+                            {/* Name and School */}
                             <div className="grid grid-cols-2 gap-6">
                                 <div>
                                     <label htmlFor="club-name" className="block text-sm font-medium text-on-background">
-                                        Club Name
+                                        Club Name <span className="text-error">*</span>
                                     </label>
                                     <input
                                         type="text"
                                         id="club-name"
-                                        className={inputClass + ' ' + (errors.clubName ? 'border-red-500' : '')}
-                                        value={clubName}
-                                        onChange={e => setClubName(e.target.value)}
-                                    />
-                                    {errors.clubName && <p className="text-red-500 text-sm mt-1">{errors.clubName}</p>}
-                                </div>
-                                <div>
-                                    <label htmlFor="club-school" className="block text-sm font-medium text-on-background">
-                                        School
-                                    </label>
-                                    <select
-                                        id="club-school"
-                                        className={inputClass + ' ' + (errors.clubSchool ? 'border-red-500' : '')}
-                                        value={clubSchool}
-                                        onChange={e => setClubSchool(e.target.value)}
-                                    >
-                                        <option className="text-on-background-variant" value="">
-                                            Select your school
-                                        </option>
-                                        <option value="UCSD">UCSD</option>
-                                        <option value="UCLA">UCLA</option>
-                                        <option value="UCI">UCI</option>
-                                        <option value="UCSB">UCSB</option>
-                                        <option value="UCR">UCR</option>
-                                    </select>
-                                    {errors.clubSchool && <p className="text-red-500 text-sm mt-1">{errors.clubSchool}</p>}
-                                </div>
-                                <div>
-                                    <label htmlFor="club-tagline" className="block text-sm font-medium text-on-background">
-                                        Tagline
-                                    </label>
-                                    <input
-                                        type="text"
-                                        id="club-tagline"
-                                        className={inputClass}
-                                        value={clubTagline}
+                                        className={inputClass + ' border-outline-variant'}
+                                        value={name}
                                         onChange={e => {
-                                            if (e.target.value.length <= maxTaglineLength) {
-                                                setClubTagline(e.target.value);
+                                            if (e.target.value.length <= maxNameLength) {
+                                                setName(e.target.value);
                                             }
                                         }}
                                     />
                                     <div className="text-right text-sm text-gray-500 mt-1">
-                                        {clubTagline.length} / {maxTaglineLength}
+                                        {name.length} / {maxNameLength}
                                     </div>
                                 </div>
                                 <div>
-                                    <label htmlFor="club-url" className="block text-sm font-medium text-on-background">
-                                        Profile Page URL
+                                    <label htmlFor="club-school" className="block text-sm font-medium text-on-background">
+                                        School <span className="text-error">*</span>
                                     </label>
+                                    <select
+                                        id="club-school"
+                                        className={inputClass + ' border-outline-variant'}
+                                        value={school}
+                                        onChange={e => setSchool(e.target.value)}
+                                    >
+                                        <option value="" disabled>
+                                            Select your school
+                                        </option>
+                                        {schools.map(school => (
+                                            <option key={school._id} value={school._id}>
+                                                {school.name}
+                                            </option>
+                                        ))}
+                                    </select>
+                                </div>
+                            </div>
+
+                            {/* URL */}
+                            <div className="mt-5">
+                                <label htmlFor="club-url" className="block text-sm font-medium text-on-background">
+                                    Profile Page URL <span className="text-error">*</span>
+                                </label>
+                                <div className="flex">
+                                    <span className={prefixClass + ' whitespace-nowrap'}>https://clubhive.timothyw.dev/club-profile/</span>
                                     <input
+                                        placeholder="your-club-profile-url"
                                         type="text"
                                         id="club-url"
-                                        className={inputClass + ' ' + (errors.clubUrl ? 'border-red-500' : '')}
-                                        value={clubUrl}
-                                        onChange={e => setClubUrl(e.target.value)}
+                                        className={inputClass + ' rounded-none rounded-r-md border-outline-variant'}
+                                        value={url}
+                                        onChange={e => {
+                                            if (e.target.value.length <= maxUrlLength) {
+                                                setUrl(e.target.value);
+                                            }
+                                        }}
                                     />
-                                    {errors.clubUrl && <p className="text-red-500 text-sm mt-1">{errors.clubUrl}</p>}
+                                </div>
+                                <div className="text-right text-sm text-gray-500 mt-1">
+                                    {url.length} / {maxUrlLength}
                                 </div>
                             </div>
 
                             {/* Social Links */}
-                            <div className="mt-5 grid grid-cols-3 gap-6">
+                            <div className="mt-5 grid grid-row-3 gap-6">
                                 <div>
                                     <label htmlFor="club-discord" className="block text-sm font-medium text-on-background">
                                         Discord Invite Link
                                     </label>
-                                    <input
-                                        placeholder="https://discord.com/invite/..."
-                                        type="text"
-                                        id="club-discord"
-                                        className={inputClass + ' ' + (errors.clubDiscord ? 'border-red-500' : '')}
-                                        value={clubDiscord}
-                                        onChange={e => setClubDiscord(e.target.value)}
-                                    />
-                                    {errors.clubDiscord && <p className="text-red-500 text-sm mt-1">{errors.clubDiscord}</p>}
+                                    <div className="flex">
+                                        <span className={prefixClass}>https://discord.com/invite/</span>
+                                        <input
+                                            placeholder="your-club-invite"
+                                            type="text"
+                                            id="club-discord"
+                                            className={inputClass + ' rounded-none rounded-r-md border-outline-variant'}
+                                            value={discord}
+                                            onChange={e => {
+                                                if (e.target.value.length <= maxUrlLength) {
+                                                    setDiscord(e.target.value);
+                                                }
+                                            }}
+                                        />
+                                    </div>
+                                    <div className="text-right text-sm text-gray-500 mt-1">
+                                        {discord.length} / {maxUrlLength}
+                                    </div>
                                 </div>
                                 <div>
                                     <label htmlFor="club-instagram" className="block text-sm font-medium text-on-background">
                                         Instagram Profile Link
                                     </label>
-                                    <input
-                                        placeholder="https://www.instagram.com/..."
-                                        type="text"
-                                        id="club-instagram"
-                                        className={inputClass + ' ' + (errors.clubInstagram ? 'border-red-500' : '')}
-                                        value={clubInstagram}
-                                        onChange={e => setClubInstagram(e.target.value)}
-                                    />
-                                    {errors.clubInstagram && <p className="text-red-500 text-sm mt-1">{errors.clubInstagram}</p>}
+                                    <div className="flex">
+                                        <span className={prefixClass}>https://www.instagram.com/</span>
+                                        <input
+                                            placeholder="your-club-account"
+                                            type="text"
+                                            id="club-instagram"
+                                            className={inputClass + ' rounded-none rounded-r-md border-outline-variant'}
+                                            value={instagram}
+                                            onChange={e => {
+                                                if (e.target.value.length <= maxUrlLength) {
+                                                    setInstagram(e.target.value);
+                                                }
+                                            }}
+                                        />
+                                    </div>
+                                    <div className="text-right text-sm text-gray-500 mt-1">
+                                        {instagram.length} / {maxUrlLength}
+                                    </div>
                                 </div>
                                 <div>
                                     <label htmlFor="club-website" className="block text-sm font-medium text-on-background">
                                         Website Link
                                     </label>
-                                    <input
-                                        type="text"
-                                        id="club-website"
-                                        className={inputClass + ' ' + (errors.clubWebsite ? 'border-red-500' : '')}
-                                        value={clubWebsite}
-                                        onChange={e => setClubWebsite(e.target.value)}
-                                    />
-                                    {errors.clubWebsite && <p className="text-red-500 text-sm mt-1">{errors.clubWebsite}</p>}
+                                    <div className="flex">
+                                        <span className={prefixClass}>https://</span>
+                                        <input
+                                            placeholder="your-club-website"
+                                            type="text"
+                                            id="club-website"
+                                            className={inputClass + ' rounded-none rounded-r-md border-outline-variant'}
+                                            value={website}
+                                            onChange={e => {
+                                                if (e.target.value.length <= maxWebsiteLength) {
+                                                    setWebsite(e.target.value);
+                                                }
+                                            }}
+                                        />
+                                    </div>
+                                    <div className="text-right text-sm text-gray-500 mt-1">
+                                        {website.length} / {maxWebsiteLength}
+                                    </div>
+                                </div>
+                            </div>
+
+                            {/* Tagline */}
+                            <div className="mt-5">
+                                <label htmlFor="club-tagline" className="block text-sm font-medium text-on-background">
+                                    Tagline <span className="text-error">*</span>
+                                </label>
+                                <input
+                                    type="text"
+                                    id="club-tagline"
+                                    className={inputClass + ' border-outline-variant'}
+                                    value={tagline}
+                                    onChange={e => {
+                                        if (e.target.value.length <= maxTaglineLength) {
+                                            setTagline(e.target.value);
+                                        }
+                                    }}
+                                />
+                                <div className="text-right text-sm text-gray-500 mt-1">
+                                    {tagline.length} / {maxTaglineLength}
                                 </div>
                             </div>
 
                             {/* Description */}
-                            <div className="mt-5">
+                            <div>
                                 <label htmlFor="club-description" className="block text-sm font-medium text-on-background">
                                     Description
                                 </label>
                                 <textarea
                                     id="club-description"
                                     rows={4}
-                                    className={inputClass}
-                                    value={clubDescription}
+                                    className={inputClass + ' border-outline-variant'}
+                                    value={description}
                                     onChange={e => {
                                         if (e.target.value.length <= maxDescriptionLength) {
-                                            setClubDescription(e.target.value);
+                                            setDescription(e.target.value);
                                         }
                                     }}
                                 />
                                 <div className="text-right text-sm text-gray-500 mt-1">
-                                    {clubDescription.length} / {maxDescriptionLength}
+                                    {description.length} / {maxDescriptionLength}
                                 </div>
+                            </div>
+
+                            {/* Status */}
+                            <div className="mt-5">
+                                <label htmlFor="club-status" className="block text-sm font-medium text-on-background">
+                                    Club Status
+                                </label>
+                                <select
+                                    id="club-status"
+                                    className={inputClass + ' border-outline-variant'}
+                                    value={status}
+                                    onChange={e => setStatus(e.target.value as ClubStatus)}
+                                >
+                                    <option value={ClubStatus.ANYONE_CAN_JOIN}>{ClubStatus.ANYONE_CAN_JOIN}</option>
+                                    <option value={ClubStatus.REQUEST_TO_JOIN}>{ClubStatus.REQUEST_TO_JOIN}</option>
+                                    <option value={ClubStatus.CLOSED}>{ClubStatus.CLOSED}</option>
+                                </select>
                             </div>
 
                             {/* Tags */}
