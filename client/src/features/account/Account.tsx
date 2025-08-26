@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Settings, Mail, Lock, User, Monitor, Moon, Sun, Trash2, LogOut } from 'lucide-react';
 import { useNavigate } from 'react-router';
 import { ThemePreference, useThemeStore } from '../../stores/themeStore.ts';
@@ -10,12 +10,14 @@ export function Account() {
     const { signOut } = useAuthStore();
     const navigate = useNavigate();
 
+    const [loadingProfile, setLoadingProfile] = useState(true);
+
     const [formData, setFormData] = useState({
         name: 'John Doe',
         email: 'john.doe@university.edu',
         school: 'University of California, San Diego',
         major: 'Computer Science',
-        educationType: 'undergraduate' as 'undergraduate' | 'graduate',
+        educationType: 'Undergraduate' as 'Undergraduate' | 'Graduate',
         year: 'third' as 'first' | 'second' | 'third' | 'fourth' | 'more-than-4',
     });
 
@@ -166,6 +168,48 @@ export function Account() {
         navigate('/signin');
     };
 
+    useEffect(() => {
+        (async () => {
+            try {
+                const res = await fetch('/api/users/get-user', {
+                    method: 'GET',
+                    credentials: 'include',
+                    headers: { 'Content-Type': 'application/json' },
+                });
+
+                if (!res.ok) {
+                    const body = await res.json().catch(() => null);
+                    throw new Error(body?.error?.message || `Failed to load user: ${res.status}`);
+                }
+
+                const { user } = await res.json();
+
+                const yearMap: Record<string, 'first' | 'second' | 'third' | 'fourth' | 'more-than-4'> = {
+                    '1': 'first',
+                    '2': 'second',
+                    '3': 'third',
+                    '4': 'fourth',
+                    '>4': 'more-than-4',
+                };
+
+                setFormData({
+                    name: user.name,
+                    email: user.email,
+                    school: user?.school && user.school.name,
+                    major: user.major,
+                    educationType: user.educationType,
+                    year: yearMap[user.year],
+                });
+                setMajorInput(user?.major || '');
+            } catch (e) {
+                console.error(e);
+                alert((e as Error).message || 'Failed to load profile');
+            } finally {
+                setLoadingProfile(false);
+            }
+        })();
+    }, []);
+
     return (
         <div className="h-full relative">
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
@@ -281,8 +325,8 @@ export function Account() {
                                             onChange={e => handleInputChange('educationType', e.target.value)}
                                             className="w-full px-3 py-2 border border-outline-variant rounded-md bg-surface text-on-surface focus:outline-none focus:ring-1 focus:ring-primary focus:border-primary"
                                         >
-                                            <option value="undergraduate">Undergraduate</option>
-                                            <option value="graduate">Graduate</option>
+                                            <option value="Undergraduate">Undergraduate</option>
+                                            <option value="Graduate">Graduate</option>
                                         </select>
                                     </div>
 
