@@ -10,6 +10,9 @@ export const updateClub = async (clubId: string, updates: UpdateClubRequest) => 
 
     const data = await response.json();
     if (!data.success) {
+        // Commented this out since const data already exists
+        //    const errorText = await response.text();
+        console.log('Response status:', response.status);
         throw new Error(data.error?.message || 'Update failed');
     }
 
