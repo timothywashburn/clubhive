@@ -13,6 +13,7 @@ export function Account() {
 
     const [loadingProfile, setLoadingProfile] = useState(true);
     const [saving, setSaving] = useState(false);
+
     const { errorToast, successToast } = useToast();
 
     const [emailEditing, setEmailEditing] = useState(false);
