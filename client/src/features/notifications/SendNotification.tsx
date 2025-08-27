@@ -10,6 +10,7 @@ export function SendNotification() {
     const [message, setMessage] = useState('');
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [notificationImages, setNotificationImages] = useState<ImageData[]>([]);
+    const [isUploadingImages, setIsUploadingImages] = useState(false);
     const [errorMsg, setErrorMsg] = useState<string | null>(null);
     const [successMsg, setSuccessMsg] = useState<string | null>(null);
 
@@ -76,6 +77,10 @@ export function SendNotification() {
 
     const handleImagesChange = (images: ImageData[]) => {
         setNotificationImages(images);
+    };
+
+    const handleUploadStateChange = (isUploading: boolean) => {
+        setIsUploadingImages(isUploading);
     };
 
     const handleSubmit = async (e: React.FormEvent) => {
@@ -319,6 +324,7 @@ export function SendNotification() {
                                     <NotificationImageUploader
                                         clubId={club}
                                         onImagesChange={handleImagesChange}
+                                        onUploadStateChange={handleUploadStateChange}
                                         maxImages={5}
                                         maxFileSizeKB={5000}
                                     />
@@ -339,10 +345,10 @@ export function SendNotification() {
                             <div className="flex justify-end">
                                 <button
                                     type="submit"
-                                    disabled={isSubmitting}
-                                    className="bg-primary text-on-primary px-6 py-2 rounded-md font-medium shadow-sm hover:bg-primary/90 transition"
+                                    disabled={isSubmitting || isUploadingImages}
+                                    className="bg-primary text-on-primary px-6 py-2 rounded-md font-medium shadow-sm hover:bg-primary/90 transition disabled:opacity-50 disabled:cursor-not-allowed"
                                 >
-                                    {isSubmitting ? 'Sending…' : 'Send Notification'}
+                                    {isSubmitting ? 'Sending…' : isUploadingImages ? 'Uploading images...' : 'Send Notification'}
                                 </button>
                             </div>
                         </form>

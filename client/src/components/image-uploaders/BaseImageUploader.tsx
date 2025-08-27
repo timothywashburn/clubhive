@@ -14,7 +14,7 @@ type BaseImageUploaderProps = {
     multiple?: boolean;
     maxImages?: number;
     maxFileSizeKB?: number;
-    onSuccess: (images: ImageData[]) => void;
+    onSuccess: (images: ImageData[], isUploading?: boolean) => void;
     onError: (error: string) => void;
 };
 
@@ -83,6 +83,7 @@ export function BaseImageUploader({ clubId, maxImages, maxFileSizeKB, onSuccess,
         }
 
         setUploading(true);
+        onSuccess(uploadedImages, true); // Notify parent that upload is starting
         try {
             // Upload each selected file
             for (const file of selectedFiles) {
@@ -95,6 +96,7 @@ export function BaseImageUploader({ clubId, maxImages, maxFileSizeKB, onSuccess,
             onError(error);
         } finally {
             setUploading(false);
+            onSuccess(uploadedImages, false); // Notify parent that upload is complete
         }
     };
 
