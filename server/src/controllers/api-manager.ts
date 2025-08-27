@@ -59,6 +59,7 @@ export default class ApiManager {
     private readonly router: Router;
 
     private constructor() {
+        // asdfasdf
         this.router = express.Router();
         this.setupMiddleware();
         this.registerEndpoints();
