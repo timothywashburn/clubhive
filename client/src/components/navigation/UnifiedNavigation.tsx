@@ -12,7 +12,6 @@ export function UnifiedNavigation(props: UnifiedNavigationProps) {
     const location = useLocation();
 
     const { isAuthenticated, user } = useAuthStore();
-    console.log(user);
 
     const style = props.style || {};
     const isAboutPage = location.pathname === '/about';
