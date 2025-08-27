@@ -3,6 +3,7 @@ import { Link } from 'react-router';
 import { useNavigate } from 'react-router';
 import { useAuthStore } from '../../stores/authStore.ts';
 import { useToast } from '../../hooks/useToast.ts';
+import { signInRequestSchema } from '@clubhive/shared/src/types/auth-types';
 
 export function SignIn() {
     const [email, setEmail] = useState('');
@@ -32,6 +33,14 @@ export function SignIn() {
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
+        // zod input validation
+        const result = signInRequestSchema.safeParse({ email: email, password: password });
+        if (!result) {
+            const zodErrors = result.error.format();
+            if (zodErrors.email?._errors.length) errorToast(zodErrors.email._errors[0]);
+            if (zodErrors.password?._errors.length) errorToast(zodErrors.password._errors[0]);
+            return;
+        }
         await signIn(email, password);
     };
 
