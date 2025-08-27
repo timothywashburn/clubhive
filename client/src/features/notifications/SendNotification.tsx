@@ -1,6 +1,10 @@
 import React, { useEffect } from 'react';
 import { useState } from 'react';
 import { formatDistanceToNow } from 'date-fns';
+import { postNotificationRequestSchema } from '@clubhive/shared/src/types/notification-types';
+import { useToast } from '../../hooks/useToast';
+
+const { errorToast } = useToast();
 
 export function SendNotification() {
     const [club, setClub] = useState('');
@@ -80,6 +84,18 @@ export function SendNotification() {
         if (!club || !title || !message) {
             setErrorMsg('Please fill Club, Title, and Message.');
             return;
+        }
+
+        const result = postNotificationRequestSchema.safeParse({
+            club: club,
+            title: title,
+            body: message,
+        });
+        if (!result) {
+            const zodErrors = result.error.format();
+            if (zodErrors.club?._errors.length) errorToast(zodErrors.club._errors[0]);
+            if (zodErrors.title?._errors.length) errorToast(zodErrors.title._errors[0]);
+            if (zodErrors.body?._errors.length) errorToast(zodErrors.body._errors[0]);
         }
 
         setIsSubmitting(true);
