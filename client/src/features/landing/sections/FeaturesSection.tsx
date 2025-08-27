@@ -7,7 +7,7 @@ interface FeaturesSectionProps {
 }
 
 export function FeaturesSection({ isActive }: FeaturesSectionProps) {
-    const title = 'Key Features';
+    const title = 'Features';
     const subtitle = 'Get started exploring clubs, searching for events, or by creating an account to manage your own club!';
     const features = [
         { icon: Users, title: 'Explore Clubs', description: '...' },

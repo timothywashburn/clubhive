@@ -1,11 +1,11 @@
 import React from 'react';
 import { motion } from 'framer-motion';
 
-interface TextSectionProps {
+interface MissionSectionProps {
     isActive: boolean;
 }
 
-export function TextSection({ isActive }: TextSectionProps) {
+export function MissionSection({ isActive }: MissionSectionProps) {
     const title = 'Our Mission';
     const content = "I swear I'll write this at some point";
     return (

@@ -1,11 +1,11 @@
 import React from 'react';
 import { motion } from 'framer-motion';
 
-interface StatsSectionProps {
+interface FeaturesSectionProps {
     isActive: boolean;
 }
 
-export function StatsSection({ isActive }: StatsSectionProps) {
+export function DataSection({ isActive }: FeaturesSectionProps) {
     const title = 'Join Our Community';
     const subtitle = 'Believe it or not this data is 100% real';
     const stats = [

@@ -1,9 +1,27 @@
 import React, { useEffect, useState, useCallback } from 'react';
-import { motion } from 'framer-motion';
+import { motion, useScroll, useTransform } from 'framer-motion';
 import { ChevronDown } from 'lucide-react';
 import { useNavigate } from 'react-router';
 import { useBackgroundStore } from '../../stores/backgroundStore.ts';
-import { HeroSection, TextSection, FeaturesSection, StatsSection, TestimonialsSection, ContributionsSection, CTASection } from './sections';
+import {
+    HeroSection,
+    MissionSection,
+    FeaturesSection,
+    DataSection,
+    TestimonialsSection,
+    ContributionsSection,
+    CTASection,
+} from './sections';
+
+enum SectionType {
+    HERO = 'hero',
+    TEXT = 'text',
+    FEATURES = 'features',
+    DATA = 'stats',
+    TESTIMONIALS = 'testimonials',
+    CONTRIBUTIONS = 'contributions',
+    CTA = 'cta',
+}
 
 export function LandingPage() {
     const navigate = useNavigate();
@@ -13,9 +31,9 @@ export function LandingPage() {
     const [nextAction, setNextAction] = useState<'next' | 'prev' | null>(null);
     const [lastScrollTime, setLastScrollTime] = useState(0);
 
-    const sectionTypes = ['hero', 'text', 'features', 'stats', 'testimonials', 'contributions', 'cta'];
-    const totalPositions = sectionTypes.length;
+    const totalPositions = Object.values(SectionType).length;
     const hexagonRadius = 1500;
+    const progressWidth = `${(currentPosition / (totalPositions - 1)) * 100}%`;
 
     // Set hasMounted to true after component mounts to trigger hero animations
     useEffect(() => {
@@ -42,7 +60,7 @@ export function LandingPage() {
         { x: hexagonRadius * Math.cos(Math.PI / 6), y: -hexagonRadius * Math.sin(Math.PI / 6), scale: 1 },
         // Top
         { x: 0, y: -hexagonRadius, scale: 1 },
-        // Center (CTA now replaces overview)
+        // Center
         { x: 0, y: 0, scale: 0.02 },
     ];
 
@@ -156,26 +174,24 @@ export function LandingPage() {
 
     const honeycombPos = getHoneycombPosition();
 
-    // Update global honeycomb position
     useEffect(() => {
         setPosition(honeycombPos.x, honeycombPos.y, currentPosition + 1 == totalPositions ? 1 : 1.7);
     }, [honeycombPos.x, honeycombPos.y, currentPosition, totalPositions, setPosition]);
 
     return (
         <div className="h-full relative">
-            {/* Navigation Progress Dots */}
-            <div className="fixed top-20 right-8 z-50 flex flex-col gap-2">
-                {sectionTypes.map((_, index) => (
-                    <button
-                        key={index}
-                        onClick={() => !isTransitioning && setCurrentPosition(index)}
-                        className={`w-3 h-3 rounded-full transition-all duration-300 ${
-                            index === currentPosition ? 'bg-primary scale-125' : 'bg-on-surface/30 hover:bg-on-surface/50'
-                        }`}
-                        disabled={isTransitioning}
-                    />
-                ))}
-            </div>
+            {/* Progress Bar */}
+            <motion.div
+                className="fixed top-16 left-0 h-0.5 bg-primary z-50"
+                initial={{ width: '0%' }}
+                animate={{ width: progressWidth }}
+                transition={{
+                    type: 'spring',
+                    damping: 25,
+                    stiffness: 150,
+                    duration: 0.6,
+                }}
+            />
 
             {/* Navigation Hint */}
             {currentPosition < totalPositions - 1 && (
@@ -211,7 +227,7 @@ export function LandingPage() {
                 }}
             >
                 {/* All content sections positioned at their hexagon coordinates */}
-                {sectionTypes.map((sectionType, index) => {
+                {Object.values(SectionType).map((sectionType, index) => {
                     const position = hexagonPositions[index];
                     return (
                         <ContentSection
@@ -219,7 +235,6 @@ export function LandingPage() {
                             sectionType={sectionType}
                             position={position}
                             isActive={currentPosition === index && hasMounted}
-                            isCTA={currentPosition === totalPositions - 1}
                             navigate={navigate}
                         />
                     );
@@ -229,21 +244,17 @@ export function LandingPage() {
     );
 }
 
-// Content Section Component
 interface ContentSectionProps {
-    sectionType: string;
+    sectionType: SectionType;
     position: { x: number; y: number; scale: number };
     isActive: boolean;
-    isCTA: boolean;
     navigate: (path: string) => void;
 }
 
-function ContentSection({ sectionType, position, isActive, isCTA, navigate }: ContentSectionProps) {
+function ContentSection({ sectionType, position, isActive, navigate }: ContentSectionProps) {
     const baseStyle = {
         position: 'absolute' as const,
-        left: '50%',
-        top: '50%',
-        transform: `translate(-50%, -50%) translate(${position.x}px, ${position.y}px)`,
+        transform: `translate(${position.x}px, ${position.y}px)`,
         width: '100vw',
         height: '100vh',
         display: 'flex',
@@ -253,29 +264,20 @@ function ContentSection({ sectionType, position, isActive, isCTA, navigate }: Co
 
     const renderContent = () => {
         switch (sectionType) {
-            case 'hero':
+            case SectionType.HERO:
                 return <HeroSection isActive={isActive} navigate={navigate} />;
-
-            case 'text':
-                return <TextSection isActive={isActive} />;
-
-            case 'features':
+            case SectionType.TEXT:
+                return <MissionSection isActive={isActive} />;
+            case SectionType.FEATURES:
                 return <FeaturesSection isActive={isActive} />;
-
-            case 'stats':
-                return <StatsSection isActive={isActive} />;
-
-            case 'testimonials':
+            case SectionType.DATA:
+                return <DataSection isActive={isActive} />;
+            case SectionType.TESTIMONIALS:
                 return <TestimonialsSection isActive={isActive} />;
-
-            case 'contributions':
+            case SectionType.CONTRIBUTIONS:
                 return <ContributionsSection isActive={isActive} />;
-
-            case 'cta':
+            case SectionType.CTA:
                 return <CTASection isActive={isActive} navigate={navigate} />;
-
-            default:
-                return null;
         }
     };
 

@@ -38,12 +38,12 @@ export function HeroSection({ isActive, navigate }: HeroSectionProps) {
                 </motion.h1>
 
                 <motion.p
-                    className="text-xl md:text-2xl text-on-background-variant mb-12 max-w-2xl mx-auto"
+                    className="text-xl md:text-2xl text-on-background-variant mb-12 max-w-xl mx-auto"
                     initial={false}
                     animate={isActive ? { opacity: 1, y: 0 } : { opacity: 0.7, y: 40 }}
                     transition={{ duration: 0.8, delay: 0.6, ease: 'easeOut' }}
                 >
-                    The only platform needed for you to explore clubs, find events, and organize your own club's affairs.
+                    A tool for exploring clubs, finding events, and organizing your own club's affairs.
                 </motion.p>
 
                 <motion.div
