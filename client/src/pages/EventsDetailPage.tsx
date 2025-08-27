@@ -69,10 +69,11 @@ export function EventsDetailPage() {
                         )}
                     </div>
 
-                    {event.event.flyerUrl && (
+                    {/* event flyer picture, only shows when picture is attached */}
+                    {event.event.picture && (
                         <div className="w-full flex justify-center mb-8">
                             <img
-                                src={event.event.flyerUrl}
+                                src={event.event.picture}
                                 alt="Event Flyer"
                                 className="max-w-full max-h-96 object-contain rounded-md shadow-sm"
                             />
@@ -90,46 +91,47 @@ export function EventsDetailPage() {
                                 ))}
                         </div>
 
-                        <button
-                            onClick={copyToClipboard}
-                            className="px-6 py-2 rounded-full font-medium border bg-surface text-on-surface border-outline hover:bg-outline-variant/30 transition-colors cursor-pointer"
-                        >
-                            🔗 Event Link
-                        </button>
-
-                        <button
-                            onClick={() => setSaved(prev => !prev)}
-                            className={`px-4 py-2 rounded-full font-medium border transition-colors min-w-[100px] text-center cursor-pointer ${
-                                saved
-                                    ? 'bg-primary text-on-secondary border-primary'
-                                    : 'bg-surface text-on-surface border-outline hover:bg-outline-variant/30'
-                            }`}
-                        >
-                            {saved ? 'Saved' : 'Save Event'}
-                        </button>
+                        <div className="flex gap-2">
+                            <button
+                                onClick={copyToClipboard}
+                                className="px-6 py-2 rounded-full font-medium border bg-surface text-on-surface border-outline hover:bg-outline-variant/30 transition-colors cursor-pointer"
+                            >
+                                🔗 Event Link
+                            </button>
+                            <button
+                                onClick={() => setSaved(prev => !prev)}
+                                className={`px-4 py-2 rounded-full font-medium border transition-colors w-[120px] text-center cursor-pointer ${
+                                    saved
+                                        ? 'bg-primary text-on-secondary border-primary'
+                                        : 'bg-surface text-on-surface border-outline hover:bg-outline-variant/30'
+                                }`}
+                            >
+                                {saved ? 'Saved' : 'Save Event'}
+                            </button>
+                        </div>
                     </div>
 
                     <div className="bg-surface-variant p-4 rounded-md mb-8">
                         <h3 className="font-medium text-on-secondary-container mb-2">About Event:</h3>
-                        <p className="text-on-surface-variant text-sm">{event.event.description}</p>
+                        <p className="font-medium text-on-surface-variant">{event.event.description}</p>
                     </div>
 
-                    <div className="flex flex-wrap gap-4 items-center mb-6">
-                        <div className="bg-surface-variant text-on-surface-variant px-4 py-3 rounded-md">
-                            <span className="font-semibold">Date: </span>
+                    <div className="flex flex-wrap gap-2 items-center mb-6">
+                        <div className="bg-surface-variant text-on-surface-variant px-3 py-1 rounded-md text-sm flex-1">
+                            <span className="font-semibold text-on-secondary-container">Date: </span>
                             <span>{new Date(event.event.date).toLocaleDateString()}</span>
                         </div>
-                        <div className="bg-surface-variant text-on-surface-variant px-4 py-3 rounded-md">
-                            <span className="font-semibold">Time: </span>
+                        <div className="bg-surface-variant text-on-surface-variant px-3 py-1 rounded-md text-sm flex-1">
+                            <span className="font-semibold text-on-secondary-container">Time: </span>
                             <span>{event.event.startTime}</span>
                         </div>
-                        <div className="bg-surface-variant text-on-surface-variant px-4 py-3 rounded-md">
-                            <span className="font-semibold">Location: </span>
+                        <div className="bg-surface-variant text-on-surface-variant px-3 py-1 rounded-md text-sm flex-1">
+                            <span className="font-semibold text-on-secondary-container">Location: </span>
                             <span>{event.event.location}</span>
                         </div>
-                        <div className="bg-surface-variant text-on-surface-variant px-4 py-3 rounded-md">
-                            <span className="font-semibold">Event Type: </span>
-                            <span className="font-semibold">{event.event.type}</span>
+                        <div className="bg-surface-variant text-on-surface-variant px-3 py-1 rounded-md text-sm flex-1">
+                            <span className="font-semibold text-on-secondary-container">Event Type: </span>
+                            <span>{event.event.type}</span>
                         </div>
                     </div>
 
