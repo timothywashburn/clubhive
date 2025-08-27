@@ -52,6 +52,16 @@ export class HoneycombBase {
         if (newConfig.showDebug !== undefined) this.renderer.updateDebugMode(newConfig.showDebug);
     }
 
+    resize(width: number, height: number): void {
+        this.pointGenerator = new PointGenerator(width, height, this.config.numPoints, this.config.noiseAmount);
+
+        this.renderer.resize(width, height);
+
+        this.points = this.pointGenerator.generateHexagonalGrid();
+        this.staticColorData = this.colorCalculator.calculateStaticColorData(this.points);
+        this.extendedBounds = this.pointGenerator.getExtendedBounds();
+    }
+
     destroy(): void {
         this.staticColorData = [];
     }
