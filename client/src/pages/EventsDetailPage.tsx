@@ -31,6 +31,8 @@ export function EventsDetailPage() {
                     throw new Error('Failed to fetch event');
                 }
                 const data = await res.json();
+                console.log('API Response:', data);
+                console.log('Event requirements:', data.data.event.requirements);
                 setEvent(data.data);
             } catch (err) {
                 console.error(err);
@@ -116,7 +118,7 @@ export function EventsDetailPage() {
                         <p className="font-medium text-on-surface-variant">{event.event.description}</p>
                     </div>
 
-                    <div className="flex flex-wrap gap-2 items-center mb-6">
+                    <div className="flex flex-wrap gap-2 items-center">
                         <div className="bg-surface-variant text-on-surface-variant px-3 py-1 rounded-md text-sm flex-1">
                             <span className="font-semibold text-on-secondary-container">Date: </span>
                             <span>{new Date(event.event.date).toLocaleDateString()}</span>
@@ -135,10 +137,10 @@ export function EventsDetailPage() {
                         </div>
                     </div>
 
-                    {event.requirements && (
+                    {event.event.requirements && (
                         <div className="bg-surface-variant p-4 rounded-md mt-6 mb-6">
                             <h3 className="font-medium text-on-secondary-container mb-2">Requirements to Attend:</h3>
-                            <p className="text-on-surface-variant text-sm">{event.requirements}</p>
+                            <p className="text-on-surface-variant text-sm">{event.event.requirements}</p>
                         </div>
                     )}
                 </div>

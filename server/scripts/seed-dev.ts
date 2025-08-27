@@ -545,6 +545,7 @@ async function seed() {
             club: clubs[0]._id,
             name: 'Summer Fair',
             description: 'Annual summer celebration and fair.',
+            requirements: 'Bring a dish/snack to enter the fair!',
             type: EventType.ANYONE,
             location: 'Campus Quad',
             date: '2025-09-01',
