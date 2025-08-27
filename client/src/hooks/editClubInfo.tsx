@@ -23,7 +23,7 @@ export const editClubInfo = (initialData, clubId, resetTagsCallback) => {
 
     const normalizeSocialsFromBackend = (socials: { discord?: string; instagram?: string; website?: string } = {}) => {
         return {
-            discord: socials.discord?.replace('https://discord.gg/', '')?.replace('https://discord.com/invite/', '') || '',
+            discord: socials.discord?.replace('https://discord.gg/', '')?.replace('https://discord.com/invite/', ''),
             instagram: socials.instagram?.replace('https://www.instagram.com/', '')?.replace('https://instagram.com/', '') || '',
             website: socials.website?.replace('https://', '') || '',
         };
@@ -103,9 +103,9 @@ export const editClubInfo = (initialData, clubId, resetTagsCallback) => {
                     joinRequirements: data.joinRequirements?.trim() || undefined,
                     status: data.status,
                     socials: {
-                        discord: data.socials?.discord ? `https://discord.com/invite/${data.socials.discord.trim()}` : undefined,
-                        instagram: data.socials?.instagram ? `https://www.instagram.com/${data.socials.instagram.trim()}` : undefined,
-                        website: data.socials?.website ? `https://${data.socials.website.trim()}` : undefined,
+                        discord: data.socials?.discord ? data.socials.discord.replace(/^https?:\/\//, '').trim() : undefined,
+                        instagram: data.socials?.instagram ? data.socials.instagram.replace(/^https?:\/\//, '').trim() : undefined,
+                        website: data.socials?.website ? data.socials.website.replace(/^https?:\/\//, '').trim() : undefined,
                     },
                     tags: tagsToSave.map(tag => tag._id).filter(Boolean) || undefined,
                     clubLogo: data.clubLogo || undefined,
