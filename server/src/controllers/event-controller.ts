@@ -8,6 +8,7 @@ export default class EventController {
             club: data.club,
             name: data.name,
             description: data.description || '',
+            requirements: data.requirements || '',
             type: data.type,
             location: data.location,
             date: data.date,
