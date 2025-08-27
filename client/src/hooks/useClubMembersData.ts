@@ -1,10 +1,10 @@
 import { useState, useEffect } from 'react';
-import { UserDoc } from '../../../server/src/models/user-schema';
+import { UserData } from '@clubhive/shared';
 import { ClubRole } from '@clubhive/shared';
 import { useToast } from './useToast';
 
 export const useClubMembersData = (clubId: string | undefined) => {
-    const [members, setMembers] = useState<{ user: UserDoc; role: ClubRole }[]>([]);
+    const [members, setMembers] = useState<{ user: UserData; role: ClubRole }[]>([]);
     const [loading, setLoading] = useState(true);
     const { errorToast } = useToast();
 
