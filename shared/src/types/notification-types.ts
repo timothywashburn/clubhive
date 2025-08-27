@@ -3,8 +3,8 @@ import { z } from 'zod';
 export const notificationSchema = z.object({
     _id: z.string(),
     club: z.string(),
-    title: z.string(),
-    body: z.string(),
+    title: z.string().max(100),
+    body: z.string().max(1000),
     pictures: z.array(z.string()),
     createdAt: z.string(),
     updatedAt: z.string(),
@@ -13,8 +13,8 @@ export const notificationSchema = z.object({
 export const notifDisplaySchema = z.object({
     _id: z.string(),
     club: z.string(),
-    title: z.string(),
-    body: z.string(),
+    title: z.string().max(100),
+    body: z.string().max(1000),
     pictures: z.array(z.string()),
     createdAt: z.string(),
     updatedAt: z.string(),
@@ -31,8 +31,8 @@ export const getNotificationResponseSchema = z.object({
 
 export const postNotificationRequestSchema = z.object({
     club: z.string(),
-    title: z.string(),
-    body: z.string(),
+    title: z.string().max(100),
+    body: z.string().max(1000),
     pictures: z.array(z.string()),
 });
 

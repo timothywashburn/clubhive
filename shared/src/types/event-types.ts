@@ -11,10 +11,10 @@ export enum EventType {
 export const eventSchema = z.object({
     _id: z.string(),
     club: z.string(),
-    name: z.string(),
-    description: z.string(),
+    name: z.string().max(100),
+    description: z.string().max(1000).optional(),
     type: z.enum(EventType),
-    location: z.string(),
+    location: z.string().max(100),
     date: z.string(),
     startTime: z.string(),
     endTime: z.string(),
@@ -27,10 +27,10 @@ export const eventSchema = z.object({
 
 export const createEventRequestSchema = z.object({
     club: z.string(),
-    name: z.string(),
-    description: z.string().optional(),
+    name: z.string().max(100),
+    description: z.string().max(1000).optional(),
     type: z.enum(EventType),
-    location: z.string(),
+    location: z.string().max(100),
     date: z.string(),
     startTime: z.string(),
     endTime: z.string(),
@@ -40,10 +40,10 @@ export const createEventRequestSchema = z.object({
 
 export const updateEventRequestSchema = z.object({
     club: z.string().optional(),
-    name: z.string().optional(),
-    description: z.string().optional(),
+    name: z.string().max(100).optional(),
+    description: z.string().max(1000).optional(),
     type: z.enum(EventType).optional(),
-    location: z.string().optional(),
+    location: z.string().max(100).optional(),
     date: z.string().optional(),
     startTime: z.string().optional(),
     endTime: z.string().optional(),

@@ -2,8 +2,8 @@ import { z } from 'zod';
 
 export const authSchema = z.object({
     _id: z.string(),
-    email: z.string(),
-    password: z.string(),
+    email: z.string().max(100),
+    password: z.string().max(100),
     emailVerified: z.boolean(),
     createdAt: z.string(),
     updatedAt: z.string(),
