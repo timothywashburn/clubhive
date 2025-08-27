@@ -35,6 +35,14 @@ export const deleteUserResponseSchema = z.object({
     deleted: z.boolean(),
 });
 
+export const changeEmailRequestSchema = z.object({
+    email: z.string(),
+});
+
+export const changeEmailResponseSchema = z.object({
+    changed: z.boolean(),
+});
+
 export const changePasswordRequestSchema = z.object({
     currentPassword: z.string(),
     newPassword: z.string(),
@@ -70,6 +78,9 @@ export type DeleteUserResponse = z.infer<typeof deleteUserResponseSchema>;
 
 export type UpdateUserRequest = z.infer<typeof updateUserRequestSchema>;
 export type UpdateUserResponse = z.infer<typeof updateUserResponseSchema>;
+
+export type ChangeEmailRequest = z.infer<typeof changeEmailRequestSchema>;
+export type ChangeEmailResponse = z.infer<typeof changeEmailResponseSchema>;
 
 export type ChangeEmailRequest = z.infer<typeof changeEmailRequestSchema>;
 export type ChangeEmailResponse = z.infer<typeof changeEmailResponseSchema>;
