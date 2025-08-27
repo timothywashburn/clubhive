@@ -20,7 +20,7 @@ function NotificationImage({ imageId }: { imageId: string }) {
         return <div className="h-32 w-32 bg-outline-variant/10 rounded-md flex-shrink-0" />;
     }
 
-    return <img src={image.url} alt="Notification image" className="h-50 w-50 max-w-48 object-cover rounded-md flex-shrink-0" />;
+    return <img src={image.url} alt="Notification image" className="h-60 w-60 object-cover rounded-md flex-shrink-0" />;
 }
 
 export function NotifExpanded({ notification }: NotifExpandedProps) {
