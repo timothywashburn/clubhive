@@ -256,7 +256,7 @@ function ContentSection({ sectionType, position, isActive, navigate }: ContentSe
         position: 'absolute' as const,
         transform: `translate(${position.x}px, ${position.y}px)`,
         width: '100vw',
-        height: '100vh',
+        height: 'calc(100vh - 4rem)',
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'center',
