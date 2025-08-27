@@ -163,4 +163,9 @@ export class HoneycombRenderer {
     updateColors(colors: HoneycombColors): void {
         this.colors = colors;
     }
+
+    resize(width: number, height: number): void {
+        this.width = width;
+        this.height = height;
+    }
 }

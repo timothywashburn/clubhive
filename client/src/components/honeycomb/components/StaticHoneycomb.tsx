@@ -49,7 +49,16 @@ export function StaticHoneycomb({
             honeycomb.destroy();
             honeycombRef.current = null;
         };
-    }, [context, dimensions, numPoints, noiseAmount, showDebug, baseColors]);
+    }, [context, numPoints, noiseAmount, showDebug, baseColors]);
+
+    // Handle resize separately without recreating the honeycomb
+    useEffect(() => {
+        if (!honeycombRef.current || !dimensions.width || !dimensions.height) return;
+
+        // Update honeycomb dimensions and re-render
+        honeycombRef.current.resize(dimensions.width, dimensions.height);
+        honeycombRef.current.renderFrame();
+    }, [dimensions]);
 
     return (
         <motion.div
