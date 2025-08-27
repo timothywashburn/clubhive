@@ -1,7 +1,10 @@
 import React, { memo, useState, useEffect, useMemo } from 'react';
-import { TagType } from '@clubhive/shared/src/types/tag-types';
 import { UserClubData } from '@clubhive/shared';
 import { editClubInfo } from '../../../hooks/editClubInfo';
+import { useClubTagsData } from '../../../hooks/useClubTagsData';
+import { getTagColor } from '../../find-clubs/utils/TagColors';
+import { TagSelectionPopup } from '../../find-clubs/components/TagsSelectionPopup';
+import type { TagData } from '@clubhive/shared';
 
 interface OfficerInfoProps {
     club: UserClubData;
@@ -10,6 +13,9 @@ interface OfficerInfoProps {
 export const OfficerInfo = memo(
     ({ club }: OfficerInfoProps) => {
         const [clubData, setClubData] = useState(null);
+        const { tags } = useClubTagsData();
+        const [selectedTags, setSelectedTags] = useState<TagData[]>([]);
+        const [initialTags, setInitialTags] = useState<TagData[]>([]);
 
         useEffect(() => {
             let isCancelled = false;
@@ -35,6 +41,15 @@ export const OfficerInfo = memo(
                             clubLogo: data.club.clubLogo?.url || '',
                             pictures: data.club.pictures?.map(pic => pic.url) || [],
                         });
+
+                        if (data.club.tags) {
+                            const existingTags = data.club.tags.map(tag => ({
+                                _id: tag._id || tag,
+                                text: tag.text || tag,
+                            }));
+                            setSelectedTags(existingTags);
+                            setInitialTags(existingTags);
+                        }
                     }
                 } catch (error) {
                     console.error('Error fetching club:', error);
@@ -71,7 +86,8 @@ export const OfficerInfo = memo(
             );
         }, [clubData]);
 
-        const { formData, newTag, setNewTag, handlers } = editClubInfo(initialData, club._id);
+        const resetTags = () => setSelectedTags([...initialTags]);
+        const { formData, handlers } = editClubInfo(initialData, club._id, resetTags);
 
         if (clubData === null) return <div>Loading...</div>;
         if (clubData === false) return <div>Club not found</div>;
@@ -189,18 +205,13 @@ export const OfficerInfo = memo(
                         <div>
                             <label className="block text-sm font-medium mb-1">Current Tags</label>
                             <div className="flex flex-wrap gap-2 mb-3">
-                                {formData.tags.map((tag, index) => (
+                                {selectedTags.map(tag => (
                                     <span
-                                        key={index}
-                                        className="inline-flex items-center px-3 py-1 rounded-full text-sm bg-blue-100 text-blue-800"
+                                        key={tag._id}
+                                        className={`px-2 py-1 rounded-full text-xs cursor-pointer ${getTagColor(tag._id)}`}
+                                        onClick={() => setSelectedTags(selectedTags.filter(t => t._id !== tag._id))}
                                     >
-                                        {tag.text || tag}
-                                        <button
-                                            onClick={() => handlers.handleDeleteTag(index)}
-                                            className="ml-2 text-red-500 hover:text-red-700"
-                                        >
-                                            ×
-                                        </button>
+                                        {tag.text}
                                     </span>
                                 ))}
                             </div>
@@ -211,14 +222,7 @@ export const OfficerInfo = memo(
                         <h2 className="text-lg font-bold">Add New</h2>
                         <div>
                             <label className="block text-sm font-medium mb-1">Tags</label>
-                            <input
-                                type="text"
-                                value={newTag}
-                                onChange={e => setNewTag(e.target.value)}
-                                onKeyDown={handlers.handleAddTag}
-                                className="w-full p-2 border rounded"
-                                placeholder="Add new tag and press Enter"
-                            />
+                            <TagSelectionPopup tags={tags} selectedTags={selectedTags} setSelectedTags={setSelectedTags} inline />
                         </div>
                         {!club.description && (
                             <div>
@@ -301,7 +305,10 @@ export const OfficerInfo = memo(
                     </div>
                 </div>
                 <div className="flex gap-4 mt-6">
-                    <button onClick={handlers.handleSaveChanges} className="bg-primary text-white px-6 py-2 rounded hover:bg-green-600">
+                    <button
+                        onClick={() => handlers.handleSaveChanges(selectedTags)}
+                        className="bg-primary text-white px-6 py-2 rounded hover:bg-green-600"
+                    >
                         Save Changes
                     </button>
                     <button

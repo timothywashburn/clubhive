@@ -3,7 +3,7 @@ import { updateClub } from '../utils/updateClub';
 import { UpdateClubRequest } from '@clubhive/shared';
 import { ClubStatus } from '@clubhive/shared';
 
-export const editClubInfo = (initialData, clubId) => {
+export const editClubInfo = (initialData, clubId, resetTagsCallback) => {
     const defaultData = {
         name: '',
         tagline: '',
@@ -29,7 +29,6 @@ export const editClubInfo = (initialData, clubId) => {
         return hasRealData(initialData) ? { ...initialData } : null;
     });
 
-    const [newTag, setNewTag] = useState('');
     const prevInitialData = useRef(null);
 
     if (hasRealData(initialData) && !hasRealData(prevInitialData.current)) {
@@ -57,30 +56,8 @@ export const editClubInfo = (initialData, clubId) => {
         }));
     };
 
-    const handleAddTag = e => {
-        if (e.key === 'Enter' && newTag.trim() !== '') {
-            const tempTag = {
-                _id: `temp_${Date.now()}`, // temp id
-                text: newTag.trim(),
-                isNew: true,
-            };
-            setFormData(prevData => ({
-                ...prevData,
-                tags: [...prevData.tags, tempTag],
-            }));
-            setNewTag('');
-        }
-    };
-
-    const handleDeleteTag = tagIndex => {
-        setFormData(prevData => ({
-            ...prevData,
-            tags: prevData.tags.filter((_, index) => index !== tagIndex),
-        }));
-    };
-
-    // Needs debugging
-    const handleSaveChanges = async () => {
+    // Pictures and Club Logo can't be handled yet
+    const handleSaveChanges = async (tagsToSave = []) => {
         try {
             const normalizeUpdatePayload = (data: typeof formData) => {
                 return {
@@ -95,13 +72,7 @@ export const editClubInfo = (initialData, clubId) => {
                         instagram: data.socials?.instagram?.trim() || undefined,
                         website: data.socials?.website?.trim() || undefined,
                     },
-                    tags:
-                        data.tags
-                            ?.map(tag => {
-                                if (tag.isNew) return tag.text;
-                                return tag._id || tag;
-                            })
-                            .filter(Boolean) || undefined,
+                    tags: tagsToSave.map(tag => tag._id).filter(Boolean) || undefined,
                     clubLogo: data.clubLogo || undefined,
                     pictures: data.pictures || undefined,
                 };
@@ -123,18 +94,16 @@ export const editClubInfo = (initialData, clubId) => {
         } else {
             setFormData(initialData);
         }
-        setNewTag('');
+        if (resetTagsCallback) {
+            resetTagsCallback();
+        }
     };
 
     return {
         formData,
-        newTag,
-        setNewTag,
         handlers: {
             handleInputChange,
             handleSocialsChange,
-            handleAddTag,
-            handleDeleteTag,
             handleSaveChanges,
             handleDiscardChanges,
         },
