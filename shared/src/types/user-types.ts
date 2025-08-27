@@ -28,10 +28,19 @@ export const userSchema = z.object({
 
 export const userWithCountsSchema = userSchema.extend({
     clubsCount: z.number(),
+    email: z.string().optional(),
 });
 
 export const deleteUserResponseSchema = z.object({
     deleted: z.boolean(),
+});
+
+export const changeEmailRequestSchema = z.object({
+    email: z.string(),
+});
+
+export const changeEmailResponseSchema = z.object({
+    changed: z.boolean(),
 });
 
 export const updateUserResponseSchema = z.object({
@@ -52,6 +61,9 @@ export type DeleteUserResponse = z.infer<typeof deleteUserResponseSchema>;
 
 export type UpdateUserRequest = z.infer<typeof updateUserRequestSchema>;
 export type UpdateUserResponse = z.infer<typeof updateUserResponseSchema>;
+
+export type ChangeEmailRequest = z.infer<typeof changeEmailRequestSchema>;
+export type ChangeEmailResponse = z.infer<typeof changeEmailResponseSchema>;
 
 export interface GetUsersResponse {
     users: UserWithCountsData[];
