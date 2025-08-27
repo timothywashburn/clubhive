@@ -30,8 +30,6 @@ export const createEventRequestSchema = z.object({
     club: z.string(),
     name: z.string().max(100),
     description: z.string().max(1000).optional(),
-    name: z.string(),
-    description: z.string().optional(),
     requirements: z.string().optional(),
     type: z.enum(EventType),
     location: z.string().max(100),
