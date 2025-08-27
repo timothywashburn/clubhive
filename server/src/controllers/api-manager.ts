@@ -23,6 +23,7 @@ import { getClubEndpoint } from '@/api/clubs/get-club';
 import { updateClubEndpoint } from '@/api/clubs/update-club';
 import { getUsersEndpoint } from '@/api/users/get-users';
 import { getUserEndpoint } from '@/api/users/get-user';
+import { updateUserEndpoint } from '@/api/users/update-user';
 import { createAccountEndpoint } from '@/api/user-auth/create-account-endpoint';
 import { signInEndpoint } from '@/api/user-auth/sign-in-endpoint';
 import { signOutEndpoint } from '@/api/user-auth/sign-out-endpoint';
@@ -88,6 +89,7 @@ export default class ApiManager {
         this.addEndpoint(signOutEndpoint);
         this.addEndpoint(tokenRefreshEndpoint);
         this.addEndpoint(checkTokenhEndpoint);
+        this.addEndpoint(updateUserEndpoint);
 
         // School endpoints
         this.addEndpoint(createSchoolEndpoint);
