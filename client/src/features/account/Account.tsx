@@ -244,6 +244,9 @@ export function Account() {
                     educationType: user.educationType,
                     year: yearMap[user.year],
                 });
+
+                console.log('User email from API:', user.email);
+
                 setMajorInput(user?.major || '');
                 setSchoolId(user?.school?._id || (typeof user?.school === 'string' ? user.school : null));
             } catch (e) {

@@ -2,6 +2,7 @@ import User, { UserDoc } from '../models/user-schema';
 import ClubMembership from '../models/club-membership-schema';
 import { updateDocument } from '@/utils/db-doc-utils';
 import { UpdateUserRequest } from '@clubhive/shared/src';
+import Auth from '@/models/auth-schema';
 
 export interface UserWithCounts extends UserDoc {
     clubsCount: number;
@@ -57,5 +58,14 @@ export default class UserController {
         const result = await updateDocument(User, id, updates);
         await result.populate('school');
         return result;
+    }
+
+    static async getUserEmail(userId: string): Promise<string | null> {
+        const auth = await Auth.findOne({ userId }).lean();
+        return auth?.email || null;
+    }
+
+    static async updateUserEmail(userId: string | undefined, newEmail: string): Promise<void> {
+        await Auth.updateOne({ userId }, { $set: { email: newEmail } });
     }
 }
