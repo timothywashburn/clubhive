@@ -44,8 +44,6 @@ export const updateEventRequestSchema = z.object({
     club: z.string().optional(),
     name: z.string().max(100).optional(),
     description: z.string().max(1000).optional(),
-    name: z.string().optional(),
-    description: z.string().optional(),
     requirements: z.string().optional(),
     type: z.enum(EventType).optional(),
     location: z.string().max(100).optional(),
