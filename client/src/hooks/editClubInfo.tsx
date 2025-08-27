@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from 'react';
-import { updateClub } from './updateClub';
+import { updateClub } from '../utils/updateClub';
 import { UpdateClubRequest } from '@clubhive/shared';
 import { ClubStatus } from '@clubhive/shared';
 
