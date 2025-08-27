@@ -5,6 +5,31 @@ import { useToast } from '../../hooks/useToast.ts';
 import { clubWithEventsAndCountsSchema } from '@clubhive/shared';
 import { ClubWithEventsData } from '@clubhive/shared';
 import JoinClubButton from './components/JoinClubButton.tsx';
+import { useImageData } from '../../hooks/useImageData.ts';
+import SocialLinks from '../find-clubs/components/SocialLinks.tsx';
+import { useNotifications } from '../../hooks/useNotifications.ts';
+
+function GalleryImage({ imageId }: { imageId: string }) {
+    const { image, loading, error } = useImageData(imageId);
+
+    if (loading) {
+        return <div className="min-w-[200px] h-40 bg-outline-variant/10 rounded-md flex-shrink-0 animate-pulse" />;
+    }
+
+    if (error || !image) {
+        return (
+            <div className="min-w-[200px] h-40 bg-outline-variant/10 rounded-md flex-shrink-0 flex items-center justify-center">
+                <span className="text-on-surface-variant text-sm">Failed to load</span>
+            </div>
+        );
+    }
+
+    return (
+        <div className="min-w-[200px] h-40 bg-surface border border-outline-variant rounded-md flex-shrink-0 overflow-hidden">
+            <img src={image.url} alt="Club gallery image" className="w-full h-full object-cover" />
+        </div>
+    );
+}
 
 export function ClubProfile() {
     const { url } = useParams<{ url: string }>();
@@ -13,6 +38,12 @@ export function ClubProfile() {
     const navigate = useNavigate();
     const [isOpen, setIsOpen] = useState(false);
     const [loading, setLoading] = useState(true);
+
+    const { notifs, isLoading: notificationsLoading } = useNotifications();
+
+    const clubNotifications = notifs.filter(notification => notification.club?.toString() === club?._id?.toString());
+    const { image: clubLogoImage, error: logoError } = useImageData(club?.clubLogo ?? null);
+    const logoUrl = clubLogoImage?.url && !logoError ? clubLogoImage.url : null;
 
     useEffect(() => {
         if (!url) return;
@@ -58,12 +89,12 @@ export function ClubProfile() {
                 </div>
 
                 {/* Club Profile header*/}
-                <div className="bg-surface rounded-md p-6 border border-outline-variant flex items-center space-x-4 min-h-28 m-4">
+                <div className="bg-surface rounded-md p-6 border border-outline-variant flex items-center space-x-4 min-h-28">
                     {/* logo circle , replace with {club.clubLogo.url} later */}
                     <div className="w-1/3 flex items-center justify-center">
                         <div className="w-30 h-30 rounded-full bg-outline-variant flex items-center justify-center overflow-hidden">
-                            {club.clubLogo ? (
-                                <img src={club.clubLogo} alt={`${club.name} logo`} className="w-full h-full object-cover object-center" />
+                            {logoUrl ? (
+                                <img src={logoUrl} alt={`${club.name} logo`} className="w-full h-full object-cover object-center" />
                             ) : (
                                 <span className="text-on-surface-variant text-sm text-center">No Logo</span>
                             )}
@@ -89,12 +120,11 @@ export function ClubProfile() {
 
                     {/* links to socials */}
                     <div className="absolute top-0 right-0 flex space-x-4 w-[240px] justify-end">
-                        <button
-                            onClick={() => setIsOpen(true)}
-                            className="px-4 py-2 rounded-full font-medium border bg-surface text-on-surface border-outline hover:bg-outline-variant/30 transition-colors cursor-pointer"
-                        >
-                            Links
-                        </button>
+                        <SocialLinks
+                            discordUrl={club.socials.discord}
+                            instagramUrl={club.socials.instagram}
+                            websiteUrl={club.socials.website}
+                        />
                     </div>
                 </div>
 
@@ -213,35 +243,49 @@ export function ClubProfile() {
                 )}
 
                 {/* announcements */}
-                <div className="mt-10">
-                    <h2 className="text-2xl font-semibold text-on-surface mb-4">Notifications</h2>
-                    <div className="bg-surface rounded-lg p-6 border border-outline-variant">
-                        <ul className="list-disc list-inside space-y-3 text-on-surface-variant">
-                            <li>Club applications open until this date!</li>
-                            <li>Our first GBM of the quarter is tomorrow!</li>
-                            <li>Don't forget to fill out our social event interest form!</li>
-                        </ul>
-                    </div>
+                <div className="bg-surface rounded-md p-6 border border-outline-variant">
+                    <h2 className="text-xl font-semibold text-on-surface mb-4">Recent Notifications</h2>
+
+                    {notificationsLoading ? (
+                        <div className="text-on-surface-variant">Loading notifications...</div>
+                    ) : clubNotifications.length > 0 ? (
+                        <div className="space-y-3">
+                            {clubNotifications.slice(0, 5).map(notification => (
+                                <div key={notification._id} className="border-l-4 border-primary/20 pl-4 py-2">
+                                    <span className="text-xs text-on-surface-variant">
+                                        {new Date(notification.date).toLocaleDateString()}
+                                    </span>
+                                    <h4 className="font-medium text-on-surface">{notification.title}</h4>
+                                    <p className="text-sm text-on-surface-variant mt-1 whitespace-pre-line">{notification.body}</p>
+                                </div>
+                            ))}
+
+                            {clubNotifications.length > 5 && (
+                                <button
+                                    onClick={() => navigate('/notifications')}
+                                    className="text-primary hover:text-primary/90 text-sm mt-2"
+                                >
+                                    View all notifications →
+                                </button>
+                            )}
+                        </div>
+                    ) : (
+                        <div className="text-on-surface-variant text-sm italic">No notifications from this club yet.</div>
+                    )}
                 </div>
 
                 {/* gallery */}
                 <h2 className="text-2xl font-semibold text-on-surface mb-4 mt-8">Gallery</h2>
                 <div className="overflow-x-auto">
-                    {' '}
-                    {/* scroll bar for images */}
                     <div className="flex space-x-4">
-                        {[1, 2, 3, 4, 5, 6].map(i => (
-                            <div
-                                key={i}
-                                className="min-w-[200px] h-40 bg-surface border border-outline-variant rounded-md flex-shrink-0 overflow-hidden"
-                            >
-                                <img
-                                    src={`https://via.placeholder.com/200x160?text=Image+${i}`}
-                                    alt={`Club image ${i}`}
-                                    className="w-full h-full object-cover"
-                                />
+                        {club.pictures && club.pictures.length > 0 ? (
+                            club.pictures.map(pictureId => <GalleryImage key={pictureId} imageId={pictureId} />)
+                        ) : (
+                            // Fallback if no pictures
+                            <div className="min-w-[200px] h-40 bg-outline-variant/10 rounded-md flex-shrink-0 flex items-center justify-center">
+                                <span className="text-on-surface-variant text-sm">No gallery images yet</span>
                             </div>
-                        ))}
+                        )}
                     </div>
                 </div>
 
