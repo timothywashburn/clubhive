@@ -16,7 +16,7 @@ export enum Year {
 
 export const userSchema = z.object({
     _id: z.string(),
-    name: z.string().max(50),
+    name: z.string(),
     school: schoolSchema,
     major: z.string(),
     educationType: z.enum([EducationType.UNDERGRADUATE, EducationType.GRADUATE]),
