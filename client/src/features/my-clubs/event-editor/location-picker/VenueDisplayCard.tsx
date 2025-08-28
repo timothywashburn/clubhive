@@ -1,5 +1,5 @@
 import { Building2, MapPin, Clock } from 'lucide-react';
-import { VenueAvailability, VenueFilters } from './types';
+import { VenueAvailability, VenueFilterType } from './types';
 import { VisualAvailabilityDisplay } from './VisualAvailabilityDisplay';
 
 export type VenueDisplayMode = 'daily' | 'weekly' | 'monthly';
@@ -8,7 +8,7 @@ interface VenueDisplayCardProps {
     venue: VenueAvailability;
     isSelected: boolean;
     onSelect: (venue: VenueAvailability, date?: Date) => void;
-    filters?: VenueFilters;
+    filters?: VenueFilterType;
     mode: VenueDisplayMode;
     // Props for different modes
     availabilityHeight?: number;

@@ -1,2 +1,2 @@
-export { EventDetails } from './EventDetails';
-export { LocationPicker } from './LocationPicker';
+export * from './EventDetails.tsx';
+export * from './LocationPicker.tsx';

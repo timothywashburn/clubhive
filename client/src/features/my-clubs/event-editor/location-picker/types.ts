@@ -10,7 +10,7 @@ export interface TimeSlot {
     end_time: string;
 }
 
-export interface VenueFilters {
+export interface VenueFilterType {
     search: string;
     roomType: string;
     building: string;

@@ -1,11 +1,11 @@
-import { VenueAvailability, VenueFilters } from './types';
+import { VenueAvailability, VenueFilterType } from './types';
 import { VisualAvailabilityDisplay } from './VisualAvailabilityDisplay';
 import { Building2, MapPin } from 'lucide-react';
 
 interface WeeklyVenueViewProps {
     venues: VenueAvailability[][];
     weekDates: Date[];
-    filters?: VenueFilters;
+    filters?: VenueFilterType;
     onVenueSelect: (venue: VenueAvailability, date: Date) => void;
     selectedVenue?: VenueAvailability;
 }

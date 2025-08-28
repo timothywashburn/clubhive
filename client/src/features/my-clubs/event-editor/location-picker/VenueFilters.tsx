@@ -1,5 +1,5 @@
 import { Search, Filter, Building, Clock, Calendar } from 'lucide-react';
-import { VenueFilters as VenueFiltersType } from './types';
+import { VenueFilterType as VenueFiltersType } from './types';
 import { useState } from 'react';
 import TimeRangePicker from '../../../../components/date-picker/TimeRangePicker.tsx';
 
