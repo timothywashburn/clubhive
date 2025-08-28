@@ -211,28 +211,26 @@ export function EventSearch() {
                         placeholder="Search events..."
                         value={searchTerm}
                         onChange={e => setSearchTerm(e.target.value)}
-                        className="flex-1 pl-10 pr-3 py-2 border border-r-0 text-on-surface border-outline-variant rounded-l-none leading-5 bg-surface placeholder-on-surface-variant focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary focus:border-r-primary focus:z-10"
+                        className="flex-1 pl-10 pr-3 py-2 focus:ring focus:ring-primary border border-r-0 text-on-surface border-outline-variant rounded-l-none leading-5 bg-surface placeholder-on-surface-variant focus:outline-none focus:z-10"
                     />
                     <input
                         type="text"
                         placeholder="Location"
                         value={location}
                         onChange={e => setLocation(e.target.value)}
-                        className="w-45 pl-3 pr-3 py-2 border border-r-0 text-on-surface border-outline-variant bg-surface placeholder-on-surface-variant focus:outline-none focus:ring-1 focus:ring-primary focus:border-primary focus:border-r-primary focus:z-10"
+                        className="w-45 pl-3 pr-3 py-2 border border-r-0 text-on-surface border-outline-variant bg-surface placeholder-on-surface-variant focus:outline-none focus:ring focus:ring-primary focus:z-10"
                     />
                     <div className="relative" ref={datePickerRef}>
                         <button
                             onClick={() => setShowDatePicker(!showDatePicker)}
-                            className={`pl-3 pr-3 py-2 border border-r-0 rounded-none bg-surface text-on-surface focus:outline-none h-10 whitespace-nowrap min-w-[120px] ${
-                                showDatePicker
-                                    ? 'border-primary ring-1 ring-primary z-10'
-                                    : 'border-outline-variant focus:ring-1 focus:ring-primary focus:border-primary focus:border-r-primary focus:z-10'
+                            className={`pl-3 pr-3 py-2 border border ounded-none bg-surface text-on-surface focus:outline-none h-10 whitespace-nowrap min-w-[120px] ${
+                                showDatePicker ? 'border-primary z-10 focus:outline-none' : 'border-outline-variant focus:z-10'
                             }`}
                         >
                             {date ? date.toLocaleDateString() : 'Select Date'}
                         </button>
                         {showDatePicker && (
-                            <div className="absolute z-50 mt-2 bg-surface border border-outline-variant rounded-md shadow-lg right-0">
+                            <div className="absolute z-50 mt-2 bg-surface border border-outline-variant rounded-md focus:ring focus:ring-primary focus:outline-none shadow-lg right-0">
                                 <div className="p-2 border-b border-outline-variant">
                                     <button
                                         onClick={() => {
