@@ -3,6 +3,7 @@ import { ClubRole } from './club-membership-types.js';
 import { schoolSchema } from './school-types.js';
 import { tagSchema } from './tag-types.js';
 import { eventSchema } from './event-types.js';
+import { imageSchema } from './image-types.js';
 
 export enum ClubStatus {
     ANYONE_CAN_JOIN = 'Anyone can join',
@@ -27,7 +28,7 @@ export const clubSchema = z.object({
         })
         .optional(),
     clubLogo: z.string().nullable().optional(),
-    pictures: z.array(z.string()),
+    pictures: z.array(imageSchema).optional(),
     tags: z.array(tagSchema),
     createdAt: z.string(),
     updatedAt: z.string(),
@@ -56,7 +57,7 @@ export const createClubRequestSchema = z.object({
         .regex(/^[a-zA-Z0-9_-]+$/, 'URL can only contain letters, numbers, hyphens, and underscores')
         .max(50, 'URL must be 50 characters or less'),
     // will be optional later
-    joinRequirements: z.string().optional(),
+    joinRequirements: z.string().max(1000).optional(),
     status: z.enum(ClubStatus),
     socials: z
         .object({
@@ -81,7 +82,7 @@ export const createClubRequestSchema = z.object({
         })
         .optional(),
     clubLogo: z.string().optional(),
-    pictures: z.array(z.string()).optional(),
+    pictures: z.array(imageSchema).optional(),
     tags: z.array(z.string()).optional(),
 });
 
@@ -95,7 +96,7 @@ export const updateClubRequestSchema = z.object({
         .regex(/^[a-zA-Z0-9_-]+$/, 'URL can only contain letters, numbers, hyphens, and underscores')
         .max(50, 'URL must be 50 characters or less')
         .optional(),
-    joinRequirements: z.string().optional(),
+    joinRequirements: z.string().max(1000).optional(),
     status: z.enum(ClubStatus).optional(),
     socials: z
         .object({
@@ -120,7 +121,7 @@ export const updateClubRequestSchema = z.object({
         })
         .optional(),
     clubLogo: z.string().optional(),
-    pictures: z.array(z.string()).optional(),
+    pictures: z.array(imageSchema).optional(),
     tags: z.array(z.string()).optional(),
 });
 
