@@ -148,7 +148,7 @@ export function Account() {
         setEmailSaving(true);
 
         try {
-            const res = await fetch('/api/user/change-email', {
+            const res = await fetch('/api/me/change-email', {
                 method: 'PUT',
                 credentials: 'include',
                 headers: { 'Content-Type': 'application/json' },
