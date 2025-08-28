@@ -34,6 +34,11 @@ export function Account() {
     const [showMajorDropdown, setShowMajorDropdown] = useState(false);
     const [deleteLoading, setDeleteLoading] = useState(false);
 
+    const [pwEditing, setPwEditing] = useState(false);
+    const [currentPassword, setCurrentPassword] = useState('');
+    const [newPassword, setNewPassword] = useState('');
+    const [pwSaving, setPwSaving] = useState(false);
+
     const majors = [
         'Accounting',
         'Aerospace Engineering',
@@ -200,6 +205,44 @@ export function Account() {
             errorToast('Failed to delete account');
         } finally {
             setDeleteLoading(false);
+        }
+    };
+
+    const handleChangePassword = async () => {
+        if (pwSaving) return;
+
+        if (!currentPassword || !newPassword) {
+            errorToast('Please enter both current and new passwords');
+            return;
+        }
+
+        setPwSaving(true);
+
+        try {
+            const res = await fetch('/api/me/change-password', {
+                method: 'PUT',
+                credentials: 'include',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    currentPassword,
+                    newPassword,
+                }),
+            });
+
+            if (!res.ok) {
+                const body = await res.json().catch(() => null);
+                throw new Error(body?.error?.message || `Failed to change password: ${res.status}`);
+            }
+
+            successToast('Password changed successfully');
+            setPwEditing(false);
+            setCurrentPassword('');
+            setNewPassword('');
+        } catch (error) {
+            console.error('Error changing password:', error);
+            errorToast('Failed to change password');
+        } finally {
+            setPwSaving(false);
         }
     };
 
@@ -559,17 +602,59 @@ export function Account() {
                                     )}
                                 </div>
 
-                                <div className="flex items-center justify-between p-4 border border-outline-variant rounded-lg">
+                                <div className="p-4 border border-outline-variant rounded-lg space-y-2">
                                     <div className="flex items-center gap-3">
                                         <Lock className="w-5 h-5 text-on-surface-variant" />
-                                        <div>
-                                            <h3 className="font-medium text-on-surface">Password</h3>
-                                            <p className="text-sm text-on-surface-variant">Last changed 3 months ago</p>
-                                        </div>
+                                        <h3 className="font-medium text-on-surface">Password</h3>
                                     </div>
-                                    <button className="px-4 py-2 rounded-md text-sm font-medium bg-secondary text-on-secondary hover:bg-secondary/90 transition-colors cursor-pointer">
-                                        Change
-                                    </button>
+
+                                    {!pwEditing ? (
+                                        <div className="flex items-center justify-between">
+                                            <p className="text-sm text-on-surface-variant">Update password to ensure security</p>
+                                            <button
+                                                onClick={() => setPwEditing(true)}
+                                                className="px-4 py-2 rounded-md text-sm font-medium bg-secondary text-on-secondary hover:bg-secondary/90 transition-colors cursor-pointer"
+                                            >
+                                                Change
+                                            </button>
+                                        </div>
+                                    ) : (
+                                        <div className="space-y-2">
+                                            <input
+                                                type="password"
+                                                placeholder="Current password"
+                                                value={currentPassword}
+                                                onChange={e => setCurrentPassword(e.target.value)}
+                                                className="w-full px-3 py-2 border border-outline-variant rounded-md bg-surface text-on-surface"
+                                            />
+                                            <input
+                                                type="password"
+                                                placeholder="New password"
+                                                value={newPassword}
+                                                onChange={e => setNewPassword(e.target.value)}
+                                                className="w-full px-3 py-2 border border-outline-variant rounded-md bg-surface text-on-surface"
+                                            />
+                                            <div className="flex gap-2 justify-end">
+                                                <button
+                                                    onClick={() => {
+                                                        setPwEditing(false);
+                                                        setCurrentPassword('');
+                                                        setNewPassword('');
+                                                    }}
+                                                    className="px-4 py-2 rounded-md text-sm font-medium bg-surface-variant text-on-surface hover:bg-surface hover:text-on-surface-variant transition-colors"
+                                                >
+                                                    Cancel
+                                                </button>
+                                                <button
+                                                    onClick={handleChangePassword}
+                                                    disabled={pwSaving}
+                                                    className="px-4 py-2 bg-primary text-on-primary rounded-md font-medium hover:bg-primary/90 disabled:opacity-60"
+                                                >
+                                                    {pwSaving ? 'Saving…' : 'Save'}
+                                                </button>
+                                            </div>
+                                        </div>
+                                    )}
                                 </div>
                             </div>
                         </div>

@@ -35,6 +35,15 @@ export const deleteUserResponseSchema = z.object({
     deleted: z.boolean(),
 });
 
+export const changePasswordRequestSchema = z.object({
+    currentPassword: z.string(),
+    newPassword: z.string(),
+});
+
+export const changePasswordResponseSchema = z.object({
+    changed: z.boolean(),
+});
+
 export const changeEmailRequestSchema = z.object({
     email: z.string(),
 });
@@ -64,6 +73,9 @@ export type UpdateUserResponse = z.infer<typeof updateUserResponseSchema>;
 
 export type ChangeEmailRequest = z.infer<typeof changeEmailRequestSchema>;
 export type ChangeEmailResponse = z.infer<typeof changeEmailResponseSchema>;
+
+export type ChangePasswordRequest = z.infer<typeof changePasswordRequestSchema>;
+export type ChangePasswordResponse = z.infer<typeof changePasswordResponseSchema>;
 
 export interface GetUsersResponse {
     users: UserWithCountsData[];
