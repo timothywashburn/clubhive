@@ -2,9 +2,9 @@ import { z } from 'zod';
 
 export const schoolSchema = z.object({
     _id: z.string(),
-    name: z.string(),
-    location: z.string(),
-    emailPattern: z.string(),
+    name: z.string().max(100),
+    location: z.string().max(100),
+    emailPattern: z.string().max(100),
     emailError: z.string(),
 });
 
@@ -14,16 +14,16 @@ export const schoolWithCountsSchema = schoolSchema.extend({
 });
 
 export const createSchoolRequestSchema = z.object({
-    name: z.string(),
-    location: z.string(),
-    emailPattern: z.string(),
+    name: z.string().max(100),
+    location: z.string().max(100),
+    emailPattern: z.string().max(100),
     emailError: z.string(),
 });
 
 export const updateSchoolRequestSchema = z.object({
-    name: z.string().optional(),
-    location: z.string().optional(),
-    emailPattern: z.string().optional(),
+    name: z.string().max(100).optional(),
+    location: z.string().max(100).optional(),
+    emailPattern: z.string().max(100).optional(),
     emailError: z.string().optional(),
 });
 
