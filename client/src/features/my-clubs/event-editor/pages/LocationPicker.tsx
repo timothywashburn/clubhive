@@ -8,9 +8,10 @@ import {
     VenueAvailability,
 } from '@clubhive/shared';
 import { MonthlyVenueView, VenueCard, VenueFilters, VenueFilterType, ViewMode, WeeklyVenueView } from '../location-picker';
-import React, { useEffect, useMemo, useState } from 'react';
+import React, { useEffect, useMemo, useState, useRef } from 'react';
 import { useToast } from '../../../../hooks/useToast.ts';
 import { AlertCircle, Calendar, CalendarDays, Grid, List, MapPin, RefreshCw } from 'lucide-react';
+import WebDatePicker from '../../../../components/date-picker/WebDatePicker';
 
 interface LocationPickerProps {
     event: EventData;
@@ -21,8 +22,10 @@ export function LocationPicker({ event, onEventChange }: LocationPickerProps) {
     const [selectedDate, setSelectedDate] = useState(() => {
         // const today = new Date();
         const today = new Date('2025-01-15'); // TODO: switch back
-        return today.toISOString().split('T')[0];
+        return today;
     });
+    const [showDatePicker, setShowDatePicker] = useState(false);
+    const datePickerRef = useRef<HTMLDivElement>(null);
 
     const [venues, setVenues] = useState<VenueAvailability[]>([]);
     const [loading, setLoading] = useState(false);
@@ -134,10 +137,22 @@ export function LocationPicker({ event, onEventChange }: LocationPickerProps) {
         }
     };
 
+    // Close date picker when clicking outside
+    useEffect(() => {
+        function handleClickOutside(event: MouseEvent) {
+            if (datePickerRef.current && !datePickerRef.current.contains(event.target as Node)) {
+                setShowDatePicker(false);
+            }
+        }
+        document.addEventListener('mousedown', handleClickOutside);
+        return () => document.removeEventListener('mousedown', handleClickOutside);
+    }, []);
+
     // Fetch data when date or view mode changes
     useEffect(() => {
+        const dateString = selectedDate.toISOString().split('T')[0];
         if (viewMode === 'daily') {
-            fetchVenueAvailability(selectedDate);
+            fetchVenueAvailability(dateString);
         } else if (viewMode === 'weekly') {
             const startOfWeek = new Date(selectedDate);
             const dayOfWeek = startOfWeek.getDay();
@@ -216,9 +231,10 @@ export function LocationPicker({ event, onEventChange }: LocationPickerProps) {
         onEventChange({ ...event, location: venue.room_name });
     };
 
-    const handleDateChange = (newDate: string) => {
+    const handleDateChange = (newDate: Date) => {
         setSelectedDate(newDate);
         setSelectedVenue(null); // Clear selection when date changes
+        setShowDatePicker(false);
     };
 
     return (
@@ -232,21 +248,28 @@ export function LocationPicker({ event, onEventChange }: LocationPickerProps) {
                             {viewMode === 'daily' ? 'Event Date' : 'Week Starting'}
                         </label>
                         <div className="flex items-center gap-2">
-                            <input
-                                type="date"
-                                value={selectedDate}
-                                onChange={e => handleDateChange(e.target.value)}
-                                className="px-3 py-2 border border-outline-variant rounded-lg focus:outline-none focus:ring-2 focus:ring-primary bg-surface text-on-surface"
-                                min={new Date().toISOString().split('T')[0]}
-                            />
+                            <div className="relative" ref={datePickerRef}>
+                                <button
+                                    onClick={() => setShowDatePicker(!showDatePicker)}
+                                    className="px-3 py-2.5 pr-10 border border-outline-variant rounded-lg bg-surface text-on-surface focus:outline-none focus:ring-2 focus:ring-primary hover:bg-surface-variant/50 transition-colors min-w-[160px] text-left relative cursor-pointer"
+                                >
+                                    {selectedDate.toLocaleDateString()}
+                                    <Calendar className="h-4 w-4 text-on-surface-variant absolute right-3 top-1/2 transform -translate-y-1/2" />
+                                </button>
+                                {showDatePicker && (
+                                    <div className="absolute z-50 mt-2 bg-surface border border-outline-variant rounded-md shadow-lg">
+                                        <WebDatePicker selectedDate={selectedDate} onDateSelected={handleDateChange} />
+                                    </div>
+                                )}
+                            </div>
                             <button
                                 onClick={() =>
                                     viewMode === 'daily'
-                                        ? fetchVenueAvailability(selectedDate)
-                                        : fetchWeeklyAvailability(new Date(selectedDate))
+                                        ? fetchVenueAvailability(selectedDate.toISOString().split('T')[0])
+                                        : fetchWeeklyAvailability(selectedDate)
                                 }
                                 disabled={loading}
-                                className="px-3 py-2 border border-outline-variant rounded-lg hover:bg-surface-variant/50 disabled:opacity-50 transition-colors"
+                                className="px-3 py-2 border border-outline-variant rounded-lg hover:bg-surface-variant/50 disabled:opacity-50 transition-colors cursor-pointer disabled:cursor-not-allowed"
                             >
                                 <RefreshCw className={`h-4 w-4 text-on-surface ${loading ? 'animate-spin' : ''}`} />
                             </button>
@@ -373,7 +396,7 @@ export function LocationPicker({ event, onEventChange }: LocationPickerProps) {
                             ) : (
                                 <MonthlyVenueView
                                     venues={monthlyVenues}
-                                    monthDate={new Date(selectedDate)}
+                                    monthDate={selectedDate}
                                     filters={filters}
                                     onVenueSelect={handleVenueSelect}
                                     selectedVenue={selectedVenue}
