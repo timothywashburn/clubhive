@@ -56,7 +56,7 @@ export const createClubRequestSchema = z.object({
         .regex(/^[a-zA-Z0-9_-]+$/, 'URL can only contain letters, numbers, hyphens, and underscores')
         .max(50, 'URL must be 50 characters or less'),
     // will be optional later
-    joinRequirements: z.string().optional(),
+    joinRequirements: z.string().max(1000).optional(),
     status: z.enum(ClubStatus),
     socials: z
         .object({
@@ -95,7 +95,7 @@ export const updateClubRequestSchema = z.object({
         .regex(/^[a-zA-Z0-9_-]+$/, 'URL can only contain letters, numbers, hyphens, and underscores')
         .max(50, 'URL must be 50 characters or less')
         .optional(),
-    joinRequirements: z.string().optional(),
+    joinRequirements: z.string().max(1000).optional(),
     status: z.enum(ClubStatus).optional(),
     socials: z
         .object({
