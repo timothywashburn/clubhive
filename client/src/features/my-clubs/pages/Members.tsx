@@ -46,12 +46,12 @@ export function Members({ club }: { club: any }) {
     const filteredMembers = members.filter(member => member.name?.toLowerCase().includes(searchTerm.toLowerCase()));
     const categorizeMembers = (members: any[]) => {
         const officers = members.filter(member => member.role?.toLowerCase() === 'officer');
-        const execs = members.filter(member => ['owner', 'principal member'].includes(member.role?.toLowerCase()));
-        const regularMembers = members.filter(member => !['officer', 'owner', 'principal member'].includes(member.role?.toLowerCase()));
+        const execs = members.filter(member => ['owner', 'principal_member'].includes(member.role?.toLowerCase()));
+        const regularMembers = members.filter(member => !['officer', 'owner', 'principal_member'].includes(member.role?.toLowerCase()));
         return { officers, execs, regularMembers };
     };
 
-    const roleOptions = ['member', 'officer', 'owner', 'principal member'];
+    const roleOptions = ['member', 'officer', 'owner', 'principal_member'];
 
     const { officers, execs, regularMembers } = categorizeMembers(filteredMembers);
 

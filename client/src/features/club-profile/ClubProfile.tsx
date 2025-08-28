@@ -1,41 +1,55 @@
-import { useEffect, useState } from 'react';
+import { useState, useMemo } from 'react';
 import { useNavigate, useParams, Link } from 'react-router';
 import { getTagColor } from '../find-clubs/utils/TagColors.ts';
-import { useToast } from '../../hooks/useToast.ts';
-import { clubWithEventsAndCountsSchema } from '@clubhive/shared';
-import { ClubWithEventsData } from '@clubhive/shared';
 import JoinClubButton from './components/JoinClubButton.tsx';
+import { useImageData } from '../../hooks/useImageData.ts';
+import SocialLinks from '../find-clubs/components/SocialLinks.tsx';
+import { useNotifications } from '../../hooks/useNotifications.ts';
+import { useClubMembersData } from '../../hooks/useClubMembersData.ts';
+import { useClubByUrl } from '../../hooks/useClubByUrl.ts';
+import { ClubRole } from '@clubhive/shared';
+
+function GalleryImage({ imageId }: { imageId: string }) {
+    const { image, loading, error } = useImageData(imageId);
+
+    if (loading) {
+        return <div className="min-w-[200px] h-70 bg-outline-variant/10 rounded-md flex-shrink-0 animate-pulse" />;
+    }
+
+    if (error || !image) {
+        return (
+            <div className="min-w-[200px] h-70 bg-outline-variant/10 rounded-md flex-shrink-0 flex items-center justify-center">
+                <span className="text-on-surface-variant text-sm">Failed to load</span>
+            </div>
+        );
+    }
+
+    return (
+        <div className="min-w-[200px] h-70 bg-surface border border-outline-variant rounded-md flex-shrink-0 overflow-hidden">
+            <img src={image.url} alt="Club gallery image" className="w-full h-full object-cover" />
+        </div>
+    );
+}
 
 export function ClubProfile() {
     const { url } = useParams<{ url: string }>();
-    const [club, setClub] = useState<ClubWithEventsData | null>(null);
-    const { errorToast } = useToast();
+    const { club, loading, error } = useClubByUrl(url);
+
     const navigate = useNavigate();
     const [isOpen, setIsOpen] = useState(false);
-    const [loading, setLoading] = useState(true);
 
-    useEffect(() => {
-        if (!url) return;
-        fetch(`/api/clubs/by-url/${url}`)
-            .then(res => res.json())
-            .then(data => {
-                console.log('Fetch result:', data);
+    const { notifs, isLoading: notificationsLoading } = useNotifications();
+    const clubNotifications = notifs.filter(notification => notification.club?.toString() === club?._id?.toString());
 
-                if (data.success) {
-                    const parsed = clubWithEventsAndCountsSchema.parse(data.club);
-                    setClub(parsed);
-                    console.log('Upcoming events response:', data);
-                } else {
-                    const errorMessage = data.error?.message || 'Unknown error';
-                    errorToast(`Failed to load club: ${errorMessage}`);
-                }
-            })
-            .catch(err => {
-                errorToast(`Failed to load club: ${err.message}`);
-            })
+    const { image: clubLogoImage, error: logoError } = useImageData(club?.clubLogo ?? null);
+    const logoUrl = clubLogoImage?.url && !logoError ? clubLogoImage.url : null;
 
-            .finally(() => setLoading(false));
-    }, [url]);
+    const { members, loading: membersLoading } = useClubMembersData(club?._id?.toString());
+
+    const owner = useMemo(() => members.find(member => member.role === ClubRole.OWNER), [members]);
+
+    const principalMembers = useMemo(() => members.filter(member => member.role === ClubRole.PRINCIPAL_MEMBER), [members]);
+    const officerMembers = useMemo(() => members.filter(member => member.role === ClubRole.OFFICER), [members]);
 
     if (loading) return <div className="text-yellow-600 p-4">Loading club...</div>;
     if (!club) return <div className="text-red 500 p-4">Club not found.</div>;
@@ -58,12 +72,12 @@ export function ClubProfile() {
                 </div>
 
                 {/* Club Profile header*/}
-                <div className="bg-surface rounded-md p-6 border border-outline-variant flex items-center space-x-4 min-h-28 m-4">
+                <div className="bg-surface rounded-md p-6 border border-outline-variant flex items-center space-x-4 min-h-28">
                     {/* logo circle , replace with {club.clubLogo.url} later */}
                     <div className="w-1/3 flex items-center justify-center">
                         <div className="w-30 h-30 rounded-full bg-outline-variant flex items-center justify-center overflow-hidden">
-                            {club.clubLogo ? (
-                                <img src={club.clubLogo} alt={`${club.name} logo`} className="w-full h-full object-cover object-center" />
+                            {logoUrl ? (
+                                <img src={logoUrl} alt={`${club.name} logo`} className="w-full h-full object-cover object-center" />
                             ) : (
                                 <span className="text-on-surface-variant text-sm text-center">No Logo</span>
                             )}
@@ -89,12 +103,11 @@ export function ClubProfile() {
 
                     {/* links to socials */}
                     <div className="absolute top-0 right-0 flex space-x-4 w-[240px] justify-end">
-                        <button
-                            onClick={() => setIsOpen(true)}
-                            className="px-4 py-2 rounded-full font-medium border bg-surface text-on-surface border-outline hover:bg-outline-variant/30 transition-colors cursor-pointer"
-                        >
-                            Links
-                        </button>
+                        <SocialLinks
+                            discordUrl={club.socials.discord}
+                            instagramUrl={club.socials.instagram}
+                            websiteUrl={club.socials.website}
+                        />
                     </div>
                 </div>
 
@@ -212,78 +225,115 @@ export function ClubProfile() {
                     <p className="text-on-surface-variant">Check back for events soon!</p>
                 )}
 
-                {/* announcements */}
-                <div className="mt-10">
-                    <h2 className="text-2xl font-semibold text-on-surface mb-4">Notifications</h2>
-                    <div className="bg-surface rounded-lg p-6 border border-outline-variant">
-                        <ul className="list-disc list-inside space-y-3 text-on-surface-variant">
-                            <li>Club applications open until this date!</li>
-                            <li>Our first GBM of the quarter is tomorrow!</li>
-                            <li>Don't forget to fill out our social event interest form!</li>
-                        </ul>
-                    </div>
+                <h2 className="mt-10 text-2xl font-semibold text-on-surface mb-4">Notifications</h2>
+                {/* notifications */}
+                <div className="bg-surface rounded-md p-6 border border-outline-variant">
+                    {notificationsLoading ? (
+                        <div className="text-on-surface-variant">Loading notifications...</div>
+                    ) : clubNotifications.length > 0 ? (
+                        <div className="space-y-3">
+                            {clubNotifications.slice(0, 5).map(notification => (
+                                <div key={notification._id} className="border-l-4 border-primary/20 pl-4 py-2">
+                                    <span className="text-xs text-on-surface-variant">
+                                        {new Date(notification.date).toLocaleDateString()}
+                                    </span>
+                                    <h4 className="font-medium text-on-surface">{notification.title}</h4>
+                                    <p className="text-sm text-on-surface-variant mt-1 whitespace-pre-line">{notification.body}</p>
+                                </div>
+                            ))}
+
+                            {clubNotifications.length > 5 && (
+                                <button
+                                    onClick={() => navigate('/notifications')}
+                                    className="text-primary hover:text-primary/90 text-sm mt-2"
+                                >
+                                    View all notifications →
+                                </button>
+                            )}
+                        </div>
+                    ) : (
+                        <div className="text-on-surface-variant text-sm italic">No notifications from this club yet.</div>
+                    )}
                 </div>
 
                 {/* gallery */}
                 <h2 className="text-2xl font-semibold text-on-surface mb-4 mt-8">Gallery</h2>
                 <div className="overflow-x-auto">
-                    {' '}
-                    {/* scroll bar for images */}
                     <div className="flex space-x-4">
-                        {[1, 2, 3, 4, 5, 6].map(i => (
-                            <div
-                                key={i}
-                                className="min-w-[200px] h-40 bg-surface border border-outline-variant rounded-md flex-shrink-0 overflow-hidden"
-                            >
-                                <img
-                                    src={`https://via.placeholder.com/200x160?text=Image+${i}`}
-                                    alt={`Club image ${i}`}
-                                    className="w-full h-full object-cover"
-                                />
+                        {club.pictures && club.pictures.length > 0 ? (
+                            club.pictures.map(pictureId => <GalleryImage key={pictureId} imageId={pictureId} />)
+                        ) : (
+                            // Fallback if no pictures
+                            <div className="min-w-[200px] h-40 bg-outline-variant/10 rounded-md flex-shrink-0 flex items-center justify-center">
+                                <span className="text-on-surface-variant text-sm">No gallery images yet</span>
                             </div>
-                        ))}
+                        )}
                     </div>
                 </div>
 
                 {/* club officers */}
-                <h2 className="text-2xl font-semibold text-on-surface mb-4 mt-8">Our Officers</h2>
-
-                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-                    {[1, 2, 3, 4, 5, 6].map((officer, i) => (
+                {/* Owner */}
+                <h2 className="text-2xl font-semibold text-on-surface mb-4 mt-8">Owner</h2>
+                <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 mb-8">
+                    {owner ? (
                         <div
-                            key={i}
-                            className="w-full bg-white border border-gray-200 rounded-lg shadow-sm dark:bg-gray-800 dark:border-gray-700"
+                            key={owner.user._id.toString()}
+                            className="bg-surface border border-outline-variant rounded-md p-4 flex flex-col items-center"
                         >
-                            <div className="flex justify-end px-4 pt-4">
-                                <button
-                                    className="inline-block text-gray-500 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700 focus:ring-4 focus:outline-none focus:ring-gray-200 dark:focus:ring-gray-700 rounded-lg text-sm p-1.5"
-                                    type="button"
-                                >
-                                    <span className="sr-only">Open dropdown</span>
-                                    <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 16 3">
-                                        <path d="M2 0a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3Zm6.041 0a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3ZM14 0a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3Z" />
-                                    </svg>
-                                </button>
-                            </div>
-                            <div className="flex flex-col items-center pb-10">
-                                <img
-                                    className="w-24 h-24 mb-3 rounded-full shadow-lg"
-                                    src="/docs/images/people/profile-picture-3.jpg"
-                                    alt="Profile"
-                                />
-                                <h5 className="mb-1 text-xl font-medium text-gray-900 dark:text-white">John Doe</h5>
-                                <span className="text-sm text-gray-500 dark:text-gray-400">President</span>
-                                <div className="flex mt-4 md:mt-6">
-                                    <a className="inline-flex items-center px-4 py-2 text-sm font-medium text-white bg-blue-700 rounded-lg hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">
-                                        Contact
-                                    </a>
-                                    <a className="py-2 px-4 ms-2 text-sm font-medium text-gray-900 focus:outline-none bg-white rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-blue-700 dark:focus:ring-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700">
-                                        Year
-                                    </a>
-                                </div>
-                            </div>
+                            <h3 className="text-on-surface font-medium">{owner.user.name}</h3>
+                            <p className="text-on-surface-variant text-sm"> Major: {owner.user.major}</p>
+                            <p className="text-on-surface-variant text-sm">
+                                {' '}
+                                Year: {owner.user.year} ({owner.user.educationType})
+                            </p>
                         </div>
-                    ))}
+                    ) : (
+                        <p className="text-on-surface-variant text-sm italic">No owner listed yet.</p>
+                    )}
+                </div>
+
+                {/* Principal Members */}
+                <h2 className="text-2xl font-semibold text-on-surface mb-4 mt-8">Principal Members</h2>
+                <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 mb-8">
+                    {principalMembers.length > 0 ? (
+                        principalMembers.map(({ user, role }) => (
+                            <div
+                                key={user._id.toString()}
+                                className="bg-surface border border-outline-variant rounded-md p-4 flex flex-col items-center"
+                            >
+                                <h3 className="text-on-surface font-medium">{user.name}</h3>
+                                <p className="text-on-surface-variant text-sm"> Major: {user.major}</p>
+                                <p className="text-on-surface-variant text-sm">
+                                    {' '}
+                                    Year: {user.year} ({user.educationType})
+                                </p>
+                            </div>
+                        ))
+                    ) : (
+                        <p className="text-on-surface-variant text-sm italic">No principal members listed yet.</p>
+                    )}
+                </div>
+
+                {/* Officers */}
+                <h2 className="text-2xl font-semibold text-on-surface mb-4">Officers</h2>
+                <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+                    {officerMembers.length > 0 ? (
+                        officerMembers.map(({ user, role }) => (
+                            <div
+                                key={user._id.toString()}
+                                className="bg-surface border border-outline-variant rounded-md p-4 flex flex-col items-center"
+                            >
+                                <h3 className="text-on-surface font-medium">{user.name}</h3>
+                                <p className="text-on-surface-variant text-sm"> Major: {user.major}</p>
+                                <p className="text-on-surface-variant text-sm">
+                                    {' '}
+                                    Year: {user.year} ({user.educationType})
+                                </p>
+                            </div>
+                        ))
+                    ) : (
+                        <p className="text-on-surface-variant text-sm italic">No officers listed yet.</p>
+                    )}
                 </div>
             </div>
         </div>
