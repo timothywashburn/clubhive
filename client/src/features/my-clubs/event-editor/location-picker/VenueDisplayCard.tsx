@@ -31,21 +31,6 @@ export function VenueDisplayCard({
     compact = false,
     children,
 }: VenueDisplayCardProps) {
-    const getRoomTypeColor = (roomType: string) => {
-        switch (roomType.toLowerCase()) {
-            case 'program/event space':
-                return 'text-purple-600 bg-purple-50 border-purple-200';
-            case 'conference/meeting room':
-                return 'text-blue-600 bg-blue-50 border-blue-200';
-            case 'outdoor space':
-                return 'text-green-600 bg-green-50 border-green-200';
-            case 'study room':
-                return 'text-orange-600 bg-orange-50 border-orange-200';
-            default:
-                return 'text-gray-600 bg-gray-50 border-gray-200';
-        }
-    };
-
     const totalAvailableHours = venue.availability.reduce((total, slot) => {
         const start = new Date(slot.start_time);
         const end = new Date(slot.end_time);
@@ -75,14 +60,6 @@ export function VenueDisplayCard({
                     </div>
                 </div>
 
-                {/* Room Type Badge */}
-                <div
-                    className={`inline-flex items-center px-2 py-1 rounded-md text-xs font-medium border ${getRoomTypeColor(venue.room_type)}`}
-                >
-                    <MapPin className="h-3 w-3 mr-1" />
-                    {venue.room_type}
-                </div>
-
                 {/* Summary Info (for daily mode) */}
                 {showSummary && mode === 'daily' && (
                     <div className="flex items-center justify-between text-xs text-on-surface-variant">
@@ -103,11 +80,11 @@ export function VenueDisplayCard({
                             <div className="flex items-center justify-center space-x-3 text-xs text-on-surface-variant mt-2 pt-2 border-t border-outline-variant/30">
                                 <div className="flex items-center space-x-1">
                                     <div className="w-3 h-3 bg-orange-400 rounded-sm" />
-                                    <span>Meets criteria</span>
+                                    <span>Meets Criteria</span>
                                 </div>
                                 <div className="flex items-center space-x-1">
                                     <div className="w-3 h-3 bg-gray-300 rounded-sm" />
-                                    <span>Available</span>
+                                    <span>Booked</span>
                                 </div>
                             </div>
                         )}

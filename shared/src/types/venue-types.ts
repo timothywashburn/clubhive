@@ -6,6 +6,7 @@ export interface VenueAvailabilitySlot {
 export interface VenueAvailability {
     room_name: string;
     room_type: string;
+    custom_room_type?: string;
     building_name: string;
     availability: VenueAvailabilitySlot[];
 }

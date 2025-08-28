@@ -35,7 +35,6 @@ export function LocationPicker({ event, onEventChange }: LocationPickerProps) {
     const [filters, setFilters] = useState<VenueFilterType>({
         search: '',
         roomType: '',
-        building: '',
         minDuration: 0,
         searchMode: 'duration',
         specificWindow: undefined,
@@ -178,13 +177,8 @@ export function LocationPicker({ event, onEventChange }: LocationPickerProps) {
                 return false;
             }
 
-            // Room type filter
-            if (filters.roomType && venue.room_type !== filters.roomType) {
-                return false;
-            }
-
-            // Building filter
-            if (filters.building && venue.building_name !== filters.building) {
+            // Room type filter (using custom room type)
+            if (filters.roomType && venue.custom_room_type !== filters.roomType) {
                 return false;
             }
 
@@ -223,8 +217,7 @@ export function LocationPicker({ event, onEventChange }: LocationPickerProps) {
         });
     }, [venues, filters]);
 
-    const availableRoomTypes = useMemo(() => [...new Set(venues.map(v => v.room_type))].sort(), [venues]);
-    const availableBuildings = useMemo(() => [...new Set(venues.map(v => v.building_name).filter(b => b))].sort(), [venues]);
+    const availableRoomTypes = useMemo(() => [...new Set(venues.map(v => v.custom_room_type).filter(Boolean))].sort(), [venues]);
 
     const handleVenueSelect = (venue: VenueAvailability, date?: Date) => {
         setSelectedVenue(venue);
@@ -315,12 +308,7 @@ export function LocationPicker({ event, onEventChange }: LocationPickerProps) {
             <div className="grid grid-cols-1 lg:grid-cols-5 gap-6">
                 {/* Filters Sidebar */}
                 <div className="lg:col-span-1">
-                    <VenueFilters
-                        filters={filters}
-                        onFiltersChange={setFilters}
-                        availableRoomTypes={availableRoomTypes}
-                        availableBuildings={availableBuildings}
-                    />
+                    <VenueFilters filters={filters} onFiltersChange={setFilters} availableRoomTypes={availableRoomTypes} />
                 </div>
 
                 {/* Venues Content */}
