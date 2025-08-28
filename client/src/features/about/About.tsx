@@ -1,6 +1,8 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Code, Users } from 'lucide-react';
 import { GlowingHoneycomb } from '../../components/honeycomb';
+import { useNavigate } from 'react-router';
+import { useAuthStore } from '../../stores/authStore';
 
 type HoneycombType = 'static' | 'dynamic' | 'glowing';
 
@@ -10,6 +12,17 @@ export function About() {
     const [honeycombType, setHoneycombType] = useState<HoneycombType>('glowing');
     const [scrollY, setScrollY] = useState(0);
     const backgroundRef = useRef<HTMLDivElement>(null);
+    const { isAuthenticated } = useAuthStore();
+
+    const navigate = useNavigate();
+
+    const handleClickAccount = () => {
+        if (isAuthenticated) {
+            navigate('/account');
+        } else {
+            navigate('/signup');
+        }
+    };
 
     useEffect(() => {
         const handleScroll = () => {
@@ -130,11 +143,17 @@ export function About() {
                         Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt.
                     </p>
                     <div className="flex flex-col sm:flex-row justify-center gap-4">
-                        <button className="bg-primary text-on-primary px-8 py-4 rounded-lg text-lg font-semibold hover:bg-primary/90 transition-colors cursor-pointer">
+                        <button
+                            onClick={() => navigate('/clubs')}
+                            className="bg-primary text-on-primary px-8 py-4 rounded-lg text-lg font-semibold hover:bg-primary/90 transition-colors cursor-pointer"
+                        >
                             browse clubs
                         </button>
-                        <button className="border-2 border-primary text-primary px-8 py-4 rounded-lg text-lg font-semibold hover:bg-primary hover:text-on-primary transition-colors cursor-pointer">
-                            create a club
+                        <button
+                            onClick={handleClickAccount}
+                            className="border-2 border-primary text-primary px-8 py-4 rounded-lg text-lg font-semibold hover:bg-primary hover:text-on-primary transition-colors cursor-pointer"
+                        >
+                            create an account
                         </button>
                     </div>
                 </div>
