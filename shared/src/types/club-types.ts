@@ -3,6 +3,7 @@ import { ClubRole } from './club-membership-types.js';
 import { schoolSchema } from './school-types.js';
 import { tagSchema } from './tag-types.js';
 import { eventSchema } from './event-types.js';
+import { imageSchema } from './image-types.js';
 
 export enum ClubStatus {
     ANYONE_CAN_JOIN = 'Anyone can join',
@@ -27,7 +28,7 @@ export const clubSchema = z.object({
         })
         .optional(),
     clubLogo: z.string().nullable().optional(),
-    pictures: z.array(z.string()),
+    pictures: z.array(imageSchema).optional(),
     tags: z.array(tagSchema),
     createdAt: z.string(),
     updatedAt: z.string(),
@@ -81,7 +82,7 @@ export const createClubRequestSchema = z.object({
         })
         .optional(),
     clubLogo: z.string().optional(),
-    pictures: z.array(z.string()).optional(),
+    pictures: z.array(imageSchema).optional(),
     tags: z.array(z.string()).optional(),
 });
 
@@ -120,7 +121,7 @@ export const updateClubRequestSchema = z.object({
         })
         .optional(),
     clubLogo: z.string().optional(),
-    pictures: z.array(z.string()).optional(),
+    pictures: z.array(imageSchema).optional(),
     tags: z.array(z.string()).optional(),
 });
 
