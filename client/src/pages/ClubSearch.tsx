@@ -86,34 +86,36 @@ export function Clubs() {
                             <>
                                 <div className="flex items-center gap-7">
                                     <div
-                                        className={`w-30 h-30 rounded-full flex items-center justify-center text-sm font-semibold bg-primary-container text-primary`}
+                                        className={`w-40 h-40 rounded-full flex items-center justify-center text-sm font-semibold bg-primary-container text-primary`}
                                     >
                                         <img
                                             src={logoUrl}
                                             alt={selectedClub?.name ?? 'Club Logo'}
-                                            className="w-30 h-30 object-cover rounded-full"
+                                            className="w-40 h-40 object-cover rounded-full"
                                         />
                                     </div>
                                     <div className="flex flex-col flex-1 overflow-hidden -mb-6">
-                                        <h2 className="text-4xl text-on-surface font-bold mb-2">{selectedClub.name}</h2>
-                                        <p className="text-on-surface-variant italic">{selectedClub.tagline || 'No tagline'}</p>
-                                        <SocialLinks
-                                            discordUrl={selectedClub.socials.discord}
-                                            instagramUrl={selectedClub.socials.instagram}
-                                            websiteUrl={selectedClub.socials.website}
-                                        />
+                                        <h2 className="text-5xl text-on-surface font-bold mb-2">{selectedClub.name}</h2>
+                                        <p className="text-on-surface-variant text-lg italic">{selectedClub.tagline || 'No tagline'}</p>
                                     </div>
                                 </div>
                                 <hr className="my-4 border-t border-outline-variant" />
-                                <div className="text-sm text-on-surface-variant mb-4 flex flex-wrap gap-2">
-                                    {selectedClub.tags.map(tag => (
-                                        <span
-                                            key={tag._id}
-                                            className={`rounded-full px-3 py-1 text-xs font-semibold ${getTagColor(tag._id)}`}
-                                        >
-                                            {tag.text}
-                                        </span>
-                                    ))}
+                                <div className="flex justify-between items-center">
+                                    <div className="text-sm text-on-surface-variant mb-4 flex flex-wrap gap-2">
+                                        {selectedClub.tags.map(tag => (
+                                            <span
+                                                key={tag._id}
+                                                className={`rounded-full px-3 py-1 text-xs font-semibold ${getTagColor(tag._id)}`}
+                                            >
+                                                {tag.text}
+                                            </span>
+                                        ))}
+                                    </div>
+                                    <SocialLinks
+                                        discordUrl={selectedClub.socials.discord}
+                                        instagramUrl={selectedClub.socials.instagram}
+                                        websiteUrl={selectedClub.socials.website}
+                                    />
                                 </div>
                                 <div className="mt-6 text-on-surface-variant">{selectedClub.description || 'No description'}</div>
 
