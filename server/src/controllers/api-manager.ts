@@ -54,6 +54,8 @@ import { getImageEndpoint } from '@/api/images/get-image';
 import { leaveMembershipEndpoint } from '@/api/memberships/leave-membership';
 import { deleteAccountEndpoint } from '@/api/me/delete-account';
 import { joinMembershipEndpoint } from '@/api/memberships/join-membership';
+import { changeEmailEndpoint } from '@/api/users/change-email';
+import { changePasswordEndpoint } from '@/api/me/change-password';
 
 export default class ApiManager {
     private static instance: ApiManager;
@@ -90,6 +92,7 @@ export default class ApiManager {
         this.addEndpoint(tokenRefreshEndpoint);
         this.addEndpoint(checkTokenhEndpoint);
         this.addEndpoint(updateUserEndpoint);
+        this.addEndpoint(changeEmailEndpoint);
 
         // School endpoints
         this.addEndpoint(createSchoolEndpoint);
@@ -117,6 +120,7 @@ export default class ApiManager {
         this.addEndpoint(getMyClubsEndpoint);
         this.addEndpoint(getMyEventsEndpoint);
         this.addEndpoint(deleteAccountEndpoint);
+        this.addEndpoint(changePasswordEndpoint);
 
         // Venue endpoints
         this.addEndpoint(getDailyVenueAvailabilityEndpoint);
