@@ -1,11 +1,11 @@
-import { VenueAvailability, VenueFilters } from './types';
+import { VenueAvailability, VenueFilterType } from './types';
 import { VenueDisplayCard } from './VenueDisplayCard';
 import { MapPin } from 'lucide-react';
 
 interface MonthlyVenueViewProps {
     venues: VenueAvailability[][]; // Array of 31 days worth of venue data
     monthDate: Date;
-    filters?: VenueFilters;
+    filters?: VenueFilterType;
     onVenueSelect: (venue: VenueAvailability, date: Date) => void;
     selectedVenue?: VenueAvailability;
 }

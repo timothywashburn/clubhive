@@ -74,7 +74,7 @@ export default class NotificationController {
                             title: notif.title,
                             body: notif.body,
                             pictures: notif.pictures,
-                            clubId: String(notif.club),
+                            club: String(notif.club),
                             clubName: clubName,
                             date: notif.createdAt,
                             read: entry.read,

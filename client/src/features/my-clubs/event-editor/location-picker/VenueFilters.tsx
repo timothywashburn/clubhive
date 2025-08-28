@@ -1,5 +1,5 @@
-import { Search, Filter, Building, Clock, Calendar } from 'lucide-react';
-import { VenueFilters as VenueFiltersType } from './types';
+import { Search, Filter, Clock, Calendar, Home } from 'lucide-react';
+import { VenueFilterType as VenueFiltersType } from './types';
 import { useState } from 'react';
 import TimeRangePicker from '../../../../components/date-picker/TimeRangePicker.tsx';
 
@@ -7,10 +7,9 @@ interface VenueFiltersProps {
     filters: VenueFiltersType;
     onFiltersChange: (filters: VenueFiltersType) => void;
     availableRoomTypes: string[];
-    availableBuildings: string[];
 }
 
-export function VenueFilters({ filters, onFiltersChange, availableRoomTypes, availableBuildings }: VenueFiltersProps) {
+export function VenueFilters({ filters, onFiltersChange, availableRoomTypes }: VenueFiltersProps) {
     const [showTimeRangePicker, setShowTimeRangePicker] = useState(false);
     // Store previous values for each search mode
     const [previousDuration, setPreviousDuration] = useState(0);
@@ -80,26 +79,6 @@ export function VenueFilters({ filters, onFiltersChange, availableRoomTypes, ava
                     {availableRoomTypes.map(type => (
                         <option key={type} value={type}>
                             {type}
-                        </option>
-                    ))}
-                </select>
-            </div>
-
-            {/* Building Filter */}
-            <div>
-                <label className="block text-sm font-medium text-on-surface mb-2">
-                    <Building className="inline h-4 w-4 mr-1" />
-                    Building
-                </label>
-                <select
-                    value={filters.building}
-                    onChange={e => updateFilter('building', e.target.value)}
-                    className="w-full px-3 py-2 border border-outline-variant rounded-lg focus:outline-none focus:ring-2 focus:ring-primary bg-surface text-on-surface text-sm"
-                >
-                    <option value="">All Buildings</option>
-                    {availableBuildings.map(building => (
-                        <option key={building} value={building}>
-                            {building}
                         </option>
                     ))}
                 </select>
@@ -210,7 +189,6 @@ export function VenueFilters({ filters, onFiltersChange, availableRoomTypes, ava
                     onFiltersChange({
                         search: '',
                         roomType: '',
-                        building: '',
                         minDuration: 0,
                         searchMode: 'duration',
                         specificWindow: undefined,

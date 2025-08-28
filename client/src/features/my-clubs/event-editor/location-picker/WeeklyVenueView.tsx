@@ -1,11 +1,11 @@
-import { VenueAvailability, VenueFilters } from './types';
+import { VenueAvailability, VenueFilterType } from './types';
 import { VisualAvailabilityDisplay } from './VisualAvailabilityDisplay';
 import { Building2, MapPin } from 'lucide-react';
 
 interface WeeklyVenueViewProps {
     venues: VenueAvailability[][];
     weekDates: Date[];
-    filters?: VenueFilters;
+    filters?: VenueFilterType;
     onVenueSelect: (venue: VenueAvailability, date: Date) => void;
     selectedVenue?: VenueAvailability;
 }
@@ -13,7 +13,6 @@ interface WeeklyVenueViewProps {
 export function WeeklyVenueView({ venues, weekDates, filters, onVenueSelect, selectedVenue }: WeeklyVenueViewProps) {
     const dayNames = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
 
-    // Get unique venues across all days
     const uniqueVenues = venues.reduce((acc, dayVenues) => {
         dayVenues.forEach(venue => {
             const key = `${venue.building_name}-${venue.room_name}`;
@@ -23,21 +22,6 @@ export function WeeklyVenueView({ venues, weekDates, filters, onVenueSelect, sel
         });
         return acc;
     }, [] as VenueAvailability[]);
-
-    const getRoomTypeColor = (roomType: string) => {
-        switch (roomType.toLowerCase()) {
-            case 'program/event space':
-                return 'text-purple-600 bg-purple-50 border-purple-200';
-            case 'conference/meeting room':
-                return 'text-blue-600 bg-blue-50 border-blue-200';
-            case 'outdoor space':
-                return 'text-green-600 bg-green-50 border-green-200';
-            case 'study room':
-                return 'text-orange-600 bg-orange-50 border-orange-200';
-            default:
-                return 'text-gray-600 bg-gray-50 border-gray-200';
-        }
-    };
 
     const getVenueForDay = (venue: VenueAvailability, dayIndex: number): VenueAvailability | null => {
         const dayVenues = venues[dayIndex] || [];
@@ -83,22 +67,13 @@ export function WeeklyVenueView({ venues, weekDates, filters, onVenueSelect, sel
                                         </div>
                                     </div>
 
-                                    <div
-                                        className={`inline-flex items-center px-2 py-1 rounded-md text-xs font-medium border ${getRoomTypeColor(venue.room_type)}`}
-                                    >
-                                        <MapPin className="h-3 w-3 mr-1" />
-                                        {venue.room_type}
+                                    <div className="flex items-center space-x-1">
+                                        <div className="w-3 h-3 bg-orange-400 rounded-sm" />
+                                        <span className="text-xs text-on-surface-variant">Meets Criteria</span>
                                     </div>
-
-                                    <div className="flex items-center space-x-3 mt-2">
-                                        <div className="flex items-center space-x-1">
-                                            <div className="w-3 h-3 bg-orange-400 rounded-sm" />
-                                            <span className="text-xs text-on-surface-variant">Meets</span>
-                                        </div>
-                                        <div className="flex items-center space-x-1">
-                                            <div className="w-3 h-3 bg-gray-300 rounded-sm" />
-                                            <span className="text-xs text-on-surface-variant">Available</span>
-                                        </div>
+                                    <div className="flex items-center space-x-1">
+                                        <div className="w-3 h-3 bg-gray-300 rounded-sm" />
+                                        <span className="text-xs text-on-surface-variant">Booked</span>
                                     </div>
                                 </div>
 
