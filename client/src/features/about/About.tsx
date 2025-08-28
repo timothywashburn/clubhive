@@ -107,18 +107,59 @@ export function About() {
                             <div className="w-20 h-20 bg-primary/10 rounded-full mx-auto mb-3 flex items-center justify-center">
                                 <Users className="text-primary" size={28} />
                             </div>
-                            <h3 className="text-sm font-bold text-on-surface">project manager</h3>
+                            <h3 className="text-sm font-bold text-on-surface">Jayden Wang</h3>
+                            <h3 className="text-sm font-bold text-on-surface-variant">project manager</h3>
+                        </div>
+
+                        {/* Product Owner */}
+                        <div className="text-center">
+                            <div className="w-20 h-20 bg-primary/10 rounded-full mx-auto mb-3 flex items-center justify-center">
+                                <Users className="text-primary" size={28} />
+                            </div>
+                            <h3 className="text-sm font-bold text-on-surface">Timothy Washburn</h3>
+                            <h3 className="text-sm font-bold text-on-surface-variant">product owner</h3>
                         </div>
 
                         {/* Developers */}
-                        {Array.from({ length: 6 }, (_, i) => (
-                            <div key={i} className="text-center">
-                                <div className="w-20 h-20 bg-primary/10 rounded-full mx-auto mb-3 flex items-center justify-center">
-                                    <Code className="text-primary" size={28} />
-                                </div>
-                                <h3 className="text-sm font-bold text-on-surface">dev #{i + 1}</h3>
+                        <div className="text-center">
+                            <div className="w-20 h-20 bg-primary/10 rounded-full mx-auto mb-3 flex items-center justify-center">
+                                <Code className="text-primary" size={28} />
                             </div>
-                        ))}
+                            <h3 className="text-sm font-bold text-on-surface">Anisha Ramesh</h3>
+                            <h3 className="text-sm font-bold text-on-surface-variant">developer</h3>
+                        </div>
+
+                        <div className="text-center">
+                            <div className="w-20 h-20 bg-primary/10 rounded-full mx-auto mb-3 flex items-center justify-center">
+                                <Code className="text-primary" size={28} />
+                            </div>
+                            <h3 className="text-sm font-bold text-on-surface">Anjali Ravi</h3>
+                            <h3 className="text-sm font-bold text-on-surface-variant">developer</h3>
+                        </div>
+
+                        <div className="text-center">
+                            <div className="w-20 h-20 bg-primary/10 rounded-full mx-auto mb-3 flex items-center justify-center">
+                                <Code className="text-primary" size={28} />
+                            </div>
+                            <h3 className="text-sm font-bold text-on-surface">Keyura Valalla</h3>
+                            <h3 className="text-sm font-bold text-on-surface-variant">developer</h3>
+                        </div>
+
+                        <div className="text-center">
+                            <div className="w-20 h-20 bg-primary/10 rounded-full mx-auto mb-3 flex items-center justify-center">
+                                <Code className="text-primary" size={28} />
+                            </div>
+                            <h3 className="text-sm font-bold text-on-surface">Minjoo O</h3>
+                            <h3 className="text-sm font-bold text-on-surface-variant">developer</h3>
+                        </div>
+
+                        <div className="text-center">
+                            <div className="w-20 h-20 bg-primary/10 rounded-full mx-auto mb-3 flex items-center justify-center">
+                                <Code className="text-primary" size={28} />
+                            </div>
+                            <h3 className="text-sm font-bold text-on-surface">Ruth Liu</h3>
+                            <h3 className="text-sm font-bold text-on-surface-variant">developer</h3>
+                        </div>
                     </div>
                 </div>
 
@@ -131,7 +172,7 @@ export function About() {
 
                     <div className="relative h-96 bg-surface-variant rounded-lg overflow-hidden border border-outline-variant">
                         <div className="absolute inset-0 p-8 flex items-center justify-center">
-                            <p className="text-on-surface-variant text-lg text-center">put some text here</p>
+                            <p className="text-on-surface-variant text-lg text-center">TBA</p>
                         </div>
                     </div>
                 </div>
