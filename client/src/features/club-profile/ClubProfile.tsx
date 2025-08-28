@@ -56,8 +56,8 @@ export function ClubProfile() {
 
     return (
         <div className="h-full relative">
-            <div className="max-w-5xl mx-auto p-6">
-                <div className="flex justify-start mb-4">
+            <div className=" max-w-7xl mx-auto px-6 py-6">
+                <div className="flex justify-start mt-3 mb-7">
                     <button
                         onClick={() => navigate(-1)}
                         className="bg-surface text-on-surface border border-outline px-4 py-2 rounded-full hover:bg-outline-variant/30 font-medium transition-colors"
@@ -66,16 +66,10 @@ export function ClubProfile() {
                     </button>
                 </div>
 
-                {/* Join Club Button */}
-                <div className="flex justify-end mb-5">
-                    <JoinClubButton clubId={club._id} onJoinSuccess={() => {}} />
-                </div>
-
                 {/* Club Profile header*/}
                 <div className="bg-surface rounded-md p-6 border border-outline-variant flex items-center space-x-4 min-h-28">
-                    {/* logo circle , replace with {club.clubLogo.url} later */}
-                    <div className="w-1/3 flex items-center justify-center">
-                        <div className="w-30 h-30 rounded-full bg-outline-variant flex items-center justify-center overflow-hidden">
+                    <div className="w-1/4 flex items-center justify-center">
+                        <div className="w-40 h-40 rounded-full bg-outline-variant flex items-center justify-center overflow-hidden">
                             {logoUrl ? (
                                 <img src={logoUrl} alt={`${club.name} logo`} className="w-full h-full object-cover object-center" />
                             ) : (
@@ -91,9 +85,9 @@ export function ClubProfile() {
                     </div>
                 </div>
 
-                <div className="my-6 relative">
-                    {/* club tags */}
-                    <div className="flex flex-wrap gap-2 mt-2">
+                <div className="my-6 flex justify-between items-center">
+                    {/* club tags on the left */}
+                    <div className="flex flex-wrap gap-2">
                         {club.tags?.map((tag, index) => (
                             <span key={index} className={`rounded-full px-3 py-1 text-xs font-semibold ${getTagColor(tag._id)}`}>
                                 {tag.text}
@@ -101,8 +95,8 @@ export function ClubProfile() {
                         ))}
                     </div>
 
-                    {/* links to socials */}
-                    <div className="absolute top-0 right-0 flex space-x-4 w-[240px] justify-end">
+                    {/* links to socials on the right */}
+                    <div>
                         <SocialLinks
                             discordUrl={club.socials.discord}
                             instagramUrl={club.socials.instagram}
@@ -110,53 +104,6 @@ export function ClubProfile() {
                         />
                     </div>
                 </div>
-
-                {isOpen && (
-                    <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
-                        <div className="bg-surface rounded-xl p-6 w-[90%] max-w-md shadow-lg relative">
-                            <p className="text-on-surface-variant mb-2">
-                                <span>Website: </span>
-                                <a
-                                    href={club.socials?.website}
-                                    target="_blank"
-                                    rel="noopener noreferrer"
-                                    className="text-primary underline ml-2"
-                                >
-                                    {club.socials?.website}
-                                </a>
-                            </p>
-                            <p className="text-on-surface-variant mb-2">
-                                <span>Instagram: </span>
-                                <a
-                                    href={club.socials?.instagram}
-                                    target="_blank"
-                                    rel="noopener noreferrer"
-                                    className="text-primary underline ml-2"
-                                >
-                                    {club.socials?.instagram}
-                                </a>
-                            </p>
-                            <p className="text-on-surface-variant mb-2">
-                                <span>Discord: </span>
-                                <a
-                                    href={club.socials?.discord}
-                                    target="_blank"
-                                    rel="noopener noreferrer"
-                                    className="text-primary underline ml-2"
-                                >
-                                    {club.socials?.discord}
-                                </a>
-                            </p>
-
-                            <button
-                                onClick={() => setIsOpen(false)}
-                                className="absolute top-3 right-4 text-on-surface-variant hover:text-on-surface"
-                            >
-                                ✕
-                            </button>
-                        </div>
-                    </div>
-                )}
 
                 {/* club description */}
                 <h2 className="mt-10 text-2xl font-semibold text-on-surface mb-4">About Our Club </h2>
@@ -169,6 +116,10 @@ export function ClubProfile() {
                     <div className="bg-surface rounded-md p-4 border border-outline-variant text-on-surface text-center">
                         <p className="text-sm text-on-surface-variant">Members</p>
                         <p className="text-2xl font-semibold">{club.memberCount ?? 'N/A'}</p>
+                        {/* Join Club Button */}
+                        <div className="mt-2">
+                            <JoinClubButton clubId={club._id} onJoinSuccess={() => {}} />
+                        </div>
                     </div>
                 </div>
 
@@ -181,7 +132,10 @@ export function ClubProfile() {
                         <div className="overflow-x-auto">
                             <div className="flex space-x-4">
                                 {club.upcomingEvents.map(event => (
-                                    <div key={event._id} className="min-w-[300px] p-4 border rounded-lg shadow-sm bg-surface">
+                                    <div
+                                        key={event._id}
+                                        className="min-w-[300px] p-4 border rounded-lg shadow-sm bg-surface border-outline-variant"
+                                    >
                                         <h3 className="font-semibold text-on-surface">
                                             <Link to={`/events/${event._id}`} className="text-primary hover:underline cursor-pointer">
                                                 {event.name}
@@ -204,7 +158,10 @@ export function ClubProfile() {
                         <div className="overflow-x-auto">
                             <div className="flex space-x-4">
                                 {club.pastEvents.map(event => (
-                                    <div key={event._id} className="min-w-[300px] p-4 border rounded-lg shadow-sm bg-surface opacity-75">
+                                    <div
+                                        key={event._id}
+                                        className="min-w-[300px] p-4 border rounded-lg shadow-sm bg-surface opacity-75 border-outline-variant"
+                                    >
                                         <h3 className="font-semibold text-on-surface">
                                             <Link to={`/events/${event._id}`} className="text-primary hover:underline cursor-pointer">
                                                 {event.name}

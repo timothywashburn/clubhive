@@ -10,7 +10,7 @@ type SocialLinksProps = {
 
 export default function SocialLinks({ discordUrl, instagramUrl, websiteUrl }: SocialLinksProps) {
     return (
-        <div className="flex gap-5 justify-end">
+        <div className="flex gap-5">
             {discordUrl && (
                 <a href={discordUrl} target="_blank" rel="noopener noreferrer">
                     <div className="w-10 h-10 bg-discord rounded-full p-1.25">
