@@ -27,6 +27,45 @@ function TimeFilter({
     const [open, setOpen] = useState(false);
     const popoverRef = useRef<HTMLDivElement>(null);
 
+    // Validate and format time string (HH:MM in 24-hour format)
+    const validateTimeString = (timeStr: string): string => {
+        // Remove any non-digit or colon characters
+        const cleaned = timeStr.replace(/[^0-9:]/g, '');
+
+        // Allow empty string
+        if (cleaned.length === 0) return '';
+
+        // Don't auto-format while typing - just validate limits
+        if (cleaned.includes(':')) {
+            const [hours, minutes] = cleaned.split(':');
+
+            // Validate hours (0-23)
+            if (hours && parseInt(hours) > 23) {
+                return cleaned.substring(0, cleaned.length - 1); // Remove last character
+            }
+
+            // Validate minutes (0-59)
+            if (minutes && parseInt(minutes) > 59) {
+                return cleaned.substring(0, cleaned.length - 1); // Remove last character
+            }
+        } else {
+            // Just numbers, no colon yet
+            if (cleaned.length <= 2) {
+                // Allow up to 2 digits for hours
+                if (parseInt(cleaned) > 23) {
+                    return cleaned.substring(0, 1); // Keep only first digit
+                }
+            }
+        }
+
+        return cleaned;
+    };
+
+    const handleTimeChange = (value: string, setter: (value: string) => void) => {
+        const formatted = validateTimeString(value);
+        setter(formatted);
+    };
+
     // Close dropdown when clicking outside
     useEffect(() => {
         function handleClickOutside(event: MouseEvent) {
@@ -41,7 +80,7 @@ function TimeFilter({
         <div className="relative" ref={popoverRef}>
             <button
                 onClick={() => setOpen(prev => !prev)}
-                className="px-3 py-2 border border-outline-variant bg-surface text-on-surface rounded-md rounded-l-none focus:outline-none focus:ring-primary focus:ring-1 h-10"
+                className="px-3 py-2 border border-outline-variant bg-surface text-on-surface rounded-md rounded-l-none focus:outline-none focus:ring-primary focus:ring-1 h-10 min-w-[100px] whitespace-nowrap"
             >
                 Time
             </button>
@@ -50,21 +89,23 @@ function TimeFilter({
                     <label className="block text-sm text-on-surface">
                         After:
                         <input
-                            type="time"
+                            type="text"
                             value={afterTime}
-                            onChange={e => setAfterTime(e.target.value)}
-                            className="mt-1 block w-full border text-on-surface border-outline-variant rounded-md bg-surface focus:outline-none focus:ring-primary focus:ring-1"
-                            step="60"
+                            onChange={e => handleTimeChange(e.target.value, setAfterTime)}
+                            placeholder="00:00"
+                            maxLength={5}
+                            className="mt-1 block w-full border text-on-surface border-outline-variant rounded-md bg-surface focus:outline-none focus:ring-primary focus:ring-1 px-2 py-1"
                         />
                     </label>
                     <label className="block text-sm text-on-surface">
                         Before:
                         <input
-                            type="time"
+                            type="text"
                             value={beforeTime}
-                            onChange={e => setBeforeTime(e.target.value)}
-                            className="mt-1 block w-full border text-on-surface border-outline-variant rounded-md bg-surface focus:outline-none focus:ring-primary focus:ring-1"
-                            step="60"
+                            onChange={e => handleTimeChange(e.target.value, setBeforeTime)}
+                            placeholder="23:59"
+                            maxLength={5}
+                            className="mt-1 block w-full border text-on-surface border-outline-variant rounded-md bg-surface focus:outline-none focus:ring-primary focus:ring-1 px-2 py-1"
                         />
                     </label>
                 </div>
@@ -137,12 +178,9 @@ export function EventSearch() {
               .filter(({ event }) => location.trim() === '' || event.location?.toLowerCase().includes(location.toLowerCase()))
               .filter(({ event }) => {
                   if (!afterTime && !beforeTime) return true;
-                  const eventTime = new Date(event.date + 'T' + (event.startTime || '00:00')).getTime();
-                  const afterTimestamp = afterTime ? new Date('1970-01-01T' + afterTime).getTime() : null;
-                  const beforeTimestamp = beforeTime ? new Date('1970-01-01T' + beforeTime).getTime() : null;
-
-                  if (afterTimestamp && eventTime < afterTimestamp) return false;
-                  if (beforeTimestamp && eventTime > beforeTimestamp) return false;
+                  const eventTime = event.startTime || '00:00';
+                  if (afterTime && eventTime < afterTime) return false;
+                  if (beforeTime && eventTime > beforeTime) return false;
 
                   return true;
               })
@@ -173,24 +211,37 @@ export function EventSearch() {
                         placeholder="Search events..."
                         value={searchTerm}
                         onChange={e => setSearchTerm(e.target.value)}
-                        className="flex-1 pl-10 pr-3 py-2 border text-on-surface border-outline-variant rounded-l-none leading-5 bg-surface placeholder-on-surface-variant focus:outline-none focus:border-primary focus:ring-1"
+                        className="flex-1 pl-10 pr-3 py-2 focus:ring focus:ring-primary border border-r-0 text-on-surface border-outline-variant rounded-l-none leading-5 bg-surface placeholder-on-surface-variant focus:outline-none focus:z-10"
                     />
                     <input
                         type="text"
                         placeholder="Location"
                         value={location}
                         onChange={e => setLocation(e.target.value)}
-                        className="w-45 pl-3 pr-3 py-2 border text-on-surface border-outline-variant bg-surface placeholder-on-surface-variant focus:outline-none focus:ring-primary focus:ring-1 focus:z-10"
+                        className="w-45 pl-3 pr-3 py-2 border border-r-0 text-on-surface border-outline-variant bg-surface placeholder-on-surface-variant focus:outline-none focus:ring focus:ring-primary focus:z-10"
                     />
                     <div className="relative" ref={datePickerRef}>
                         <button
                             onClick={() => setShowDatePicker(!showDatePicker)}
-                            className="pl-3 pr-3 py-2 border border-outline-variant border-r-0 rounded-none bg-surface text-on-surface focus:outline-none focus:ring-primary focus:ring-1 focus:z-10 h-10 whitespace-nowrap min-w-[120px]"
+                            className={`pl-3 pr-3 py-2 border border ounded-none bg-surface text-on-surface focus:outline-none h-10 whitespace-nowrap min-w-[120px] ${
+                                showDatePicker ? 'border-primary z-10 focus:outline-none' : 'border-outline-variant focus:z-10'
+                            }`}
                         >
                             {date ? date.toLocaleDateString() : 'Select Date'}
                         </button>
                         {showDatePicker && (
-                            <div className="absolute z-50 mt-2 bg-surface border border-outline-variant rounded-md shadow-lg right-0">
+                            <div className="absolute z-50 mt-2 bg-surface border border-outline-variant rounded-md focus:ring focus:ring-primary focus:outline-none shadow-lg right-0">
+                                <div className="p-2 border-b border-outline-variant">
+                                    <button
+                                        onClick={() => {
+                                            setDate(null);
+                                            setShowDatePicker(false);
+                                        }}
+                                        className="w-full text-sm py-1 px-2 text-on-surface-variant hover:bg-primary/10 rounded"
+                                    >
+                                        Clear Date
+                                    </button>
+                                </div>
                                 <WebDatePicker
                                     selectedDate={date || new Date()}
                                     onDateSelected={selectedDate => {

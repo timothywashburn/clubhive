@@ -59,7 +59,7 @@ export function ClubProfile() {
             <div className=" max-w-7xl mx-auto px-6 py-6">
                 <div className="flex justify-start mt-3 mb-7">
                     <button
-                        onClick={() => navigate(-1)}
+                        onClick={() => navigate('/clubs')}
                         className="bg-surface text-on-surface border border-outline px-4 py-2 rounded-full hover:bg-outline-variant/30 font-medium transition-colors"
                     >
                         ← Find Clubs
