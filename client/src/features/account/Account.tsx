@@ -13,7 +13,12 @@ export function Account() {
 
     const [loadingProfile, setLoadingProfile] = useState(true);
     const [saving, setSaving] = useState(false);
+
     const { errorToast, successToast } = useToast();
+
+    const [emailEditing, setEmailEditing] = useState(false);
+    const [newEmail, setNewEmail] = useState('');
+    const [emailSaving, setEmailSaving] = useState(false);
 
     const [formData, setFormData] = useState({
         name: 'John Doe',
@@ -28,6 +33,11 @@ export function Account() {
     const [majorInput, setMajorInput] = useState('Computer Science');
     const [showMajorDropdown, setShowMajorDropdown] = useState(false);
     const [deleteLoading, setDeleteLoading] = useState(false);
+
+    const [pwEditing, setPwEditing] = useState(false);
+    const [currentPassword, setCurrentPassword] = useState('');
+    const [newPassword, setNewPassword] = useState('');
+    const [pwSaving, setPwSaving] = useState(false);
 
     const majors = [
         'Accounting',
@@ -132,6 +142,37 @@ export function Account() {
         }
     };
 
+    const handleChangeEmail = async () => {
+        if (!newEmail || emailSaving) return;
+
+        setEmailSaving(true);
+
+        try {
+            const res = await fetch('/api/me/change-email', {
+                method: 'PUT',
+                credentials: 'include',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    email: newEmail,
+                }),
+            });
+
+            if (!res.ok) {
+                const body = await res.json().catch(() => null);
+                throw new Error(body?.error?.message || `Failed to change email: ${res.status}`);
+            }
+
+            successToast('Email updated successfully');
+            setFormData(prev => ({ ...prev, email: newEmail }));
+            setEmailEditing(false);
+        } catch (error) {
+            console.error('Error changing email:', error);
+            errorToast('Failed to change email');
+        } finally {
+            setEmailSaving(false);
+        }
+    };
+
     const handleDeleteAccount = async () => {
         if (deleteLoading) return;
 
@@ -164,6 +205,44 @@ export function Account() {
             errorToast('Failed to delete account');
         } finally {
             setDeleteLoading(false);
+        }
+    };
+
+    const handleChangePassword = async () => {
+        if (pwSaving) return;
+
+        if (!currentPassword || !newPassword) {
+            errorToast('Please enter both current and new passwords');
+            return;
+        }
+
+        setPwSaving(true);
+
+        try {
+            const res = await fetch('/api/me/change-password', {
+                method: 'PUT',
+                credentials: 'include',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    currentPassword,
+                    newPassword,
+                }),
+            });
+
+            if (!res.ok) {
+                const body = await res.json().catch(() => null);
+                throw new Error(body?.error?.message || `Failed to change password: ${res.status}`);
+            }
+
+            successToast('Password changed successfully');
+            setPwEditing(false);
+            setCurrentPassword('');
+            setNewPassword('');
+        } catch (error) {
+            console.error('Error changing password:', error);
+            errorToast('Failed to change password');
+        } finally {
+            setPwSaving(false);
         }
     };
 
@@ -244,6 +323,11 @@ export function Account() {
                     educationType: user.educationType,
                     year: yearMap[user.year],
                 });
+
+                setNewEmail(user.email);
+
+                console.log('User email from API:', user.email);
+
                 setMajorInput(user?.major || '');
                 setSchoolId(user?.school?._id || (typeof user?.school === 'string' ? user.school : null));
             } catch (e) {
@@ -475,30 +559,102 @@ export function Account() {
                                 </h2>
                             </div>
                             <div className="px-6 py-6 space-y-4">
-                                <div className="flex items-center justify-between p-4 border border-outline-variant rounded-lg">
+                                <div className="p-4 border border-outline-variant rounded-lg space-y-2">
                                     <div className="flex items-center gap-3">
                                         <Mail className="w-5 h-5 text-on-surface-variant" />
-                                        <div>
-                                            <h3 className="font-medium text-on-surface">Email Address</h3>
-                                            <p className="text-sm text-on-surface-variant">{formData.email}</p>
-                                        </div>
+                                        <h3 className="font-medium text-on-surface">Email Address</h3>
                                     </div>
-                                    <button className="px-4 py-2 rounded-md text-sm font-medium bg-secondary text-on-secondary hover:bg-secondary/90 transition-colors cursor-pointer">
-                                        Change
-                                    </button>
+
+                                    {!emailEditing ? (
+                                        <div className="flex justify-between items-center">
+                                            <p className="text-sm text-on-surface-variant">{formData.email}</p>
+                                            <button
+                                                onClick={() => setEmailEditing(true)}
+                                                className="px-4 py-2 rounded-md text-sm font-medium bg-secondary text-on-secondary hover:bg-secondary/90 transition-colors cursor-pointer"
+                                            >
+                                                Change
+                                            </button>
+                                        </div>
+                                    ) : (
+                                        <div className="space-y-2">
+                                            <input
+                                                type="email"
+                                                value={newEmail}
+                                                onChange={e => setNewEmail(e.target.value)}
+                                                className="w-full px-3 py-2 border border-outline-variant rounded-md bg-surface text-on-surface"
+                                            />
+                                            <div className="flex gap-2 justify-end">
+                                                <button
+                                                    onClick={() => setEmailEditing(false)}
+                                                    className="px-3 py-1 text-sm text-on-surface-variant hover:text-on-surface hover:underline"
+                                                >
+                                                    Cancel
+                                                </button>
+                                                <button
+                                                    onClick={handleChangeEmail}
+                                                    disabled={emailSaving}
+                                                    className="px-4 py-2 bg-primary text-on-primary rounded-md font-medium hover:bg-primary/90"
+                                                >
+                                                    {emailSaving ? 'Saving…' : 'Save'}
+                                                </button>
+                                            </div>
+                                        </div>
+                                    )}
                                 </div>
 
-                                <div className="flex items-center justify-between p-4 border border-outline-variant rounded-lg">
+                                <div className="p-4 border border-outline-variant rounded-lg space-y-2">
                                     <div className="flex items-center gap-3">
                                         <Lock className="w-5 h-5 text-on-surface-variant" />
-                                        <div>
-                                            <h3 className="font-medium text-on-surface">Password</h3>
-                                            <p className="text-sm text-on-surface-variant">Last changed 3 months ago</p>
-                                        </div>
+                                        <h3 className="font-medium text-on-surface">Password</h3>
                                     </div>
-                                    <button className="px-4 py-2 rounded-md text-sm font-medium bg-secondary text-on-secondary hover:bg-secondary/90 transition-colors cursor-pointer">
-                                        Change
-                                    </button>
+
+                                    {!pwEditing ? (
+                                        <div className="flex items-center justify-between">
+                                            <p className="text-sm text-on-surface-variant">Update password to ensure security</p>
+                                            <button
+                                                onClick={() => setPwEditing(true)}
+                                                className="px-4 py-2 rounded-md text-sm font-medium bg-secondary text-on-secondary hover:bg-secondary/90 transition-colors cursor-pointer"
+                                            >
+                                                Change
+                                            </button>
+                                        </div>
+                                    ) : (
+                                        <div className="space-y-2">
+                                            <input
+                                                type="password"
+                                                placeholder="Current password"
+                                                value={currentPassword}
+                                                onChange={e => setCurrentPassword(e.target.value)}
+                                                className="w-full px-3 py-2 border border-outline-variant rounded-md bg-surface text-on-surface"
+                                            />
+                                            <input
+                                                type="password"
+                                                placeholder="New password"
+                                                value={newPassword}
+                                                onChange={e => setNewPassword(e.target.value)}
+                                                className="w-full px-3 py-2 border border-outline-variant rounded-md bg-surface text-on-surface"
+                                            />
+                                            <div className="flex gap-2 justify-end">
+                                                <button
+                                                    onClick={() => {
+                                                        setPwEditing(false);
+                                                        setCurrentPassword('');
+                                                        setNewPassword('');
+                                                    }}
+                                                    className="px-4 py-2 rounded-md text-sm font-medium bg-surface-variant text-on-surface hover:bg-surface hover:text-on-surface-variant transition-colors"
+                                                >
+                                                    Cancel
+                                                </button>
+                                                <button
+                                                    onClick={handleChangePassword}
+                                                    disabled={pwSaving}
+                                                    className="px-4 py-2 bg-primary text-on-primary rounded-md font-medium hover:bg-primary/90 disabled:opacity-60"
+                                                >
+                                                    {pwSaving ? 'Saving…' : 'Save'}
+                                                </button>
+                                            </div>
+                                        </div>
+                                    )}
                                 </div>
                             </div>
                         </div>

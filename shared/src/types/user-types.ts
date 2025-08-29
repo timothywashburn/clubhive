@@ -16,7 +16,7 @@ export enum Year {
 
 export const userSchema = z.object({
     _id: z.string(),
-    name: z.string().max(50),
+    name: z.string(),
     school: schoolSchema,
     major: z.string(),
     educationType: z.enum([EducationType.UNDERGRADUATE, EducationType.GRADUATE]),
@@ -28,10 +28,36 @@ export const userSchema = z.object({
 
 export const userWithCountsSchema = userSchema.extend({
     clubsCount: z.number(),
+    email: z.string().optional(),
 });
 
 export const deleteUserResponseSchema = z.object({
     deleted: z.boolean(),
+});
+
+export const changeEmailRequestSchema = z.object({
+    email: z.string(),
+});
+
+export const changeEmailResponseSchema = z.object({
+    changed: z.boolean(),
+});
+
+export const changePasswordRequestSchema = z.object({
+    currentPassword: z.string(),
+    newPassword: z.string(),
+});
+
+export const changePasswordResponseSchema = z.object({
+    changed: z.boolean(),
+});
+
+export const changeEmailRequestSchema = z.object({
+    email: z.string(),
+});
+
+export const changeEmailResponseSchema = z.object({
+    changed: z.boolean(),
 });
 
 export const updateUserResponseSchema = z.object({
@@ -52,6 +78,15 @@ export type DeleteUserResponse = z.infer<typeof deleteUserResponseSchema>;
 
 export type UpdateUserRequest = z.infer<typeof updateUserRequestSchema>;
 export type UpdateUserResponse = z.infer<typeof updateUserResponseSchema>;
+
+export type ChangeEmailRequest = z.infer<typeof changeEmailRequestSchema>;
+export type ChangeEmailResponse = z.infer<typeof changeEmailResponseSchema>;
+
+export type ChangeEmailRequest = z.infer<typeof changeEmailRequestSchema>;
+export type ChangeEmailResponse = z.infer<typeof changeEmailResponseSchema>;
+
+export type ChangePasswordRequest = z.infer<typeof changePasswordRequestSchema>;
+export type ChangePasswordResponse = z.infer<typeof changePasswordResponseSchema>;
 
 export interface GetUsersResponse {
     users: UserWithCountsData[];
