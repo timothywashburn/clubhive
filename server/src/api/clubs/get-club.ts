@@ -4,6 +4,7 @@ import Club from '@/models/club-schema';
 import Event from '@/models/event-schema';
 import { serializeRecursive } from '@/utils/db-doc-utils';
 import { clubWithEventsAndCountsSchema } from '@clubhive/shared';
+import { TagType } from '@clubhive/shared';
 
 export const getClubEndpoint: ApiEndpoint<undefined, GetClubResponse> = {
     path: '/api/clubs/:id',
@@ -12,8 +13,14 @@ export const getClubEndpoint: ApiEndpoint<undefined, GetClubResponse> = {
     handler: async (req, res) => {
         try {
             const { id } = req.params;
-
-            const club = await Club.findById(id).populate('school').populate('tags').exec();
+            // const club = await Club.findById(id).populate('school').populate('tags').exec();
+            const club = await Club.findById(id)
+                .populate('school')
+                .populate({
+                    path: 'tags',
+                    match: { type: TagType.CLUB }, // only club tags
+                })
+                .exec();
 
             if (!club) {
                 res.status(404).json({
