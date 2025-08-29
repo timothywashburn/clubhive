@@ -2,6 +2,8 @@ import User, { UserDoc } from '../models/user-schema';
 import ClubMembership from '../models/club-membership-schema';
 import { updateDocument } from '@/utils/db-doc-utils';
 import { UpdateUserRequest } from '@clubhive/shared/src';
+import Auth from '@/models/auth-schema';
+import bcrypt from 'bcrypt';
 
 export interface UserWithCounts extends UserDoc {
     clubsCount: number;
@@ -57,5 +59,31 @@ export default class UserController {
         const result = await updateDocument(User, id, updates);
         await result.populate('school');
         return result;
+    }
+
+    static async getUserEmail(userId: string): Promise<string | null> {
+        const auth = await Auth.findOne({ userId }).lean();
+        return auth?.email || null;
+    }
+
+    static async updateUserEmail(userId: string | undefined, newEmail: string): Promise<void> {
+        await Auth.updateOne({ userId }, { $set: { email: newEmail } });
+    }
+
+    static async changePassword(userId: string, currentPassword: string, newPassword: string): Promise<void> {
+        const auth = await Auth.findOne({ userId }).exec();
+
+        if (!auth) {
+            throw new Error('Auth not found');
+        }
+
+        const compare = await bcrypt.compare(currentPassword, auth.password);
+        if (!compare) {
+            throw new Error('Current password is incorrect');
+        }
+
+        const hashedPassword = await bcrypt.hash(newPassword, 10);
+        auth.password = hashedPassword;
+        await auth.save();
     }
 }
