@@ -120,9 +120,11 @@ export function About() {
 
                         {/* Developers */}
                         <div className="text-center">
-                            <div className="w-20 h-20 bg-primary/10 rounded-full mx-auto mb-3 flex items-center justify-center">
-                                <Code className="text-primary" size={28} />
-                            </div>
+                            <img
+                                src="/anisha.png"
+                                alt="Anisha Ramesh"
+                                className="w-50 h-auto mx-auto mb-3 flex items-center justify-center"
+                            />
                             <h3 className="text-sm font-bold text-on-surface">Anisha Ramesh</h3>
                             <h3 className="text-sm font-bold text-on-surface-variant">developer</h3>
                         </div>
