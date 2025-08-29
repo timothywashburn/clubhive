@@ -94,7 +94,7 @@ export function GalleryPicturesUploader({
             />
 
             {currentPictureCount > 0 && (
-                <p className="text-xs text-amber-600">
+                <p className="text-xs text-error">
                     Note: Uploading new images will replace all {currentPictureCount} existing gallery pictures.
                 </p>
             )}

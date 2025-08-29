@@ -4,6 +4,9 @@ import { editClubInfo } from '../../../hooks/editClubInfo';
 import { useClubTagsData } from '../../../hooks/useClubTagsData';
 import { getTagColor } from '../../find-clubs/utils/TagColors';
 import { TagSelectionPopup } from '../../find-clubs/components/TagsSelectionPopup';
+import { ProfilePictureUploader } from '../../../components/image-uploaders/ProfilePictureUploader';
+import { GalleryPicturesUploader } from '../../../components/image-uploaders/GalleryPicturesUploader';
+import { useToast } from '../../../hooks/useToast';
 import type { TagData } from '@clubhive/shared';
 
 interface OfficerInfoProps {
@@ -57,6 +60,7 @@ export const OfficerInfo = memo(
         const { tags } = useClubTagsData();
         const [selectedTags, setSelectedTags] = useState<TagData[]>([]);
         const [initialTags, setInitialTags] = useState<TagData[]>([]);
+        const { successToast, errorToast } = useToast();
 
         useEffect(() => {
             let isCancelled = false;
@@ -130,7 +134,7 @@ export const OfficerInfo = memo(
         if (clubData === false) return <div className="text-error">Club not found</div>;
 
         return (
-            <div className="min-h-screen bg-surface rounded-lg border border-outline-variant p-6">
+            <div className="min-h-screen bg-background">
                 <div className="grid grid-cols-2 gap-6">
                     <div className="bg-surface p-4 rounded shadow space-y-4 border border-outline-variant">
                         <h2 className="text-lg font-bold text-on-surface">Edit / Delete</h2>
@@ -257,6 +261,20 @@ export const OfficerInfo = memo(
                                     </span>
                                 ))}
                             </div>
+                        </div>
+
+                        {/* Profile Picture Upload */}
+                        <div>
+                            <ProfilePictureUploader
+                                clubId={club._id}
+                                maxFileSizeKB={5000}
+                                onSuccess={() => successToast('Updated Club Logo!')}
+                            />
+                        </div>
+
+                        {/* Gallery Pictures Upload */}
+                        <div>
+                            <GalleryPicturesUploader clubId={club._id} maxImages={10} maxFileSizeKB={5000} />
                         </div>
                     </div>
 
