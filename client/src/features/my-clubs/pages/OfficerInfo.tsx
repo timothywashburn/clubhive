@@ -23,11 +23,11 @@ interface SocialInputProps {
 const SocialInput = ({ label, id, prefix, placeholder, value, maxLength, onChange }: SocialInputProps) => {
     return (
         <div>
-            <label htmlFor={id} className="block text-sm font-medium text-on-background">
+            <label htmlFor={id} className="block text-sm font-medium text-on-surface">
                 {label}
             </label>
             <div className="flex">
-                <span className="inline-flex items-center px-3 rounded-l-md border border-r-0 border-outline-variant bg-gray-50 text-gray-500 text-sm">
+                <span className="inline-flex items-center px-3 rounded-l-md border border-r-0 border-outline-variant bg-surface-variant text-on-surface-variant text-sm">
                     {prefix}
                 </span>
                 <input
@@ -35,7 +35,7 @@ const SocialInput = ({ label, id, prefix, placeholder, value, maxLength, onChang
                     type="text"
                     id={id}
                     name={id.replace('club-', '')}
-                    className="flex-1 min-w-0 block w-full px-3 py-2 border rounded-none rounded-r-md border-outline-variant"
+                    className="flex-1 min-w-0 block w-full px-3 py-2 border rounded-none rounded-r-md border-outline-variant bg-surface text-on-surface"
                     value={value}
                     onChange={e => {
                         if (e.target.value.length <= maxLength) {
@@ -44,7 +44,7 @@ const SocialInput = ({ label, id, prefix, placeholder, value, maxLength, onChang
                     }}
                 />
             </div>
-            <div className="text-right text-sm text-gray-500 mt-1">
+            <div className="text-right text-sm text-on-surface-variant mt-1">
                 {value.length} / {maxLength}
             </div>
         </div>
@@ -126,42 +126,42 @@ export const OfficerInfo = memo(
         const resetTags = () => setSelectedTags([...initialTags]);
         const { formData, handlers } = editClubInfo(initialData, club._id, resetTags);
 
-        if (clubData === null) return <div>Loading...</div>;
-        if (clubData === false) return <div>Club not found</div>;
+        if (clubData === null) return <div className="text-on-surface">Loading...</div>;
+        if (clubData === false) return <div className="text-error">Club not found</div>;
 
         return (
-            <div className="min-h-screen bg-gray-100 p-6">
+            <div className="min-h-screen bg-surface rounded-lg border border-outline-variant p-6">
                 <div className="grid grid-cols-2 gap-6">
-                    <div className="bg-white p-4 rounded shadow space-y-4">
-                        <h2 className="text-lg font-bold">Edit / Delete</h2>
+                    <div className="bg-surface p-4 rounded shadow space-y-4 border border-outline-variant">
+                        <h2 className="text-lg font-bold text-on-surface">Edit / Delete</h2>
 
                         <div>
-                            <label className="block text-sm font-medium mb-1">Name</label>
+                            <label className="block text-sm font-medium mb-1 text-on-surface">Name</label>
                             <input
                                 type="text"
                                 name="name"
-                                className="w-full p-2 border rounded"
+                                className="w-full p-2 border rounded bg-surface text-on-surface border-outline-variant"
                                 value={formData.name || ''}
                                 onChange={handlers.handleInputChange}
                             />
                         </div>
 
                         <div>
-                            <label className="block text-sm font-medium mb-1">Tagline</label>
+                            <label className="block text-sm font-medium mb-1 text-on-surface">Tagline</label>
                             <input
                                 type="text"
                                 name="tagline"
-                                className="w-full p-2 border rounded"
+                                className="w-full p-2 border rounded bg-surface text-on-surface border-outline-variant"
                                 value={formData.tagline || ''}
                                 onChange={handlers.handleInputChange}
                             />
                         </div>
 
                         <div>
-                            <label className="block text-sm font-medium mb-1">Club Status</label>
+                            <label className="block text-sm font-medium mb-1 text-on-surface">Club Status</label>
                             <select
                                 name="status"
-                                className="w-full p-2 border rounded"
+                                className="w-full p-2 border rounded bg-surface text-on-surface border-outline-variant"
                                 value={formData.status || ''}
                                 onChange={handlers.handleInputChange}
                             >
@@ -173,10 +173,10 @@ export const OfficerInfo = memo(
 
                         {club.description && (
                             <div>
-                                <label className="block text-sm font-medium mb-1">Description</label>
+                                <label className="block text-sm font-medium mb-1 text-on-surface">Description</label>
                                 <textarea
                                     name="description"
-                                    className="w-full p-2 border rounded"
+                                    className="w-full p-2 border rounded bg-surface text-on-surface border-outline-variant"
                                     rows={4}
                                     value={formData.description || ''}
                                     onChange={handlers.handleInputChange}
@@ -186,11 +186,11 @@ export const OfficerInfo = memo(
 
                         {club.joinRequirements && (
                             <div>
-                                <label className="block text-sm font-medium mb-1">Membership Requirements</label>
+                                <label className="block text-sm font-medium mb-1 text-on-surface">Membership Requirements</label>
                                 <input
                                     type="text"
                                     name="joinRequirements"
-                                    className="w-full p-2 border rounded"
+                                    className="w-full p-2 border rounded bg-surface text-on-surface border-outline-variant"
                                     value={formData.joinRequirements || ''}
                                     onChange={handlers.handleInputChange}
                                 />
@@ -199,11 +199,11 @@ export const OfficerInfo = memo(
 
                         {club.url && (
                             <div>
-                                <label className="block text-sm font-medium mb-1">URL</label>
+                                <label className="block text-sm font-medium mb-1 text-on-surface">URL</label>
                                 <input
                                     type="text"
                                     name="url"
-                                    className="w-full p-2 border rounded"
+                                    className="w-full p-2 border rounded bg-surface text-on-surface border-outline-variant"
                                     value={formData.url || ''}
                                     onChange={handlers.handleInputChange}
                                 />
@@ -245,7 +245,7 @@ export const OfficerInfo = memo(
                         )}
 
                         <div>
-                            <label className="block text-sm font-medium mb-1">Current Tags</label>
+                            <label className="block text-sm font-medium mb-1 text-on-surface">Current Tags</label>
                             <div className="flex flex-wrap gap-2 mb-3">
                                 {selectedTags.map(tag => (
                                     <span
@@ -260,21 +260,21 @@ export const OfficerInfo = memo(
                         </div>
                     </div>
 
-                    <div className="bg-white p-4 rounded shadow space-y-4">
-                        <h2 className="text-lg font-bold">Add New</h2>
+                    <div className="bg-surface p-4 rounded shadow space-y-4 border border-outline-variant">
+                        <h2 className="text-lg font-bold text-on-surface">Add New</h2>
 
                         <div>
-                            <label className="block text-sm font-medium mb-1">Tags</label>
+                            <label className="block text-sm font-medium mb-1 text-on-surface">Tags</label>
                             <TagSelectionPopup tags={tags} selectedTags={selectedTags} setSelectedTags={setSelectedTags} inline />
                         </div>
 
                         {!club.description && (
                             <div>
-                                <label className="block text-sm font-medium mb-1">Description</label>
+                                <label className="block text-sm font-medium mb-1 text-on-surface">Description</label>
                                 <textarea
                                     name="description"
                                     onChange={handlers.handleInputChange}
-                                    className="w-full p-2 border rounded"
+                                    className="w-full p-2 border rounded bg-surface text-on-surface border-outline-variant"
                                     rows={4}
                                     value={formData.description || ''}
                                     placeholder="Add description"
@@ -284,12 +284,12 @@ export const OfficerInfo = memo(
 
                         {!club.url && (
                             <div>
-                                <label className="block text-sm font-medium mb-1">URL</label>
+                                <label className="block text-sm font-medium mb-1 text-on-surface">URL</label>
                                 <input
                                     name="url"
                                     onChange={handlers.handleInputChange}
                                     type="text"
-                                    className="w-full p-2 border rounded"
+                                    className="w-full p-2 border rounded bg-surface text-on-surface border-outline-variant"
                                     value={formData.url || ''}
                                     placeholder="Add URL"
                                 />
@@ -332,12 +332,12 @@ export const OfficerInfo = memo(
 
                         {!club.joinRequirements && (
                             <div>
-                                <label className="block text-sm font-medium mb-1">Membership Requirements</label>
+                                <label className="block text-sm font-medium mb-1 text-on-surface">Membership Requirements</label>
                                 <input
                                     name="joinRequirements"
                                     onChange={handlers.handleInputChange}
                                     type="text"
-                                    className="w-full p-2 border rounded"
+                                    className="w-full p-2 border rounded bg-surface text-on-surface border-outline-variant"
                                     value={formData.joinRequirements || ''}
                                     placeholder="Add membership requirements"
                                 />
@@ -349,13 +349,13 @@ export const OfficerInfo = memo(
                 <div className="flex gap-4 mt-6">
                     <button
                         onClick={() => handlers.handleSaveChanges(selectedTags)}
-                        className="bg-primary text-white px-6 py-2 rounded hover:bg-green-600"
+                        className="bg-primary text-on-primary px-6 py-2 rounded hover:bg-primary/90"
                     >
                         Save Changes
                     </button>
                     <button
                         onClick={handlers.handleDiscardChanges}
-                        className="bg-secondary text-white px-6 py-2 rounded hover:bg-red-500 flex items-center gap-2"
+                        className="bg-error text-on-error px-6 py-2 rounded hover:bg-error/90 flex items-center gap-2"
                     >
                         Discard Changes
                     </button>
