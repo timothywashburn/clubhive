@@ -104,7 +104,11 @@ export function About() {
                     <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-4 gap-6">
                         {/* Project Manager */}
                         <div className="text-center">
-                            <img src="/jayden.png" alt="Jayden Wang" className="w-50 h-50 mx-auto mb-3 flex items-center justify-center" />
+                            <img
+                                src="/jayden.png"
+                                alt="Jayden Wang"
+                                className="w-50 h-auto mx-auto mb-3 flex items-center justify-center"
+                            />
                             <h3 className="text-sm font-bold text-on-surface">Jayden Wang</h3>
                             <h3 className="text-sm font-bold text-on-surface-variant">project manager</h3>
                         </div>
@@ -130,34 +134,34 @@ export function About() {
                         </div>
 
                         <div className="text-center">
-                            <img src="/anjali.png" alt="Anjali Ravi" className="w-50 h-50 mx-auto mb-3 flex items-center justify-center" />
+                            <img
+                                src="/anjali.png"
+                                alt="Anjali Ravi"
+                                className="w-50 h-auto mx-auto mb-3 flex items-center justify-center"
+                            />
                             <h3 className="text-sm font-bold text-on-surface">Anjali Ravi</h3>
                             <h3 className="text-sm font-bold text-on-surface-variant">developer</h3>
                         </div>
                     </div>
-                    <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-3 gap-6">
+                    <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-3 gap-6 flex items-center justify-center">
                         <div className="text-center">
                             <img
                                 src="/keyura.png"
                                 alt="Keyura Valalla"
-                                className="w-50 h-50 mx-auto mb-3 flex items-center justify-center"
+                                className="w-50 h-auto mx-auto mb-3 flex items-center justify-center"
                             />
                             <h3 className="text-sm font-bold text-on-surface">Keyura Valalla</h3>
                             <h3 className="text-sm font-bold text-on-surface-variant">developer</h3>
                         </div>
 
                         <div className="text-center">
-                            <div className="w-20 h-20 bg-primary/10 rounded-full mx-auto mb-3 flex items-center justify-center">
-                                <Code className="text-primary" size={28} />
-                            </div>
+                            <img src="/minjoo.png" alt="Minjoo O" className="w-50 h-auto mx-auto mb-3 flex items-center justify-center" />
                             <h3 className="text-sm font-bold text-on-surface">Minjoo O</h3>
                             <h3 className="text-sm font-bold text-on-surface-variant">developer</h3>
                         </div>
 
                         <div className="text-center">
-                            <div className="w-20 h-20 bg-primary/10 rounded-full mx-auto mb-3 flex items-center justify-center">
-                                <Code className="text-primary" size={28} />
-                            </div>
+                            <img src="/ruth.png" alt="Ruth Liu" className="w-50 h-auto mx-auto mb-3 flex items-center justify-center" />
                             <h3 className="text-sm font-bold text-on-surface">Ruth Liu</h3>
                             <h3 className="text-sm font-bold text-on-surface-variant">developer</h3>
                         </div>
@@ -181,7 +185,7 @@ export function About() {
                 {/* Casual CTA */}
                 <div className="text-center bg-surface/80 backdrop-blur-[4px] rounded-lg shadow p-8 border border-outline-variant">
                     <h2 className="text-4xl font-bold text-on-surface mb-6">ready to explore?</h2>
-                    <p className="text-xl text-on-surface-variant mb-10">Blehhh</p>
+                    {/*<p className="text-xl text-on-surface-variant mb-10">Blehhh</p>*/}
                     <div className="flex flex-col sm:flex-row justify-center gap-4">
                         <button
                             onClick={() => navigate('/clubs')}
