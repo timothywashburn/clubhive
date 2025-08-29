@@ -77,21 +77,28 @@ export function About() {
                 </div>
 
                 {/* Project Story */}
-                <div className="mb-20 max-w-4xl mx-auto bg-surface/80 backdrop-blur-[4px] rounded-lg shadow p-8 border border-outline-variant">
+                <div className="mb-20 bg-surface/80 backdrop-blur-[4px] rounded-lg shadow p-8 border border-outline-variant">
                     <h2 className="text-4xl font-bold text-on-surface mb-8 text-center">the project</h2>
                     <div className="space-y-6 text-lg text-on-surface-variant leading-relaxed">
                         <p>
-                            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore
-                            magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
-                            consequat.
+                            Clubs play an essential role in both the academic and social development of college students. They provide
+                            opportunities for exploration, collaboration, and community-building that few other spaces can offer. Yet,
+                            discovering the right club has become increasingly difficult. Social media cliques often discourage students
+                            from taking the first step, and universities typically lack systems that make it easy to connect with
+                            organizations.
                         </p>
                         <p>
-                            Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur
-                            sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+                            As part of the San Diego Supercomputer Center’s 2025 Summer Internship Program, our team set out to address this
+                            problem. After many iterations, we created clubhive, a platform designed to lower the barriers to joining clubs
+                            while also meeting the organizational needs of existing ones. With clubhive, clubs can manage logistics, plan
+                            events, and recruit new members - all in a centralized system.
                         </p>
                         <p>
-                            Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem
-                            aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt.
+                            Through this process, our team gained not only technical skills but also a deeper appreciation for the
+                            importance of connectivity within student communities. We envision clubhive supporting every type of club at
+                            every level, expanding beyond UCSD to foster connections across universities. Our goal is to strengthen the
+                            visibility, accessibility, and impact of student clubs, turning them into a more powerful force for growth and
+                            engagement.
                         </p>
                     </div>
                 </div>
