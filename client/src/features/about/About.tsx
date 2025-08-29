@@ -115,9 +115,11 @@ export function About() {
 
                         {/* Product Owner */}
                         <div className="text-center">
-                            <div className="w-20 h-20 bg-primary/10 rounded-full mx-auto mb-3 flex items-center justify-center">
-                                <Users className="text-primary" size={28} />
-                            </div>
+                            <img
+                                src="/timothy.png"
+                                alt="Timothy Washburn"
+                                className="w-50 h-auto mx-auto mb-3 flex items-center justify-center"
+                            />
                             <h3 className="text-sm font-bold text-on-surface">Timothy Washburn</h3>
                             <h3 className="text-sm font-bold text-on-surface-variant">product owner</h3>
                         </div>
