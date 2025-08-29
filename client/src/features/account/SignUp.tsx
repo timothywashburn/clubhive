@@ -4,6 +4,7 @@ import { useNavigate } from 'react-router';
 import { useAuthStore } from '../../stores/authStore.ts';
 import { useToast } from '../../hooks/useToast.ts';
 import { useSchoolData } from '../../hooks/useSchoolData.ts';
+import { createAccountRequestSchema } from '@clubhive/shared/src/types/auth-types';
 
 export function SignUp() {
     const [fullName, setFullName] = useState('');
@@ -124,13 +125,7 @@ export function SignUp() {
             return;
         }
 
-        if (confirmPassword !== password) {
-            clearErrors();
-            useAuthStore.setState({ errors: { confirmPassword: 'Passwords do not match' } });
-            return;
-        }
-
-        await createAccount({
+        const userData = {
             name: fullName,
             email: email,
             password: password,
@@ -138,7 +133,29 @@ export function SignUp() {
             major: major,
             educationType: educationType,
             year: year,
-        });
+        };
+
+        if (confirmPassword !== password) {
+            clearErrors();
+            useAuthStore.setState({ errors: { confirmPassword: 'Passwords do not match' } });
+            return;
+        }
+
+        const result = createAccountRequestSchema.safeParse(userData);
+        // validation with zod
+        if (!result.success) {
+            const zodErrors = result.error.format();
+
+            if (zodErrors.name?._errors.length) errorToast(zodErrors.name._errors[0]);
+            if (zodErrors.email?._errors.length) errorToast(zodErrors.email._errors[0]);
+            if (zodErrors.password?._errors.length) errorToast(zodErrors.password._errors[0]);
+            if (zodErrors.school?._errors.length) errorToast(zodErrors.school._errors[0]);
+            if (zodErrors.major?._errors.length) errorToast(zodErrors.major._errors[0]);
+            if (zodErrors.educationType?._errors.length) errorToast(zodErrors.educationType._errors[0]);
+            if (zodErrors.year?._errors.length) errorToast(zodErrors.year._errors[0]);
+        }
+
+        await createAccount(userData);
     };
 
     const getYearLabel = (year: string) => {

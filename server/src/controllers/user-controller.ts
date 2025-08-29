@@ -1,5 +1,7 @@
 import User, { UserDoc } from '../models/user-schema';
 import ClubMembership from '../models/club-membership-schema';
+import { updateDocument } from '@/utils/db-doc-utils';
+import { UpdateUserRequest } from '@clubhive/shared/src';
 
 export interface UserWithCounts extends UserDoc {
     clubsCount: number;
@@ -49,5 +51,11 @@ export default class UserController {
                 clubsCount: 0,
             } as UserWithCounts;
         }
+    }
+
+    static async updateUser(id: string, updates: UpdateUserRequest): Promise<UserDoc> {
+        const result = await updateDocument(User, id, updates);
+        await result.populate('school');
+        return result;
     }
 }

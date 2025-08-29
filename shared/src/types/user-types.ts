@@ -16,7 +16,7 @@ export enum Year {
 
 export const userSchema = z.object({
     _id: z.string(),
-    name: z.string(),
+    name: z.string().max(50),
     school: schoolSchema,
     major: z.string(),
     educationType: z.enum([EducationType.UNDERGRADUATE, EducationType.GRADUATE]),
@@ -34,9 +34,24 @@ export const deleteUserResponseSchema = z.object({
     deleted: z.boolean(),
 });
 
+export const updateUserResponseSchema = z.object({
+    updated: z.boolean(),
+});
+
+export const updateUserRequestSchema = z.object({
+    name: z.string().optional(),
+    school: z.string().optional(),
+    major: z.string().optional(),
+    educationType: z.enum([EducationType.UNDERGRADUATE, EducationType.GRADUATE]).optional(),
+    year: z.enum([Year.FIRST, Year.SECOND, Year.THIRD, Year.FOURTH, Year.OVER_FOUR]).optional(),
+});
+
 export type UserData = z.infer<typeof userSchema>;
 export type UserWithCountsData = z.infer<typeof userWithCountsSchema>;
 export type DeleteUserResponse = z.infer<typeof deleteUserResponseSchema>;
+
+export type UpdateUserRequest = z.infer<typeof updateUserRequestSchema>;
+export type UpdateUserResponse = z.infer<typeof updateUserResponseSchema>;
 
 export interface GetUsersResponse {
     users: UserWithCountsData[];

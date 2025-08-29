@@ -1,8 +1,8 @@
-import { TimeSlot, VenueFilters } from './types';
+import { TimeSlot, VenueFilterType } from './types';
 
 interface VisualAvailabilityDisplayProps {
     availability: TimeSlot[];
-    filters?: VenueFilters;
+    filters?: VenueFilterType;
     className?: string;
     height?: number; // Height in pixels, default 120
 }

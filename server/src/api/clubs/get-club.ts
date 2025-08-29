@@ -20,8 +20,6 @@ export const getClubEndpoint: ApiEndpoint<undefined, GetClubResponse> = {
                     path: 'tags',
                     match: { type: TagType.CLUB }, // only club tags
                 })
-                .populate('clubLogo')
-                .populate('pictures')
                 .exec();
 
             if (!club) {

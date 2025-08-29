@@ -4,12 +4,12 @@ import UserController from '@/controllers/user-controller';
 import { serializeRecursive } from '@/utils/db-doc-utils';
 
 export const getUserEndpoint: ApiEndpoint<undefined, GetUserResponse> = {
-    path: '/api/users/:id',
+    path: '/api/users/get-user',
     method: 'get',
-    auth: AuthType.NONE,
+    auth: AuthType.VERIFIED_EMAIL,
     handler: async (req, res) => {
         try {
-            const { id } = req.params;
+            const id = (req as any)?.auth?.userId;
 
             const user = await UserController.getUserById(id);
 
