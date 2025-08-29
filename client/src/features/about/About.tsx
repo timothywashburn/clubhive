@@ -71,8 +71,8 @@ export function About() {
                 <div className="text-center mb-20 bg-surface/80 backdrop-blur-[4px] rounded-lg shadow p-8 border border-outline-variant">
                     <h1 className="text-5xl md:text-7xl font-black text-on-surface mb-6">hey there! 👋</h1>
                     <p className="text-xl md:text-2xl text-on-surface-variant max-w-4xl mx-auto leading-relaxed">
-                        welcome to <span className="font-bold text-primary">clubhive</span> - Lorem ipsum dolor sit amet, consectetur
-                        adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+                        welcome to <span className="font-bold text-primary">clubhive</span> - a centralized club system for students, made
+                        by students.
                     </p>
                 </div>
 
@@ -101,12 +101,10 @@ export function About() {
                     <h2 className="text-4xl font-bold text-on-surface text-center mb-4">our team</h2>
                     <p className="text-lg text-on-surface-variant text-center mb-12">SDSC RDS Internship Summer 2025</p>
 
-                    <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-7 gap-6">
+                    <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-4 gap-6">
                         {/* Project Manager */}
                         <div className="text-center">
-                            <div className="w-20 h-20 bg-primary/10 rounded-full mx-auto mb-3 flex items-center justify-center">
-                                <Users className="text-primary" size={28} />
-                            </div>
+                            <img src="/jayden.png" alt="Jayden Wang" className="w-50 h-50 mx-auto mb-3 flex items-center justify-center" />
                             <h3 className="text-sm font-bold text-on-surface">Jayden Wang</h3>
                             <h3 className="text-sm font-bold text-on-surface-variant">project manager</h3>
                         </div>
@@ -130,17 +128,18 @@ export function About() {
                         </div>
 
                         <div className="text-center">
-                            <div className="w-20 h-20 bg-primary/10 rounded-full mx-auto mb-3 flex items-center justify-center">
-                                <Code className="text-primary" size={28} />
-                            </div>
+                            <img src="/anjali.png" alt="Anjali Ravi" className="w-50 h-50 mx-auto mb-3 flex items-center justify-center" />
                             <h3 className="text-sm font-bold text-on-surface">Anjali Ravi</h3>
                             <h3 className="text-sm font-bold text-on-surface-variant">developer</h3>
                         </div>
-
+                    </div>
+                    <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-3 gap-6">
                         <div className="text-center">
-                            <div className="w-20 h-20 bg-primary/10 rounded-full mx-auto mb-3 flex items-center justify-center">
-                                <Code className="text-primary" size={28} />
-                            </div>
+                            <img
+                                src="/keyura.png"
+                                alt="Keyura Valalla"
+                                className="w-50 h-50 mx-auto mb-3 flex items-center justify-center"
+                            />
                             <h3 className="text-sm font-bold text-on-surface">Keyura Valalla</h3>
                             <h3 className="text-sm font-bold text-on-surface-variant">developer</h3>
                         </div>
@@ -180,9 +179,7 @@ export function About() {
                 {/* Casual CTA */}
                 <div className="text-center bg-surface/80 backdrop-blur-[4px] rounded-lg shadow p-8 border border-outline-variant">
                     <h2 className="text-4xl font-bold text-on-surface mb-6">ready to explore?</h2>
-                    <p className="text-xl text-on-surface-variant mb-10">
-                        Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt.
-                    </p>
+                    <p className="text-xl text-on-surface-variant mb-10">Blehhh</p>
                     <div className="flex flex-col sm:flex-row justify-center gap-4">
                         <button
                             onClick={() => navigate('/clubs')}
