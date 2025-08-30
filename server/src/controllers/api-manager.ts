@@ -181,7 +181,7 @@ export default class ApiManager {
 
         if (refreshToken) {
             try {
-                const tokenPayload = AuthManager.verifyRefreshToken(refreshToken);
+                const tokenPayload = await AuthManager.verifyRefreshToken(refreshToken);
                 req.auth = AuthManager.toAuthInfo(tokenPayload);
             } catch (error) {
                 // Silently ignore invalid tokens - req.auth will remain undefined

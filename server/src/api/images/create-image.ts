@@ -2,7 +2,7 @@
 import { CreateImageRequest, CreateImageResponse, createImageRequestSchema, imageSchema } from '@clubhive/shared';
 import ImageController from '@/controllers/image-controller';
 import { ApiEndpoint, AuthType } from '@/types/api-types';
-import { upload } from '@/utils/cloudinary-multer';
+import { getUploadHandler } from '@/utils/cloudinary-multer';
 import { serializeRecursive } from '@/utils/db-doc-utils';
 import { z } from 'zod';
 import multer from 'multer';
@@ -13,6 +13,7 @@ export const uploadImageEndpoint: ApiEndpoint<CreateImageRequest, CreateImageRes
     auth: AuthType.VERIFIED_EMAIL,
     handler: async (req, res) => {
         // Use multer middleware for file upload
+        const upload = await getUploadHandler();
         upload.single('image')(req, res, async err => {
             try {
                 if (err instanceof multer.MulterError) {
