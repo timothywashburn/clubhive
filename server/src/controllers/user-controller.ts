@@ -1,7 +1,7 @@
 import User, { UserDoc } from '../models/user-schema';
 import ClubMembership from '../models/club-membership-schema';
 import { updateDocument } from '@/utils/db-doc-utils';
-import { UpdateUserRequest } from '@clubhive/shared/src';
+import { UpdateUserRequest } from '@clubhive/shared';
 import Auth from '@/models/auth-schema';
 import bcrypt from 'bcrypt';
 

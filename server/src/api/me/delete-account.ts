@@ -1,5 +1,5 @@
 import { AuthType, ApiEndpoint } from '@/types/api-types';
-import { DeleteUserResponse } from '@clubhive/shared/src';
+import { DeleteUserResponse } from '@clubhive/shared';
 
 import User from '@/models/user-schema';
 import ClubMembership from '@/models/club-membership-schema';

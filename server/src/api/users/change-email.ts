@@ -1,5 +1,5 @@
 import { AuthType, ApiEndpoint } from '@/types/api-types';
-import { ChangeEmailResponse, ChangeEmailRequest } from '@clubhive/shared/src';
+import { ChangeEmailResponse, ChangeEmailRequest } from '@clubhive/shared';
 import UserController from '@/controllers/user-controller';
 
 export const changeEmailEndpoint: ApiEndpoint<ChangeEmailRequest, ChangeEmailResponse> = {

@@ -1,5 +1,5 @@
 import { ApiEndpoint, AuthType } from '@/types/api-types';
-import { UpdateUserResponse, UpdateUserRequest, updateUserRequestSchema } from '@clubhive/shared/src';
+import { UpdateUserResponse, UpdateUserRequest, updateUserRequestSchema } from '@clubhive/shared';
 import UserController from '@/controllers/user-controller';
 
 export const updateUserEndpoint: ApiEndpoint<UpdateUserRequest, UpdateUserResponse> = {

@@ -1,6 +1,6 @@
 import { ApiEndpoint, AuthType } from '@/types/api-types';
 import UserController from '@/controllers/user-controller';
-import { ChangePasswordRequest, ChangePasswordResponse } from '@clubhive/shared/src';
+import { ChangePasswordRequest, ChangePasswordResponse } from '@clubhive/shared';
 
 export const changePasswordEndpoint: ApiEndpoint<ChangePasswordRequest, ChangePasswordResponse> = {
     path: '/api/me/change-password',
