@@ -1,19 +1,37 @@
 import React from 'react';
 import { motion } from 'framer-motion';
+import { useLandingStatistics } from '../../../hooks/useLandingStatistics';
 
 interface FeaturesSectionProps {
     isActive: boolean;
 }
 
 export function DataSection({ isActive }: FeaturesSectionProps) {
+    const { data: statistics, loading } = useLandingStatistics();
+
     const title = 'Join Our Community';
-    const subtitle = 'Believe it or not this data is 100% real';
-    const stats = [
-        { number: '500+', label: 'Active Clubs' },
-        { number: '15K+', label: 'Students Connected' },
-        { number: '2K+', label: 'Events Hosted' },
-        { number: '50+', label: 'Universities' },
-    ];
+    const subtitle = '(Right now only @ UC San Diego)';
+
+    // Helper function to format numbers and handle singular/plural
+    const formatStat = (count: number, singular: string, plural: string) => {
+        const formattedNumber = count.toLocaleString();
+        const label = count === 1 ? singular : plural;
+        return { number: formattedNumber, label };
+    };
+
+    const stats = statistics
+        ? [
+              formatStat(statistics.clubs, 'Club', 'Clubs'),
+              formatStat(statistics.users, 'User', 'Users'),
+              formatStat(statistics.events, 'Event', 'Events'),
+              formatStat(statistics.schools, 'School', 'Schools'),
+          ]
+        : [
+              { number: '...', label: 'Clubs' },
+              { number: '...', label: 'Students Connected' },
+              { number: '...', label: 'Events Hosted' },
+              { number: '...', label: 'Schools' },
+          ];
     return (
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10" style={{ opacity: isActive ? 1 : 0.7 }}>
             <motion.div

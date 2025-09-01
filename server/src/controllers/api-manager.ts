@@ -7,6 +7,7 @@ import { testEndpoint } from '@/api/misc/test';
 import { getTagsEndpoint } from '@/api/misc/tags-endpoint';
 import { changelogEndpoint } from '@/api/misc/changelog';
 import { versionEndpoint } from '@/api/misc/version';
+import { landingStatisticsEndpoint } from '@/api/misc/landing-statistics';
 
 import { createEventEndpoint } from '@/api/events/create-event';
 import { getEventByIdEndpoint } from '@/api/events/get-event-page';
@@ -75,6 +76,7 @@ export default class ApiManager {
         this.addEndpoint(getClubProfileEndpoint);
         this.addEndpoint(changelogEndpoint);
         this.addEndpoint(versionEndpoint);
+        this.addEndpoint(landingStatisticsEndpoint);
 
         // Club endpoints
         this.addEndpoint(createClubEndpoint);
