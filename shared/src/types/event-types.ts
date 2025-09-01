@@ -1,5 +1,6 @@
 import { z } from 'zod';
 import { tagSchema } from './tag-types.js';
+import { ClubData } from './club-types.js';
 
 export enum EventType {
     CLUB_OFFICERS = 'Club Officers',
@@ -24,6 +25,7 @@ export const eventSchema = z.object({
     tags: z.array(tagSchema),
     clubName: z.string().optional(),
     clubLogo: z.string().nullable().optional(),
+    clubUrl: z.string().optional(),
 });
 
 export const createEventRequestSchema = z.object({
@@ -72,7 +74,7 @@ export interface GetEventsResponse {
     //events: EventData[];
     events: Array<{
         event: EventData;
-        club: any;
+        club: ClubData | null;
     }>;
 }
 
