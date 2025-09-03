@@ -17,11 +17,7 @@ function GalleryImage({ imageId }: { imageId: string }) {
     }
 
     if (error || !image) {
-        return (
-            <div className="min-w-[200px] h-70 bg-outline-variant/10 rounded-md flex-shrink-0 flex items-center justify-center">
-                <span className="text-on-surface-variant text-sm">Failed to load</span>
-            </div>
-        );
+        return <div className="min-w-[200px] h-70 bg-outline-variant/10 rounded-md flex-shrink-0 flex items-center justify-center"></div>;
     }
 
     return (

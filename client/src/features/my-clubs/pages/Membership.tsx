@@ -5,6 +5,8 @@ import { useState } from 'react';
 import { useNavigate } from 'react-router';
 import { useMyClubsData } from '../../../hooks/useMyClubsData.ts';
 import { useToast } from '../../../hooks/useToast';
+import { useImageData } from '../../../hooks/useImageData.ts';
+import { ClubLogo } from '../../../components/ClubLogo.tsx';
 
 interface MembershipProps {
     club: UserClubData;
@@ -20,6 +22,8 @@ export function Membership({ club, isOwner }: MembershipProps) {
     const [leaveLoading, setLeaveLoading] = useState(false);
     const [transferLoading, setTransferLoading] = useState(false);
     const [disbandLoading, setDisbandLoading] = useState(false);
+
+    const { image: clubLogoImage } = useImageData(club.clubLogo);
 
     const handleLeaveClub = async () => {
         setLeaveLoading(true);
@@ -110,7 +114,7 @@ export function Membership({ club, isOwner }: MembershipProps) {
                         >
                             <div className="absolute top-1/2 left-1/2 w-64 h-64 opacity-8 select-none pointer-events-none transform -translate-x-1/2 -translate-y-1/2">
                                 <img
-                                    src={club.clubLogo || '/vgdc-square-logo.png'}
+                                    src={clubLogoImage?.url || '/vgdc-square-logo.png'}
                                     alt="Club logo background"
                                     className="w-full h-full object-contain"
                                 />
@@ -171,11 +175,7 @@ export function Membership({ club, isOwner }: MembershipProps) {
                                                 backgroundColor: `#3b82f615`,
                                             }}
                                         >
-                                            <img
-                                                src={club.clubLogo || '/vgdc-square-logo.png'}
-                                                alt={`${club.name} logo`}
-                                                className="w-8 h-8 object-contain"
-                                            />
+                                            <ClubLogo clubLogo={club.clubLogo} clubName={club.name} size="md" />
                                         </div>
                                     </div>
                                 </div>
