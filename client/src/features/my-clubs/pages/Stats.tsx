@@ -190,7 +190,6 @@ export function Stats({ club, isOfficer, setStatsVisibleToAll, statsVisibleToAll
             <div className="bg-surface rounded-lg shadow p-6 border border-outline-variant">
                 <div className="flex items-center justify-between mb-5">
                     <h3 className="text-3xl font-bold text-primary">Club Statistics</h3>
-
                     {isOfficer && setStatsVisibleToAll && (
                         <button
                             onClick={() => setStatsVisibleToAll(!statsVisibleToAll)}
@@ -200,7 +199,9 @@ export function Stats({ club, isOfficer, setStatsVisibleToAll, statsVisibleToAll
                         </button>
                     )}
                 </div>
-
+                <div className="bg-blue-100 border-l-4 border-blue-500 text-blue-700 p-4 mb-4 mr-355 ">
+                    <p className="font-semibold">Coming Soon!</p>
+                </div>
                 <div className="grid grid-cols-3 gap-20 mb-8">
                     <div>
                         <p className="text-lg font-medium text-on-surface mb-2">Member Count</p>
