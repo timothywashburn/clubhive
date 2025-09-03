@@ -3,7 +3,6 @@ import { UserClubData } from '@clubhive/shared';
 import { DangerZone } from '../../../components/DangerZone';
 import { useState } from 'react';
 import { useNavigate } from 'react-router';
-import { useMyClubsData } from '../../../hooks/useMyClubsData.ts';
 import { useToast } from '../../../hooks/useToast';
 import { useImageData } from '../../../hooks/useImageData.ts';
 import { ClubLogo } from '../../../components/ClubLogo.tsx';
@@ -15,8 +14,6 @@ interface MembershipProps {
 
 export function Membership({ club, isOwner }: MembershipProps) {
     const navigate = useNavigate();
-    const { getMembershipData } = useMyClubsData();
-    const membershipData = getMembershipData(club);
     const { successToast, errorToast } = useToast();
 
     const [leaveLoading, setLeaveLoading] = useState(false);
@@ -143,7 +140,14 @@ export function Membership({ club, isOwner }: MembershipProps) {
                             <div className="p-6 pt-16 h-full flex flex-col">
                                 <div className="mb-4">
                                     <h4 className="font-bold text-on-surface mb-1">John Doe</h4>
-                                    <p className="text-sm text-on-surface-variant">Valid since {membershipData.joinDate}</p>
+                                    <p className="text-sm text-on-surface-variant">
+                                        Valid since{' '}
+                                        {new Date(club.joinDate).toLocaleDateString('en-US', {
+                                            year: 'numeric',
+                                            month: 'long',
+                                            day: 'numeric',
+                                        })}
+                                    </p>
                                 </div>
 
                                 <div className="flex flex-col justify-between flex-1">

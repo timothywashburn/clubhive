@@ -126,6 +126,7 @@ export const updateClubRequestSchema = z.object({
 
 export const userClubSchema = clubSchema.extend({
     userRole: z.enum(ClubRole),
+    joinDate: z.string(),
 });
 
 export const clubMemberSchema = z.object({

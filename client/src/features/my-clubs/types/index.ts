@@ -18,6 +18,4 @@ export interface TabItem {
 
 export interface MembershipData {
     joinDate: string;
-    eventsAttended: number;
-    totalEvents: number;
 }
