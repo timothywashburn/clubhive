@@ -125,12 +125,13 @@ export function HomePage() {
                             {upcomingEvents.length === 0 ? (
                                 <EmptyEventState type="upcoming" />
                             ) : (
-                                <div className="space-y-4 max-h-96 overflow-y-auto scrollbar-surface">
+                                <div className="space-y-4 max-h-96 overflow-y-auto scrollbar-surface p-1">
                                     {upcomingEvents.map(event => (
                                         <EventCard
                                             key={event._id}
                                             event={event}
                                             clubName={event.clubName}
+                                            clubUrl={event.clubUrl}
                                             isSaved={savedEventIds.has(event._id)}
                                             onSaveToggle={handleSaveToggle}
                                             showSaveButton={true}
@@ -156,12 +157,13 @@ export function HomePage() {
                             {savedEvents.length === 0 ? (
                                 <EmptyEventState type="saved" />
                             ) : (
-                                <div className="space-y-4 max-h-96 overflow-y-auto scrollbar-surface">
+                                <div className="space-y-4 max-h-96 overflow-y-auto scrollbar-surface p-1">
                                     {savedEvents.map(event => (
                                         <EventCard
                                             key={event._id}
                                             event={event}
                                             clubName={event.clubName}
+                                            clubUrl={event.clubUrl}
                                             isSaved={true}
                                             onSaveToggle={handleSaveToggle}
                                             showSaveButton={true}
