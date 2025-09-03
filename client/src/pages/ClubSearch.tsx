@@ -10,6 +10,7 @@ import { getTagColor } from '../features/find-clubs/utils/TagColors';
 import SocialLinks from '../features/find-clubs/components/SocialLinks';
 import { ClubLogo } from '../components/ClubLogo.tsx';
 import { useImageData } from '../hooks/useImageData.ts';
+import JoinClubButton from '../features/club-profile/components/JoinClubButton.tsx';
 
 function GalleryImage({ imageId }: { imageId: string }) {
     const { image, loading, error } = useImageData(imageId);
@@ -96,7 +97,7 @@ export function Clubs() {
                     </div>
 
                     {/* Right: selected club detail */}
-                    <div className="w-full lg:w-2/3 bg-surface rounded-lg shadow p-6">
+                    <div className="w-full lg:w-2/3 bg-surface rounded-lg shadow p-6 h-[calc(100vh-10rem)] overflow-y-auto">
                         {selectedClub ? (
                             <>
                                 <div className="flex items-center gap-7">
@@ -117,7 +118,7 @@ export function Clubs() {
                                 </div>
                                 <hr className="my-4 border-t border-outline-variant" />
                                 <div className="flex justify-between items-center">
-                                    <div className="text-sm text-on-surface-variant mb-4 flex flex-wrap gap-2">
+                                    <div className="text-sm text-on-surface-variant flex flex-wrap gap-2">
                                         {selectedClub.tags.map(tag => (
                                             <span
                                                 key={tag._id}
@@ -141,13 +142,14 @@ export function Clubs() {
                                             selectedClub.pictures.map(pictureId => <GalleryImage key={pictureId} imageId={pictureId} />)}
                                     </div>
                                 </div>
-                                <div className="mt-6 flex justify-center">
+                                <div className="mt-6 flex justify-center items-center gap-5">
                                     <Link
                                         to={`/club-profile/${selectedClub.url}`}
-                                        className="mt-6 inline-block px-4 py-2 bg-primary text-on-primary rounded-md hover:bg-primary-dark transition-colors"
+                                        className="h-10 inline-flex items-center px-4 py-2 bg-primary text-on-primary rounded-md hover:bg-primary-dark transition-colors"
                                     >
                                         View Profile
                                     </Link>
+                                    <JoinClubButton clubId={selectedClub._id} onJoinSuccess={() => {}} />
                                 </div>
                             </>
                         ) : (
