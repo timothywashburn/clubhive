@@ -39,6 +39,7 @@ import { getMyClubsEndpoint } from '@/api/me/clubs';
 import { getMyEventsEndpoint } from '@/api/me/events';
 import { getMeEndpoint } from '@/api/me/get-me';
 import { getClubMembersEndpoint } from '@/api/memberships/get-members';
+import { getClubOfficersEndpoint } from '@/api/memberships/get-officers';
 import { updateMemberRoleEndpoint } from '@/api/memberships/update-members';
 import { removeMemberEndpoint } from '@/api/memberships/delete-member';
 import { getDailyVenueAvailabilityEndpoint } from '@/api/venues/daily-availability';
@@ -57,6 +58,7 @@ import { deleteAccountEndpoint } from '@/api/me/delete-account';
 import { joinMembershipEndpoint } from '@/api/memberships/join-membership';
 import { changeEmailEndpoint } from '@/api/users/change-email';
 import { changePasswordEndpoint } from '@/api/me/change-password';
+import { get } from 'http';
 
 export default class ApiManager {
     private static instance: ApiManager;
@@ -140,6 +142,7 @@ export default class ApiManager {
         this.addEndpoint(getClubMembersEndpoint);
         this.addEndpoint(updateMemberRoleEndpoint);
         this.addEndpoint(removeMemberEndpoint);
+        this.addEndpoint(getClubOfficersEndpoint);
 
         console.log(`registered api endpoints`);
     }
