@@ -47,63 +47,65 @@ export function NotificationPage() {
     return (
         <div className="h-full relative">
             <div className="w-full py-8">
-                <div className="mb-8 px-4 sm:px-6 lg:px-8">
-                    <h1 className="text-3xl font-bold text-on-surface">Notifications</h1>
-                    <p className="text-on-surface-variant mt-2">Stay updated with your club activities</p>
-                </div>
-
                 <div className="flex gap-6 px-4 sm:px-6 lg:px-8 min-h-[calc(100vh-200px)]">
                     <motion.div
-                        className="bg-surface rounded-lg shadow border border-outline-variant flex flex-col h-fit w-1/3"
+                        className="flex flex-col w-1/3"
                         initial={{ x: '100%' }}
                         animate={{
                             x: selected ? '0%' : '100%',
                         }}
                         transition={{ duration: 0.3, ease: 'easeInOut' }}
                     >
-                        <div className="px-6 py-4 border-b border-outline-variant flex-shrink-0">
-                            <div className="flex items-center justify-between">
-                                <h2 className="text-lg font-medium text-on-surface">Recent Activity</h2>
-                                <button
-                                    className="text-sm text-primary hover:text-primary/90 cursor-pointer"
-                                    onClick={() => {
-                                        notifs.forEach(n => {
-                                            if (!n.read) {
-                                                void markAsRead(n.userNotifId);
-                                            }
-                                        });
-                                    }}
-                                >
-                                    Mark all as read
-                                </button>
-                            </div>
+                        <div className="mb-8">
+                            <h1 className="text-3xl font-bold text-on-surface">Notifications</h1>
+                            <p className="text-on-surface-variant mt-2">Stay updated with your club activities</p>
                         </div>
 
-                        <div className="p-2 space-y-2">
-                            {notifs.map(notification => (
-                                <NotificationCard
-                                    key={notification._id}
-                                    club={notification.clubName}
-                                    title={notification.title}
-                                    date={notification.date}
-                                    read={notification.read}
-                                    selected={selected === notification._id}
-                                    onClick={() => {
-                                        setSelected(notification._id);
-                                        if (!notification.read) {
-                                            void markAsRead(notification.userNotifId);
-                                        }
-                                    }}
-                                />
-                            ))}
-                        </div>
-                        <div className="p-4">
-                            <button
-                                onClick={() => navigate('/send-notification')}
-                                className="bg-primary text-on-primary px-4 py-2 w-full rounded-md font-medium shadow-sm hover:bg-primary/90 transition"
-                            >
-                                Send Notification
-                            </button>
+                        <div className="bg-surface rounded-lg shadow border border-outline-variant flex flex-col">
+                            <div className="px-6 py-4 border-b border-outline-variant flex-shrink-0">
+                                <div className="flex items-center justify-between">
+                                    <h2 className="text-lg font-medium text-on-surface">Recent Activity</h2>
+                                    <button
+                                        className="text-sm text-primary hover:text-primary/90 cursor-pointer"
+                                        onClick={() => {
+                                            notifs.forEach(n => {
+                                                if (!n.read) {
+                                                    void markAsRead(n.userNotifId);
+                                                }
+                                            });
+                                        }}
+                                    >
+                                        Mark all as read
+                                    </button>
+                                </div>
+                            </div>
+
+                            <div className="p-2 space-y-2">
+                                {notifs.map(notification => (
+                                    <NotificationCard
+                                        key={notification._id}
+                                        club={notification.clubName}
+                                        title={notification.title}
+                                        date={notification.date}
+                                        read={notification.read}
+                                        selected={selected === notification._id}
+                                        onClick={() => {
+                                            setSelected(notification._id);
+                                            if (!notification.read) {
+                                                void markAsRead(notification.userNotifId);
+                                            }
+                                        }}
+                                    />
+                                ))}
+                            </div>
+                            <div className="p-4">
+                                <button
+                                    onClick={() => navigate('/send-notification')}
+                                    className="bg-primary text-on-primary px-4 py-2 w-full rounded-md font-medium shadow-sm hover:bg-primary/90 transition"
+                                >
+                                    Send Notification
+                                </button>
+                            </div>
                         </div>
                     </motion.div>
 
