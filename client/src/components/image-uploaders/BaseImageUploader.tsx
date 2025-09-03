@@ -3,6 +3,7 @@ import { Eye, X } from 'lucide-react';
 import type { ImageData } from '@clubhive/shared';
 import { useUploadImage } from '../../hooks/useUploadImage.ts';
 import { useDeleteImage } from '../../hooks/useDeleteImageFile.ts';
+import { useToast } from '../../hooks/useToast.ts';
 
 // BaseImageUploader is a generic image uploader component that can be wrapped by components like ProfilePictureUploader
 // It handles file selection, preview, upload, and deletion of images
@@ -25,6 +26,8 @@ export function BaseImageUploader({ clubId, maxImages, maxFileSizeKB, onSuccess,
     const [uploading, setUploading] = useState(false);
     const [previewImage, setPreviewImage] = useState<string | null>(null);
     const fileInputRef = useRef<HTMLInputElement>(null);
+
+    const { errorToast } = useToast();
 
     const { uploadFile } = useUploadImage({
         clubId,
@@ -54,6 +57,7 @@ export function BaseImageUploader({ clubId, maxImages, maxFileSizeKB, onSuccess,
 
         if (maxImages && files.length > maxImages) {
             onError(`You can only upload up to ${maxImages} images`);
+            errorToast(`You can only upload up to ${maxImages} images`);
             return;
         }
 
@@ -61,6 +65,7 @@ export function BaseImageUploader({ clubId, maxImages, maxFileSizeKB, onSuccess,
         const oversizedFiles = files.filter(file => file.size > (maxFileSizeKB || Infinity) * 1024);
         if (oversizedFiles.length > 0) {
             onError(`File size exceeds ${maxFileSizeKB} KB: ${oversizedFiles.map(f => f.name).join(', ')}`);
+            errorToast(`File size exceeds ${maxFileSizeKB} KB: ${oversizedFiles.map(f => f.name).join(', ')}`);
             return;
         }
 
@@ -93,7 +98,7 @@ export function BaseImageUploader({ clubId, maxImages, maxFileSizeKB, onSuccess,
             setSelectedFiles([]);
             setThumbnails([]);
         } catch (error) {
-            onError(error);
+            errorToast(error);
         } finally {
             setUploading(false);
             onSuccess(uploadedImages, false); // Notify parent that upload is complete
@@ -167,7 +172,7 @@ export function BaseImageUploader({ clubId, maxImages, maxFileSizeKB, onSuccess,
                 <div className="flex items-center gap-3">
                     <input
                         type="file"
-                        accept="image/*"
+                        accept="image/jpeg,image/jpg,image/png"
                         multiple
                         onChange={handleFileChange}
                         disabled={uploading || hasUploaded}

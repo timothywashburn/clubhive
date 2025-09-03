@@ -2,6 +2,7 @@ import { Eye, Save, X } from 'lucide-react';
 import { motion } from 'framer-motion';
 import { UserClubData, EventData } from '@clubhive/shared';
 import { useMyClubsData } from '../../../hooks/useMyClubsData.ts';
+import { ClubLogo } from '../../../components/ClubLogo.tsx';
 
 interface ClubHeaderProps {
     club: UserClubData;
@@ -26,18 +27,11 @@ export function ClubHeader({
     saveLoading = false,
     isCreateMode = false,
 }: ClubHeaderProps) {
-    const { getClubColors } = useMyClubsData();
-
     return (
         <div className="flex items-center justify-between mb-4">
             <div className="flex items-center space-x-4">
-                <div className={`w-12 h-12 rounded-full flex items-center justify-center text-lg font-bold ${getClubColors(club._id)}`}>
-                    {club.name
-                        .split(' ')
-                        .map(word => word[0])
-                        .join('')
-                        .toUpperCase()
-                        .slice(0, 2)}
+                <div className="w-12 h-12 rounded-full flex items-center justify-center text-lg font-bold overflow-hidden">
+                    <ClubLogo clubLogo={club.clubLogo} clubName={club.name} size="md" className="w-12 h-12" />
                 </div>
                 <div>
                     <div className="flex items-center gap-2">
