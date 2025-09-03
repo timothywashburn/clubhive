@@ -54,7 +54,7 @@ export default function JoinClubButton({ clubId, onJoinSuccess }: JoinClubButton
         <button
             onClick={handleJoin}
             disabled={isJoining || isMember}
-            className="bg-primary text-on-primary px-4 py-2 rounded-full hover:bg-primary/90 font-medium disabled:opacity-50"
+            className="bg-primary text-on-primary px-4 py-2 rounded-md hover:bg-primary/90 hover:cursor-pointer font-medium disabled:opacity-50 disabled:hover:cursor-not-allowed transition-colors"
         >
             {isMember ? 'Already a Member' : isJoining ? 'Joining...' : 'Join Club'}
         </button>
