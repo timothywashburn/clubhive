@@ -3,17 +3,21 @@ import { Calendar, MapPin, Users, Bookmark, BookmarkCheck } from 'lucide-react';
 import { EventData } from '@clubhive/shared';
 import { eventService } from '../services/eventService';
 import { ClubLogo } from './ClubLogo';
+import { useNavigate } from 'react-router';
+import { motion } from 'framer-motion';
 
 interface EventCardProps {
     event: EventData;
     clubName?: string;
+    clubUrl?: string;
     isSaved?: boolean;
     onSaveToggle?: (eventId: string, isSaved: boolean) => void;
     showSaveButton?: boolean;
 }
 
-export function EventCard({ event, clubName, isSaved = false, onSaveToggle, showSaveButton = true }: EventCardProps) {
+export function EventCard({ event, clubName, clubUrl, isSaved = false, onSaveToggle, showSaveButton = true }: EventCardProps) {
     const [isToggling, setIsToggling] = useState(false);
+    const navigate = useNavigate();
 
     const formatDate = (dateString: string) => {
         const date = new Date(dateString);
@@ -47,15 +51,41 @@ export function EventCard({ event, clubName, isSaved = false, onSaveToggle, show
         }
     };
 
+    const handleCardClick = (e: React.MouseEvent) => {
+        if (e.target === e.currentTarget || !(e.target as Element).closest('button')) {
+            navigate(`/events/${event._id}`);
+        }
+    };
+
+    const handleClubNameClick = (e: React.MouseEvent) => {
+        e.stopPropagation();
+        if (clubUrl) {
+            navigate(`/club-profile/${clubUrl}`);
+        }
+    };
+
     return (
-        <div className="bg-surface border border-outline-variant rounded-lg p-4 hover:shadow-md transition-shadow">
+        <motion.div
+            className="bg-surface border border-outline-variant rounded-lg p-4 cursor-pointer"
+            onClick={handleCardClick}
+            whileHover={{ scale: 1.01 }}
+            whileTap={{ scale: 0.99 }}
+            transition={{ type: 'spring', stiffness: 400, damping: 25 }}
+        >
             <div className="flex items-start justify-between mb-3">
                 <div className="flex items-start gap-3 flex-1 min-w-0">
                     <ClubLogo clubLogo={event.clubLogo} clubName={clubName} size="sm" className="mt-0.5" />
                     <div className="flex-1 min-w-0">
                         <div className="flex items-center gap-2 mb-1">
                             <h3 className="text-base font-medium text-on-surface line-clamp-1">{event.name}</h3>
-                            {clubName && <span className="text-xs text-on-surface-variant font-normal opacity-75">• {clubName}</span>}
+                            {clubName && (
+                                <span
+                                    className="text-xs text-on-surface-variant font-normal opacity-75 hover:text-primary hover:underline cursor-pointer"
+                                    onClick={clubUrl ? handleClubNameClick : undefined}
+                                >
+                                    • {clubName}
+                                </span>
+                            )}
                         </div>
                     </div>
                 </div>
@@ -63,10 +93,8 @@ export function EventCard({ event, clubName, isSaved = false, onSaveToggle, show
                     <button
                         onClick={handleSaveToggle}
                         disabled={isToggling}
-                        className={`ml-3 p-1 rounded-md transition-colors flex-shrink-0 cursor-pointer ${
-                            isSaved
-                                ? 'text-primary hover:text-primary/80'
-                                : 'text-on-surface-variant hover:text-on-surface hover:bg-surface-variant'
+                        className={`ml-3 p-1 rounded-md transition-colors flex-shrink-0 cursor-pointer hover:bg-surface-variant ${
+                            isSaved ? 'text-primary hover:text-primary' : 'text-on-surface-variant hover:text-on-surface'
                         } disabled:opacity-50 disabled:cursor-not-allowed`}
                     >
                         {isSaved ? <BookmarkCheck className="w-5 h-5" /> : <Bookmark className="w-5 h-5" />}
@@ -92,6 +120,6 @@ export function EventCard({ event, clubName, isSaved = false, onSaveToggle, show
                     <span className="text-xs">{event.type}</span>
                 </div>
             </div>
-        </div>
+        </motion.div>
     );
 }
