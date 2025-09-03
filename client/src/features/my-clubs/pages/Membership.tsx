@@ -174,9 +174,9 @@ export function Membership({ club, isOwner }: MembershipProps) {
                                         )}
                                     </div>
 
-                                    <div className="flex justify-end">
+                                    <div className="relative">
                                         <div
-                                            className="w-12 h-12 rounded-lg flex items-center justify-center overflow-hidden"
+                                            className="absolute bottom-0 right-0 w-12 h-12 rounded-lg flex items-center justify-center overflow-hidden"
                                             style={{
                                                 backgroundColor: `#3b82f615`,
                                             }}
