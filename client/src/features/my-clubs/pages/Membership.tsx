@@ -6,6 +6,7 @@ import { useNavigate } from 'react-router';
 import { useToast } from '../../../hooks/useToast';
 import { useImageData } from '../../../hooks/useImageData.ts';
 import { ClubLogo } from '../../../components/ClubLogo.tsx';
+import { useAuthStore } from '../../../stores/authStore';
 
 interface MembershipProps {
     club: UserClubData;
@@ -15,6 +16,7 @@ interface MembershipProps {
 export function Membership({ club, isOwner }: MembershipProps) {
     const navigate = useNavigate();
     const { successToast, errorToast } = useToast();
+    const { user } = useAuthStore();
 
     const [leaveLoading, setLeaveLoading] = useState(false);
     const [transferLoading, setTransferLoading] = useState(false);
@@ -139,7 +141,7 @@ export function Membership({ club, isOwner }: MembershipProps) {
 
                             <div className="p-6 pt-16 h-full flex flex-col">
                                 <div className="mb-4">
-                                    <h4 className="font-bold text-on-surface mb-1">John Doe</h4>
+                                    <h4 className="font-bold text-on-surface mb-1">{user?.name || 'Member'}</h4>
                                     <p className="text-sm text-on-surface-variant">
                                         Valid since{' '}
                                         {new Date(club.joinDate).toLocaleDateString('en-US', {
