@@ -43,8 +43,8 @@ export function Clubs() {
         <div className="h-full relative">
             <div className="mx-auto px-4 sm:px-6 lg:px-8 py-8">
                 <div className="mb-8">
-                    <h1 className="text-3xl font-bold text-on-background">Find Clubs</h1>
-                    <p className="text-on-background-variant mt-2">Discover clubs that match your interests</p>
+                    <h1 className="text-4xl font-bold text-on-background mb-2">Find Clubs</h1>
+                    <p className="text-lg text-on-background-variant">Discover clubs that match your interests</p>
                 </div>
 
                 <div className="flex h-10 mb-6">
@@ -54,7 +54,7 @@ export function Clubs() {
                         placeholder="Search clubs..."
                         value={searchTerm}
                         onChange={e => setSearchTerm(e.target.value)}
-                        className="block w-full pl-10 pr-3 py-2 border text-on-surface border-outline-variant rounded-md rounded-l-none leading-5 bg-surface placeholder-on-surface-variant focus:outline-none focus:border-primary"
+                        className="block w-full pl-3 pr-3 py-2 border text-on-surface border-outline-variant rounded-md rounded-l-none leading-5 bg-surface placeholder-on-surface-variant focus:outline-none focus:border-primary"
                     />
                 </div>
                 <div className="flex flex-col lg:flex-row gap-3">

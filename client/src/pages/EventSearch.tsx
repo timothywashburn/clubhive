@@ -74,7 +74,7 @@ function TimeFilter({
         <div className="relative" ref={popoverRef}>
             <button
                 onClick={() => setOpen(prev => !prev)}
-                className="px-3 py-2 border border-outline-variant bg-surface text-on-surface rounded-md rounded-l-none focus:outline-none focus:ring-primary focus:ring-1 h-10 min-w-[100px] whitespace-nowrap"
+                className="px-3 py-2 border border-outline-variant bg-surface text-on-surface rounded-md rounded-l-none focus:outline-none focus:ring-primary focus:ring-1 h-10 min-w-[100px] whitespace-nowrap cursor-pointer"
             >
                 Time
             </button>
@@ -206,8 +206,8 @@ export function EventSearch() {
         <div className="h-full relative">
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
                 <div className="mb-8">
-                    <h1 className="text-3xl font-bold text-on-surface">Events</h1>
-                    <p className="text-on-surface-variant mt-2">Discover upcoming events!</p>
+                    <h1 className="text-4xl font-bold text-on-surface mb-2">Events</h1>
+                    <p className="text-lg text-on-surface-variant">Discover upcoming events!</p>
                 </div>
 
                 {/* search bar */}
@@ -218,7 +218,7 @@ export function EventSearch() {
                         placeholder="Search events..."
                         value={searchTerm}
                         onChange={e => setSearchTerm(e.target.value)}
-                        className="flex-1 pl-10 pr-3 py-2 focus:ring focus:ring-primary border border-r-0 text-on-surface border-outline-variant rounded-l-none leading-5 bg-surface placeholder-on-surface-variant focus:outline-none focus:z-10"
+                        className="flex-1 pl-3 pr-3 py-2 focus:ring focus:ring-primary border border-r-0 text-on-surface border-outline-variant rounded-l-none leading-5 bg-surface placeholder-on-surface-variant focus:outline-none focus:z-10"
                     />
                     <input
                         type="text"
@@ -230,7 +230,7 @@ export function EventSearch() {
                     <div className="relative" ref={datePickerRef}>
                         <button
                             onClick={() => setShowDatePicker(!showDatePicker)}
-                            className={`pl-3 pr-3 py-2 border border ounded-none bg-surface text-on-surface focus:outline-none h-10 whitespace-nowrap min-w-[120px] ${
+                            className={`pl-3 pr-3 py-2 border border-r-0 rounded-none bg-surface text-on-surface focus:outline-none h-10 whitespace-nowrap min-w-[120px] cursor-pointer ${
                                 showDatePicker ? 'border-primary z-10 focus:outline-none' : 'border-outline-variant focus:z-10'
                             }`}
                         >
