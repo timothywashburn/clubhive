@@ -112,13 +112,17 @@ export function NotificationPage() {
                     <AnimatePresence>
                         {selected && (
                             <motion.div
-                                className="flex-1 min-w-0 h-full overflow-y-auto"
+                                className="flex-1 min-w-0"
                                 initial={{ opacity: 0, x: 50 }}
                                 animate={{ opacity: 1, x: 0 }}
                                 exit={{ opacity: 0, x: 50 }}
                                 transition={{ duration: 0.3, ease: 'easeInOut', delay: 0.2 }}
                             >
-                                <NotifExpanded notification={selectedNotification} />
+                                <div className="h-full overflow-y-auto overflow-x-hidden">
+                                    <div className="py-2">
+                                        <NotifExpanded notification={selectedNotification} />
+                                    </div>
+                                </div>
                             </motion.div>
                         )}
                     </AnimatePresence>
