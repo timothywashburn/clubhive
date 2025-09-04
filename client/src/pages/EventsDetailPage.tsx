@@ -3,6 +3,8 @@ import { useState, useEffect } from 'react';
 import { getTagColor } from '../features/find-clubs/utils/TagColors';
 import { useEventTagsData } from '../hooks/useEventTagsData.ts';
 import type { TagData } from '@clubhive/shared';
+import { ArrowLeft, Paperclip, Bookmark, BookmarkCheck } from 'lucide-react';
+import { useToast } from '../hooks/useToast';
 
 export function EventsDetailPage() {
     const { id } = useParams<{ id: string }>();
@@ -12,12 +14,16 @@ export function EventsDetailPage() {
     const [saved, setSaved] = useState(false);
     const { tags } = useEventTagsData();
 
+    const { successToast, errorToast } = useToast();
+
     const copyToClipboard = async () => {
         const url = `${window.location.origin}/events/${event.event._id}`;
         try {
             await navigator.clipboard.writeText(url);
+            successToast('Link copied to clipboard!');
         } catch (err) {
             console.error('Failed to copy: ', err);
+            errorToast('Failed to copy link');
         }
     };
 
@@ -47,12 +53,13 @@ export function EventsDetailPage() {
     return (
         <div className="h-full relative z-10">
             <div className="min-h-screen px-4 sm:px-6 lg:px-8 py-8 max-w-7xl mx-auto">
-                <div className="flex justify-start mb-4">
+                <div className="flex justify-start mt-3 mb-7">
                     <button
                         onClick={() => navigate('/events')}
-                        className="bg-surface text-on-surface border border-outline px-4 py-2 rounded-full hover:bg-outline-variant/30 font-medium transition-colors cursor-pointer"
+                        className="bg-surface text-on-surface border border-outline px-4 py-2 rounded-md hover:bg-surface/90 font-medium transition-colors cursor-pointer"
                     >
-                        ← Find Events
+                        <ArrowLeft className="inline-block mr-1 h-4" />
+                        Find Events
                     </button>
                 </div>
 
@@ -94,47 +101,46 @@ export function EventsDetailPage() {
                     <div className="flex gap-2">
                         <button
                             onClick={copyToClipboard}
-                            className="px-6 py-2 rounded-full font-medium border bg-surface text-on-surface border-outline hover:bg-outline-variant/30 transition-colors cursor-pointer"
+                            className="p-2 border rounded-md transition-colors hover:bg-surface-variant/40 cursor-pointer 
+                                        text-on-surface-variant hover:text-on-surface border-outline"
                         >
-                            Share Link
+                            <Paperclip className="w-5 h-5" />
                         </button>
                         <button
                             onClick={() => setSaved(prev => !prev)}
-                            className={`px-4 py-2 rounded-full font-medium border transition-colors w-[120px] text-center cursor-pointer ${
+                            className={`p-2 border rounded-md transition-colors hover:bg-surface-variant/40 cursor-pointer ${
                                 saved
-                                    ? 'bg-primary text-on-secondary border-primary'
-                                    : 'bg-surface text-on-surface border-outline hover:bg-outline-variant/30'
+                                    ? 'border-primary text-primary hover:text-primary'
+                                    : 'border-outline text-on-surface-variant hover:text-on-surface'
                             }`}
                         >
-                            {saved ? 'Saved' : 'Save'}
+                            {saved ? <BookmarkCheck className="w-5 h-5" /> : <Bookmark className="w-5 h-5" />}
                         </button>
                     </div>
                 </div>
 
                 <h2 className="mt-10 text-2xl font-semibold text-on-surface mb-4">About This Event:</h2>
                 <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
-                    {/* Left half - Description */}
                     <div className="bg-surface border border-outline-variant p-6 rounded-md">
                         <p className="text-on-surface leading-relaxed whitespace-pre-line">{event.event.description}</p>
                     </div>
 
-                    {/* Right half - Event Details */}
-                    <div className="bg-surface border border-outline-variant p-6 rounded-md">
+                    <div className="bg-surface border border-outline-variant p-3 rounded-md">
                         <div className="grid grid-cols-2 gap-2">
-                            <div className="bg-surface-variant text-on-surface-variant px-3 py-2 rounded-md text-sm">
+                            <div className="bg-surface-variant text-on-surface-variant px-2.5 py-1.5 rounded-md text-sm">
                                 <span className="font-semibold text-on-secondary-container">Date: </span>
                                 <span>{new Date(event.event.date).toLocaleDateString()}</span>
                             </div>
-                            <div className="bg-surface-variant text-on-surface-variant px-3 py-2 rounded-md text-sm">
+                            <div className="bg-surface-variant text-on-surface-variant px-2.5 py-1.5 rounded-md text-sm">
                                 <span className="font-semibold text-on-secondary-container">Time: </span>
                                 <span>{event.event.startTime}</span>
                                 {event.event.endTime && <span> – {event.event.endTime}</span>}
                             </div>
-                            <div className="bg-surface-variant text-on-surface-variant px-3 py-2 rounded-md text-sm">
+                            <div className="bg-surface-variant text-on-surface-variant px-2.5 py-1.5 rounded-md text-sm">
                                 <span className="font-semibold text-on-secondary-container">Location: </span>
                                 <span>{event.event.location || 'TBA'}</span>
                             </div>
-                            <div className="bg-surface-variant text-on-surface-variant px-3 py-2 rounded-md text-sm">
+                            <div className="bg-surface-variant text-on-surface-variant px-2.5 py-1.5 rounded-md text-sm">
                                 <span className="font-semibold text-on-secondary-container">Type: </span>
                                 <span>{event.event.type}</span>
                             </div>

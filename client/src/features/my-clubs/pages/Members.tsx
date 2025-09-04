@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Trash2 } from 'lucide-react';
+import { useToast } from '../../../hooks/useToast';
 
 export function useClubMembers(clubId: string | null) {
     const [members, setMembers] = useState<any[]>([]);
@@ -40,6 +41,8 @@ export function Members({ club }: { club: any }) {
     const [removingMember, setRemovingMember] = useState<string | null>(null);
     const [confirmRemove, setConfirmRemove] = useState<string | null>(null);
 
+    const { successToast, errorToast } = useToast();
+
     if (loading) return <p> Loading members...</p>;
     if (error) return <p>Error: {error}</p>;
 
@@ -66,13 +69,13 @@ export function Members({ club }: { club: any }) {
             if (data.success) {
                 setMembers(prevMembers => prevMembers.filter(member => member._id !== memberId));
                 setConfirmRemove(null);
-                console.log('Member removed successfully!');
+                successToast('Member removed successfully!');
             } else {
-                alert('Failed to remove member: ' + data.message);
+                errorToast(`Failed to remove member: ${data.message}`);
             }
         } catch (err) {
             console.error('Error removing member:', err);
-            alert('Failed to remove member');
+            errorToast('Failed to remove member');
         } finally {
             setRemovingMember(null);
         }
@@ -206,12 +209,13 @@ export function Members({ club }: { club: any }) {
                 setMembers(prevMembers => prevMembers.map(member => (member._id === memberId ? { ...member, role: tempRole } : member)));
                 setEditingRole(null);
                 setTempRole('');
+                successToast('Role updated successfully!');
             } else {
-                alert('Failed to update role: ' + data.message);
+                errorToast(`Failed to update role: ${data.message}`);
             }
         } catch (err) {
             console.error('Error updating role:', err);
-            alert('Failed to update role');
+            errorToast('Failed to update role');
         } finally {
             setUpdatingRole(null);
         }

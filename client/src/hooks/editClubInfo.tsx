@@ -2,8 +2,11 @@ import { useState, useRef } from 'react';
 import { updateClub } from '../utils/updateClub';
 import { UpdateClubRequest } from '@clubhive/shared';
 import { ClubStatus } from '@clubhive/shared';
+import { useToast } from './useToast';
 
 export const editClubInfo = (initialData, clubId, resetTagsCallback) => {
+    const { successToast, errorToast } = useToast();
+
     const defaultData = {
         name: '',
         tagline: '',
@@ -128,10 +131,10 @@ export const editClubInfo = (initialData, clubId, resetTagsCallback) => {
             });
 
             console.log('Update successfull:', updatedClub);
-            alert('Your update was successfull!');
+            successToast('Your update was successful!');
         } catch (error) {
             console.error('Error saving changes:', error);
-            alert('Error: Your updates were not saved.');
+            errorToast('Error: Your updates were not saved.');
         }
     };
 
