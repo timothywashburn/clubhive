@@ -1,6 +1,6 @@
 import { useMemo, useState } from 'react';
 import { Link, useLocation } from 'react-router';
-import { BarChart3, Calendar, FileText, MapPin, Menu, Shield, ShieldOff, User, Users, UserX, UserCog, X } from 'lucide-react';
+import { BarChart3, Calendar, FileText, MapPin, Menu, Shield, ShieldOff, User, Users, UserX, PenLine, X } from 'lucide-react';
 import { AnimatePresence, motion } from 'framer-motion';
 import { NavLink } from '../navbar/NavLink';
 import { useUnifiedIndicator } from './useUnifiedIndicator';
@@ -113,7 +113,7 @@ function generateTabNavigation(props: TabNavigationConfig) {
     const getMemberTabs = (): NavigationItem[] => {
         const tabs: NavigationItem[] = [
             { key: 'membership', label: 'My Membership', icon: User },
-            { key: 'info', label: 'Info', icon: Users },
+            { key: 'info', label: 'Info', icon: PenLine },
             { key: 'events', label: 'Events', icon: Calendar },
         ];
         if (props.showStatsTab) {
@@ -124,10 +124,10 @@ function generateTabNavigation(props: TabNavigationConfig) {
 
     const getOfficerTabs = (): NavigationItem[] => [
         { key: 'membership', label: 'My Membership', icon: User },
-        { key: 'info', label: 'Edit Info', icon: Users },
+        { key: 'info', label: 'Edit Info', icon: PenLine },
         { key: 'events', label: 'Event Planner', icon: Calendar },
         { key: 'stats', label: 'Stats', icon: BarChart3 },
-        { key: 'members', label: 'Members', icon: UserCog },
+        { key: 'members', label: 'Members', icon: Users },
     ];
 
     const getEventEditTabs = (): NavigationItem[] => [

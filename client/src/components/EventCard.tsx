@@ -79,12 +79,15 @@ export function EventCard({ event, clubName, clubUrl, isSaved = false, onSaveTog
                         <div className="flex items-center gap-2 mb-1">
                             <h3 className="text-base font-medium text-on-surface line-clamp-1">{event.name}</h3>
                             {clubName && (
-                                <span
-                                    className="text-xs text-on-surface-variant font-normal opacity-75 hover:text-primary hover:underline cursor-pointer"
-                                    onClick={clubUrl ? handleClubNameClick : undefined}
-                                >
-                                    • {clubName}
-                                </span>
+                                <div className="flex items-center gap-1">
+                                    <span className="text-xs text-on-surface-variant font-normal opacity-75">•</span>
+                                    <span
+                                        className="text-xs text-on-surface-variant font-normal opacity-75 hover:text-primary hover:underline cursor-pointer"
+                                        onClick={clubUrl ? handleClubNameClick : undefined}
+                                    >
+                                        {clubName}
+                                    </span>
+                                </div>
                             )}
                         </div>
                     </div>

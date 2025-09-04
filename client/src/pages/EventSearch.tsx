@@ -6,6 +6,7 @@ import { getTagColor } from '../features/find-clubs/utils/TagColors';
 import { useToast } from '../hooks/useToast.ts';
 import WebDatePicker from '../components/date-picker/WebDatePicker';
 import { EventCard } from '../components/EventCard';
+import { useAuth } from '../hooks/useAuth';
 
 function TimeFilter({
     afterTime,
@@ -20,38 +21,24 @@ function TimeFilter({
 }) {
     const [open, setOpen] = useState(false);
     const popoverRef = useRef<HTMLDivElement>(null);
-
-    // Validate and format time string (HH:MM in 24-hour format)
     const validateTimeString = (timeStr: string): string => {
-        // Remove any non-digit or colon characters
         const cleaned = timeStr.replace(/[^0-9:]/g, '');
-
-        // Allow empty string
         if (cleaned.length === 0) return '';
-
-        // Don't auto-format while typing - just validate limits
         if (cleaned.includes(':')) {
             const [hours, minutes] = cleaned.split(':');
-
-            // Validate hours (0-23)
             if (hours && parseInt(hours) > 23) {
-                return cleaned.substring(0, cleaned.length - 1); // Remove last character
+                return cleaned.substring(0, cleaned.length - 1);
             }
-
-            // Validate minutes (0-59)
             if (minutes && parseInt(minutes) > 59) {
-                return cleaned.substring(0, cleaned.length - 1); // Remove last character
+                return cleaned.substring(0, cleaned.length - 1);
             }
         } else {
-            // Just numbers, no colon yet
             if (cleaned.length <= 2) {
-                // Allow up to 2 digits for hours
                 if (parseInt(cleaned) > 23) {
-                    return cleaned.substring(0, 1); // Keep only first digit
+                    return cleaned.substring(0, 1);
                 }
             }
         }
-
         return cleaned;
     };
 
@@ -120,6 +107,8 @@ export function EventSearch() {
     const [beforeTime, setBeforeTime] = useState('');
     const [savedEventIds, setSavedEventIds] = useState<Set<string>>(new Set());
     const datePickerRef = useRef<HTMLDivElement>(null);
+
+    const { isAuth } = useAuth();
 
     const { errorToast } = useToast();
 
@@ -244,7 +233,7 @@ export function EventSearch() {
                                             setDate(null);
                                             setShowDatePicker(false);
                                         }}
-                                        className="w-full text-sm py-1 px-2 text-on-surface-variant hover:bg-primary/10 rounded"
+                                        className="w-full text-sm py-1 px-2 text-on-surface-variant hover:bg-primary/10 rounded cursor-pointer"
                                     >
                                         Clear Date
                                     </button>
@@ -283,7 +272,7 @@ export function EventSearch() {
                             clubUrl={club?.url}
                             isSaved={savedEventIds.has(event._id)}
                             onSaveToggle={handleSaveToggle}
-                            showSaveButton={true}
+                            showSaveButton={isAuth}
                         />
                     ))}
                 </div>
