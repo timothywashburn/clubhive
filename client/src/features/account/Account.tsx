@@ -5,6 +5,7 @@ import { ThemePreference, useThemeStore } from '../../stores/themeStore.ts';
 import { useAuthStore } from '../../stores/authStore.ts';
 import { DeleteDangerZone } from '../../components/DangerZone.tsx';
 import { useToast } from '../../hooks/useToast.ts';
+import { SegmentedButton } from '../../components/SegmentedButton.tsx';
 
 export function Account() {
     const { preference, setPreference } = useThemeStore();
@@ -461,24 +462,18 @@ export function Account() {
 
                                     <div className="md:col-span-2">
                                         <label className="block text-sm font-medium text-on-surface mb-2">Academic Year</label>
-                                        <div className="inline-flex bg-surface-variant rounded-lg p-1 border border-outline-variant flex-wrap gap-1">
-                                            {['first', 'second', 'third', 'fourth', 'more-than-4'].map(yearOption => (
-                                                <button
-                                                    key={yearOption}
-                                                    onClick={() => handleInputChange('year', yearOption)}
-                                                    className={`
-                                                        px-4 py-2 rounded-md text-sm font-medium transition-all duration-200 cursor-pointer
-                                                        ${
-                                                            formData.year === yearOption
-                                                                ? 'bg-primary text-on-primary shadow-sm'
-                                                                : 'text-on-surface-variant hover:text-on-surface hover:bg-surface'
-                                                        }
-                                                    `}
-                                                >
-                                                    {getYearLabel(yearOption)}
-                                                </button>
-                                            ))}
-                                        </div>
+                                        <SegmentedButton
+                                            value={formData.year}
+                                            onChange={value => handleInputChange('year', value)}
+                                            options={[
+                                                { value: 'first', label: '1st Year' },
+                                                { value: 'second', label: '2nd Year' },
+                                                { value: 'third', label: '3rd Year' },
+                                                { value: 'fourth', label: '4th Year' },
+                                                { value: 'more-than-4', label: '4+ Years' },
+                                            ]}
+                                            className="flex-wrap gap-1"
+                                        />
                                     </div>
                                 </div>
 
@@ -511,8 +506,10 @@ export function Account() {
                                         </p>
                                     </div>
 
-                                    <div className="inline-flex bg-surface-variant rounded-lg p-1 border border-outline-variant">
-                                        {[
+                                    <SegmentedButton
+                                        value={preference || 'system'}
+                                        onChange={value => setPreference(value as ThemePreference)}
+                                        options={[
                                             {
                                                 value: 'light',
                                                 label: 'Light',
@@ -528,24 +525,8 @@ export function Account() {
                                                 label: 'System',
                                                 icon: <Monitor className="w-4 h-4" />,
                                             },
-                                        ].map(option => (
-                                            <button
-                                                key={option.value}
-                                                onClick={() => setPreference(option.value as ThemePreference)}
-                                                className={`
-                                                    flex items-center gap-2 px-4 py-2 rounded-md text-sm font-medium transition-all duration-200 cursor-pointer
-                                                    ${
-                                                        preference === option.value || (!preference && option.value === 'system')
-                                                            ? 'bg-primary text-on-primary shadow-sm'
-                                                            : 'text-on-surface-variant hover:text-on-surface hover:bg-surface'
-                                                    }
-                                                `}
-                                            >
-                                                {option.icon}
-                                                {option.label}
-                                            </button>
-                                        ))}
-                                    </div>
+                                        ]}
+                                    />
                                 </div>
                             </div>
                         </div>
