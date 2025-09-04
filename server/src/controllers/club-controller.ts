@@ -101,7 +101,7 @@ export default class ClubController {
         }
     }
 
-    static async getClubsByUserId(userId: string): Promise<{ doc: ClubDoc; userRole: ClubRole }[]> {
+    static async getClubsByUserId(userId: string): Promise<{ doc: ClubDoc; userRole: ClubRole; joinDate: string }[]> {
         const memberships = await ClubMembership.find({ user: userId })
             .populate<{ club: ClubDoc }>({
                 path: 'club',
@@ -112,6 +112,7 @@ export default class ClubController {
         return memberships.map(membership => ({
             doc: membership.club,
             userRole: membership.role,
+            joinDate: membership.createdAt.toISOString(),
         }));
     }
 }

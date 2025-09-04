@@ -24,10 +24,11 @@ export const getMyClubsEndpoint: ApiEndpoint<undefined, GetMyClubsResponse> = {
 
             res.json({
                 success: true,
-                clubs: clubs.map(({ doc, userRole }) =>
+                clubs: clubs.map(({ doc, userRole, joinDate }) =>
                     userClubSchema.parse({
                         ...serializeRecursive(doc),
                         userRole,
+                        joinDate,
                     })
                 ),
             });

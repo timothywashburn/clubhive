@@ -47,42 +47,9 @@ export const useMyClubsData = () => {
         return colors[index];
     };
 
-    const getMembershipData = (club: UserClubData): MembershipData => {
-        const joinDates = {
-            '1': 'September 15, 2023',
-            '2': 'January 10, 2024',
-            '3': 'August 5, 2023',
-            '4': 'November 20, 2023',
-            '5': 'October 8, 2023',
-            '6': 'February 14, 2024',
-            '7': 'December 3, 2023',
-            '8': 'March 22, 2024',
-        };
-
-        const eventsAttended = {
-            '1': 12,
-            '2': 3,
-            '3': 8,
-            '4': 15,
-            '5': 6,
-            '6': 4,
-            '7': 9,
-            '8': 2,
-        };
-
-        return {
-            joinDate: joinDates[club._id as keyof typeof joinDates] || 'January 1, 2024',
-            eventsAttended: eventsAttended[club._id as keyof typeof eventsAttended] || 0,
-            totalEvents: eventsAttended[club._id as keyof typeof eventsAttended]
-                ? eventsAttended[club._id as keyof typeof eventsAttended] + Math.floor(Math.random() * 5)
-                : 5,
-        };
-    };
-
     return {
         clubs,
         loading,
         getClubColors,
-        getMembershipData,
     };
 };

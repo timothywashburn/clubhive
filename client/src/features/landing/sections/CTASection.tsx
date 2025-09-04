@@ -11,7 +11,10 @@ export function CTASection({ isActive, navigate }: CTASectionProps) {
     const title = 'Ready to Start?';
     const content = 'I have no idea what to put here, should it be a redirect to the signup page?';
     return (
-        <div className="w-full h-full flex flex-col items-center justify-center relative z-10" style={{ transform: 'scale(50)' }}>
+        <div
+            className="w-full h-full flex flex-col items-center justify-center relative z-10"
+            style={{ transform: 'scale(50)', pointerEvents: isActive ? 'auto' : 'none' }}
+        >
             {/* Top content - equal height to bottom */}
             <div className="flex-1 flex flex-col justify-end items-center pb-8 -mt-20">
                 <motion.h2

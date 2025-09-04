@@ -7,6 +7,7 @@ import { testEndpoint } from '@/api/misc/test';
 import { getTagsEndpoint } from '@/api/misc/tags-endpoint';
 import { changelogEndpoint } from '@/api/misc/changelog';
 import { versionEndpoint } from '@/api/misc/version';
+import { landingStatisticsEndpoint } from '@/api/misc/landing-statistics';
 
 import { createEventEndpoint } from '@/api/events/create-event';
 import { getEventByIdEndpoint } from '@/api/events/get-event-page';
@@ -38,6 +39,7 @@ import { getMyClubsEndpoint } from '@/api/me/clubs';
 import { getMyEventsEndpoint } from '@/api/me/events';
 import { getMeEndpoint } from '@/api/me/get-me';
 import { getClubMembersEndpoint } from '@/api/memberships/get-members';
+import { getClubOfficersEndpoint } from '@/api/memberships/get-officers';
 import { updateMemberRoleEndpoint } from '@/api/memberships/update-members';
 import { removeMemberEndpoint } from '@/api/memberships/delete-member';
 import { getDailyVenueAvailabilityEndpoint } from '@/api/venues/daily-availability';
@@ -54,6 +56,9 @@ import { getImageEndpoint } from '@/api/images/get-image';
 import { leaveMembershipEndpoint } from '@/api/memberships/leave-membership';
 import { deleteAccountEndpoint } from '@/api/me/delete-account';
 import { joinMembershipEndpoint } from '@/api/memberships/join-membership';
+import { changeEmailEndpoint } from '@/api/users/change-email';
+import { changePasswordEndpoint } from '@/api/me/change-password';
+import { get } from 'http';
 
 export default class ApiManager {
     private static instance: ApiManager;
@@ -73,6 +78,7 @@ export default class ApiManager {
         this.addEndpoint(getClubProfileEndpoint);
         this.addEndpoint(changelogEndpoint);
         this.addEndpoint(versionEndpoint);
+        this.addEndpoint(landingStatisticsEndpoint);
 
         // Club endpoints
         this.addEndpoint(createClubEndpoint);
@@ -90,6 +96,7 @@ export default class ApiManager {
         this.addEndpoint(tokenRefreshEndpoint);
         this.addEndpoint(checkTokenhEndpoint);
         this.addEndpoint(updateUserEndpoint);
+        this.addEndpoint(changeEmailEndpoint);
 
         // School endpoints
         this.addEndpoint(createSchoolEndpoint);
@@ -117,6 +124,7 @@ export default class ApiManager {
         this.addEndpoint(getMyClubsEndpoint);
         this.addEndpoint(getMyEventsEndpoint);
         this.addEndpoint(deleteAccountEndpoint);
+        this.addEndpoint(changePasswordEndpoint);
 
         // Venue endpoints
         this.addEndpoint(getDailyVenueAvailabilityEndpoint);
@@ -134,6 +142,7 @@ export default class ApiManager {
         this.addEndpoint(getClubMembersEndpoint);
         this.addEndpoint(updateMemberRoleEndpoint);
         this.addEndpoint(removeMemberEndpoint);
+        this.addEndpoint(getClubOfficersEndpoint);
 
         console.log(`registered api endpoints`);
     }
@@ -177,7 +186,7 @@ export default class ApiManager {
 
         if (refreshToken) {
             try {
-                const tokenPayload = AuthManager.verifyRefreshToken(refreshToken);
+                const tokenPayload = await AuthManager.verifyRefreshToken(refreshToken);
                 req.auth = AuthManager.toAuthInfo(tokenPayload);
             } catch (error) {
                 // Silently ignore invalid tokens - req.auth will remain undefined

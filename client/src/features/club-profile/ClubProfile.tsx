@@ -4,10 +4,10 @@ import { getTagColor } from '../find-clubs/utils/TagColors.ts';
 import JoinClubButton from './components/JoinClubButton.tsx';
 import { useImageData } from '../../hooks/useImageData.ts';
 import SocialLinks from '../find-clubs/components/SocialLinks.tsx';
-import { useNotifications } from '../../hooks/useNotifications.ts';
-import { useClubMembersData } from '../../hooks/useClubMembersData.ts';
+import { useClubOfficersData } from '../../hooks/useClubOfficersData.ts';
 import { useClubByUrl } from '../../hooks/useClubByUrl.ts';
 import { ClubRole } from '@clubhive/shared';
+import { Calendar, Clock, ArrowLeft } from 'lucide-react';
 
 function GalleryImage({ imageId }: { imageId: string }) {
     const { image, loading, error } = useImageData(imageId);
@@ -17,11 +17,7 @@ function GalleryImage({ imageId }: { imageId: string }) {
     }
 
     if (error || !image) {
-        return (
-            <div className="min-w-[200px] h-70 bg-outline-variant/10 rounded-md flex-shrink-0 flex items-center justify-center">
-                <span className="text-on-surface-variant text-sm">Failed to load</span>
-            </div>
-        );
+        return <div className="min-w-[200px] h-70 bg-outline-variant/10 rounded-md flex-shrink-0 flex items-center justify-center"></div>;
     }
 
     return (
@@ -38,18 +34,14 @@ export function ClubProfile() {
     const navigate = useNavigate();
     const [isOpen, setIsOpen] = useState(false);
 
-    const { notifs, isLoading: notificationsLoading } = useNotifications();
-    const clubNotifications = notifs.filter(notification => notification.club?.toString() === club?._id?.toString());
-
     const { image: clubLogoImage, error: logoError } = useImageData(club?.clubLogo ?? null);
     const logoUrl = clubLogoImage?.url && !logoError ? clubLogoImage.url : null;
 
-    const { members, loading: membersLoading } = useClubMembersData(club?._id?.toString());
+    const { officers, loading: officersLoading } = useClubOfficersData(club?._id?.toString());
 
-    const owner = useMemo(() => members.find(member => member.role === ClubRole.OWNER), [members]);
-
-    const principalMembers = useMemo(() => members.filter(member => member.role === ClubRole.PRINCIPAL_MEMBER), [members]);
-    const officerMembers = useMemo(() => members.filter(member => member.role === ClubRole.OFFICER), [members]);
+    const owner = useMemo(() => officers.find(officer => officer.role === ClubRole.OWNER), [officers]);
+    const principalMembers = useMemo(() => officers.filter(officer => officer.role === ClubRole.PRINCIPAL_MEMBER), [officers]);
+    const officerMembers = useMemo(() => officers.filter(officer => officer.role === ClubRole.OFFICER), [officers]);
 
     if (loading) return <div className="text-yellow-600 p-4">Loading club...</div>;
     if (!club) return <div className="text-red 500 p-4">Club not found.</div>;
@@ -60,9 +52,10 @@ export function ClubProfile() {
                 <div className="flex justify-start mt-3 mb-7">
                     <button
                         onClick={() => navigate('/clubs')}
-                        className="bg-surface text-on-surface border border-outline px-4 py-2 rounded-full hover:bg-outline-variant/30 font-medium transition-colors"
+                        className="bg-surface text-on-surface border border-outline px-4 py-2 rounded-md hover:bg-surface/90 hover:cursor-pointer font-medium transition-colors"
                     >
-                        ← Find Clubs
+                        <ArrowLeft className="inline-block mr-1 h-4" />
+                        Find Clubs
                     </button>
                 </div>
 
@@ -141,9 +134,16 @@ export function ClubProfile() {
                                                 {event.name}
                                             </Link>
                                         </h3>
-                                        <p className="text-sm text-on-surface-variant">
-                                            📅 {event.date} ⏰ {event.startTime}
-                                        </p>
+                                        <div className="flex items-center gap-4 text-sm text-on-surface-variant mt-2">
+                                            <div className="flex items-center gap-1">
+                                                <Calendar size={16} className="text-on-surface-variant" />
+                                                <span>{event.date}</span>
+                                            </div>
+                                            <div className="flex items-center gap-1">
+                                                <Clock size={16} className="text-on-surface-variant" />
+                                                <span>{event.startTime}</span>
+                                            </div>
+                                        </div>
                                         <p className="mt-2 text-on-surface-variant">{event.description}</p>
                                     </div>
                                 ))}
@@ -160,16 +160,23 @@ export function ClubProfile() {
                                 {club.pastEvents.map(event => (
                                     <div
                                         key={event._id}
-                                        className="min-w-[300px] p-4 border rounded-lg shadow-sm bg-surface opacity-75 border-outline-variant"
+                                        className="min-w-[300px] p-4 border rounded-lg shadow-sm bg-surface opacity-60 border-outline-variant"
                                     >
                                         <h3 className="font-semibold text-on-surface">
                                             <Link to={`/events/${event._id}`} className="text-primary hover:underline cursor-pointer">
                                                 {event.name}
                                             </Link>
                                         </h3>
-                                        <p className="text-sm text-on-surface-variant">
-                                            📅 {event.date} ⏰ {event.startTime}
-                                        </p>
+                                        <div className="flex items-center gap-4 text-sm text-on-surface-variant mt-2">
+                                            <div className="flex items-center gap-1">
+                                                <Calendar size={16} className="text-on-surface-variant" />
+                                                <span>{event.date}</span>
+                                            </div>
+                                            <div className="flex items-center gap-1">
+                                                <Clock size={16} className="text-on-surface-variant" />
+                                                <span>{event.startTime}</span>
+                                            </div>
+                                        </div>
                                         <p className="mt-2 text-on-surface-variant">{event.description}</p>
                                     </div>
                                 ))}
@@ -181,37 +188,6 @@ export function ClubProfile() {
                 {!club.upcomingEvents?.length && !club.pastEvents?.length && (
                     <p className="text-on-surface-variant">Check back for events soon!</p>
                 )}
-
-                <h2 className="mt-10 text-2xl font-semibold text-on-surface mb-4">Notifications</h2>
-                {/* notifications */}
-                <div className="bg-surface rounded-md p-6 border border-outline-variant">
-                    {notificationsLoading ? (
-                        <div className="text-on-surface-variant">Loading notifications...</div>
-                    ) : clubNotifications.length > 0 ? (
-                        <div className="space-y-3">
-                            {clubNotifications.slice(0, 5).map(notification => (
-                                <div key={notification._id} className="border-l-4 border-primary/20 pl-4 py-2">
-                                    <span className="text-xs text-on-surface-variant">
-                                        {new Date(notification.date).toLocaleDateString()}
-                                    </span>
-                                    <h4 className="font-medium text-on-surface">{notification.title}</h4>
-                                    <p className="text-sm text-on-surface-variant mt-1 whitespace-pre-line">{notification.body}</p>
-                                </div>
-                            ))}
-
-                            {clubNotifications.length > 5 && (
-                                <button
-                                    onClick={() => navigate('/notifications')}
-                                    className="text-primary hover:text-primary/90 text-sm mt-2"
-                                >
-                                    View all notifications →
-                                </button>
-                            )}
-                        </div>
-                    ) : (
-                        <div className="text-on-surface-variant text-sm italic">No notifications from this club yet.</div>
-                    )}
-                </div>
 
                 {/* gallery */}
                 <h2 className="text-2xl font-semibold text-on-surface mb-4 mt-8">Gallery</h2>
@@ -232,17 +208,12 @@ export function ClubProfile() {
                 {/* Owner */}
                 <h2 className="text-2xl font-semibold text-on-surface mb-4 mt-8">Owner</h2>
                 <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 mb-8">
-                    {owner ? (
-                        <div
-                            key={owner.user._id.toString()}
-                            className="bg-surface border border-outline-variant rounded-md p-4 flex flex-col items-center"
-                        >
-                            <h3 className="text-on-surface font-medium">{owner.user.name}</h3>
-                            <p className="text-on-surface-variant text-sm"> Major: {owner.user.major}</p>
-                            <p className="text-on-surface-variant text-sm">
-                                {' '}
-                                Year: {owner.user.year} ({owner.user.educationType})
-                            </p>
+                    {officersLoading ? (
+                        <p className="text-on-surface-variant text-sm">Loading officers...</p>
+                    ) : owner ? (
+                        <div className="bg-surface border border-outline-variant rounded-md p-4 flex flex-col items-center">
+                            <h3 className="text-on-surface font-medium">{owner.name}</h3>
+                            <p className="text-on-surface-variant text-sm capitalize">{owner.role}</p>
                         </div>
                     ) : (
                         <p className="text-on-surface-variant text-sm italic">No owner listed yet.</p>
@@ -252,18 +223,13 @@ export function ClubProfile() {
                 {/* Principal Members */}
                 <h2 className="text-2xl font-semibold text-on-surface mb-4 mt-8">Principal Members</h2>
                 <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 mb-8">
-                    {principalMembers.length > 0 ? (
-                        principalMembers.map(({ user, role }) => (
-                            <div
-                                key={user._id.toString()}
-                                className="bg-surface border border-outline-variant rounded-md p-4 flex flex-col items-center"
-                            >
-                                <h3 className="text-on-surface font-medium">{user.name}</h3>
-                                <p className="text-on-surface-variant text-sm"> Major: {user.major}</p>
-                                <p className="text-on-surface-variant text-sm">
-                                    {' '}
-                                    Year: {user.year} ({user.educationType})
-                                </p>
+                    {officersLoading ? (
+                        <p className="text-on-surface-variant text-sm">Loading officers...</p>
+                    ) : principalMembers.length > 0 ? (
+                        principalMembers.map((officer, index) => (
+                            <div key={index} className="bg-surface border border-outline-variant rounded-md p-4 flex flex-col items-center">
+                                <h3 className="text-on-surface font-medium">{officer.name}</h3>
+                                <p className="text-on-surface-variant text-sm capitalize">{officer.role}</p>
                             </div>
                         ))
                     ) : (
@@ -274,18 +240,13 @@ export function ClubProfile() {
                 {/* Officers */}
                 <h2 className="text-2xl font-semibold text-on-surface mb-4">Officers</h2>
                 <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-                    {officerMembers.length > 0 ? (
-                        officerMembers.map(({ user, role }) => (
-                            <div
-                                key={user._id.toString()}
-                                className="bg-surface border border-outline-variant rounded-md p-4 flex flex-col items-center"
-                            >
-                                <h3 className="text-on-surface font-medium">{user.name}</h3>
-                                <p className="text-on-surface-variant text-sm"> Major: {user.major}</p>
-                                <p className="text-on-surface-variant text-sm">
-                                    {' '}
-                                    Year: {user.year} ({user.educationType})
-                                </p>
+                    {officersLoading ? (
+                        <p className="text-on-surface-variant text-sm">Loading officers...</p>
+                    ) : officerMembers.length > 0 ? (
+                        officerMembers.map((officer, index) => (
+                            <div key={index} className="bg-surface border border-outline-variant rounded-md p-4 flex flex-col items-center">
+                                <h3 className="text-on-surface font-medium">{officer.name}</h3>
+                                <p className="text-on-surface-variant text-sm capitalize">{officer.role}</p>
                             </div>
                         ))
                     ) : (

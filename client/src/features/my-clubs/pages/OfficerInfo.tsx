@@ -262,20 +262,6 @@ export const OfficerInfo = memo(
                                 ))}
                             </div>
                         </div>
-
-                        {/* Profile Picture Upload */}
-                        <div>
-                            <ProfilePictureUploader
-                                clubId={club._id}
-                                maxFileSizeKB={5000}
-                                onSuccess={() => successToast('Updated Club Logo!')}
-                            />
-                        </div>
-
-                        {/* Gallery Pictures Upload */}
-                        <div>
-                            <GalleryPicturesUploader clubId={club._id} maxImages={10} maxFileSizeKB={5000} />
-                        </div>
                     </div>
 
                     <div className="bg-surface p-4 rounded shadow space-y-4 border border-outline-variant">
@@ -361,6 +347,20 @@ export const OfficerInfo = memo(
                                 />
                             </div>
                         )}
+
+                        {/* Profile Picture Upload */}
+                        <div>
+                            <ProfilePictureUploader
+                                clubId={club._id}
+                                maxFileSizeKB={5000}
+                                onSuccess={() => successToast('Updated Club Logo!')}
+                            />
+                        </div>
+
+                        {/* Gallery Pictures Upload */}
+                        <div>
+                            <GalleryPicturesUploader clubId={club._id} maxImages={10} maxFileSizeKB={5000} />
+                        </div>
                     </div>
                 </div>
 

@@ -33,11 +33,12 @@ export const getMyEventsEndpoint: ApiEndpoint<undefined, GetMyEventsResponse> = 
             for (const { doc: club } of userClubs) {
                 const clubEvents = await EventController.getEventsByClub(club._id.toString(), false); // only published
                 const futureEvents = clubEvents.filter(event => event.date >= today);
-                // Add club name and logo to each event
+                // Add club name, logo, and URL to each event
                 const eventsWithClubInfo = futureEvents.map(event => ({
                     ...event.toObject(),
                     clubName: club.name,
                     clubLogo: club.clubLogo,
+                    clubUrl: club.url,
                 }));
                 upcomingEvents.push(...eventsWithClubInfo);
             }
@@ -66,6 +67,7 @@ export const getMyEventsEndpoint: ApiEndpoint<undefined, GetMyEventsResponse> = 
                         ...event,
                         clubName: event.club?.name || 'Unknown Club',
                         clubLogo: event.club?.clubLogo || null,
+                        clubUrl: event.club?.url || null,
                     };
                 }); // Only include published saved events
 

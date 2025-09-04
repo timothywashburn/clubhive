@@ -37,7 +37,7 @@ export const signInEndpoint: ApiEndpoint<SignInRequest, SignInResponse> = {
         }
         try {
             if (await bcrypt.compare(password, auth.password)) {
-                const { accessToken, refreshToken } = AuthManager.generateTokenPair(auth._id.toString(), auth.userId.toString());
+                const { accessToken, refreshToken } = await AuthManager.generateTokenPair(auth._id.toString(), auth.userId.toString());
 
                 AuthManager.setRefreshTokenCookie(res, refreshToken);
 

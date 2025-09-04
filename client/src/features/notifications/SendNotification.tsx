@@ -3,7 +3,7 @@ import { useState } from 'react';
 import { formatDistanceToNow } from 'date-fns';
 import { NotificationImageUploader } from '../../components/image-uploaders/NotificationImageUploader';
 import type { ImageData } from '@clubhive/shared';
-import { postNotificationRequestSchema } from '@clubhive/shared/src/types/notification-types';
+import { postNotificationRequestSchema } from '@clubhive/shared';
 import { useToast } from '../../hooks/useToast';
 
 const { errorToast } = useToast();

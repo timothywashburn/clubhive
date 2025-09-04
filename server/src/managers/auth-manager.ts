@@ -1,6 +1,7 @@
 import jwt from 'jsonwebtoken';
 import { Response } from 'express';
 import { AuthInfo } from '@clubhive/shared';
+import { ConfigManager } from '@/services/config-manager';
 
 export interface TokenPayload {
     authId: string;
@@ -24,35 +25,38 @@ export class AuthManager {
         return AuthManager.instance;
     }
 
-    generateTokenPair(authId: string, userId: string): AccessTokens {
+    async generateTokenPair(authId: string, userId: string): Promise<AccessTokens> {
+        const config = await ConfigManager.getConfig();
         const payload: TokenPayload = { authId, userId };
 
-        const accessToken = jwt.sign(payload, process.env.ACCESS_TOKEN_SECRET!, {
+        const accessToken = jwt.sign(payload, config.jwtSecret, {
             expiresIn: '1d',
         });
 
-        const refreshToken = jwt.sign(payload, process.env.REFRESH_TOKEN_SECRET!, {
+        const refreshToken = jwt.sign(payload, config.jwtSecret, {
             expiresIn: '7d',
         });
 
         return { accessToken, refreshToken };
     }
 
-    refreshAccessToken(refreshToken: string): string {
-        const decoded = this.verifyRefreshToken(refreshToken);
+    async refreshAccessToken(refreshToken: string): Promise<string> {
+        const config = await ConfigManager.getConfig();
+        const decoded = await this.verifyRefreshToken(refreshToken);
         const payload: TokenPayload = {
             authId: decoded.authId,
             userId: decoded.userId,
         };
 
-        return jwt.sign(payload, process.env.ACCESS_TOKEN_SECRET!, {
+        return jwt.sign(payload, config.jwtSecret, {
             expiresIn: '15m',
         });
     }
 
-    verifyRefreshToken(refreshToken: string): TokenPayload {
+    async verifyRefreshToken(refreshToken: string): Promise<TokenPayload> {
         try {
-            const decoded = jwt.verify(refreshToken, process.env.REFRESH_TOKEN_SECRET!) as any;
+            const config = await ConfigManager.getConfig();
+            const decoded = jwt.verify(refreshToken, config.jwtSecret) as any;
             return {
                 authId: decoded.authId,
                 userId: decoded.userId,
@@ -62,9 +66,10 @@ export class AuthManager {
         }
     }
 
-    verifyAccessToken(accessToken: string): TokenPayload {
+    async verifyAccessToken(accessToken: string): Promise<TokenPayload> {
         try {
-            const decoded = jwt.verify(accessToken, process.env.ACCESS_TOKEN_SECRET!) as any;
+            const config = await ConfigManager.getConfig();
+            const decoded = jwt.verify(accessToken, config.jwtSecret) as any;
             return {
                 authId: decoded.authId,
                 userId: decoded.userId,

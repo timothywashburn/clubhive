@@ -25,7 +25,7 @@ export const tokenRefreshEndpoint: ApiEndpoint<undefined, RefreshResponse> = {
         }
 
         try {
-            const accessToken = AuthManager.refreshAccessToken(refreshToken);
+            const accessToken = await AuthManager.refreshAccessToken(refreshToken);
             res.json({
                 success: true,
                 accessToken: accessToken,

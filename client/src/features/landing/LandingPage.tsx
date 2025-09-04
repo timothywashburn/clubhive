@@ -269,7 +269,7 @@ function ContentSection({ sectionType, position, isActive, navigate }: ContentSe
             case SectionType.TEXT:
                 return <MissionSection isActive={isActive} />;
             case SectionType.FEATURES:
-                return <FeaturesSection isActive={isActive} />;
+                return <FeaturesSection isActive={isActive} navigate={navigate} />;
             case SectionType.DATA:
                 return <DataSection isActive={isActive} />;
             case SectionType.TESTIMONIALS:

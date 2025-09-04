@@ -8,7 +8,27 @@ import ClubCardSmall from '../features/find-clubs/components/ClubCardSmall';
 import FilterTagsButton from '../features/find-clubs/components/FilterTagsButton';
 import { getTagColor } from '../features/find-clubs/utils/TagColors';
 import SocialLinks from '../features/find-clubs/components/SocialLinks';
+import { ClubLogo } from '../components/ClubLogo.tsx';
 import { useImageData } from '../hooks/useImageData.ts';
+import JoinClubButton from '../features/club-profile/components/JoinClubButton.tsx';
+
+function GalleryImage({ imageId }: { imageId: string }) {
+    const { image, loading, error } = useImageData(imageId);
+
+    if (loading) {
+        return <div className="min-w-[200px] h-60 bg-outline-variant/10 rounded-md flex-shrink-0 animate-pulse" />;
+    }
+
+    if (error || !image) {
+        return <div className="min-w-[200px] h-60 bg-outline-variant/10 rounded-md flex-shrink-0 flex items-center justify-center"></div>;
+    }
+
+    return (
+        <div className="min-w-[200px] h-60 bg-surface border border-outline-variant rounded-md flex-shrink-0 overflow-hidden">
+            <img src={image.url} alt="Club gallery image" className="w-full h-full object-cover" />
+        </div>
+    );
+}
 
 export function Clubs() {
     const [searchTerm, setSearchTerm] = useState('');
@@ -17,10 +37,6 @@ export function Clubs() {
     const { clubs, isLoading, error } = useClubsData();
     const { tags } = useClubTagsData();
 
-    // this is how you get the club logo image data for the selected club
-    const { image: clubLogoImage, error: logoError } = useImageData(selectedClub?.clubLogo ?? null);
-    const logoUrl = clubLogoImage?.url && !logoError ? clubLogoImage.url : '/ucsd-logo.png';
-
     if (isLoading) return <p className="p-4 text-on-surface-variant">Loading clubs...</p>;
     if (error) return <p className="p-4 text-red-500">Error: {error}</p>;
 
@@ -28,8 +44,8 @@ export function Clubs() {
         <div className="h-full relative">
             <div className="mx-auto px-4 sm:px-6 lg:px-8 py-8">
                 <div className="mb-8">
-                    <h1 className="text-3xl font-bold text-on-background">Find Clubs</h1>
-                    <p className="text-on-background-variant mt-2">Discover clubs that match your interests</p>
+                    <h1 className="text-4xl font-bold text-on-background mb-2">Find Clubs</h1>
+                    <p className="text-lg text-on-background-variant">Discover clubs that match your interests</p>
                 </div>
 
                 <div className="flex h-10 mb-6">
@@ -39,7 +55,7 @@ export function Clubs() {
                         placeholder="Search clubs..."
                         value={searchTerm}
                         onChange={e => setSearchTerm(e.target.value)}
-                        className="block w-full pl-10 pr-3 py-2 border text-on-surface border-outline-variant rounded-md rounded-l-none leading-5 bg-surface placeholder-on-surface-variant focus:outline-none focus:border-primary"
+                        className="block w-full pl-3 pr-3 py-2 border text-on-surface border-outline-variant rounded-md rounded-l-none leading-5 bg-surface placeholder-on-surface-variant focus:outline-none focus:border-primary"
                     />
                 </div>
                 <div className="flex flex-col lg:flex-row gap-3">
@@ -81,17 +97,18 @@ export function Clubs() {
                     </div>
 
                     {/* Right: selected club detail */}
-                    <div className="w-full lg:w-2/3 bg-surface rounded-lg shadow p-6">
+                    <div className="w-full lg:w-2/3 bg-surface rounded-lg shadow p-6 h-[calc(100vh-10rem)] overflow-y-auto">
                         {selectedClub ? (
                             <>
                                 <div className="flex items-center gap-7">
                                     <div
                                         className={`w-40 h-40 rounded-full flex items-center justify-center text-sm font-semibold bg-primary-container text-primary`}
                                     >
-                                        <img
-                                            src={logoUrl}
-                                            alt={selectedClub?.name ?? 'Club Logo'}
-                                            className="w-40 h-40 object-cover rounded-full"
+                                        <ClubLogo
+                                            clubLogo={selectedClub.clubLogo}
+                                            clubName={selectedClub.name}
+                                            size="lg"
+                                            className="w-40 h-40"
                                         />
                                     </div>
                                     <div className="flex flex-col flex-1 overflow-hidden -mb-6">
@@ -101,7 +118,7 @@ export function Clubs() {
                                 </div>
                                 <hr className="my-4 border-t border-outline-variant" />
                                 <div className="flex justify-between items-center">
-                                    <div className="text-sm text-on-surface-variant mb-4 flex flex-wrap gap-2">
+                                    <div className="text-sm text-on-surface-variant flex flex-wrap gap-2">
                                         {selectedClub.tags.map(tag => (
                                             <span
                                                 key={tag._id}
@@ -118,14 +135,21 @@ export function Clubs() {
                                     />
                                 </div>
                                 <div className="mt-6 text-on-surface-variant">{selectedClub.description || 'No description'}</div>
-
-                                <div className="mt-6 flex justify-center">
+                                <div className="mt-6 overflow-x-auto">
+                                    <div className="flex space-x-4">
+                                        {selectedClub.pictures &&
+                                            selectedClub.pictures.length > 0 &&
+                                            selectedClub.pictures.map(pictureId => <GalleryImage key={pictureId} imageId={pictureId} />)}
+                                    </div>
+                                </div>
+                                <div className="mt-6 flex justify-center items-center gap-5">
                                     <Link
                                         to={`/club-profile/${selectedClub.url}`}
-                                        className="mt-6 inline-block px-4 py-2 bg-primary text-on-primary rounded-md hover:bg-primary-dark transition-colors"
+                                        className="inline-block px-4 py-2 bg-primary text-on-primary rounded-md hover:bg-primary/90 transition-colors"
                                     >
                                         View Profile
                                     </Link>
+                                    <JoinClubButton clubId={selectedClub._id} onJoinSuccess={() => {}} />
                                 </div>
                             </>
                         ) : (

@@ -75,15 +75,16 @@ export const Footer: React.FC = () => {
 
                         {/* Right Content */}
                         <div className="flex items-center gap-3 text-sm text-on-surface-variant lg:justify-end justify-center">
+                            {/*TODO: Future Implementation*/}
+                            {/*<a*/}
+                            {/*    href="/status"*/}
+                            {/*    className="flex items-center gap-1 text-on-surface-variant hover:text-primary transition-colors"*/}
+                            {/*>*/}
+                            {/*    <Activity size={14} />*/}
+                            {/*    <span>Status</span>*/}
+                            {/*</a>*/}
                             <a
-                                href="/status"
-                                className="flex items-center gap-1 text-on-surface-variant hover:text-primary transition-colors"
-                            >
-                                <Activity size={14} />
-                                <span>Status</span>
-                            </a>
-                            <a
-                                href="#"
+                                href="#" // TODO: Add link to source code once public
                                 className="flex items-center gap-1 text-on-surface-variant hover:text-primary transition-colors"
                                 aria-label="Source Code"
                             >

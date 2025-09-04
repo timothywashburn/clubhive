@@ -32,6 +32,19 @@ async function seed() {
     await Notification.deleteMany({});
     await UserNotification.deleteMany({});
 
+    await ClubhiveConfigModel.create({
+        emsApi: {
+            host: process.env.EMS_API_BASE_URL || '',
+            token: process.env.EMS_API_TOKEN || '',
+        },
+        jwtSecret: process.env.JWT_SECRET || '',
+        cloudinary: {
+            cloudName: process.env.CLOUDINARY_CLOUD_NAME || '',
+            apiKey: process.env.CLOUDINARY_API_KEY || '',
+            apiSecret: process.env.CLOUDINARY_API_SECRET || '',
+        },
+    });
+
     const [ucsd] = await School.insertMany([
         {
             _id: UCSD_SCHOOL_ID,
@@ -605,12 +618,6 @@ async function seed() {
     }
 
     await Event.insertMany(otherClubsEvents);
-
-    // Seed configuration
-    await ClubhiveConfigModel.create({
-        emsApiBaseUrl: process.env.EMS_API_BASE_URL || '',
-        emsApiToken: process.env.EMS_API_TOKEN || '',
-    });
 
     console.log('Seeding complete!');
     mongoose.connection.close();

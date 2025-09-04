@@ -3,7 +3,7 @@ import { Link } from 'react-router';
 import { useNavigate } from 'react-router';
 import { useAuthStore } from '../../stores/authStore.ts';
 import { useToast } from '../../hooks/useToast.ts';
-import { signInRequestSchema } from '@clubhive/shared/src/types/auth-types';
+import { signInRequestSchema } from '@clubhive/shared';
 
 export function SignIn() {
     const [email, setEmail] = useState('');
@@ -100,6 +100,7 @@ export function SignIn() {
 
                         <div className="flex items-center justify-between">
                             <div className="text-sm">
+                                {/* TODO: implement */}
                                 <a href="#" className="font-medium text-primary hover:text-primary/90">
                                     Forgot your password?
                                 </a>

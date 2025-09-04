@@ -108,8 +108,6 @@ export const editClubInfo = (initialData, clubId, resetTagsCallback) => {
                         website: data.socials?.website ? data.socials.website.replace(/^https?:\/\//, '').trim() : undefined,
                     },
                     tags: tagsToSave.map(tag => tag._id).filter(Boolean) || undefined,
-                    clubLogo: data.clubLogo || undefined,
-                    pictures: data.pictures || undefined,
                 };
             };
 

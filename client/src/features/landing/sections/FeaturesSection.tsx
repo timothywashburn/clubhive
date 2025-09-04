@@ -1,21 +1,35 @@
 import React from 'react';
 import { motion } from 'framer-motion';
-import { Users, Calendar, Target } from 'lucide-react';
+import { Users, Calendar, UserPlus } from 'lucide-react';
 
 interface FeaturesSectionProps {
     isActive: boolean;
+    navigate: (path: string) => void;
 }
 
-export function FeaturesSection({ isActive }: FeaturesSectionProps) {
+export function FeaturesSection({ isActive, navigate }: FeaturesSectionProps) {
     const title = 'Features';
     const subtitle = 'Get started exploring clubs, searching for events, or by creating an account to manage your own club!';
+
     const features = [
-        { icon: Users, title: 'Explore Clubs', description: '...' },
-        { icon: Calendar, title: 'Discover Events', description: '...' },
-        { icon: Target, title: 'Create an Account', description: '...' },
+        {
+            icon: Users,
+            title: 'Browse Clubs',
+            route: '/clubs',
+        },
+        {
+            icon: Calendar,
+            title: 'View Events',
+            route: '/events',
+        },
+        {
+            icon: UserPlus,
+            title: 'Sign Up',
+            route: '/signup',
+        },
     ];
     return (
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10" style={{ opacity: isActive ? 1 : 0.7 }}>
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-20" style={{ opacity: isActive ? 1 : 0.7 }}>
             <motion.div
                 className="text-center mb-16"
                 initial={false}
@@ -49,16 +63,16 @@ export function FeaturesSection({ isActive }: FeaturesSectionProps) {
                 {features.map((feature, index) => (
                     <motion.div
                         key={`feature-${index}`}
-                        className="text-center p-8 bg-background/80 backdrop-blur-sm rounded-xl shadow-lg border border-outline-variant hover:shadow-xl transition-all duration-300 hover:scale-105"
+                        onClick={() => navigate(feature.route)}
+                        className="group text-center p-4 bg-background/60 hover:bg-background/80 rounded-xl border border-outline-variant/50 hover:border-primary/60 transition-all duration-300 hover:scale-102 flex flex-col items-center justify-center cursor-pointer min-h-[140px]"
                         initial={false}
                         animate={isActive ? { opacity: 1, scale: 1 } : { opacity: 0.7, scale: 0.8 }}
                         transition={{ duration: 0.6, delay: index * 0.15 + 0.2, ease: 'easeOut' }}
                     >
-                        <div className="w-16 h-16 mx-auto mb-6 bg-primary/10 rounded-full flex items-center justify-center">
-                            <feature.icon className="w-8 h-8 text-primary" />
-                        </div>
-                        <h3 className="text-xl font-semibold text-on-surface mb-4">{feature.title}</h3>
-                        <p className="text-on-surface-variant">{feature.description}</p>
+                        <feature.icon className="w-10 h-10 text-primary mb-3 group-hover:scale-110 transition-transform duration-200" />
+                        <h3 className="text-lg font-semibold text-on-surface group-hover:text-primary transition-colors">
+                            {feature.title}
+                        </h3>
                     </motion.div>
                 ))}
             </motion.div>

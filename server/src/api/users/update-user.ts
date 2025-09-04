@@ -1,9 +1,9 @@
 import { ApiEndpoint, AuthType } from '@/types/api-types';
-import { UpdateUserResponse, UpdateUserRequest, updateUserRequestSchema } from '@clubhive/shared/src';
+import { UpdateUserResponse, UpdateUserRequest, updateUserRequestSchema } from '@clubhive/shared';
 import UserController from '@/controllers/user-controller';
 
 export const updateUserEndpoint: ApiEndpoint<UpdateUserRequest, UpdateUserResponse> = {
-    path: '/api/user',
+    path: '/api/user/change-email',
     method: 'put',
     auth: AuthType.VERIFIED_EMAIL,
     handler: async (req, res) => {

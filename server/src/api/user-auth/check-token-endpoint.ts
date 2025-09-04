@@ -25,7 +25,7 @@ export const checkTokenhEndpoint: ApiEndpoint<undefined, RefreshResponse> = {
         }
 
         try {
-            AuthManager.verifyRefreshToken(refreshToken);
+            await AuthManager.verifyRefreshToken(refreshToken);
             res.json({
                 success: true,
                 hasToken: true,
