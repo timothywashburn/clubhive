@@ -1,4 +1,5 @@
 import mongoose, { Schema, InferSchemaType, HydratedDocument } from 'mongoose';
+import { ClubStatus } from '@clubhive/shared';
 
 const schema = new Schema(
     {
@@ -24,6 +25,14 @@ const schema = new Schema(
         },
         url: {
             type: String,
+        },
+        joinRequirements: {
+            type: String,
+        },
+        status: {
+            type: String,
+            enum: Object.values(ClubStatus),
+            required: true,
         },
         socials: {
             website: {

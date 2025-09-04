@@ -1,6 +1,7 @@
 import React, { useEffect, useState, useRef } from 'react';
 import { motion, AnimatePresence, stagger } from 'framer-motion';
 import { X, FileText, Calendar, Bug, Plus, GitBranch, Minus, Settings, Edit2 } from 'lucide-react';
+import { useToast } from '../../hooks/useToast';
 
 interface ChangelogVersion {
     version: string;
@@ -19,23 +20,20 @@ interface ChangelogModalProps {
 const ChangelogModal: React.FC<ChangelogModalProps> = ({ isOpen, onClose }) => {
     const [changelogVersions, setChangelogVersions] = useState<ChangelogVersion[]>([]);
     const [isLoading, setIsLoading] = useState(false);
-    const [error, setError] = useState<string | null>(null);
     const contentRef = useRef<HTMLDivElement>(null);
+    const { errorToast } = useToast();
 
     useEffect(() => {
         if (isOpen) {
             fetchChangelog();
         } else {
-            // Reset state when modal closes
             setChangelogVersions([]);
             setIsLoading(false);
-            setError(null);
         }
     }, [isOpen]);
 
     const fetchChangelog = async () => {
         setIsLoading(true);
-        setError(null);
 
         try {
             await new Promise(resolve => setTimeout(resolve, 100));
@@ -51,7 +49,8 @@ const ChangelogModal: React.FC<ChangelogModalProps> = ({ isOpen, onClose }) => {
                 throw new Error(data.error?.message || 'Failed to fetch changelog');
             }
         } catch (err) {
-            setError(err instanceof Error ? err.message : 'Unknown error');
+            const errorMessage = err instanceof Error ? err.message : 'Unknown error';
+            errorToast(`Failed to load changelog: ${errorMessage}`);
         } finally {
             setIsLoading(false);
         }
@@ -155,7 +154,7 @@ const ChangelogModal: React.FC<ChangelogModalProps> = ({ isOpen, onClose }) => {
                                 height: '120px',
                             }}
                             animate={{
-                                height: isLoading || error || changelogVersions.length === 0 ? '120px' : 'auto',
+                                height: isLoading || changelogVersions.length === 0 ? '120px' : 'auto',
                             }}
                             transition={{ duration: 0.3, ease: 'easeInOut' }}
                         >
@@ -163,13 +162,6 @@ const ChangelogModal: React.FC<ChangelogModalProps> = ({ isOpen, onClose }) => {
                                 {isLoading ? (
                                     <div className="flex items-center justify-center py-8">
                                         <div className="text-on-surface-variant">Loading changelog...</div>
-                                    </div>
-                                ) : error ? (
-                                    <div className="flex items-center justify-center py-8">
-                                        <div className="text-error text-center">
-                                            <p>Failed to load changelog</p>
-                                            <p className="text-sm text-on-surface-variant mt-2">{error}</p>
-                                        </div>
                                     </div>
                                 ) : changelogVersions.length === 0 ? (
                                     <div className="flex items-center justify-center py-8">

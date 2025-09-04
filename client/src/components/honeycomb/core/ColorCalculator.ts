@@ -1,7 +1,7 @@
 import { createNoise2D } from 'simplex-noise';
-import { ColorData, HoneycombColors } from '../config/types.ts';
-import { GENERATION_CONFIG } from '../config/animation.ts';
-import { calculateBlendFactor, hexToHsl } from '../config/utils.ts';
+import { ColorData, HoneycombColors } from '../config';
+import { GENERATION_CONFIG } from '../config';
+import { calculateBlendFactor, hexToHsl } from '../config';
 import { useThemeStore } from '../../../stores/themeStore.ts';
 
 export class ColorCalculator {

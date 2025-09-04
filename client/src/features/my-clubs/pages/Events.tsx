@@ -34,9 +34,15 @@ export function Events({ events, loading, error, onEditEvent }: EventsProps) {
         );
     }
 
+    const sortedEvents = [...events].sort((a, b) => {
+        const dateA = new Date(a.date + 'T' + (a.startTime || '00:00'));
+        const dateB = new Date(b.date + 'T' + (b.startTime || '00:00'));
+        return dateA.getTime() - dateB.getTime();
+    });
+
     return (
         <div className="space-y-4">
-            {events.map(event => (
+            {sortedEvents.map(event => (
                 <div
                     key={event._id}
                     onClick={() => onEditEvent?.(event)}

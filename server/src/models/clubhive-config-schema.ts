@@ -1,17 +1,46 @@
-import mongoose from 'mongoose';
+import mongoose, { Schema, InferSchemaType, HydratedDocument } from 'mongoose';
 
-const clubhiveConfigSchema = new mongoose.Schema(
+const schema = new Schema(
     {
-        emsApiBaseUrl: {
+        emsApi: {
+            type: {
+                host: {
+                    type: String,
+                    required: true,
+                },
+                token: {
+                    type: String,
+                    required: true,
+                },
+            },
+            required: true,
+        },
+        jwtSecret: {
             type: String,
             required: true,
         },
-        emsApiToken: {
-            type: String,
+        cloudinary: {
+            type: {
+                cloudName: {
+                    type: String,
+                    required: true,
+                },
+                apiKey: {
+                    type: String,
+                    required: true,
+                },
+                apiSecret: {
+                    type: String,
+                    required: true,
+                },
+            },
             required: true,
         },
     },
     { timestamps: true }
 );
 
-export const ClubhiveConfigModel = mongoose.model('ClubhiveConfig', clubhiveConfigSchema);
+export type ClubhiveConfigSchema = InferSchemaType<typeof schema>;
+export type ClubhiveConfigDoc = HydratedDocument<InferSchemaType<typeof schema>>;
+
+export const ClubhiveConfigModel = mongoose.model('ClubhiveConfig', schema);

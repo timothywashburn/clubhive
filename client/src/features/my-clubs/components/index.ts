@@ -1,6 +1,5 @@
 export { ClubSelector } from './ClubSelector';
 export { ClubHeader } from './ClubHeader';
-export { TabNavigation } from './TabNavigation';
 export { MemberInfo } from '../pages/MemberInfo.tsx';
 export { OfficerInfo } from '../pages/OfficerInfo.tsx';
 export { Events } from '../pages/Events.tsx';
@@ -8,3 +7,4 @@ export { Stats } from '../pages/Stats.tsx';
 export { Membership } from '../pages/Membership.tsx';
 export { EmptyState } from './EmptyState';
 export { RegisterClubButton } from './RegisterClubButton';
+export { Members } from '../pages/Members';

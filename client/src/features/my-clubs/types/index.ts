@@ -4,6 +4,7 @@ export type TabType =
     | 'events'
     | 'planner'
     | 'stats'
+    | 'members'
     | 'event-details'
     | 'event-location'
     | 'event-tap'
@@ -17,6 +18,4 @@ export interface TabItem {
 
 export interface MembershipData {
     joinDate: string;
-    eventsAttended: number;
-    totalEvents: number;
 }

@@ -3,9 +3,13 @@ import { UserClubData } from '../../../../../shared/src/types/club-types.ts';
 import { useState, useMemo, useEffect } from 'react';
 import MyLineChart from '../components/stats/LineChart.tsx';
 import MyPolarChart from '../components/stats/PolarChart.tsx';
+import { SegmentedButton, SegmentedButtonOption } from '../../../components/SegmentedButton.tsx';
 
 interface StatsProps {
     club: UserClubData;
+    isOfficer?: boolean;
+    statsVisibleToAll?: boolean;
+    setStatsVisibleToAll?: (value: boolean) => void;
 }
 
 interface MemberDataPoint {
@@ -64,7 +68,7 @@ const mockData = {
     ] as MajorDistribution[],
 };
 
-export function Stats({ club }: StatsProps) {
+export function Stats({ club, isOfficer, setStatsVisibleToAll, statsVisibleToAll }: StatsProps) {
     const [view, setView] = useState<'all-time' | 'last-12-months' | 'last-30-days' | 'yearly'>('all-time');
     const [memberChangesData, setMemberChangesData] = useState<MemberDataPoint[]>(mockData.memberChanges);
     const [majorDistribution, setMajorDistribution] = useState<MajorDistribution[]>(mockData.majorDistribution);
@@ -183,89 +187,85 @@ export function Stats({ club }: StatsProps) {
     }, [view, filteredMemberChangesData, memberChangesData, initialCount]);
 
     return (
-        <div className="space-y-6">
+        <div className="space-y-6 relative">
             <div className="bg-surface rounded-lg shadow p-6 border border-outline-variant">
-                <h3 className="text-3xl font-bold text-primary mb-5">Club Statistics</h3>
-
-                <div className="grid grid-cols-3 gap-20 mb-8">
-                    <div>
+                <div className="flex items-center justify-between mb-5">
+                    <h3 className="text-3xl font-bold text-on-surface">Club Statistics</h3>
+                    {isOfficer && setStatsVisibleToAll && (
+                        <button
+                            onClick={() => setStatsVisibleToAll(!statsVisibleToAll)}
+                            className="px-4 py-2 text-sm font-medium bg-primary text-on-primary hover:bg-primary/90 rounded-md transition-colors"
+                        >
+                            {statsVisibleToAll ? 'Hide Stats from Users' : 'Make Stats Visible to Everyone'}
+                        </button>
+                    )}
+                </div>
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+                    <div className="text-center">
                         <p className="text-lg font-medium text-on-surface mb-2">Member Count</p>
-                        <p className="text-lg font-small text-on-surface mb-2 ml-10">{memberCount}</p>
+                        <p className="text-2xl font-bold text-primary">{memberCount}</p>
                     </div>
-                    <div>
+                    <div className="text-center">
                         <p className="text-lg font-medium text-on-surface mb-2">Member Change</p>
-                        <p className="text-lg font-small text-on-surface mb-2 ml-6">
+                        <p className="text-2xl font-bold text-success">
                             +{memberChange} (+{memberChangePercent}%)
                         </p>
                     </div>
-                    <div>
+                    <div className="text-center">
                         <p className="text-lg font-medium text-on-surface mb-2">Event Saves Per Month</p>
-                        <p className="text-lg font-small text-on-surface mb-2 ml-20">{eventSavesPerMonth}</p>
+                        <p className="text-2xl font-bold text-primary">{eventSavesPerMonth}</p>
                     </div>
                 </div>
+            </div>
 
-                <div className="bg-surface rounded-lg shadow p-6 border border-outline-variant">
-                    <h3 className="text-lg font-medium text-on-surface mb-4">Statistics Visualization</h3>
+            <div className="bg-surface rounded-lg shadow p-6 border border-outline-variant">
+                <h3 className="text-lg font-medium text-on-surface mb-4">Statistics Visualization</h3>
 
-                    <div className="flex gap-4 mb-4">
-                        <button
-                            onClick={() => setView('all-time')}
-                            className={`px-4 py-2 rounded-md ${
-                                view === 'all-time' ? 'bg-primary text-white' : 'bg-gray-200 text-gray-700'
-                            }`}
-                        >
-                            All Time
-                        </button>
-                        <button
-                            onClick={() => setView('last-12-months')}
-                            className={`px-4 py-2 rounded-md ${
-                                view === 'last-12-months' ? 'bg-primary text-white' : 'bg-gray-200 text-gray-700'
-                            }`}
-                        >
-                            Last 12 Months
-                        </button>
-                        <button
-                            onClick={() => setView('last-30-days')}
-                            className={`px-4 py-2 rounded-md ${
-                                view === 'last-30-days' ? 'bg-primary text-white' : 'bg-gray-200 text-gray-700'
-                            }`}
-                        >
-                            Last 30 Days
-                        </button>
-                        <button
-                            onClick={() => setView('yearly')}
-                            className={`px-4 py-2 rounded-md ${view === 'yearly' ? 'bg-primary text-white' : 'bg-gray-200 text-gray-700'}`}
-                        >
-                            Yearly View
-                        </button>
+                <div className="mb-6">
+                    <SegmentedButton
+                        value={view}
+                        onChange={setView}
+                        options={
+                            [
+                                { value: 'all-time', label: 'All Time' },
+                                { value: 'last-12-months', label: 'Last 12 Months' },
+                                { value: 'last-30-days', label: 'Last 30 Days' },
+                                { value: 'yearly', label: 'Yearly View' },
+                            ] as SegmentedButtonOption<'all-time' | 'last-12-months' | 'last-30-days' | 'yearly'>[]
+                        }
+                    />
+                </div>
+
+                <h4 className="text-xl font-semibold mb-4 text-on-surface">
+                    {view === 'all-time'
+                        ? 'All Time Member Count'
+                        : view === 'last-12-months'
+                          ? 'Last 12 Months Member Count'
+                          : view === 'last-30-days'
+                            ? 'Last 30 Days Member Count'
+                            : 'Yearly Member Count'}
+                </h4>
+
+                <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mt-8">
+                    <div className="h-96">
+                        <MyLineChart data={lineChartData} view={view} />
                     </div>
-
-                    <h4 className="text-xl font-semibold mb-4">
-                        {view === 'all-time'
-                            ? 'All Time Member Count'
-                            : view === 'last-12-months'
-                              ? 'Last 12 Months Member Count'
-                              : view === 'last-30-days'
-                                ? 'Last 30 Days Member Count'
-                                : 'Yearly Member Count'}
-                    </h4>
-
-                    <div className="rounded-lg flex">
-                        <div
-                            style={{
-                                width: '45%',
-                                height: '400px',
-                                marginLeft: '10px',
-                                marginRight: '30px',
-                                marginTop: '50px',
-                            }}
-                        >
-                            <MyLineChart data={lineChartData} view={view} />
-                        </div>
-                        <div style={{ width: '45%', height: '400px', marginLeft: '40px', marginRight: '0px' }}>
-                            <MyPolarChart data={majorDistribution} />
-                        </div>
+                    <div className="h-96">
+                        <MyPolarChart data={majorDistribution} />
                     </div>
+                </div>
+            </div>
+
+            {/* Coming Soon Overlay */}
+            <div className="absolute inset-0 z-10 flex items-center justify-center">
+                <div className="absolute inset-0 backdrop-blur-[4px] rounded-lg" />
+
+                <div className="relative bg-surface rounded-lg shadow-lg p-8 border border-outline-variant max-w-md mx-4 text-center">
+                    <h3 className="text-2xl font-bold text-primary mb-4">Coming Soon!</h3>
+                    <p className="text-on-surface-variant mb-6">
+                        Club statistics and analytics are currently in development. Stay tuned for detailed insights about your club's
+                        growth and engagement!
+                    </p>
                 </div>
             </div>
         </div>

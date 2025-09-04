@@ -1,7 +1,8 @@
 import { Eye, Save, X } from 'lucide-react';
 import { motion } from 'framer-motion';
 import { UserClubData, EventData } from '@clubhive/shared';
-import { useMyClubsData } from '../hooks';
+import { useMyClubsData } from '../../../hooks/useMyClubsData.ts';
+import { ClubLogo } from '../../../components/ClubLogo.tsx';
 
 interface ClubHeaderProps {
     club: UserClubData;
@@ -11,6 +12,8 @@ interface ClubHeaderProps {
     selectedEvent?: EventData | null;
     onEventSave?: () => void;
     onEventCancel?: () => void;
+    saveLoading?: boolean;
+    isCreateMode?: boolean;
 }
 
 export function ClubHeader({
@@ -21,19 +24,14 @@ export function ClubHeader({
     selectedEvent,
     onEventSave,
     onEventCancel,
+    saveLoading = false,
+    isCreateMode = false,
 }: ClubHeaderProps) {
-    const { getClubColors } = useMyClubsData();
-
     return (
         <div className="flex items-center justify-between mb-4">
             <div className="flex items-center space-x-4">
-                <div className={`w-12 h-12 rounded-full flex items-center justify-center text-lg font-bold ${getClubColors(club._id)}`}>
-                    {club.name
-                        .split(' ')
-                        .map(word => word[0])
-                        .join('')
-                        .toUpperCase()
-                        .slice(0, 2)}
+                <div className="w-12 h-12 rounded-full flex items-center justify-center text-lg font-bold overflow-hidden">
+                    <ClubLogo clubLogo={club.clubLogo} clubName={club.name} size="md" className="w-12 h-12" />
                 </div>
                 <div>
                     <div className="flex items-center gap-2">
@@ -42,8 +40,14 @@ export function ClubHeader({
                             <>
                                 <span className="text-on-surface-variant text-xl">→</span>
                                 <motion.div
-                                    layoutId={`event-${selectedEvent._id}`}
-                                    className="bg-primary text-on-primary px-3 py-2 rounded-lg font-medium text-sm"
+                                    layoutId={
+                                        selectedEvent._id.startsWith('create-event') || selectedEvent._id.startsWith('temp-')
+                                            ? selectedEvent._id
+                                            : `event-${selectedEvent._id}`
+                                    }
+                                    className={`px-3 py-2 rounded-lg font-medium text-sm ${
+                                        selectedEvent.published ? 'bg-primary text-on-primary' : 'bg-secondary text-on-secondary'
+                                    }`}
                                     transition={{ duration: 0.6, ease: [0.4, 0, 0.2, 1] }}
                                 >
                                     {selectedEvent.name}
@@ -60,14 +64,16 @@ export function ClubHeader({
                         <>
                             <button
                                 onClick={onEventSave}
-                                className="flex items-center px-4 py-2 rounded-lg text-sm font-medium transition-colors cursor-pointer bg-primary text-on-primary hover:bg-primary/90"
+                                disabled={saveLoading}
+                                className="flex items-center px-4 py-2 rounded-lg text-sm font-medium transition-colors cursor-pointer bg-primary text-on-primary hover:bg-primary/90 disabled:opacity-50 disabled:cursor-not-allowed"
                             >
                                 <Save className="w-4 h-4 mr-2" />
-                                Save
+                                {saveLoading ? (isCreateMode ? 'Creating...' : 'Saving...') : isCreateMode ? 'Create' : 'Save'}
                             </button>
                             <button
                                 onClick={onEventCancel}
-                                className="flex items-center px-4 py-2 rounded-lg text-sm font-medium transition-colors cursor-pointer border border-outline-variant text-on-surface hover:bg-surface-variant"
+                                disabled={saveLoading}
+                                className="flex items-center px-4 py-2 rounded-lg text-sm font-medium transition-colors cursor-pointer border border-outline-variant text-on-surface hover:bg-surface-variant disabled:opacity-50 disabled:cursor-not-allowed"
                             >
                                 <X className="w-4 h-4 mr-2" />
                                 Cancel

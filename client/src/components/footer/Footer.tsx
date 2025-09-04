@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useLocation } from 'react-router';
 import { Code, Mail, GitBranch, Activity, FileText, Shield, ScrollText } from 'lucide-react';
-import { DiscordIcon } from '../DiscordIcon';
+import { DiscordIcon } from '../icons/DiscordIcon.tsx';
 import ChangelogModal from './ChangelogModal';
 
 export const Footer: React.FC = () => {
@@ -29,9 +29,7 @@ export const Footer: React.FC = () => {
     return (
         <div style={{ zIndex: 1 }}>
             <ChangelogModal isOpen={isChangelogOpen} onClose={() => setIsChangelogOpen(false)} />
-            <footer
-                className={`${isAboutPage ? 'bg-black/20 backdrop-blur-md border-t border-white/10' : 'bg-surface border-t border-divider'}`}
-            >
+            <footer className={`bg-surface/20 backdrop-blur-[4px] border-t border-outline/50 flex-shrink-0`}>
                 <div className="max-w-7xl mx-auto px-6 lg:px-8 py-6">
                     <div className="flex flex-col lg:flex-row justify-between items-center gap-4">
                         {/* Left Content */}
@@ -77,15 +75,16 @@ export const Footer: React.FC = () => {
 
                         {/* Right Content */}
                         <div className="flex items-center gap-3 text-sm text-on-surface-variant lg:justify-end justify-center">
+                            {/*TODO: Future Implementation*/}
+                            {/*<a*/}
+                            {/*    href="/status"*/}
+                            {/*    className="flex items-center gap-1 text-on-surface-variant hover:text-primary transition-colors"*/}
+                            {/*>*/}
+                            {/*    <Activity size={14} />*/}
+                            {/*    <span>Status</span>*/}
+                            {/*</a>*/}
                             <a
-                                href="/status"
-                                className="flex items-center gap-1 text-on-surface-variant hover:text-primary transition-colors"
-                            >
-                                <Activity size={14} />
-                                <span>Status</span>
-                            </a>
-                            <a
-                                href="#"
+                                href="#" // TODO: Add link to source code once public
                                 className="flex items-center gap-1 text-on-surface-variant hover:text-primary transition-colors"
                                 aria-label="Source Code"
                             >

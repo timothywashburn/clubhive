@@ -1,7 +1,9 @@
 import { Crown, Shield, Search, ChevronLeft, ChevronRight } from 'lucide-react';
+import { RegisterClubButton } from './RegisterClubButton.tsx';
 import { useNavigate } from 'react-router';
 import { UserClubData } from '@clubhive/shared';
-import { useMyClubsData } from '../hooks';
+import { useMyClubsData } from '../../../hooks/useMyClubsData.ts';
+import { ClubLogo } from '../../../components/ClubLogo.tsx';
 
 interface ClubSelectorProps {
     clubs: UserClubData[];
@@ -98,9 +100,14 @@ export function ClubSelector({
                         >
                             <div className={`flex items-center transition-all duration-300 ${isMinimized ? 'justify-center' : ''}`}>
                                 <div
-                                    className={`w-10 h-10 rounded-full flex items-center justify-center text-sm font-semibold ${getClubColors(club._id)} relative flex-shrink-0 transition-all duration-300 ${isMinimized ? '' : 'mr-3'}`}
+                                    className={`w-10 h-10 rounded-full flex items-center justify-center text-sm font-semibold relative flex-shrink-0 transition-all duration-300 overflow-hidden ${isMinimized ? '' : 'mr-3'}`}
                                 >
-                                    {clubInitials}
+                                    <ClubLogo
+                                        clubLogo={club.clubLogo}
+                                        clubName={club.name}
+                                        size="md"
+                                        className="w-10 h-10" // Override size to match your design
+                                    />
                                     {isMinimized && club.userRole === 'owner' && (
                                         <Crown size={16} className="text-warning absolute -top-1.5 -right-1.5" />
                                     )}
@@ -132,6 +139,7 @@ export function ClubSelector({
                         </button>
                     );
                 })}
+                <RegisterClubButton isMinimized={isMinimized} isAnimating={isAnimating} />
             </div>
         </div>
     );

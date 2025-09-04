@@ -1,6 +1,6 @@
 import * as d3 from 'd3';
 import { Delaunay } from 'd3-delaunay';
-import { ColorData, HoneycombColors, Point } from '../config/types.ts';
+import { ColorData, HoneycombColors, Point } from '../config';
 
 export class HoneycombRenderer {
     private ctx: CanvasRenderingContext2D;
@@ -162,5 +162,10 @@ export class HoneycombRenderer {
 
     updateColors(colors: HoneycombColors): void {
         this.colors = colors;
+    }
+
+    resize(width: number, height: number): void {
+        this.width = width;
+        this.height = height;
     }
 }

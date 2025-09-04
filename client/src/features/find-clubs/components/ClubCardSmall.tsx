@@ -1,6 +1,7 @@
 import React from 'react';
 import type { TagData } from '@clubhive/shared';
 import { getTagColor } from '../utils/TagColors';
+import { ClubLogo } from '../../../components/ClubLogo';
 type ClubCardProps = {
     name: string;
     tagline: string;
@@ -8,13 +9,15 @@ type ClubCardProps = {
     tags?: TagData[];
     createdAt: string;
     isSelected: boolean;
+    clubLogo?: string;
     onClick: () => void;
 };
 
-const ClubCardSmall: React.FC<ClubCardProps> = ({ name, tagline, id, isSelected, tags = [], onClick, createdAt }) => {
+const ClubCardSmall: React.FC<ClubCardProps> = ({ name, tagline, id, isSelected, tags = [], clubLogo, onClick, createdAt }) => {
     const createdAtDate = new Date(createdAt);
     const today = new Date();
     const isUnderAMonthOld = today.getTime() - createdAtDate.getTime() < 30 * 24 * 60 * 60 * 1000;
+
     return (
         <div
             className={`relative p-4 border rounded-md cursor-pointer transition-transform transition-shadow duration-200 hover:shadow-lg hover:-translate-y-1 ${
@@ -29,7 +32,7 @@ const ClubCardSmall: React.FC<ClubCardProps> = ({ name, tagline, id, isSelected,
             </div>
             <div className="flex items-center gap-3 mb-2">
                 <div className={`w-14 h-14 rounded-full flex items-center justify-center text-sm font-semibold`}>
-                    <img src="/ucsd-logo.png" alt={name} className="w-14 h-14 object-cover rounded-full" />
+                    <ClubLogo clubLogo={clubLogo} clubName={name} size="md" className="w-14 h-14" />
                 </div>
 
                 <div className="flex-1 overflow-hidden">
