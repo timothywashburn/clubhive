@@ -10,14 +10,12 @@ export function EventsDetailPage() {
     const [loading, setLoading] = useState(true);
     const navigate = useNavigate();
     const [saved, setSaved] = useState(false);
-    const [showShareModal, setShowShareModal] = useState(false);
     const { tags } = useEventTagsData();
 
     const copyToClipboard = async () => {
         const url = `${window.location.origin}/events/${event.event._id}`;
         try {
             await navigator.clipboard.writeText(url);
-            alert('Link copied to clipboard!');
         } catch (err) {
             console.error('Failed to copy: ', err);
         }
@@ -48,7 +46,7 @@ export function EventsDetailPage() {
 
     return (
         <div className="h-full relative z-10">
-            <div className="min-h-screen p-6">
+            <div className="min-h-screen px-4 sm:px-6 lg:px-8 py-8 max-w-7xl mx-auto">
                 <div className="flex justify-start mb-4">
                     <button
                         onClick={() => navigate('/events')}
@@ -98,7 +96,7 @@ export function EventsDetailPage() {
                             onClick={copyToClipboard}
                             className="px-6 py-2 rounded-full font-medium border bg-surface text-on-surface border-outline hover:bg-outline-variant/30 transition-colors cursor-pointer"
                         >
-                            🔗 Event Link
+                            Share Link
                         </button>
                         <button
                             onClick={() => setSaved(prev => !prev)}
@@ -108,32 +106,39 @@ export function EventsDetailPage() {
                                     : 'bg-surface text-on-surface border-outline hover:bg-outline-variant/30'
                             }`}
                         >
-                            {saved ? 'Saved' : 'Save Event'}
+                            {saved ? 'Saved' : 'Save'}
                         </button>
                     </div>
                 </div>
 
-                <div className="bg-surface-variant p-4 rounded-md mb-8">
-                    <h3 className="font-medium text-on-secondary-container mb-2">About Event:</h3>
-                    <p className="font-medium text-on-surface-variant">{event.event.description}</p>
-                </div>
+                <h2 className="mt-10 text-2xl font-semibold text-on-surface mb-4">About This Event:</h2>
+                <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
+                    {/* Left half - Description */}
+                    <div className="bg-surface border border-outline-variant p-6 rounded-md">
+                        <p className="text-on-surface leading-relaxed whitespace-pre-line">{event.event.description}</p>
+                    </div>
 
-                <div className="flex flex-wrap gap-2 items-center">
-                    <div className="bg-surface-variant text-on-surface-variant px-3 py-1 rounded-md text-sm flex-1">
-                        <span className="font-semibold text-on-secondary-container">Date: </span>
-                        <span>{new Date(event.event.date).toLocaleDateString()}</span>
-                    </div>
-                    <div className="bg-surface-variant text-on-surface-variant px-3 py-1 rounded-md text-sm flex-1">
-                        <span className="font-semibold text-on-secondary-container">Time: </span>
-                        <span>{event.event.startTime}</span>
-                    </div>
-                    <div className="bg-surface-variant text-on-surface-variant px-3 py-1 rounded-md text-sm flex-1">
-                        <span className="font-semibold text-on-secondary-container">Location: </span>
-                        <span>{event.event.location}</span>
-                    </div>
-                    <div className="bg-surface-variant text-on-surface-variant px-3 py-1 rounded-md text-sm flex-1">
-                        <span className="font-semibold text-on-secondary-container">Event Type: </span>
-                        <span>{event.event.type}</span>
+                    {/* Right half - Event Details */}
+                    <div className="bg-surface border border-outline-variant p-6 rounded-md">
+                        <div className="grid grid-cols-2 gap-2">
+                            <div className="bg-surface-variant text-on-surface-variant px-3 py-2 rounded-md text-sm">
+                                <span className="font-semibold text-on-secondary-container">Date: </span>
+                                <span>{new Date(event.event.date).toLocaleDateString()}</span>
+                            </div>
+                            <div className="bg-surface-variant text-on-surface-variant px-3 py-2 rounded-md text-sm">
+                                <span className="font-semibold text-on-secondary-container">Time: </span>
+                                <span>{event.event.startTime}</span>
+                                {event.event.endTime && <span> – {event.event.endTime}</span>}
+                            </div>
+                            <div className="bg-surface-variant text-on-surface-variant px-3 py-2 rounded-md text-sm">
+                                <span className="font-semibold text-on-secondary-container">Location: </span>
+                                <span>{event.event.location || 'TBA'}</span>
+                            </div>
+                            <div className="bg-surface-variant text-on-surface-variant px-3 py-2 rounded-md text-sm">
+                                <span className="font-semibold text-on-secondary-container">Type: </span>
+                                <span>{event.event.type}</span>
+                            </div>
+                        </div>
                     </div>
                 </div>
 

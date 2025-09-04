@@ -166,7 +166,7 @@ export function Members({ club }: { club: any }) {
                                                     className="text-xs text-gray-500 hover:text-primary hover:underline transition-colors cursor-pointer"
                                                     title="Edit role"
                                                 >
-                                                    Edit role ✏️
+                                                    Edit role
                                                 </button>
                                             )}
                                         </div>
