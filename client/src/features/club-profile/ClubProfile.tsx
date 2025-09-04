@@ -8,6 +8,7 @@ import { useClubOfficersData } from '../../hooks/useClubOfficersData.ts';
 import { useClubByUrl } from '../../hooks/useClubByUrl.ts';
 import { ClubRole } from '@clubhive/shared';
 import { Calendar, Clock, ArrowLeft } from 'lucide-react';
+import { ClubLogo } from '../../components/ClubLogo.tsx';
 
 function GalleryImage({ imageId }: { imageId: string }) {
     const { image, loading, error } = useImageData(imageId);
@@ -63,11 +64,7 @@ export function ClubProfile() {
                 <div className="bg-surface rounded-md p-6 border border-outline-variant flex items-center space-x-4 min-h-28">
                     <div className="w-1/4 flex items-center justify-center">
                         <div className="w-40 h-40 rounded-full bg-outline-variant flex items-center justify-center overflow-hidden">
-                            {logoUrl ? (
-                                <img src={logoUrl} alt={`${club.name} logo`} className="w-full h-full object-cover object-center" />
-                            ) : (
-                                <span className="text-on-surface-variant text-sm text-center">No Logo</span>
-                            )}
+                            <ClubLogo clubLogo={club.clubLogo} clubName={club.name} size="lg" className="text-2xl w-40 h-40" />
                         </div>
                     </div>
 
