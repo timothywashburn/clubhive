@@ -81,7 +81,7 @@ export function Members({ club }: { club: any }) {
     const renderMemberColumn = (title: string, membersList: any[], bgColor: string) => (
         <div className="flex-1">
             <div className={`${bgColor} rounded-lg shadow p-6 border border-outline-variant h-full`}>
-                <h4 className="text-xl font-bold text-primary mb-4 text-center">{title}</h4>
+                <h4 className="text-lg font-bold text-on-surface mb-4 text-center">{title}</h4>
                 {membersList.length === 0 ? (
                     <p className="text-on-surface-variant text-center text-sm">No {title.toLowerCase()} yet.</p>
                 ) : (
@@ -225,7 +225,7 @@ export function Members({ club }: { club: any }) {
     return (
         <div className="space-y-6">
             <div className="bg-surface rounded-lg shadow p-6 border border-outline-variant">
-                <h3 className="text-3xl font-bold text-primary mb-2">Club Members</h3>
+                <h3 className="text-lg font-bold text-on-surface mb-2">Club Members</h3>
                 {/* search bar */}
                 <div className="mb-4">
                     <div className="relative">
