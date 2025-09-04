@@ -106,6 +106,10 @@ async function seed() {
     const clubTagMap = Object.fromEntries(tags.filter(t => t.type === 'club').map(t => [t.text, t._id]));
     const eventTagMap = Object.fromEntries(tags.filter(t => t.type === 'event').map(t => [t.text, t._id]));
 
+    // console.log('Prod seeding complete!');
+    // mongoose.connection.close();
+    // return;
+
     const [testUser, testUser2, userA, userB, userC, userD] = await User.insertMany([
         {
             _id: TEST_USER_ID,
