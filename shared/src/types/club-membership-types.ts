@@ -28,3 +28,12 @@ export type ClubMembershipData = z.infer<typeof clubMembershipSchema>;
 export interface LeaveMembershipResponse {
     message?: string;
 }
+
+export interface GetClubOfficersResponse {
+    success: boolean;
+    officers: {
+        role: ClubRole;
+        name: string;
+    }[];
+    error?: { message: string };
+}
