@@ -214,7 +214,7 @@ export const OfficerInfo = memo(
                             </div>
                         )}
 
-                        {club.socials.website && (
+                        {club.socials?.website && (
                             <SocialInput
                                 label="Website Link"
                                 id="club-website"
@@ -225,7 +225,7 @@ export const OfficerInfo = memo(
                                 onChange={handlers.handleSocialsChange}
                             />
                         )}
-                        {club.socials.discord && (
+                        {club.socials?.discord && (
                             <SocialInput
                                 label="Discord Invite Link"
                                 id="club-discord"
@@ -236,7 +236,7 @@ export const OfficerInfo = memo(
                                 onChange={handlers.handleSocialsChange}
                             />
                         )}
-                        {club.socials.instagram && (
+                        {club.socials?.instagram && (
                             <SocialInput
                                 label="Instagram Profile Link"
                                 id="club-instagram"
@@ -300,7 +300,7 @@ export const OfficerInfo = memo(
                             </div>
                         )}
 
-                        {!club.socials.website && (
+                        {!club.socials?.website && (
                             <SocialInput
                                 label="Website Link"
                                 id="club-website"
@@ -311,7 +311,7 @@ export const OfficerInfo = memo(
                                 onChange={handlers.handleSocialsChange}
                             />
                         )}
-                        {!club.socials.discord && (
+                        {!club.socials?.discord && (
                             <SocialInput
                                 label="Discord Invite Link"
                                 id="club-discord"
@@ -322,7 +322,7 @@ export const OfficerInfo = memo(
                                 onChange={handlers.handleSocialsChange}
                             />
                         )}
-                        {!club.socials.instagram && (
+                        {!club.socials?.instagram && (
                             <SocialInput
                                 label="Instagram Profile Link"
                                 id="club-instagram"

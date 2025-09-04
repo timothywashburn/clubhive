@@ -87,11 +87,13 @@ export function ClubProfile() {
 
                     {/* links to socials on the right */}
                     <div>
-                        <SocialLinks
-                            discordUrl={club.socials.discord}
-                            instagramUrl={club.socials.instagram}
-                            websiteUrl={club.socials.website}
-                        />
+                        {club.socials && (
+                            <SocialLinks
+                                discordUrl={club.socials.discord}
+                                instagramUrl={club.socials.instagram}
+                                websiteUrl={club.socials.website}
+                            />
+                        )}
                     </div>
                 </div>
 

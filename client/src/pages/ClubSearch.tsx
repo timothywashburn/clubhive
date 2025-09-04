@@ -128,11 +128,13 @@ export function Clubs() {
                                             </span>
                                         ))}
                                     </div>
-                                    <SocialLinks
-                                        discordUrl={selectedClub.socials.discord}
-                                        instagramUrl={selectedClub.socials.instagram}
-                                        websiteUrl={selectedClub.socials.website}
-                                    />
+                                    {selectedClub.socials && (
+                                        <SocialLinks
+                                            discordUrl={selectedClub.socials.discord}
+                                            instagramUrl={selectedClub.socials.instagram}
+                                            websiteUrl={selectedClub.socials.website}
+                                        />
+                                    )}
                                 </div>
                                 <div className="mt-6 text-on-surface-variant">{selectedClub.description || 'No description'}</div>
                                 <div className="mt-6 overflow-x-auto">
