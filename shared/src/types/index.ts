@@ -1,4 +1,3 @@
-export * from './announcement-types.js';
 export * from './api-types.js';
 export * from './auth-types.js';
 export * from './club-membership-types.js';
@@ -6,6 +5,7 @@ export * from './club-snapshot-types.js';
 export * from './club-types.js';
 export * from './event-types.js';
 export * from './image-types.js';
+export * from './notification-types.js';
 export * from './saved-events-types.js';
 export * from './school-types.js';
 export * from './tag-types.js';

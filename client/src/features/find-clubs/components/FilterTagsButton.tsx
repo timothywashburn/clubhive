@@ -1,6 +1,6 @@
 import { useState, useRef, useEffect } from 'react';
 import type { TagData } from '@clubhive/shared';
-import { TagSelectionPopup } from './TagsSelectionPopup';
+import { TagSelectionPopup } from '../../../features/find-clubs/components/TagsSelectionPopup';
 
 type Props = {
     tags: TagData[];
@@ -28,7 +28,7 @@ export default function FilterTagsButton({ tags, selectedTags, setSelectedTags }
         <div className="text-left" ref={popoverRef}>
             <button
                 onClick={() => setOpen(prev => !prev)}
-                className="h-10 px-4 py-2 bg-surface text-on-surface-variant border border-outline-variant rounded-md rounded-r-none flex items-center focus:border-primary"
+                className="h-10 px-4 py-2 bg-surface text-on-surface border border-outline-variant rounded-md rounded-r-none flex items-center focus:border-primary cursor-pointer"
             >
                 Filter
             </button>

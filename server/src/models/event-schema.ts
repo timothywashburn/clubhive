@@ -20,6 +20,10 @@ const schema = new Schema({
         type: String,
         default: '',
     },
+    requirements: {
+        type: String,
+        default: '',
+    },
     type: {
         type: String,
         enum: Object.values(EventType),
@@ -40,6 +44,10 @@ const schema = new Schema({
     endTime: {
         type: String,
         required: true,
+    },
+    published: {
+        type: Boolean,
+        default: false,
     },
     picture: {
         type: mongoose.Schema.Types.ObjectId,

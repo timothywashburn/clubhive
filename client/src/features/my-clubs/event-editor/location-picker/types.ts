@@ -1,6 +1,7 @@
 export interface VenueAvailability {
     room_name: string;
     room_type: string;
+    custom_room_type?: string;
     building_name: string;
     availability: TimeSlot[];
 }
@@ -10,10 +11,9 @@ export interface TimeSlot {
     end_time: string;
 }
 
-export interface VenueFilters {
+export interface VenueFilterType {
     search: string;
     roomType: string;
-    building: string;
     minDuration: number; // in hours
     searchMode: 'duration' | 'specific-window';
     specificWindow?: {

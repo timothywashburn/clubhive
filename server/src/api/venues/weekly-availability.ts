@@ -1,6 +1,6 @@
 import { ApiEndpoint, AuthType } from '@/types/api-types';
 import { ErrorCode, GetWeeklyVenueAvailabilityResponse, GetDailyVenueAvailabilityResponse } from '@clubhive/shared';
-import { ClubhiveConfigModel } from '@/models/clubhive-config-schema';
+import { ConfigManager } from '@/services/config-manager';
 
 interface ApiResponse {
     success: boolean;
@@ -43,24 +43,14 @@ export const getWeeklyVenueAvailabilityEndpoint: ApiEndpoint<undefined, GetWeekl
                 return;
             }
 
-            // Get config from database
-            const config = await ClubhiveConfigModel.findOne();
-            if (!config || !config.emsApiBaseUrl || !config.emsApiToken) {
-                res.status(500).json({
-                    success: false,
-                    error: {
-                        message: 'EMS API configuration missing',
-                        code: ErrorCode.EMS_CONFIG_ERROR,
-                    },
-                });
-                return;
-            }
+            // Get config from config manager
+            const config = await ConfigManager.getConfig();
 
             // Call EMS API weekly endpoint
-            const response = await fetch(`${config.emsApiBaseUrl}/api/availability/weekly?date=${date}`, {
+            const response = await fetch(`${config.emsApi.host}/api/availability/weekly?date=${date}`, {
                 method: 'GET',
                 headers: {
-                    Authorization: `Bearer ${config.emsApiToken}`,
+                    Authorization: `Bearer ${config.emsApi.token}`,
                     'Content-Type': 'application/json',
                 },
             });

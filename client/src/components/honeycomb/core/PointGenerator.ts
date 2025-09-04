@@ -1,4 +1,4 @@
-import { GENERATION_CONFIG } from '../config/animation.ts';
+import { GENERATION_CONFIG } from '../config';
 
 export class PointGenerator {
     private readonly width: number;

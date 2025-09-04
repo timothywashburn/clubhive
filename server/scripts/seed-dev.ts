@@ -3,12 +3,16 @@ import Club from '../src/models/club-schema';
 import School from '../src/models/school-schema';
 import Tag from '../src/models/tag-schema';
 import User, { EducationType, Year } from '../src/models/user-schema';
+import Auth from '../src/models/auth-schema';
 import ClubMembership from '../src/models/club-membership-schema';
 import Event from '../src/models/event-schema';
-import Announcement from '../src/models/announcement-schema';
+import Notification from '../src/models/notification-schema';
 import UserNotification from '../src/models/user-notification-schema';
 import { ClubhiveConfigModel } from '../src/models/clubhive-config-schema';
-import { EventType, ClubRole } from '@clubhive/shared';
+import { EventType, ClubRole, ClubStatus } from '@clubhive/shared';
+// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+// @ts-expect-error
+import bcrypt from 'bcrypt';
 
 const TEST_USER_ID = new mongoose.Types.ObjectId('507f1f77bcf86cd799439020');
 const UCSD_SCHOOL_ID = new mongoose.Types.ObjectId('507f1f77bcf86cd799439021');
@@ -21,13 +25,35 @@ async function seed() {
     await Tag.deleteMany({});
     await Club.deleteMany({});
     await User.deleteMany({});
+    await Auth.deleteMany({});
     await ClubMembership.deleteMany({});
     await Event.deleteMany({});
     await ClubhiveConfigModel.deleteMany({});
-    await Announcement.deleteMany({});
+    await Notification.deleteMany({});
     await UserNotification.deleteMany({});
 
-    const [ucsd] = await School.insertMany([{ _id: UCSD_SCHOOL_ID, name: 'UCSD', location: 'San Diego, CA' }]);
+    await ClubhiveConfigModel.create({
+        emsApi: {
+            host: process.env.EMS_API_BASE_URL || '',
+            token: process.env.EMS_API_TOKEN || '',
+        },
+        jwtSecret: process.env.JWT_SECRET || '',
+        cloudinary: {
+            cloudName: process.env.CLOUDINARY_CLOUD_NAME || '',
+            apiKey: process.env.CLOUDINARY_API_KEY || '',
+            apiSecret: process.env.CLOUDINARY_API_SECRET || '',
+        },
+    });
+
+    const [ucsd] = await School.insertMany([
+        {
+            _id: UCSD_SCHOOL_ID,
+            name: 'University of California, San Diego',
+            location: 'San Diego, CA',
+            emailPattern: '^[a-zA-Z0-9._%+-]+@ucsd\\.edu$',
+            emailError: 'Please use your UCSD email address (example@ucsd.edu)',
+        },
+    ]);
 
     const tags = await Tag.insertMany([
         { type: 'club', text: 'Technology' },
@@ -74,12 +100,17 @@ async function seed() {
         { type: 'event', text: 'Review' },
         { type: 'event', text: 'Preparation' },
         { type: 'event', text: 'Photography' },
+        { type: 'event', text: 'Free Food' },
     ]);
 
     const clubTagMap = Object.fromEntries(tags.filter(t => t.type === 'club').map(t => [t.text, t._id]));
     const eventTagMap = Object.fromEntries(tags.filter(t => t.type === 'event').map(t => [t.text, t._id]));
 
-    const [testUser, testUser2] = await User.insertMany([
+    // console.log('Prod seeding complete!');
+    // mongoose.connection.close();
+    // return;
+
+    const [testUser, testUser2, userA, userB, userC, userD] = await User.insertMany([
         {
             _id: TEST_USER_ID,
             name: 'Test User',
@@ -87,6 +118,7 @@ async function seed() {
             major: 'Computer Science',
             educationType: EducationType.UNDERGRADUATE,
             year: Year.THIRD,
+            admin: true,
         },
         {
             name: 'Test User 2',
@@ -94,6 +126,45 @@ async function seed() {
             major: 'Data Science',
             educationType: EducationType.GRADUATE,
             year: Year.FIRST,
+            admin: true,
+        },
+        {
+            name: 'Alice Johnson',
+            school: ucsd._id,
+            major: 'Computer Science',
+            educationType: EducationType.UNDERGRADUATE,
+            year: Year.SECOND,
+        },
+        {
+            name: 'David Lee',
+            school: ucsd._id,
+            major: 'Math and Computer Science',
+            educationType: EducationType.UNDERGRADUATE,
+            year: Year.THIRD,
+        },
+        {
+            name: 'Bob Ross',
+            school: ucsd._id,
+            major: 'Computer Science',
+            educationType: EducationType.UNDERGRADUATE,
+            year: Year.SECOND,
+        },
+        {
+            name: 'Carol Lee',
+            school: ucsd._id,
+            major: 'Data Science',
+            educationType: EducationType.UNDERGRADUATE,
+            year: Year.FOURTH,
+        },
+    ]);
+
+    const hashedPassword = await bcrypt.hash('test', 10);
+    await Auth.insertMany([
+        {
+            email: 'test@test.com',
+            password: hashedPassword,
+            emailVerified: true,
+            userId: testUser._id,
         },
     ]);
 
@@ -114,6 +185,7 @@ async function seed() {
                 clubTagMap['Career'],
                 clubTagMap['Coding'],
             ],
+            status: ClubStatus.ANYONE_CAN_JOIN,
             socials: {
                 website: 'https://csclub.ucsd.edu',
                 discord: 'https://discord.gg/csclub',
@@ -136,6 +208,7 @@ async function seed() {
                 clubTagMap['Career'],
                 clubTagMap['Coding'],
             ],
+            status: ClubStatus.ANYONE_CAN_JOIN,
             socials: {
                 website: 'https://hackthetriton.ucsd.edu',
                 discord: 'https://discord.gg/hackucsd',
@@ -158,6 +231,7 @@ async function seed() {
                 clubTagMap['Career'],
                 clubTagMap['Coding'],
             ],
+            status: ClubStatus.ANYONE_CAN_JOIN,
             socials: {
                 website: 'https://wic.ucsd.edu',
                 discord: '',
@@ -172,6 +246,7 @@ async function seed() {
             url: 'triton-community',
             school: ucsd._id,
             tags: [clubTagMap['Service'], clubTagMap['Community'], clubTagMap['Leadership']],
+            status: ClubStatus.ANYONE_CAN_JOIN,
             socials: {
                 website: 'https://community.ucsd.edu',
                 discord: '',
@@ -186,6 +261,7 @@ async function seed() {
             url: 'workshop-central',
             school: ucsd._id,
             tags: [clubTagMap['Technology'], clubTagMap['Academic'], clubTagMap['STEM'], clubTagMap['Career']],
+            status: ClubStatus.ANYONE_CAN_JOIN,
             socials: {
                 website: 'https://workshopcentral.ucsd.edu',
                 discord: 'https://discord.gg/workshops',
@@ -200,6 +276,7 @@ async function seed() {
             url: 'startup-circle',
             school: ucsd._id,
             tags: [clubTagMap['Entrepreneurship'], clubTagMap['Career'], clubTagMap['Leadership']],
+            status: ClubStatus.ANYONE_CAN_JOIN,
             socials: {
                 website: 'https://startupcircle.ucsd.edu',
                 discord: '',
@@ -214,6 +291,7 @@ async function seed() {
             url: 'triton-gamers',
             school: ucsd._id,
             tags: [clubTagMap['Gaming & Esports'], clubTagMap['Community'], clubTagMap['Social'], clubTagMap['Technology']],
+            status: ClubStatus.ANYONE_CAN_JOIN,
             socials: {
                 website: 'https://gamers.ucsd.edu',
                 discord: 'https://discord.gg/gaming',
@@ -228,6 +306,7 @@ async function seed() {
             url: 'triton-creatives',
             school: ucsd._id,
             tags: [clubTagMap['Art'], clubTagMap['Music'], clubTagMap['Media & Journalism'], clubTagMap['Community']],
+            status: ClubStatus.ANYONE_CAN_JOIN,
             socials: {
                 website: 'https://creatives.ucsd.edu',
                 discord: '',
@@ -242,6 +321,7 @@ async function seed() {
             url: 'diversity-in-data',
             school: ucsd._id,
             tags: [clubTagMap['Diversity'], clubTagMap['STEM'], clubTagMap['Technology'], clubTagMap['Academic']],
+            status: ClubStatus.ANYONE_CAN_JOIN,
             socials: {
                 website: 'https://diversitydata.ucsd.edu',
                 discord: '',
@@ -256,6 +336,7 @@ async function seed() {
             url: 'infosessions-at-ucsd',
             school: ucsd._id,
             tags: [clubTagMap['Career'], clubTagMap['Professional Development'], clubTagMap['STEM']],
+            status: ClubStatus.ANYONE_CAN_JOIN,
             socials: {
                 website: 'https://infosessions.ucsd.edu',
                 discord: '',
@@ -268,12 +349,23 @@ async function seed() {
         { user: testUser._id, club: clubs[0]._id, role: ClubRole.OWNER },
         { user: testUser._id, club: clubs[1]._id, role: ClubRole.MEMBER },
         { user: testUser._id, club: clubs[4]._id, role: ClubRole.OFFICER },
+        { user: testUser2._id, club: clubs[0]._id, role: ClubRole.OFFICER },
 
         { user: testUser2._id, club: clubs[2]._id, role: ClubRole.MEMBER },
         { user: testUser2._id, club: clubs[6]._id, role: ClubRole.OWNER },
+
+        { user: userA._id, club: clubs[0]._id, role: ClubRole.OFFICER },
+        { user: userB._id, club: clubs[0]._id, role: ClubRole.OFFICER },
+        { user: userC._id, club: clubs[0]._id, role: ClubRole.MEMBER },
+        { user: userD._id, club: clubs[0]._id, role: ClubRole.MEMBER },
+
+        { user: userA._id, club: clubs[1]._id, role: ClubRole.MEMBER },
+        { user: userB._id, club: clubs[2]._id, role: ClubRole.MEMBER },
+        { user: userC._id, club: clubs[3]._id, role: ClubRole.OFFICER },
+        { user: userD._id, club: clubs[1]._id, role: ClubRole.MEMBER },
     ]);
 
-    const announcements = await Announcement.insertMany([
+    const notifications = await Notification.insertMany([
         {
             club: clubs[0]._id,
             title: 'Meeting Location Changed',
@@ -305,17 +397,17 @@ async function seed() {
     await UserNotification.insertMany([
         {
             user: TEST_USER_ID,
-            notification: announcements[0]._id,
+            notification: notifications[0]._id,
             read: false,
         },
         {
             user: TEST_USER_ID,
-            notification: announcements[1]._id,
+            notification: notifications[1]._id,
             read: true,
         },
         {
             user: TEST_USER_ID,
-            notification: announcements[2]._id,
+            notification: notifications[2]._id,
             read: false,
         },
     ]);
@@ -328,9 +420,10 @@ async function seed() {
             description: 'Monthly club meeting before summer break.',
             type: EventType.CLUB_MEMBERS,
             location: 'Engineering Building Room 205',
-            date: '2025-06-25',
+            date: '2025-07-25',
             startTime: '15:00',
             endTime: '16:00',
+            published: true,
             tags: [eventTagMap['Meeting']],
         },
         {
@@ -339,9 +432,10 @@ async function seed() {
             description: 'Review June accomplishments and July goals.',
             type: EventType.CLUB_MEMBERS,
             location: 'Conference Room A',
-            date: '2025-06-30',
+            date: '2025-07-30',
             startTime: '16:00',
             endTime: '17:00',
+            published: false,
             tags: [eventTagMap['Review'], eventTagMap['Meeting']],
         },
         {
@@ -350,9 +444,10 @@ async function seed() {
             description: 'Prepare for July 4th celebration activities.',
             type: EventType.CLUB_MEMBERS,
             location: 'Student Center',
-            date: '2025-07-01',
+            date: '2025-08-01',
             startTime: '10:00',
             endTime: '12:00',
+            published: true,
             tags: [eventTagMap['Preparation'], eventTagMap['Social']],
         },
         {
@@ -361,9 +456,10 @@ async function seed() {
             description: 'Start July with team building activities.',
             type: EventType.CLUB_MEMBERS,
             location: 'Main Hall',
-            date: '2025-07-02',
+            date: '2025-08-02',
             startTime: '14:00',
             endTime: '16:00',
+            published: false,
             tags: [eventTagMap['Social'], eventTagMap['Meeting']],
         },
         {
@@ -372,9 +468,10 @@ async function seed() {
             description: 'Introduction to React and modern web development.',
             type: EventType.UCSD_STUDENTS,
             location: 'Computer Lab',
-            date: '2025-07-08',
+            date: '2025-08-08',
             startTime: '14:00',
             endTime: '17:00',
+            published: true,
             tags: [eventTagMap['Workshop'], eventTagMap['Educational']],
         },
         {
@@ -383,9 +480,10 @@ async function seed() {
             description: 'Learn advanced lighting techniques and composition.',
             type: EventType.UCSD_STUDENTS,
             location: 'Art Building Studio 3',
-            date: '2025-07-15',
+            date: '2025-08-15',
             startTime: '14:00',
             endTime: '16:00',
+            published: false,
             tags: [eventTagMap['Workshop'], eventTagMap['Photography']],
         },
         {
@@ -394,9 +492,10 @@ async function seed() {
             description: 'Weekly esports tournament with prizes.',
             type: EventType.UCSD_STUDENTS,
             location: 'Game Room',
-            date: '2025-07-15',
+            date: '2025-08-15',
             startTime: '19:00',
             endTime: '22:00',
+            published: true,
             tags: [eventTagMap['Tournament'], eventTagMap['Competition']],
         },
         {
@@ -405,9 +504,10 @@ async function seed() {
             description: 'Prepare for upcoming hackathon event.',
             type: EventType.CLUB_MEMBERS,
             location: 'Tech Lab',
-            date: '2025-07-22',
+            date: '2025-08-22',
             startTime: '13:00',
             endTime: '15:00',
+            published: false,
             tags: [eventTagMap['Hackathon'], eventTagMap['Preparation']],
         },
         {
@@ -416,9 +516,10 @@ async function seed() {
             description: 'Guest speaker on AI and machine learning.',
             type: EventType.UCSD_STUDENTS,
             location: 'Auditorium',
-            date: '2025-07-22',
+            date: '2025-08-22',
             startTime: '16:00',
             endTime: '17:30',
+            published: true,
             tags: [eventTagMap['Tech Talk'], eventTagMap['Educational']],
         },
         {
@@ -427,9 +528,10 @@ async function seed() {
             description: 'Connect with industry professionals.',
             type: EventType.UCSD_STUDENTS,
             location: 'Business Center',
-            date: '2025-07-22',
+            date: '2025-08-22',
             startTime: '18:30',
             endTime: '20:00',
+            published: true,
             tags: [eventTagMap['Networking'], eventTagMap['Professional']],
         },
         {
@@ -438,9 +540,10 @@ async function seed() {
             description: 'Panel on career paths in technology.',
             type: EventType.UCSD_STUDENTS,
             location: 'Conference Hall',
-            date: '2025-07-22',
+            date: '2025-08-22',
             startTime: '20:00',
             endTime: '21:30',
+            published: false,
             tags: [eventTagMap['Panel'], eventTagMap['Professional']],
         },
         {
@@ -449,20 +552,23 @@ async function seed() {
             description: 'Practice session for upcoming competition.',
             type: EventType.CLUB_MEMBERS,
             location: 'Debate Hall',
-            date: '2025-07-25',
+            date: '2025-08-25',
             startTime: '15:00',
             endTime: '17:00',
+            published: false,
             tags: [eventTagMap['Debate'], eventTagMap['Competition']],
         },
         {
             club: clubs[0]._id,
             name: 'Summer Fair',
             description: 'Annual summer celebration and fair.',
+            requirements: 'Bring a dish/snack to enter the fair!',
             type: EventType.ANYONE,
             location: 'Campus Quad',
-            date: '2025-08-01',
+            date: '2025-09-01',
             startTime: '11:00',
             endTime: '17:00',
+            published: true,
             tags: [eventTagMap['Fair'], eventTagMap['Social']],
         },
         {
@@ -471,9 +577,10 @@ async function seed() {
             description: 'Community service project.',
             type: EventType.ANYONE,
             location: 'Community Center',
-            date: '2025-08-05',
+            date: '2025-09-05',
             startTime: '09:00',
             endTime: '15:00',
+            published: true,
             tags: [eventTagMap['Volunteer'], eventTagMap['Social']],
         },
     ];
@@ -481,7 +588,7 @@ async function seed() {
     await Event.insertMany(csClubEvents);
 
     // Add 2 events for each other club in the same date range
-    const otherClubsEvents = [];
+    const otherClubsEvents: any[] = [];
 
     // For each club except the first one (Computer Science Club)
     for (let i = 1; i < clubs.length; i++) {
@@ -493,9 +600,10 @@ async function seed() {
                 description: `Interactive workshop hosted by ${club.name}.`,
                 type: EventType.UCSD_STUDENTS,
                 location: 'Student Center Room 101',
-                date: '2025-07-10',
+                date: '2025-08-10',
                 startTime: '18:00',
                 endTime: '20:00',
+                published: false,
                 tags: [eventTagMap['Workshop'], eventTagMap['Educational']],
             },
             {
@@ -504,21 +612,16 @@ async function seed() {
                 description: `Meet other members and learn more about ${club.name}.`,
                 type: EventType.UCSD_STUDENTS,
                 location: 'Campus Quad',
-                date: '2025-07-25',
+                date: '2025-08-25',
                 startTime: '17:00',
                 endTime: '19:00',
+                published: true,
                 tags: [eventTagMap['Social'], eventTagMap['Networking']],
             }
         );
     }
 
     await Event.insertMany(otherClubsEvents);
-
-    // Seed configuration
-    await ClubhiveConfigModel.create({
-        emsApiBaseUrl: process.env.EMS_API_BASE_URL || '',
-        emsApiToken: process.env.EMS_API_TOKEN || '',
-    });
 
     console.log('Seeding complete!');
     mongoose.connection.close();

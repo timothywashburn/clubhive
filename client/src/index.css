@@ -65,13 +65,6 @@
     --color-divider: #334155;
     --color-divider-variant: #334155;
 }
-.bg-instagram {
-    background: linear-gradient(45deg, #feda75, #d62976, #962fbf);
-}
-
-.bg-globe {
-    background: linear-gradient(45deg, #00c6ff, #0072ff);
-}
 
 /* Scrollbar Styling */
 * {
@@ -113,6 +106,16 @@
 
 .scrollbar-surface::-webkit-scrollbar-thumb:hover {
     background-color: var(--color-outline);
+}
+
+/* Hide scrollbar utility */
+.scrollbar-hide {
+    -ms-overflow-style: none; /* Internet Explorer 10+ */
+    scrollbar-width: none; /* Firefox */
+}
+
+.scrollbar-hide::-webkit-scrollbar {
+    display: none; /* Safari and Chrome */
 }
 
 body {

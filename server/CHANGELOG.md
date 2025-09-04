@@ -8,6 +8,21 @@
 
 ---
 
+## [v0.0.2] - 2025-09-15
+
+### Added
+
+- landing page for non-authenticated users
+- home page for authenticated users
+- functional sign-in/sign-out behavior
+- ability to create, manage, and delete clubs and events
+- notification toasts to display cleaner messages to user
+- image system for club logos and club & event pictures
+- background parallax
+- about page data filled in
+- notification sending/receiving system
+- and many other features/changes/bugfixes, too many to mention here
+
 ## [v0.0.1] - 2025-07-31
 
 ### Added

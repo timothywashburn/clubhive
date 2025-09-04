@@ -1,11 +1,11 @@
-import { VenueAvailability, VenueFilters } from './types';
+import { VenueAvailability, VenueFilterType } from './types';
 import { VenueDisplayCard } from './VenueDisplayCard';
 
 interface VenueCardProps {
     venue: VenueAvailability;
     isSelected: boolean;
     onSelect: (venue: VenueAvailability) => void;
-    filters?: VenueFilters;
+    filters?: VenueFilterType;
 }
 
 export function VenueCard({ venue, isSelected, onSelect, filters }: VenueCardProps) {

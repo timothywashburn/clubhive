@@ -3,7 +3,7 @@ import { Link } from 'react-router';
 export function NotFound() {
     return (
         <div className="h-full relative">
-            <div className="flex items-center justify-center">
+            <div className="flex items-center justify-center h-full">
                 <div className="max-w-md text-center">
                     <h1 className="text-6xl font-bold text-on-surface mb-4">404</h1>
                     <h2 className="text-2xl font-semibold text-on-surface mb-4">Page Not Found</h2>

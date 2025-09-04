@@ -1,4 +1,2 @@
-export { EventDetails } from './EventDetails';
-export { LocationPicker } from './LocationPicker';
-export { TAPIntegration } from './TAPIntegration';
-export { ASFunding } from './ASFunding';
+export * from './EventDetails.tsx';
+export * from './LocationPicker.tsx';
