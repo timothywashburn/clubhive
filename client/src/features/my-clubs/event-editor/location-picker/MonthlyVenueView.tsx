@@ -148,7 +148,7 @@ export function MonthlyVenueView({ venues, monthDate, filters, onVenueSelect, se
                                                 key={date.getDate()}
                                                 className={`aspect-square text-xs flex items-center justify-center rounded cursor-pointer transition-all hover:scale-105 ${
                                                     hasAvailability
-                                                        ? 'bg-orange-400 text-white hover:bg-orange-500'
+                                                        ? 'bg-primary text-white hover:brightness-80'
                                                         : dayVenue
                                                           ? 'bg-gray-300 text-gray-700 hover:bg-gray-400'
                                                           : 'bg-surface-variant/30 text-on-surface-variant'
@@ -175,7 +175,7 @@ export function MonthlyVenueView({ venues, monthDate, filters, onVenueSelect, se
             {/* Legend */}
             <div className="flex items-center justify-center space-x-6 text-xs text-on-surface-variant py-6 mt-6 border-t border-outline-variant">
                 <div className="flex items-center space-x-1">
-                    <div className="w-3 h-3 bg-orange-400 rounded" />
+                    <div className="w-3 h-3 bg-primary rounded" />
                     <span>Meets criteria</span>
                 </div>
                 <div className="flex items-center space-x-1">

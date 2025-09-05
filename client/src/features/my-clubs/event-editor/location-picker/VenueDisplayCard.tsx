@@ -79,7 +79,7 @@ export function VenueDisplayCard({
                         {mode === 'daily' && venue.availability.length > 0 && (
                             <div className="flex items-center justify-center space-x-3 text-xs text-on-surface-variant mt-2 pt-2 border-t border-outline-variant/30">
                                 <div className="flex items-center space-x-1">
-                                    <div className="w-3 h-3 bg-orange-400 rounded-sm" />
+                                    <div className="w-3 h-3 bg-primary rounded-sm" />
                                     <span>Meets Criteria</span>
                                 </div>
                                 <div className="flex items-center space-x-1">
