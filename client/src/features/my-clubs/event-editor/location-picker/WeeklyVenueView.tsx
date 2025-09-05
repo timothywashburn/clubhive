@@ -68,7 +68,7 @@ export function WeeklyVenueView({ venues, weekDates, filters, onVenueSelect, sel
                                     </div>
 
                                     <div className="flex items-center space-x-1">
-                                        <div className="w-3 h-3 bg-orange-400 rounded-sm" />
+                                        <div className="w-3 h-3 bg-primary rounded-sm" />
                                         <span className="text-xs text-on-surface-variant">Meets Criteria</span>
                                     </div>
                                     <div className="flex items-center space-x-1">
