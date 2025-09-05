@@ -95,9 +95,7 @@ export function VisualAvailabilityDisplay({ availability, filters, className = '
                         <div
                             key={index}
                             className={`absolute left-1 right-1 rounded-sm border transition-all hover:shadow-sm ${
-                                meetsFilter
-                                    ? 'bg-orange-400 border-orange-500 hover:bg-orange-500' // Meets criteria
-                                    : 'bg-gray-300 border-gray-400 hover:bg-gray-400' // Doesn't meet criteria
+                                meetsFilter ? 'bg-primary hover:brightness-80' : 'bg-gray-300 border-gray-400 hover:bg-gray-400'
                             }`}
                             style={{
                                 top: `${topPercent}%`,

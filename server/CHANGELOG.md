@@ -8,6 +8,16 @@
 
 ---
 
+## [v0.0.3] - 2025-9-15
+
+### Changed
+
+- changed location picker colors to better align with website theme
+
+### Fixed
+
+- fixed error with clubs without socials set
+
 ## [v0.0.2] - 2025-09-15
 
 ### Added
