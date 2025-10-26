@@ -20,7 +20,7 @@ spec:
       containers:
       - name: client
         image: {{ .Values.image.client.name }}:latest
-        imagePullPolicy: {{ .Values.image.pullPolicy }}
+        imagePullPolicy: Always
         ports:
         - containerPort: 80
         resources:

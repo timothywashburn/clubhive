@@ -1,16 +1,6 @@
-image:
-  registry: registry.gitlab.com/sdsc-rds/summer-internships/rds-interns-su25/team-hexagon/centralized-club-system
-  pullPolicy: Always
-  server:
-    tag: latest
-  client:
-    tag: latest
-
 ingress:
   host: ""
   ingressClassName: traefik
-
-branch: ""
 
 mongodb:
   storage:
