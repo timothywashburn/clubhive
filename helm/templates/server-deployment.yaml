@@ -22,7 +22,7 @@ spec:
 {{- end }}
       containers:
       - name: server
-        image: ""
+        image: {{ .Values.image.server.name }}:latest
         imagePullPolicy: {{ .Values.image.pullPolicy }}
         ports:
         - containerPort: 3000
