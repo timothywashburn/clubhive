@@ -2,7 +2,6 @@ ingress:
   host: clubhive.timothyw.dev
 
 branch: main
-namespace: clubhive
 
 mongodb:
   storage:
