@@ -17,9 +17,7 @@ spec:
         app: client
     spec:
       imagePullSecrets:
-{{- range .Values.imagePullSecrets }}
-      - name: {{ .name }}
-{{- end }}
+      - name: dockerhub-registry
       containers:
       - name: client
         image: {{ .Values.image.client.name }}:latest

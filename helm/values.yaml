@@ -6,9 +6,6 @@ image:
   client:
     tag: latest
 
-imagePullSecrets:
-  - name: gitlab-registry
-
 ingress:
   host: ""
   ingressClassName: traefik
