@@ -3,7 +3,7 @@ import { BrowserRouter, Routes, Route, useLocation } from 'react-router';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { UnifiedNavigation } from './components/navigation';
-import { Footer } from './components/footer/Footer.tsx';
+import { Footer } from './components/footer';
 import { useTheme } from './hooks/useTheme';
 import { RootPage } from './pages/RootPage.tsx';
 import { MyClubs } from './features/my-clubs';
