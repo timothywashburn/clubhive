@@ -5,5 +5,4 @@ ingress:
 mongodb:
   storage:
     size: ""
-    storageClass: ""
   port: ""

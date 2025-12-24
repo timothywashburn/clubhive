@@ -4,5 +4,4 @@ ingress:
 mongodb:
   storage:
     size: "1Gi"
-    storageClass: "local"
   port: "30018"
