@@ -2,6 +2,10 @@
 
 ## Setup
 
+[//]: # 'TODO: This is out of date'
+
+THIS IS OUT OF DATE
+
 ### Create Deploy Token
 
 1. Go to your GitLab project → Settings → Repository → Deploy tokens
