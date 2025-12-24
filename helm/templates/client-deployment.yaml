@@ -19,7 +19,7 @@ spec:
       - name: dockerhub-registry
       containers:
       - name: client
-        image: {{ .Values.image.client.name }}:latest
+        image: {{ .Values.image.client.name }}:{{ .Values.image.client.tag }}
         imagePullPolicy: Always
         ports:
         - containerPort: 80

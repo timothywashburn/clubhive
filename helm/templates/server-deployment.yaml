@@ -19,7 +19,7 @@ spec:
         - name: dockerhub-registry
       containers:
       - name: server
-        image: {{ .Values.image.server.name }}:latest
+        image: {{ .Values.image.server.name }}:{{ .Values.image.server.tag }}
         imagePullPolicy: Always
         ports:
         - containerPort: 3000
