@@ -36,6 +36,8 @@ function AppContent() {
     const { theme } = useThemeStore();
     const { x, y, scale, setIsLandingPage, setScrollY } = useBackgroundStore();
 
+    // test 2
+
     // Update landing page state when route or auth changes
     useEffect(() => {
         const isOnLandingPage = location.pathname === '/' && !isAuthenticated;
