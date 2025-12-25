@@ -1,7 +1,0 @@
-ingress:
-  host: chdev.timothyw.dev
-
-mongodb:
-  storage:
-    size: "1Gi"
-  port: "30018"

@@ -1,7 +1,0 @@
-ingress:
-  host: clubhive.timothyw.dev
-
-mongodb:
-  storage:
-    size: "1Gi"
-  port: "30017"
