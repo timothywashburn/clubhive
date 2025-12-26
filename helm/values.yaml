@@ -1,8 +1,8 @@
 ingress:
-  host: ""
+  host:
   ingressClassName: traefik
 
 mongodb:
+  port:
   storage:
-    size: "1Gi"
-  port: ""
+    size: 1Gi

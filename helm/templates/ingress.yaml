@@ -2,7 +2,7 @@
 apiVersion: traefik.io/v1alpha1
 kind: IngressRoute
 metadata:
-  name: clubhive-https
+  name: clubhive-https-ingress
 spec:
   entryPoints:
     - websecure
@@ -34,7 +34,7 @@ spec:
 apiVersion: traefik.io/v1alpha1
 kind: IngressRoute
 metadata:
-  name: clubhive-http
+  name: clubhive-http-ingress
 spec:
   entryPoints:
     - web
