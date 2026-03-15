@@ -1,6 +1,7 @@
 ingress:
   host:
   ingressClassName: traefik
+  tls: true
 
 mongodb:
   port:
